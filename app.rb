@@ -4,6 +4,9 @@ require "ostruct"
 require_relative "lib/services"
 require_relative "lib/search"
 
+enable :sessions
+set :session_secret, S.session_secret
+
 datastores = Search::Presenters.datastores
 
 before do

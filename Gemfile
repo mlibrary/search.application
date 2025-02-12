@@ -4,6 +4,8 @@ gem "sinatra"
 gem "puma"
 gem "rackup"
 gem "canister"
+gem "omniauth"
+gem "omniauth_openid_connect"
 
 group :development, :test do
   gem "debug"

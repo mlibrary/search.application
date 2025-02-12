@@ -8,3 +8,4 @@ module Search
 end
 
 require "search/presenters"
+require "search/routes"
