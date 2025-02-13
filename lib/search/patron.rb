@@ -1,8 +1,16 @@
 module Search
   module Patron
     def self.for(uniqname)
-      body = {}
-      Alma.new(body)
+      alma_response = AlmaRestClient.client.get("users/#{uniqname}")
+      if alma_response.status == 200
+        Alma.new(alma_response.body)
+      else
+        S.logger.error(alma_response.body)
+        not_logged_in
+      end
+    rescue Faraday::Error => e
+      S.logger.error(e.detailed_message)
+      not_logged_in
     end
 
     def self.from_session(session)
@@ -61,13 +69,13 @@ module Search
       end
 
       def email
-        @data.dig("contact_info", "email").find do |email_entry|
+        @data.dig("contact_info", "email")&.find do |email_entry|
           email_entry["preferred"]
         end&.dig("email_address")
       end
 
       def sms
-        @data.dig("contact_info", "phone").find do |phone_entry|
+        @data.dig("contact_info", "phone")&.find do |phone_entry|
           phone_entry["preferred_sms"]
         end&.dig("phone_number")
       end

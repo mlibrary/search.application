@@ -23,6 +23,30 @@ RSpec.describe Search::Patron::SessionHelper do
   end
 end
 
+RSpec.describe Search::Patron do
+  before(:each) do
+    @data = JSON.parse(fixture("alma_user.json"))
+  end
+  context ".for" do
+    it "returns an Alma Patron object on a succesful request" do
+      stub_alma_get_request(url: "users/fakeuser", output: @data.to_json)
+      patron = described_class.for("fakeuser")
+      expect(patron.email).to eq("fakeuser@umich.edu")
+    end
+
+    it "returns not logged in patron for non-200 response" do
+      stub_alma_get_request(url: "users/fakeuser", status: 500, output: "some output string")
+      patron = described_class.for("fakeuser")
+      expect(patron.email).to eq("")
+    end
+    it "returns not logged in patron for timedout request" do
+      stub_alma_get_request(url: "users/fakeuser", no_return: true).to_timeout
+      patron = described_class.for("fakeuser")
+      expect(patron.email).to eq("")
+    end
+  end
+end
+
 RSpec.describe Search::Patron::Alma do
   before(:each) do
     @data = JSON.parse(fixture("alma_user.json"))

@@ -1,8 +1,13 @@
 require "canister"
+require "alma_rest_client"
 
 Services = Canister.new
 
 S = Services
+
+AlmaRestClient.configure do |config|
+  config.alma_api_key = ENV["ALMA_API_KEY"] || "your_alma_api_key"
+end
 
 S.register(:app_env) { ENV["APP_ENV"] || "development" }
 S.register(:version) { ENV["APP_VERSION"] || `git rev-parse HEAD` }

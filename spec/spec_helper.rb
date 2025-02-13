@@ -1,6 +1,8 @@
 require "rack/test"
 require "rspec"
 require "debug"
+require "webmock/rspec"
+require "httpx/adapters/webmock"
 require "simplecov"
 SimpleCov.start
 
@@ -9,6 +11,7 @@ require_relative "../app"
 
 module RSpecMixin
   include Rack::Test::Methods
+  include AlmaRestClient::Test::Helpers
   def app = Sinatra::Application
 end
 
