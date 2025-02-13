@@ -11,17 +11,39 @@ datastores = Search::Presenters.datastores
 
 before do
   subdirectory = request.path_info.split("/")[1]
+
   pass if ["auth", "session_switcher", "logout", "login", "-"].include?(subdirectory)
 
-  if session[:logged_in].nil? || session[:logged_in] && session[:expires_at] < Time.now.to_i
+  if new_user? || expired_user_session?
     patron = Search::Patron.not_logged_in
     patron.to_h.each { |k, v| session[k] = v }
+    session.delete(:expires_at)
   end
   @patron = Search::Patron.from_session(session)
 
   S.logger.debug(session)
   @current_datastore = datastores.find { |datastore| datastore[:slug] == subdirectory }
   @datastores = datastores
+end
+
+helpers do
+  #
+  # A new user is someone who doesn't have any session variables set.
+  #
+  # @return [Boolean]
+  #
+  def new_user?
+    session[:logged_in].nil?
+  end
+
+  #
+  # A session state where logged_in is true and expires_at is in the past
+  #
+  # @return [Boolean] <description>
+  #
+  def expired_user_session?
+    session[:logged_in] && session[:expires_at] < Time.now.to_i
+  end
 end
 
 get "/" do
