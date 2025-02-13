@@ -9,6 +9,7 @@ gem "omniauth_openid_connect"
 gem "alma_rest_client",
   git: "https://github.com/mlibrary/alma_rest_client",
   tag: "v2.0.0"
+gem "semantic_logger"
 
 group :development, :test do
   gem "debug"

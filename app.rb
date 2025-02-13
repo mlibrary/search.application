@@ -8,7 +8,7 @@ enable :sessions
 set :session_secret, S.session_secret
 
 datastores = Search::Presenters.datastores
-
+S.logger.info("log level: #{S.log_level}")
 before do
   subdirectory = request.path_info.split("/")[1]
 
@@ -21,7 +21,7 @@ before do
   end
   @patron = Search::Patron.from_session(session)
 
-  S.logger.debug(session)
+  S.logger.debug("here's the session", session.to_h)
   @current_datastore = datastores.find { |datastore| datastore[:slug] == subdirectory }
   @datastores = datastores
 end

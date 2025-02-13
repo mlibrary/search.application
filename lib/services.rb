@@ -1,5 +1,6 @@
 require "canister"
 require "alma_rest_client"
+require "semantic_logger"
 
 Services = Canister.new
 
@@ -25,4 +26,47 @@ S.register(:oidc_client_secret) { ENV["OIDC_CLIENT_SECRET"] }
 
 S.register(:base_url) { ENV["BASE_URL"] || "http://localhost:4567" }
 
-S.register(:logger) { Logger.new($stdout) }
+S.register(:log_stream) do
+  $stdout.sync = true
+  $stdout
+end
+
+S.register(:logger) do
+  SemanticLogger["search"]
+end
+
+S.register(:log_level) do
+  ENV["DEBUG"] ? :debug : :info
+end
+
+SemanticLogger.default_level = S.log_level
+
+S.register(:app_env) do
+  ENV["APP_ENV"] || "development"
+end
+
+class ProductionFormatter < SemanticLogger::Formatters::Json
+  # Leave out the pid
+  def pid
+  end
+
+  # Leave out the timestamp
+  def time
+  end
+
+  # Leave out environment
+  def environment
+  end
+
+  # Leave out application (This would be Semantic Logger, which isn't helpful)
+  def application
+  end
+end
+
+if S.app_env != "test"
+  if $stdin.tty?
+    SemanticLogger.add_appender(io: S.log_stream, formatter: :color)
+  else
+    SemanticLogger.add_appender(io: S.log_stream, formatter: ProductionFormatter.new)
+  end
+end
