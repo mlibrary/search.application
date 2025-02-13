@@ -56,16 +56,25 @@ module Search
   module Patron
     class Alma < Base
       include SessionHelper
-      def initialize
+      def initialize(data)
+        @data = data
       end
 
       def email
+        @data.dig("contact_info", "email").find do |email_entry|
+          email_entry["preferred"]
+        end&.dig("email_address")
       end
 
       def sms
+        @data.dig("contact_info", "phone").find do |phone_entry|
+          phone_entry["preferred_sms"]
+        end&.dig("phone_number")
       end
 
       def campus
+        campus_code = @data.dig("campus_code", "value")
+        (campus_code == "UMFL") ? "flint" : "aa"
       end
 
       def logged_in?
