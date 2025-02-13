@@ -97,7 +97,7 @@ module Search
       end
 
       def campus
-        "aa"
+        ""
       end
 
       def logged_in?

@@ -63,3 +63,73 @@ RSpec.describe Search::Patron::Alma do
     end
   end
 end
+
+RSpec.describe Search::Patron::FromSession do
+  before(:each) do
+    @data = {email: "email", logged_in: true, sms: "sms", campus: "campus"}
+  end
+  subject do
+    described_class.new(@data)
+  end
+  context "#email" do
+    it "returns what is in the :email field" do
+      expect(subject.email).to eq("email")
+    end
+  end
+  context "#sms" do
+    it "returns what is in the :sms field" do
+      expect(subject.sms).to eq("sms")
+    end
+  end
+  context "#campus" do
+    it "returns what is in the :campus field" do
+      expect(subject.campus).to eq("campus")
+    end
+  end
+  context "#logged_in?" do
+    it "returns true when session is true" do
+      expect(subject.logged_in?).to eq(true)
+    end
+
+    it "returns false when session is false" do
+      @data[:logged_in] = false
+      expect(subject.logged_in?).to eq(false)
+    end
+  end
+  context "#affiliation" do
+    it "returns nil when there's no affiliation set" do
+      expect(subject.affiliation).to be_nil
+    end
+    it "returns the value of whatever is in affiliation" do
+      # this will either be aa or flint, but we aren't doing any checking here
+      @data[:affiliation] = "aa"
+      expect(subject.affiliation).to eq("aa")
+    end
+  end
+end
+
+RSpec.describe Search::Patron::NotLoggedIn do
+  subject do
+    described_class.new
+  end
+  context "#email" do
+    it "returns empty string" do
+      expect(subject.email).to eq("")
+    end
+  end
+  context "#sms" do
+    it "returns empty string" do
+      expect(subject.sms).to eq("")
+    end
+  end
+  context "#campus" do
+    it "returns empty string" do
+      expect(subject.campus).to eq("")
+    end
+  end
+  context "#logged_in?" do
+    it "returns false" do
+      expect(subject.logged_in?).to eq(false)
+    end
+  end
+end
