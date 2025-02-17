@@ -4,17 +4,46 @@ require "ostruct"
 require_relative "lib/services"
 require_relative "lib/search"
 
-datastores = Search::Presenters.datastores
+enable :sessions
+set :session_secret, S.session_secret
 
+datastores = Search::Presenters.datastores
+S.logger.info("log level: #{S.log_level}")
 before do
-  @current_datastore = datastores.find { |datastore| datastore[:slug] == request.path_info.split("/")[1] }
+  subdirectory = request.path_info.split("/")[1]
+
+  pass if ["auth", "session_switcher", "logout", "login", "-"].include?(subdirectory)
+
+  if new_user? || expired_user_session?
+    patron = Search::Patron.not_logged_in
+    patron.to_h.each { |k, v| session[k] = v }
+    session.delete(:expires_at)
+  end
+  @patron = Search::Patron.from_session(session)
+
+  S.logger.debug("here's the session", session.to_h)
+  @current_datastore = datastores.find { |datastore| datastore[:slug] == subdirectory }
   @datastores = datastores
-  @patron = OpenStruct.new(
-    email: "",
-    sms: "",
-    affiliation: "aa", # flint || aa
-    logged_in?: false
-  )
+end
+
+helpers do
+  #
+  # A new user is someone who doesn't have any session variables set.
+  #
+  # @return [Boolean]
+  #
+  def new_user?
+    session[:logged_in].nil?
+  end
+
+  #
+  # A session state where logged_in is true and expires_at is in the past
+  #
+  # @return [Boolean] <description>
+  #
+  def expired_user_session?
+    session[:logged_in] && session[:expires_at] < Time.now.to_i
+  end
 end
 
 get "/" do

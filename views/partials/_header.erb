@@ -19,10 +19,10 @@
         </a>
       </li>
       <li>
-        <%= erb :'partials/header/_login', locals: { logged_in: @patron[:logged_in?] } %>
+        <%= erb :'partials/header/_login', locals: { logged_in: @patron.logged_in? } %>
       </li>
       <li>
-        <%= erb :'partials/header/_choose-affiliation', locals: { current_affiliation: request.params["affiliation"] || @patron[:affiliation] } %>
+        <%= erb :'partials/header/_choose-affiliation', locals: { current_affiliation: request.params["affiliation"] || @patron.affiliation || "aa" } %>
       </li>
     </ul>
   </nav>

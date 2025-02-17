@@ -1,0 +1,178 @@
+{
+  "gender": {
+    "value": "",
+    "desc": ""
+  },
+  "password": "",
+  "status": {
+    "value": "ACTIVE",
+    "desc": "Active"
+  },
+  "record_type": {
+    "value": "PUBLIC",
+    "desc": "Public"
+  },
+  "primary_id": "fakeuser",
+  "first_name": "Fake",
+  "middle_name": "",
+  "last_name": "User",
+  "full_name": "Fake User",
+  "created_by": "Umich LDAP",
+  "created_date": "2003-07-30Z",
+  "last_modified_by": "Umich LDAP",
+  "last_modified_date": "2025-02-09Z",
+  "user_title": {
+    "value": "",
+    "desc": ""
+  },
+  "job_category": {
+    "value": "",
+    "desc": ""
+  },
+  "job_description": "Library Info Tech - Some Department (470430)",
+  "user_group": {
+    "value": "02",
+    "desc": "Staff Level"
+  },
+  "campus_code": {
+    "value": "UMAA",
+    "desc": "UM-Ann Arbor"
+  },
+  "web_site_url": "",
+  "cataloger_level": {
+    "value": "00",
+    "desc": "[00] Default Level"
+  },
+  "preferred_language": {
+    "value": "en",
+    "desc": "English"
+  },
+  "expiry_date": "2025-05-04Z",
+  "purge_date": "2027-05-04Z",
+  "account_type": {
+    "value": "EXTERNAL",
+    "desc": "External"
+  },
+  "external_id": "Umich LDAP",
+  "force_password_change": "false",
+  "status_date": "2025-02-09Z",
+  "last_patron_activity_date": "2024-11-21Z",
+  "contact_info": {
+    "address": [
+      {
+        "line1": "Library Info Tech - Some Department",
+        "line2": "300 Hatcher North",
+        "city": "Ann Arbor",
+        "country": {
+          "value": "UNITED STATES"
+        },
+        "state_province": "MI",
+        "postal_code": "48109-1190",
+        "address_note": "",
+        "address_type": [
+          {
+            "value": "work",
+            "desc": "Work"
+          }
+        ],
+        "preferred": true,
+        "segment_type": "External"
+      },
+      {
+        "line1": "1440 Some Street",
+        "city": "Ann Arbor",
+        "country": {
+          "value": "UNITED STATES"
+        },
+        "state_province": "MI",
+        "postal_code": "48108",
+        "address_note": "",
+        "address_type": [
+          {
+            "value": "home",
+            "desc": "Home"
+          }
+        ],
+        "preferred": false,
+        "segment_type": "External"
+      }
+    ],
+    "email": [
+      {
+        "email_address": "fakeuser@umich.edu",
+        "email_type": [
+          {
+            "value": "work",
+            "desc": "Work"
+          }
+        ],
+        "preferred": true,
+        "segment_type": "External"
+      }
+    ],
+    "phone": [
+      {
+        "phone_number": "(888) 222-2222",
+        "phone_type": [
+          {
+            "value": "mobile",
+            "desc": "Mobile"
+          }
+        ],
+        "preferred": false,
+        "preferred_sms": true,
+        "segment_type": "Internal"
+      },
+      {
+        "phone_number": "999-111-1111",
+        "phone_type": [
+          {
+            "value": "home",
+            "desc": "Home"
+          }
+        ],
+        "preferred": true,
+        "preferred_sms": false,
+        "segment_type": "External"
+      }
+    ]
+  },
+  "user_identifier": [
+    {
+      "value": "9999999",
+      "status": "ACTIVE",
+      "id_type": {
+        "value": "01",
+        "desc": "Barcode"
+      },
+      "segment_type": "Internal"
+    },
+    {
+      "value": "9999999",
+      "status": "ACTIVE",
+      "id_type": {
+        "value": "00",
+        "desc": "System number"
+      },
+      "segment_type": "Internal"
+    },
+    {
+      "value": "9999999",
+      "status": "ACTIVE",
+      "id_type": {
+        "value": "02",
+        "desc": "UM ID"
+      },
+      "segment_type": "External"
+    },
+    {
+      "value": "fakeuser@umich.edu",
+      "status": "ACTIVE",
+      "id_type": {
+        "value": "05",
+        "desc": "Inst ID"
+      },
+      "segment_type": "External"
+    }
+  ]
+}
