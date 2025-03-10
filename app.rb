@@ -107,8 +107,11 @@ Search::Datastores.each do |datastore|
           )
         ]
       )
-      content_type :json
+      # content_type :json
       @record.to_json
+      erb :"datastores/record/layout", layout: :layout do
+        erb :"datastores/record/#{datastore.slug}"
+      end
     end
   end
 end
