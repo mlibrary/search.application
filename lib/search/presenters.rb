@@ -40,6 +40,23 @@ module Search::Presenters
     )
   end
 
+  def self.for_datastore_record(slug:, uri:, patron: nil)
+    datastore = Search::Datastores.find(slug)
+    params = URI.decode_www_form(uri.query.to_s)&.to_h
+
+    OpenStruct.new(
+      title: datastore.title,
+      current_datastore: slug,
+      description: datastore.description,
+      icons: Icons.new,
+      slug: datastore.slug,
+      styles: ["styles.css", "datastores/styles.css", "datastores/record/styles.css"],
+      scripts: ["scripts.js", "partials/scripts.js"],
+      search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
+      affiliations: Affiliations.new(current_affiliation: patron.affiliation)
+    )
+  end
+
   def self.for_static_page(slug:, uri:, patron:)
     page = static_pages.find { |x| x[:slug] == slug }
 

@@ -87,7 +87,7 @@ Search::Datastores.each do |datastore|
   end
   if datastore.slug == "catalog"
     get "/#{datastore.slug}/record/:mms_id" do
-      @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+      @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
       @record = OpenStruct.new(
         title: "This is a title",
         metadata: [
