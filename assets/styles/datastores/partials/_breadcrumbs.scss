@@ -1,0 +1,41 @@
+// --------------------------------------------------
+//
+// # Breadcrumbs
+//   Styles to apply directly to `views/datastores/partials/_breadcrumbs.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. List Item
+//     2.1. Forward Slash
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".breadcrumbs > li";
+
+
+
+
+
+// ******************** //
+// *** 2. LIST ITEM *** //
+// ******************** //
+
+#{$class} {
+  display: inline-block;
+}
+
+
+
+// *                    * //
+// * 2.1. FORWARD SLASH * //
+// *                    * //
+
+#{$class}:not(:last-child):after {
+  content: " /";
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
