@@ -1,5 +1,5 @@
 <%= erb :'datastores/partials/_breadcrumbs', locals: { current_page: "Record" } %>
-<p>Actions</p>
+<%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
 <div class="container__rounded">
   <p>Formats</p>
   <p>Add to list</p>
@@ -10,5 +10,6 @@
   <p>Resource Access</p>
 </div>
 <p>Shelf browse</p>
+<%#= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
 <p>Date Last Indexed</p>
 <p>View MARC data</p>
