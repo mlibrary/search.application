@@ -1,3 +1,7 @@
+@use '../../utilities';
+@use '../../icons';
+@use '../../media';
+
 // --------------------------------------------------
 //
 // # Actions
@@ -6,6 +10,9 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Container
+//   3. Header
+//   4. Tablist
+//     4.1 Tabs
 //
 // --------------------------------------------------
 
@@ -13,7 +20,15 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: ".actions";
+$class: "actions";
+$tabs: (
+  "email": "mail",
+  "text": "chat",
+  "citation": "format_quote",
+  "endnote": "draft",
+  "ris": "draft",
+  "link": "link"
+);
 
 
 
@@ -23,6 +38,72 @@ $class: ".actions";
 // *** 2. CONTAINER *** //
 // ******************** //
 
-#{$class} {
+.#{$class} {
+  margin-top: 1rem;
   padding: 1rem 1.5rem;
+  @media print {
+    display: none;
+  }
+  & > * + * {
+    margin-top: 0.5rem;
+  }
+}
+
+
+
+
+
+// ***************** //
+// *** 3. HEADER *** //
+// ***************** //
+
+.#{$class}__header {
+  @include utilities.flex($wrap: true, $align: baseline);
+  gap: 0.25rem 1.5rem;
+}
+
+
+
+
+
+// ****************** //
+// *** 4. TABLIST *** //
+// ****************** //
+
+.#{$class}__tablist {
+  @include utilities.flex($align: start, $responsive: true);
+  & {
+    justify-content: space-between;
+  }
+}
+
+
+
+// *          * //
+// * 4.1 TABS * //
+// *          * //
+
+.#{$class}__tablist > button[role="tab"] {
+  @include utilities.flex();
+  & {
+    flex: 0 1 auto;
+    font-size: 1rem;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  @include media.breakpoint('xs') {
+    flex-direction: column;
+    gap: 0rem;
+  }
+  @each $tab, $icon in $tabs {
+    &##{$class}__#{$tab}:before {
+      @include icons.icon($icon: $icon, $fill: true);
+      & {
+        font-size: 1.25rem;
+      }
+    }
+  }
+  &:not(.button__ghost--active) {
+    border-color: transparent;
+  }
 }

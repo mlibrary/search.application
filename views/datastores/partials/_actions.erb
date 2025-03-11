@@ -3,31 +3,25 @@
     <span class="strong" id="actions__label">Actions</span>
     <small>Select what to do with this record.</small>
   </div>
-  <div role="tablist" aria-labelledby="actions__label" class="manual">
-    <button type="button" role="tab" aria-selected="false" aria-controls="actions__email--tabpanel" class="button__link">
-      <span class="material-symbols-rounded" aria-hidden="true">mail</span>
-      <span id="actions__email">Email</span>
+  <div role="tablist" aria-labelledby="actions__label" class="actions__tablist">
+    <button type="button" role="tab" id="actions__email" aria-selected="false" aria-controls="actions__email--tabpanel" class="button__ghost">
+      Email
     </button>
-    <button type="button" role="tab" aria-selected="false" aria-controls="actions__text--tabpanel" class="button__link">
-      <span class="material-symbols-rounded" aria-hidden="true">chat</span>
-      <span id="actions__text">Text</span>
+    <button type="button" role="tab" id="actions__text" aria-selected="false" aria-controls="actions__text--tabpanel" class="button__ghost">
+      Text
     </button>
-    <button type="button" role="tab" aria-selected="false" aria-controls="actions__citation--tabpanel" class="button__link">
-      <span class="material-symbols-rounded" aria-hidden="true">format_quote</span>
-      <span id="actions__citation">Citation</span>
+    <button type="button" role="tab" id="actions__citation" aria-selected="false" aria-controls="actions__citation--tabpanel" class="button__ghost">
+      Citation
     </button>
-    <button type="button" role="tab" aria-selected="false" aria-controls="actions__endnote--tabpanel" class="button__link">
-      <span class="material-symbols-rounded" aria-hidden="true">draft</span>
-      <span id="actions__endnote">Export Citation (EndNote)</span>
+    <button type="button" role="tab" id="actions__endnote" aria-selected="false" aria-controls="actions__endnote--tabpanel" class="button__ghost">
+      Export Citation (EndNote)
     </button>
-    <button type="button" role="tab" aria-selected="false" aria-controls="actions__ris--tabpanel" class="button__link">
-      <span class="material-symbols-rounded" aria-hidden="true">draft</span>
-      <span id="actions__ris">Export Citation (RIS)</span>
+    <button type="button" role="tab" id="actions__ris" aria-selected="false" aria-controls="actions__ris--tabpanel" class="button__ghost">
+      Export Citation (RIS)
     </button>
     <% if show_copy_link %>
-      <button type="button" role="tab" aria-selected="false" aria-controls="actions__link--tabpanel" class="button__link">
-        <span class="material-symbols-rounded" aria-hidden="true">link</span>
-        <span id="actions__link">Copy link</span>
+      <button type="button" role="tab" id="actions__link" aria-selected="false" aria-controls="actions__link--tabpanel" class="button__ghost">
+        Copy link
       </button>
     <% end %>
   </div>
