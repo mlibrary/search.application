@@ -27,7 +27,7 @@
   </div>
   <div id="actions__email--tabpanel" role="tabpanel" aria-labelledby="actions__email">
     <% if @patron.logged_in? %>
-      <form method="post" action="/action_email" class="action__email">
+      <form method="post" action="/action_email" class="actions__form">
         <label for="action__email--input">Email address</label>
         <input type="email" id="action__email--input" name="action__email--input" required autocomplete="on" value="<%= @patron.email %>">
         <button type="submit">Send email</button>
@@ -41,7 +41,7 @@
   </div>
   <div id="actions__text--tabpanel" role="tabpanel" aria-labelledby="actions__text">
     <% if @patron.logged_in? %>
-      <form method="post" action="/action_text" class="action__text">
+      <form method="post" action="/action_text" class="actions__form">
         <label for="action__text--input">Phone number</label>
         <input type="tel" id="action__text--input" name="action__text--input" aria-describedby="action__text--description" required autocomplete="on" value="" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
         <small id="action__text--description">Please enter using this format: 000-111-5555</small>
@@ -69,7 +69,7 @@
   </div>
   <% if show_copy_link %>
   <div id="actions__link--tabpanel" role="tabpanel" aria-labelledby="actions__link">
-    <form method="post" action="/action_link" class="action__link">
+    <form method="post" action="/action_link" class="actions__form">
       <label for="action__link--input">Copy link</label>
       <input type="url" id="action__link--input" name="action__link--input" disabled autocomplete="off" value="<%= request.url.sub("?" + request.query_string, "") %>">
       <button type="submit">Copy link</button>

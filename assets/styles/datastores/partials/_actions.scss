@@ -107,3 +107,50 @@ $tabs: (
     border-color: transparent;
   }
 }
+
+
+
+
+
+// ******************* //
+// *** 5. TABPANEL *** //
+// ******************* //
+
+.#{$class} > [role="tabpanel"] {
+  
+}
+
+
+
+// *          * //
+// * 5.1 FORM * //
+// *          * //
+
+[role="tabpanel"] .#{$class}__form {
+  button[type="submit"] {
+    margin-top: 1rem;
+  }
+  @include media.breakpoint('xs') {
+    display: grid;
+    gap: 0.125rem 1rem;
+    grid-template-areas:
+      "label ."
+      "input submit"
+      "description .";
+    grid-template-columns: 1fr auto;
+    max-width: 30rem;
+    label {
+      grid-area: label;
+    }
+    input {
+      grid-area: input;
+    }
+    small {
+      grid-area: description;
+    }
+    button[type="submit"] {
+      grid-area: submit;
+      margin-top: 0;
+    }
+  }
+}
