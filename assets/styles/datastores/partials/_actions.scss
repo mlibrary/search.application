@@ -1,0 +1,28 @@
+// --------------------------------------------------
+//
+// # Actions
+//   Styles to apply directly to `views/datastores/partials/_actions.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".actions";
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} {
+  padding: 1rem 1.5rem;
+}
