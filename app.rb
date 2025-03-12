@@ -105,7 +105,8 @@ Search::Datastores.each do |datastore|
               )
             ]
           )
-        ]
+        ],
+        indexing_date: "20250217"
       )
       # content_type :json
       @record.to_json

@@ -1,2 +1,20 @@
 @use '../partials/breadcrumbs';
 @use '../partials/actions';
+
+// --------------------------------------------------
+//
+// # Record
+//   Styles to apply directly to `views/datastores/record/layout.erb`.
+//
+// ## Table of Contents
+//   1. Date Last Indexed
+//
+// --------------------------------------------------
+
+// **************************** //
+// *** 1. DATE LAST INDEXED *** //
+// **************************** //
+
+.indexing-date {
+  color: var(--search-color-grey-600);
+}
