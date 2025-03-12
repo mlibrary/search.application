@@ -11,5 +11,9 @@
 </div>
 <p>Shelf browse</p>
 <%#= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
-<p>Date Last Indexed</p>
+<% if @record.indexing_date %>
+  <p class="indexing-date">
+    <span class="strong">Date Last Indexed:</span> <%= @record.indexing_date %>
+  </p>
+<% end %>
 <p>View MARC data</p>
