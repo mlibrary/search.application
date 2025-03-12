@@ -16,4 +16,6 @@
     <span class="strong">Date Last Indexed:</span> <%= @record.indexing_date %>
   </p>
 <% end %>
-<p>View MARC data</p>
+<% if @record.marc_record %>
+  <%= erb :'datastores/record/partials/_marc', locals: { data: @record.marc_record } %>
+<% end %>
