@@ -108,8 +108,8 @@ Search::Datastores.each do |datastore|
         ],
         indexing_date: "20250217",
         marc_record: {
-          "leader": "01375nas a22003731  4500",
-          "fields": [
+          leader: "01375nas a22003731  4500",
+          fields: [
             {
               "005": "20241217220537.0"
             },
@@ -121,11 +121,11 @@ Search::Datastores.each do |datastore|
             },
             {
               "022": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "0006-3665"
+                    a: "0006-3665"
                   },
                   {
                     "0": "http://worldcat.org/issn/0006-3665"
@@ -135,154 +135,154 @@ Search::Datastores.each do |datastore|
             },
             {
               "035": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "(MiU)000675899MIU01"
+                    a: "(MiU)000675899MIU01"
                   }
                 ]
               }
             },
             {
               "035": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "(RLIN)MIUG101629-S"
+                    a: "(RLIN)MIUG101629-S"
                   }
                 ]
               }
             },
             {
               "035": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "(CaOTULAS)160668009"
+                    a: "(CaOTULAS)160668009"
                   }
                 ]
               }
             },
             {
               "035": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "(OCoLC)ocm02551528"
+                    a: "(OCoLC)ocm02551528"
                   }
                 ]
               }
             },
             {
               "040": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "CU-CU"
+                    a: "CU-CU"
                   },
                   {
-                    "c": "CU-CU"
+                    c: "CU-CU"
                   },
                   {
-                    "d": "NIC"
+                    d: "NIC"
                   },
                   {
-                    "d": "CtY"
+                    d: "CtY"
                   },
                   {
-                    "d": "MiU"
+                    d: "MiU"
                   },
                   {
-                    "d": "UtOrBLW"
+                    d: "UtOrBLW"
                   }
                 ]
               }
             },
             {
               "245": {
-                "ind1": "0",
-                "ind2": "0",
-                "subfields": [
+                ind1: "0",
+                ind2: "0",
+                subfields: [
                   {
-                    "a": "Birds."
+                    a: "Birds."
                   }
                 ]
               }
             },
             {
               "260": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "Sandy, Bedfordshire, Eng. :"
+                    a: "Sandy, Bedfordshire, Eng. :"
                   },
                   {
-                    "b": "Royal Society for the Protection of Birds"
+                    b: "Royal Society for the Protection of Birds"
                   }
                 ]
               }
             },
             {
               "300": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "v. :"
+                    a: "v. :"
                   },
                   {
-                    "b": "ill. ;"
+                    b: "ill. ;"
                   },
                   {
-                    "c": "28-30 cm"
+                    c: "28-30 cm"
                   }
                 ]
               }
             },
             {
               "310": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "Quarterly"
+                    a: "Quarterly"
                   },
                   {
-                    "b": "Spring 1966-"
+                    b: "Spring 1966-"
                   }
                 ]
               }
             },
             {
               "321": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "Bimonthly,"
+                    a: "Bimonthly,"
                   },
                   {
-                    "b": "Jan./Feb. 1976"
+                    b: "Jan./Feb. 1976"
                   }
                 ]
               }
             },
             {
               "336": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "text"
+                    a: "text"
                   },
                   {
-                    "b": "txt"
+                    b: "txt"
                   },
                   {
                     "2": "rdacontent"
@@ -292,14 +292,14 @@ Search::Datastores.each do |datastore|
             },
             {
               "337": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "unmediated"
+                    a: "unmediated"
                   },
                   {
-                    "b": "n"
+                    b: "n"
                   },
                   {
                     "2": "rdamedia"
@@ -309,14 +309,14 @@ Search::Datastores.each do |datastore|
             },
             {
               "338": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "volume"
+                    a: "volume"
                   },
                   {
-                    "b": "nc"
+                    b: "nc"
                   },
                   {
                     "2": "rdacarrier"
@@ -326,47 +326,47 @@ Search::Datastores.each do |datastore|
             },
             {
               "362": {
-                "ind1": "0",
-                "ind2": " ",
-                "subfields": [
+                ind1: "0",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "v. 1- Jan./Feb. 1966-"
+                    a: "v. 1- Jan./Feb. 1966-"
                   }
                 ]
               }
             },
             {
               "362": {
-                "ind1": "1",
-                "ind2": " ",
-                "subfields": [
+                ind1: "1",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "Ceased publication with v.24 no.7 2013"
+                    a: "Ceased publication with v.24 no.7 2013"
                   }
                 ]
               }
             },
             {
               "500": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "\"Magazine of the Royal Society for the Protection of Birds.\""
+                    a: "\"Magazine of the Royal Society for the Protection of Birds.\""
                   }
                 ]
               }
             },
             {
               "650": {
-                "ind1": " ",
-                "ind2": "0",
-                "subfields": [
+                ind1: " ",
+                ind2: "0",
+                subfields: [
                   {
-                    "a": "Birds"
+                    a: "Birds"
                   },
                   {
-                    "v": "Periodicals."
+                    v: "Periodicals."
                   },
                   {
                     "0": "http://id.loc.gov/authorities/subjects/sh2007102031"
@@ -376,11 +376,11 @@ Search::Datastores.each do |datastore|
             },
             {
               "710": {
-                "ind1": "2",
-                "ind2": " ",
-                "subfields": [
+                ind1: "2",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "Royal Society for the Protection of Birds."
+                    a: "Royal Society for the Protection of Birds."
                   },
                   {
                     "0": "http://id.loc.gov/authorities/names/n80132329"
@@ -396,146 +396,132 @@ Search::Datastores.each do |datastore|
             },
             {
               "780": {
-                "ind1": "0",
-                "ind2": "2",
-                "subfields": [
+                ind1: "0",
+                ind2: "2",
+                subfields: [
                   {
-                    "t": "Bird notes"
+                    t: "Bird notes"
                   },
                   {
-                    "g": "1903-65"
+                    g: "1903-65"
                   },
                   {
-                    "x": "0406-3392"
+                    x: "0406-3392"
                   }
                 ]
               }
             },
             {
               "785": {
-                "ind1": "0",
-                "ind2": "0",
-                "subfields": [
+                ind1: "0",
+                ind2: "0",
+                subfields: [
                   {
-                    "t": "Nature's home"
+                    t: "Nature's home"
                   },
                   {
-                    "x": "2054-3433"
+                    x: "2054-3433"
                   },
                   {
-                    "w": "(DLC) 2013224081"
+                    w: "(DLC) 2013224081"
                   },
                   {
-                    "w": "(OcoLC)863222856"
+                    w: "(OcoLC)863222856"
                   }
                 ]
               }
             },
             {
               "908": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "AuthComplete 2024-12-16"
+                    a: "AuthComplete 2024-12-16"
                   }
                 ]
               }
             },
             {
               "958": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "MiU"
+                    a: "MiU"
                   }
                 ]
               }
             },
             {
               "959": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "(notis)ULACW8630"
+                    a: "(notis)ULACW8630"
                   }
                 ]
               }
             },
             {
               "995": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "a": "20"
+                    a: "20"
                   }
                 ]
               }
             },
             {
               "998": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "c": "KK"
+                    c: "KK"
                   },
                   {
-                    "s": "9121"
+                    s: "9121"
                   }
                 ]
               }
             },
             {
-              "BIB": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+              BIB: {
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
-                    "u": "2025-01-03 23:13:42 US/Eastern"
+                    u: "2025-01-03 23:13:42 US/Eastern"
                   },
                   {
-                    "c": "2021-06-21 14:44:43 US/Eastern"
+                    c: "2021-06-21 14:44:43 US/Eastern"
                   },
                   {
-                    "s": "false"
+                    s: "false"
                   }
                 ]
               }
             },
             {
               "852": {
-                "ind1": "0",
-                "ind2": " ",
-                "subfields": [
+                ind1: "0",
+                ind2: " ",
+                subfields: [
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   },
                   {
-                    "a": "MiU"
+                    a: "MiU"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "h": "QL671 .B678"
-                  },
-                  {
-                    "8": "22913504230006381"
-                  }
-                ]
-              }
-            },
-            {
-              "866": {
-                "ind1": "3",
-                "ind2": "2",
-                "subfields": [
-                  {
-                    "a": "1-24"
+                    h: "QL671 .B678"
                   },
                   {
                     "8": "22913504230006381"
@@ -545,11 +531,25 @@ Search::Datastores.each do |datastore|
             },
             {
               "866": {
-                "ind1": "3",
-                "ind2": "2",
-                "subfields": [
+                ind1: "3",
+                ind2: "2",
+                subfields: [
                   {
-                    "a": "1966/1967-2013"
+                    a: "1-24"
+                  },
+                  {
+                    "8": "22913504230006381"
+                  }
+                ]
+              }
+            },
+            {
+              "866": {
+                ind1: "3",
+                ind2: "2",
+                subfields: [
+                  {
+                    a: "1966/1967-2013"
                   },
                   {
                     "8": "22913504230006381"
@@ -559,880 +559,880 @@ Search::Datastores.each do |datastore|
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015019702078"
+                    a: "39015019702078"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504160006381"
                   },
                   {
-                    "z": "v.7-8 1978-81"
+                    z: "v.7-8 1978-81"
                   },
                   {
-                    "r": "2002-08-06 06:59:00 US/Eastern"
+                    r: "2002-08-06 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015042512437"
+                    a: "39015042512437"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504140006381"
                   },
                   {
-                    "z": "v.9 1982-83"
+                    z: "v.9 1982-83"
                   },
                   {
-                    "r": "2002-08-06 06:59:00 US/Eastern"
+                    r: "2002-08-06 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015019702060"
+                    a: "39015019702060"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504180006381"
                   },
                   {
-                    "z": "v.5-6 1974-77"
+                    z: "v.5-6 1974-77"
                   },
                   {
-                    "r": "2002-07-24 06:59:00 US/Eastern"
+                    r: "2002-07-24 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015072358081"
+                    a: "39015072358081"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913503990006381"
                   },
                   {
-                    "z": "v.23 2010-2011"
+                    z: "v.23 2010-2011"
                   },
                   {
-                    "r": "2019-05-22 06:59:00 US/Eastern"
+                    r: "2019-05-22 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015019702045"
+                    a: "39015019702045"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504200006381"
                   },
                   {
-                    "z": "v.1-2 1966-69"
+                    z: "v.1-2 1966-69"
                   },
                   {
-                    "r": "2002-08-06 06:59:00 US/Eastern"
+                    r: "2002-08-06 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015061999291"
+                    a: "39015061999291"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504000006381"
                   },
                   {
-                    "z": "v.22 2008-2010"
+                    z: "v.22 2008-2010"
                   },
                   {
-                    "r": "2010-03-23 06:59:00 US/Eastern"
+                    r: "2010-03-23 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015018662489"
+                    a: "39015018662489"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504100006381"
                   },
                   {
-                    "z": "v.12 1988-89"
+                    z: "v.12 1988-89"
                   },
                   {
-                    "r": "1991-02-26 05:59:00 US/Eastern"
+                    r: "1991-02-26 05:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015063505500"
+                    a: "39015063505500"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913503980006381"
                   },
                   {
-                    "z": "v.24 2012-2013"
+                    z: "v.24 2012-2013"
                   },
                   {
-                    "r": "2021-04-19 13:58:56 US/Eastern"
+                    r: "2021-04-19 13:58:56 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015019702052"
+                    a: "39015019702052"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504190006381"
                   },
                   {
-                    "z": "v.3-4 1970-73"
+                    z: "v.3-4 1970-73"
                   },
                   {
-                    "r": "2002-08-06 06:59:00 US/Eastern"
+                    r: "2002-08-06 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015019702086"
+                    a: "39015019702086"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504110006381"
                   },
                   {
-                    "z": "v.11 1986-87"
+                    z: "v.11 1986-87"
                   },
                   {
-                    "r": "2002-08-06 06:59:00 US/Eastern"
+                    r: "2002-08-06 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015014271111"
+                    a: "39015014271111"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504130006381"
                   },
                   {
-                    "z": "v.10 1984-85"
+                    z: "v.10 1984-85"
                   },
                   {
-                    "r": "2002-08-06 06:59:00 US/Eastern"
+                    r: "2002-08-06 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015061356914"
+                    a: "39015061356914"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504020006381"
                   },
                   {
-                    "z": "v.20 2004-05"
+                    z: "v.20 2004-05"
                   },
                   {
-                    "r": "2006-06-23 06:59:00 US/Eastern"
+                    r: "2006-06-23 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015028677949"
+                    a: "39015028677949"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504090006381"
                   },
                   {
-                    "z": "v.13 1990-91"
+                    z: "v.13 1990-91"
                   },
                   {
-                    "r": "1993-04-23 06:59:00 US/Eastern"
+                    r: "1993-04-23 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015061912286"
+                    a: "39015061912286"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504010006381"
                   },
                   {
-                    "z": "v.21 2006-2007"
+                    z: "v.21 2006-2007"
                   },
                   {
-                    "r": "2008-02-11 05:59:00 US/Eastern"
+                    r: "2008-02-11 05:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015052376814"
+                    a: "39015052376814"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504030006381"
                   },
                   {
-                    "z": "v.19 2002-03"
+                    z: "v.19 2002-03"
                   },
                   {
-                    "r": "2004-04-30 06:59:00 US/Eastern"
+                    r: "2004-04-30 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015042539869"
+                    a: "39015042539869"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504060006381"
                   },
                   {
-                    "z": "v.16 1996-97"
+                    z: "v.16 1996-97"
                   },
                   {
-                    "r": "2001-10-08 06:59:00 US/Eastern"
+                    r: "2001-10-08 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015042749575"
+                    a: "39015042749575"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504050006381"
                   },
                   {
-                    "z": "v.17 1998-99"
+                    z: "v.17 1998-99"
                   },
                   {
-                    "r": "2001-02-02 05:59:00 US/Eastern"
+                    r: "2001-02-02 05:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015028967381"
+                    a: "39015028967381"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504080006381"
                   },
                   {
-                    "z": "v.14 1992-93"
+                    z: "v.14 1992-93"
                   },
                   {
-                    "r": "1994-06-27 06:59:00 US/Eastern"
+                    r: "1994-06-27 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015042512601"
+                    a: "39015042512601"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504040006381"
                   },
                   {
-                    "z": "v.18 2000-01"
+                    z: "v.18 2000-01"
                   },
                   {
-                    "r": "2002-08-27 06:59:00 US/Eastern"
+                    r: "2002-08-27 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }
             },
             {
               "974": {
-                "ind1": " ",
-                "ind2": " ",
-                "subfields": [
+                ind1: " ",
+                ind2: " ",
+                subfields: [
                   {
                     "8": "22913504230006381"
                   },
                   {
-                    "f": "1"
+                    f: "1"
                   },
                   {
-                    "c": "BIR"
+                    c: "BIR"
                   },
                   {
-                    "m": "ISSUE"
+                    m: "ISSUE"
                   },
                   {
-                    "a": "39015037684480"
+                    a: "39015037684480"
                   },
                   {
-                    "e": "BIR"
+                    e: "BIR"
                   },
                   {
                     "7": "23913504070006381"
                   },
                   {
-                    "z": "v.15 1994-96"
+                    z: "v.15 1994-96"
                   },
                   {
-                    "r": "1996-07-25 06:59:00 US/Eastern"
+                    r: "1996-07-25 06:59:00 US/Eastern"
                   },
                   {
-                    "h": "QL671 .B678"
+                    h: "QL671 .B678"
                   },
                   {
-                    "d": "MUSM"
+                    d: "MUSM"
                   },
                   {
-                    "b": "MUSM"
+                    b: "MUSM"
                   }
                 ]
               }

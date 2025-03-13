@@ -6,6 +6,7 @@
 // ## Table of Contents
 //   1. Table
 //     1.1 Caption
+//     1.2 Rows
 //
 // --------------------------------------------------
 
@@ -25,4 +26,17 @@ table {
 
 table caption {
   text-align: left;
+}
+
+
+
+// *          * //
+// * 1.2 ROWS * //
+// *          * //
+
+table tr {
+  @media print {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 }
