@@ -1,4 +1,4 @@
-<div class="container__rounded--no-shadow actions">
+<section class="container__rounded--no-shadow actions">
   <div class="actions__header">
     <span class="strong" id="actions__label">Actions</span>
     <small>Select what to do with this record.</small>
@@ -25,7 +25,7 @@
       </button>
     <% end %>
   </div>
-  <div id="actions__email--tabpanel" role="tabpanel" aria-labelledby="actions__email">
+  <div id="actions__email--tabpanel" role="tabpanel" aria-labelledby="actions__email" class="actions__tabpanel">
     <% if @patron.logged_in? %>
       <form method="post" action="/action_email" class="actions__form">
         <label for="action__email--input">Email address</label>
@@ -39,7 +39,7 @@
       </form>
     <% end %>
   </div>
-  <div id="actions__text--tabpanel" role="tabpanel" aria-labelledby="actions__text">
+  <div id="actions__text--tabpanel" role="tabpanel" aria-labelledby="actions__text" class="actions__tabpanel">
     <% if @patron.logged_in? %>
       <form method="post" action="/action_text" class="actions__form">
         <label for="action__text--input">Phone number</label>
@@ -54,21 +54,21 @@
       </form>
     <% end %>
   </div>
-  <div id="actions__citation--tabpanel" role="tabpanel" aria-labelledby="actions__citation">
+  <div id="actions__citation--tabpanel" role="tabpanel" aria-labelledby="actions__citation" class="actions__tabpanel">
     CITATIONS
   </div>
-  <div id="actions__endnote--tabpanel" role="tabpanel" aria-labelledby="actions__endnote">
+  <div id="actions__endnote--tabpanel" role="tabpanel" aria-labelledby="actions__endnote" class="actions__tabpanel">
     <form method="post" action="/action_endnote" class="action__endnote">
       <button type="submit">Download</button>
     </form>
   </div>
-  <div id="actions__ris--tabpanel" role="tabpanel" aria-labelledby="actions__ris">
+  <div id="actions__ris--tabpanel" role="tabpanel" aria-labelledby="actions__ris" class="actions__tabpanel">
     <form method="post" action="/action_ris" class="action__ris">
       <button type="submit">Download</button>
     </form>
   </div>
   <% if show_copy_link %>
-  <div id="actions__link--tabpanel" role="tabpanel" aria-labelledby="actions__link">
+  <div id="actions__link--tabpanel" role="tabpanel" aria-labelledby="actions__link" class="actions__tabpanel">
     <form method="post" action="/action_link" class="actions__form">
       <label for="action__link--input">Copy link</label>
       <input type="url" id="action__link--input" name="action__link--input" disabled autocomplete="off" value="<%= request.url.sub("?" + request.query_string, "") %>">
@@ -76,4 +76,4 @@
     </form>
   </div>
   <% end %>
-</div>
+</section>
