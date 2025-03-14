@@ -1,6 +1,7 @@
 @use '../partials/breadcrumbs';
 @use '../partials/actions';
 @use './partials/marc';
+@use '../../utilities';
 
 // --------------------------------------------------
 //
@@ -8,12 +9,49 @@
 //   Styles to apply directly to `views/datastores/record/layout.erb`.
 //
 // ## Table of Contents
-//   1. Date Last Indexed
+//   2. Formats
+//   2. Information
+//   2. Date Last Indexed
 //
 // --------------------------------------------------
 
+// ****************** //
+// *** 1. RECORD *** //
+// ****************** //
+
+.record > * + * {
+  margin-top: 1rem;
+}
+
+// ****************** //
+// *** 1. FORMATS *** //
+// ****************** //
+
+.record__formats {
+  @include utilities.flex($wrap: true);
+  & {
+    background: var(--search-color-blue-200);
+    color: var(--search-color-blue-500);
+    padding: 1rem;
+  }
+  li {
+    @include utilities.flex();
+    & {
+      gap: 0.25rem;
+    }
+  }
+}
+
+// ***************************** //
+// *** 2. INFORMATION *** //
+// ***************************** //
+
+.record__information {
+  padding: 1rem;
+}
+
 // **************************** //
-// *** 1. DATE LAST INDEXED *** //
+// *** 3. DATE LAST INDEXED *** //
 // **************************** //
 
 .indexing-date {
