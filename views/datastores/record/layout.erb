@@ -1,21 +1,42 @@
-<%= erb :'datastores/partials/_breadcrumbs', locals: { current_page: "Record" } %>
-<%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
-<div class="container__rounded">
-  <p>Formats</p>
-  <p>Add to list</p>
-  <%= h1(body: @presenter.title) %>
-  <p>Metadata</p>
-  <%= yield %>
-  <p>Harmful language</p>
-  <p>Resource Access</p>
+<div class="record">
+  <%= erb :'datastores/partials/_breadcrumbs', locals: { current_page: "Record" } %>
+  <%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
+  <%
+    formats = @record.metadata.select do |entry|
+      entry.field == "Formats"
+    end
+  %>
+  <div class="container__rounded">
+    <ul class="record__formats list__no-style">
+      <% formats.first.data.each do |format| %>
+        <li class="record__format">
+          <span class="material-symbols-rounded">
+            <%= format.icon %>
+          </span>
+          <span class="strong">
+            <%= format.text %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+    <p>Formats</p>
+    <section class="record__information">
+      <p>Add to list</p>
+      <%= h1(body: @presenter.title) %>
+      <p>Metadata</p>
+      <%= yield %>
+      <p>Harmful language</p>
+    </section>
+    <p>Resource Access</p>
+  </div>
+  <p>Shelf browse</p>
+  <%#= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
+  <% if @record.indexing_date %>
+    <p class="indexing-date">
+      <span class="strong">Date Last Indexed:</span> <%= @record.indexing_date %>
+    </p>
+  <% end %>
+  <% if @record.marc_record %>
+    <%= erb :'datastores/record/partials/_marc', locals: { data: @record.marc_record } %>
+  <% end %>
 </div>
-<p>Shelf browse</p>
-<%#= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
-<% if @record.indexing_date %>
-  <p class="indexing-date">
-    <span class="strong">Date Last Indexed:</span> <%= @record.indexing_date %>
-  </p>
-<% end %>
-<% if @record.marc_record %>
-  <%= erb :'datastores/record/partials/_marc', locals: { data: @record.marc_record } %>
-<% end %>
