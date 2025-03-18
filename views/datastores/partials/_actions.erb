@@ -1,13 +1,3 @@
-<%
-  citations = {
-    "MLA" => @record.citations.mla,
-    "APA" => @record.citations.apa,
-    "Chicago" => @record.citations.chicago,
-    "IEEE" => @record.citations.ieee,
-    "NLM" => @record.citations.nlm,
-    "BibTex" => @record.citations.bibtex
-  }
-%>
 <section class="container__rounded--no-shadow actions">
   <div class="actions__header">
     <span class="strong" id="actions__label">Actions</span>
@@ -64,26 +54,8 @@
       </form>
     <% end %>
   </div>
-  <div id="actions__citation--tabpanel" role="tabpanel" aria-labelledby="actions__citation" class="actions__tabpanel">
-    <div role="tablist" aria-labelledby="actions__citation" class="citations__tablist">
-      <% citations.each do |key, value| %>
-        <button type="button" role="tab" aria-selected="true" id="citations__<%= key.downcase %>" aria-controls="citations__<%= key.downcase %>--tabpanel">
-          <%= key %>
-        </button>
-      <% end %>
-    </div>
-    <% citations.each do |key, value| %>
-      <div id="citations__<%= key.downcase %>--tabpanel" role="tabpanel" aria-labelledby="citations__<%= key.downcase %>" class="citation__tabpanel">
-        <p for="citations__form--input"><%= key %> citation</p>
-        <input type="text" id="citations__form--input" name="citations__form--input" disabled autocomplete="off" value="<%= value %>" aria-describedby="<%= key.downcase %>-disclaimer">
-        <p>
-          <small id="<%= key.downcase %>-disclaimer">
-            These citations are generated from a variety of data sources. Remember to check citation format and content for accuracy before including them in your work. View the <%= link_to(body: "Citation Management guide on U-M Library Website", url: "https://lib.umich.edu/research-and-scholarship/help-research/citation-management", open_in_new: true) %>.
-          </small>
-        </p>
-        <button type="submit">Copy citation</button>
-      </div>
-    <% end %>
+  <div id="actions__citation--tabpanel" role="tabpanel" aria-labelledby="actions__citation" class="actions__tabpanel citation">
+    <%= erb :'datastores/partials/actions/_citation' %>
   </div>
   <div id="actions__endnote--tabpanel" role="tabpanel" aria-labelledby="actions__endnote" class="actions__tabpanel">
     <form method="post" action="/action_endnote" class="action__endnote">
