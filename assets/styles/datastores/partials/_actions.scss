@@ -1,6 +1,7 @@
 @use '../../utilities';
 @use '../../icons';
 @use '../../media';
+@use './actions/citation';
 
 // --------------------------------------------------
 //
@@ -125,6 +126,12 @@ body.no-javascript .#{$class}__tablist {
 // ******************* //
 // *** 5. TABPANEL *** //
 // ******************* //
+
+[role="tabpanel"] {
+  margin-top: 1rem;
+}
+
+
 
 // *          * //
 // * 5.1 FORM * //
