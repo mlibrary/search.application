@@ -56,6 +56,11 @@ h6 {
   font-size: 1.125rem;
 }
 
+small,
+.text__small {
+  font-size: 0.875rem;
+}
+
 
 
 
@@ -64,6 +69,8 @@ h6 {
 // *** 3. WEIGHTS *** //
 // ****************** //
 
+strong,
+b,
 .strong {
   font-weight: 700;
 }
