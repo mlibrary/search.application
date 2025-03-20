@@ -1,79 +1,28 @@
+<%
+  tabs = {
+    "email" => "Email",
+    "text" => "Text",
+    "citation" => "Citation",
+    "endnote" => "Export Citation (EndNote)",
+    "ris" => "Export Citation (RIS)",
+    "link" => "Copy link"
+  }
+%>
 <section class="container__rounded--no-shadow actions">
   <div class="actions__header">
     <span class="strong" id="actions__label">Actions</span>
     <small>Select what to do with this record.</small>
   </div>
   <div role="tablist" aria-labelledby="actions__label" class="actions__tablist">
-    <button type="button" role="tab" id="actions__email" aria-selected="false" aria-controls="actions__email--tabpanel" class="button__ghost">
-      Email
-    </button>
-    <button type="button" role="tab" id="actions__text" aria-selected="false" aria-controls="actions__text--tabpanel" class="button__ghost">
-      Text
-    </button>
-    <button type="button" role="tab" id="actions__citation" aria-selected="false" aria-controls="actions__citation--tabpanel" class="button__ghost">
-      Citation
-    </button>
-    <button type="button" role="tab" id="actions__endnote" aria-selected="false" aria-controls="actions__endnote--tabpanel" class="button__ghost">
-      Export Citation (EndNote)
-    </button>
-    <button type="button" role="tab" id="actions__ris" aria-selected="false" aria-controls="actions__ris--tabpanel" class="button__ghost">
-      Export Citation (RIS)
-    </button>
-    <% if show_copy_link %>
-      <button type="button" role="tab" id="actions__link" aria-selected="false" aria-controls="actions__link--tabpanel" class="button__ghost">
-        Copy link
+    <% tabs.each do |key, value| %>
+      <button type="button" role="tab" id="actions__<%= key %>" aria-selected="false" aria-controls="actions__<%= key %>--tabpanel" class="button__ghost">
+        <%= value %>
       </button>
     <% end %>
   </div>
-  <div id="actions__email--tabpanel" role="tabpanel" aria-labelledby="actions__email" class="actions__tabpanel">
-    <% if @patron.logged_in? %>
-      <form method="post" action="/action_email" class="actions__form">
-        <label for="action__email--input">Email address</label>
-        <input type="email" id="action__email--input" name="action__email--input" required autocomplete="on" value="<%= @patron.email %>">
-        <button type="submit">Send email</button>
-      </form>
-    <% else %>
-      <form method="post" action="/auth/openid_connect">
-        <input type="hidden" name="authenticity_token" value="#{request.env["rack.session"]["csrf"]}">
-        <button type="submit">Log in to continue</button>
-      </form>
-    <% end %>
-  </div>
-  <div id="actions__text--tabpanel" role="tabpanel" aria-labelledby="actions__text" class="actions__tabpanel">
-    <% if @patron.logged_in? %>
-      <form method="post" action="/action_text" class="actions__form">
-        <label for="action__text--input">Phone number</label>
-        <input type="tel" id="action__text--input" name="action__text--input" aria-describedby="action__text--description" required autocomplete="on" value="" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
-        <small id="action__text--description">Please enter using this format: 000-111-5555</small>
-        <button type="submit">Send text</button>
-      </form>
-    <% else %>
-      <form method="post" action="/auth/openid_connect">
-        <input type="hidden" name="authenticity_token" value="#{request.env["rack.session"]["csrf"]}">
-        <button type="submit">Log in to continue</button>
-      </form>
-    <% end %>
-  </div>
-  <div id="actions__citation--tabpanel" role="tabpanel" aria-labelledby="actions__citation" class="actions__tabpanel citation">
-    <%= erb :'datastores/partials/actions/_citation' %>
-  </div>
-  <div id="actions__endnote--tabpanel" role="tabpanel" aria-labelledby="actions__endnote" class="actions__tabpanel">
-    <form method="post" action="/action_endnote" class="action__endnote">
-      <button type="submit">Download</button>
-    </form>
-  </div>
-  <div id="actions__ris--tabpanel" role="tabpanel" aria-labelledby="actions__ris" class="actions__tabpanel">
-    <form method="post" action="/action_ris" class="action__ris">
-      <button type="submit">Download</button>
-    </form>
-  </div>
-  <% if show_copy_link %>
-    <div id="actions__link--tabpanel" role="tabpanel" aria-labelledby="actions__link" class="actions__tabpanel">
-      <form class="actions__form">
-        <label for="action__link--input">Copy link</label>
-        <input type="url" id="action__link--input" name="action__link--input" disabled autocomplete="off" value="<%= request.url.sub("?" + request.query_string, "") %>">
-        <button type="submit">Copy link</button>
-      </form>
+  <% tabs.each do |key, value| %>
+    <div id="actions__<%= key %>--tabpanel" role="tabpanel" aria-labelledby="actions__<%= key %>" class="actions__tabpanel">
+      <%= erb :"datastores/partials/actions/_#{key}" %>
     </div>
   <% end %>
 </section>

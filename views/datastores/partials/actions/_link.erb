@@ -1,0 +1,7 @@
+<div id="actions__link--tabpanel" role="tabpanel" aria-labelledby="actions__link" class="actions__tabpanel">
+  <form class="actions__form">
+    <label for="action__link--input">Copy link</label>
+    <input type="url" id="action__link--input" name="action__link--input" disabled autocomplete="off" value="<%= request.url.sub("?" + request.query_string, "") %>">
+    <button type="submit">Copy link</button>
+  </form>
+</div>
