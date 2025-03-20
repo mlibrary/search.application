@@ -1,6 +1,7 @@
 const isSelected = (tab) => {
   return tab.getAttribute('aria-selected') === 'true';
 };
+
 const getTabPanel = ({ tab, tabContainer }) => {
   return tabContainer.querySelector(`#${tab.getAttribute('aria-controls')}`);
 };
@@ -31,4 +32,21 @@ const tabControl = (element) => {
   });
 };
 
-export default tabControl;
+const actionsPlacement = () => {
+  const record = document.querySelector('.record');
+  const actions = record.querySelector('.actions');
+  const actionsDesktop = record.querySelector('.actions__desktop');
+  const actionsMobile = record.querySelector('.actions__mobile');
+  const moveElementBasedOnWindowSize = () => {
+    const targetParent = window.innerWidth > 820 ? actionsDesktop : actionsMobile;
+    if (actions.parentNode !== targetParent) {
+      targetParent.appendChild(actions);
+    }
+  };
+
+  window.addEventListener('resize', moveElementBasedOnWindowSize);
+
+  moveElementBasedOnWindowSize();
+};
+
+export { actionsPlacement, tabControl };
