@@ -1,10 +1,10 @@
 describe Search::Presenters::Record::Catalog::Full do
   before(:each) do
-    @record_stub = instance_double(Search::Record::Catalog::Bib,
+    @bib_stub = instance_double(Search::Record::Catalog::Bib,
       title: "This is a title", vernacular_title: "This is a v title")
   end
   subject do
-    described_class.new(@record_stub)
+    described_class.new(OpenStruct.new(bib: @bib_stub))
   end
   context "#title" do
     it "returns a title array for both title and v title when v title is present" do
@@ -15,7 +15,7 @@ describe Search::Presenters::Record::Catalog::Full do
       expect(title[1].css_class).to eq("vernacular")
     end
     it "only returns a default script title when there isn't a vernacular title" do
-      allow(@record_stub).to receive(:vernacular_title).and_return(nil)
+      allow(@bib_stub).to receive(:vernacular_title).and_return(nil)
       title = subject.title
       expect(title.count).to eq(1)
       expect(title.first.text).to eq("This is a title")

@@ -3,7 +3,7 @@ module Search
     module Record
       module Catalog
         class Base
-          [:title, :record_info].each do |m|
+          [:title, :icons, :record_info].each do |m|
             define_method m do
               raise NotImplementedError
             end
@@ -11,16 +11,24 @@ module Search
         end
 
         class Full < Base
+          def self.for(id)
+            record = Search::Record::Catalog.for(id)
+            new(record)
+          end
+
           def initialize(record)
             @record = record
           end
 
           def title
-            out = [OpenStruct.new(text: @record.title, css_class: "title")]
-            unless @record.vernacular_title.nil?
-              out.append(OpenStruct.new(text: @record.vernacular_title, css_class: "vernacular"))
+            out = [OpenStruct.new(text: @record.bib.title, css_class: "title")]
+            unless @record.bib.vernacular_title.nil?
+              out.append(OpenStruct.new(text: @record.bib.vernacular_title, css_class: "vernacular"))
             end
             out
+          end
+
+          def icons
           end
 
           def record_info
@@ -36,14 +44,14 @@ module Search
           def format
             OpenStruct.new(
               field: "Formats",
-              data: @record.format
+              data: @record.bib.format
             )
           end
 
           def contributors
             OpenStruct.new(
               field: "Contributors",
-              data: @record.contributors.map do |c|
+              data: @record.bib.contributors.map do |c|
                 OpenStruct.new(
                   partial: "browse",
                   locals: c

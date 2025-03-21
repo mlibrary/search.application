@@ -1,10 +1,10 @@
 module Search
   module Presenters
     module Record
-      def for_datastore(datastore:, id:)
+      def self.for_datastore(datastore:, id:)
         case datastore
         when "catalog"
-          Catalog.for(id)
+          Catalog::Full.for(id)
         end
       end
     end
