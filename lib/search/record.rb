@@ -1,4 +1,4 @@
 module Search::Record
 end
 
-require "search/record/bib"
+require "search/record/catalog"

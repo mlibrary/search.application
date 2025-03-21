@@ -1,6 +1,6 @@
-RSpec.describe Search::Record::Bib::Catalog do
+RSpec.describe Search::Record::Catalog::Bib do
   before(:each) do
-    @data = JSON.parse(fixture("record/bib/land_birds.json"))
+    @data = JSON.parse(fixture("record/catalog/land_birds.json"))
   end
   subject do
     described_class.new(@data)
