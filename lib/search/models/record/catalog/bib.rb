@@ -19,15 +19,61 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  def contributors
-    list = @data.dig("contributors") || []
-    list.map do |c|
-      OpenStruct.new(
-        text: c["text"],
-        url: "http://search.lib.umich.edu/catalog/author:(\"#{c["search"]}\")",
-        browse_url: "http://search.lib.umich.edu/catalog/browse/author/?query=#{c["browse"]}",
-        kind: "author"
-      )
+  def main_author
+    ma = @data.dig("main_author", 0)
+    _browse_item(item: ma, kind: "author") if ma
+  end
+
+  def vernacular_main_author
+    vma = @data.dig("main_author", 1)
+    _browse_item(item: vma, kind: "author") if vma
+  end
+
+  def other_titles
+    _map_field("other_titles") do |item|
+      OpenStruct.new(text: item["text"], search: item["search"])
     end
+  end
+
+  def contributors
+    _map_field("contributors") do |c|
+      _browse_item(item: c, kind: "author")
+    end
+  end
+
+  def academic_discipline
+    _map_field("academic_discipline") do |ad|
+      ad["list"]
+    end
+  end
+
+  [:edition, :series, :series_statement, :note, :physical_description].each do |uid|
+    define_method(uid) { @data.dig(uid.to_s, 0, "text") }
+  end
+
+  [:language, :published, :manufactured, :oclc, :isbn, :call_number, :lcsh_subjects].each do |uid|
+    define_method(uid) { _map_text_field(uid.to_s) }
+  end
+
+  def _map_text_field(uid)
+    _map_field(uid) do |item|
+      item["text"]
+    end
+  end
+
+  def _map_field(uid)
+    list = @data.dig(uid) || []
+    list.map do |item|
+      yield(item)
+    end
+  end
+
+  def _browse_item(item:, kind:)
+    OpenStruct.new(
+      text: item["text"],
+      url: "#{S.base_url}/catalog?query=#{kind}:(\"#{item["search"]}\")",
+      browse_url: "#{S.base_url}/catalog/browse/#{kind}?query=#{item["browse"]}",
+      kind: kind
+    )
   end
 end

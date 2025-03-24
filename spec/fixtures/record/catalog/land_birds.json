@@ -98,7 +98,9 @@
     }
   ],
   "language": [
-    "Japan"
+    {
+      "text": "Japanese"
+    }
   ],
   "note": [
     {
@@ -125,7 +127,7 @@
       "text": "23343161"
     }
   ],
-  "lsch_subjects": [
+  "lcsh_subjects": [
     {
       "text": "Birds -- Japan -- Identification"
     }
