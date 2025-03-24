@@ -12,7 +12,7 @@ module Search
 
         class Full < Base
           def self.for(id)
-            record = Search::Record::Catalog.for(id)
+            record = Search::Models::Record::Catalog.for(id)
             new(record)
           end
 

@@ -1,4 +1,4 @@
-RSpec.describe Search::Record::Catalog::Bib do
+RSpec.describe Search::Models::Record::Catalog::Bib do
   before(:each) do
     @data = JSON.parse(fixture("record/catalog/land_birds.json"))
   end

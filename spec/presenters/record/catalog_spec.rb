@@ -1,6 +1,6 @@
 describe Search::Presenters::Record::Catalog::Full do
   before(:each) do
-    @bib_stub = instance_double(Search::Record::Catalog::Bib,
+    @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
       title: "This is a title", vernacular_title: "This is a v title")
   end
   subject do

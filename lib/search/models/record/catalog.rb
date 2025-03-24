@@ -1,9 +1,9 @@
-module Search::Record::Catalog
+module Search::Models::Record::Catalog
 end
 
-require "search/record/catalog/bib"
+require "search/models/record/catalog/bib"
 
-module Search::Record::Catalog
+module Search::Models::Record::Catalog
   def self.for(id)
     # get data from the api with the client
     # data = catalog_api_client.get(id)

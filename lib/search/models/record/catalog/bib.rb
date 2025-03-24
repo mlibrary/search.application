@@ -1,4 +1,4 @@
-class Search::Record::Catalog::Bib
+class Search::Models::Record::Catalog::Bib
   FORMAT_ICONS = YAML.load_file(File.join(S.config_path, "format_icons.yaml"))
   def initialize(data)
     @data = data
