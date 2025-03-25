@@ -133,7 +133,4 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       end
     end
   end
-
-  xcontext "#academic_discipline" do
-  end
 end

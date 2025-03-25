@@ -260,6 +260,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activesupport (~> 7.0, >= 7.0.1)
   alma_rest_client!
   canister
   debug

@@ -48,16 +48,34 @@ module Search
             )
           end
 
+          def main_author
+            BrowseField.for(field: "Author/Creator", data: [@record.bib.main_author, @record.bib.vernacular_main_author])
+          end
+
           def contributors
-            OpenStruct.new(
-              field: "Contributors",
-              data: @record.bib.contributors.map do |c|
-                OpenStruct.new(
-                  partial: "browse",
-                  locals: c
-                )
-              end
-            )
+            BrowseField.for(field: "Contributors", data: @record.bib.contributors)
+          end
+        end
+
+        class BrowseField
+          attr_reader :field
+          def self.for(field:, data:)
+            compact_data = data.compact
+            new(field: field, data: compact_data) if compact_data.present?
+          end
+
+          def initialize(field:, data:)
+            @field = field
+            @data = data
+          end
+
+          def data
+            @data.map do |c|
+              OpenStruct.new(
+                partial: "browse",
+                locals: c
+              )
+            end
           end
         end
       end

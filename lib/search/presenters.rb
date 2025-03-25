@@ -46,6 +46,131 @@ module Search::Presenters
     params = URI.decode_www_form(uri.query.to_s)&.to_h
     record = Record.for_datastore(datastore: slug, id: record_id)
 
+    record_example = OpenStruct.new(
+      title: [
+        OpenStruct.new(text: "", css_class: "title"),
+        OpenStruct.new(text: "", css_class: "vernacular")
+      ],
+      record_info: [
+        OpenStruct.new(
+          field: "Formats",
+          data: [
+            OpenStruct.new(
+              icon: "collections_bookmark",
+              text: "Journal"
+            ),
+            OpenStruct.new(
+              icon: "devices",
+              text: "Available Online"
+            )
+          ]
+        ),
+        OpenStruct.new(
+          field: "Main Author",
+          data: [
+            OpenStruct.new(
+              partial: "browse",
+              locals: OpenStruct.new(
+                text: "This is an author",
+                url: 'http://search.lib.umich.edu/catalog/author:("This is a contributor")',
+                browse_url: "http://search.lib.umich.edu/catalog/browse/author/This+is+a+contributor",
+                kind: "author"
+              )
+            ),
+            OpenStruct.new(
+              partial: "browse",
+              locals: OpenStruct.new(
+                text: "This is a vernacular author",
+                url: 'http://search.lib.umich.edu/catalog/author:("This is a contributor")',
+                browse_url: "http://search.lib.umich.edu/catalog/browse/author/This+is+a+contributor",
+                kind: "author"
+              )
+            )
+          ]
+        ),
+        OpenStruct.new(
+          field: "Other Titles",
+          data: [
+            OpenStruct.new(
+              partial: "href",
+              locals: OpenStruct.new(
+                text: "This is a vernacular author",
+                url: 'http://search.lib.umich.edu/catalog/title:("This is a contributor")'
+              )
+            )
+          ]
+        ),
+        OpenStruct.new(
+          field: "Contributors",
+          data: [
+            OpenStruct.new(
+              partial: "browse",
+              locals: OpenStruct.new(
+                text: "This is a contributor",
+                url: 'http://search.lib.umich.edu/catalog/author:("This is a contributor")',
+                browse_url: "http://search.lib.umich.edu/catalog/browse/author/This+is+a+contributor",
+                kind: "author"
+              )
+            )
+          ]
+        ),
+        OpenStruct.new(
+          field: "Published",
+          data: [
+            OpenStruct.new(
+              partial: "plain_text",
+              locals: OpenStruct.new(text: "")
+            )
+          ]
+        ),
+        OpenStruct.new(
+          field: "Series",
+          data: [
+            OpenStruct.new(
+              partial: "plain_text",
+              locals: OpenStruct.new(text: "")
+            )
+          ]
+        ),
+        OpenStruct.new(
+          field: "LCSH Subjects",
+          data: [
+            OpenStruct.new(
+              partial: "browse",
+              locals: OpenStruct.new(
+                text: "This is a subject",
+                url: 'http://search.lib.umich.edu/catalog/subject:("This is a contributor")',
+                browse_url: "http://search.lib.umich.edu/catalog/browse/subject?query=This+is+a+subject",
+                kind: "subject"
+              )
+            )
+          ]
+        ),
+        OpenStruct.new(
+          field: "Academic Discipline",
+          data: [
+            OpenStruct.new(
+              partial: academic_discipline,
+              locals: OpenStruct.new(
+                disciplines: [OpenStruct(text: "Science", url:),
+                  OpenStruct(text: "Engineering", url: "")]
+              )
+            ),
+            OpenStruct.new(
+              partial: academic_discipline,
+              locals: OpenStruct.new(
+                disciplines: [OpenStruct(text: "Science", url:),
+                  OpenStruct(text: "Engineering", url: "")]
+              )
+            )
+
+          ]
+        )
+
+      ],
+      indexing_date: "20250217"
+    )
+
     OpenStruct.new(
       title: datastore.title,
       current_datastore: slug,

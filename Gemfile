@@ -10,6 +10,7 @@ gem "alma_rest_client",
   git: "https://github.com/mlibrary/alma_rest_client",
   tag: "v2.0.0"
 gem "semantic_logger"
+gem "activesupport", "~> 7.0", ">= 7.0.1"
 
 group :development, :test do
   gem "debug"

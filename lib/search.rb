@@ -3,6 +3,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require "services"
 require "yaml"
+require "active_support"
 
 module Search
 end
