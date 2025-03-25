@@ -59,37 +59,46 @@ describe Search::Presenters::Record::Catalog::Full do
       expect(title.first.text).to eq("This is a title")
       expect(title.first.css_class).to eq("title")
     end
-    context "main_author" do
-      it "returns an appropriate field" do
-        expect(subject.main_author.field).to eq("Author/Creator")
-      end
-      it "has the main_author has the first object" do
-        ma = subject.main_author.data.first
-        expect(ma.partial).to eq("browse")
-        expect(ma.locals).to eq(@bib_stub.main_author)
-      end
-      it "has the vernacular main_author as the second field" do
-        vma = subject.main_author.data[1]
-        expect(vma.partial).to eq("browse")
-        expect(vma.locals).to eq(@bib_stub.vernacular_main_author)
-      end
-      it "handles missing vernacular main author" do
-        allow(@bib_stub).to receive(:vernacular_main_author).and_return(nil)
-        expect(subject.main_author.data.count).to eq(1)
-      end
+  end
+  context "#main_author" do
+    it "returns an appropriate field" do
+      expect(subject.main_author.field).to eq("Author/Creator")
     end
-    context "contributors" do
-      it "returns the appropriate field" do
-        expect(subject.contributors.field).to eq("Contributors")
-      end
-      it "returns a browse object for data" do
-        expect(subject.contributors.data.first.partial).to eq("browse")
-        expect(subject.contributors.data.first.locals).to eq(@bib_stub.contributors.first)
-      end
-      it "returns nil if Contributors is nil" do
-        allow(@bib_stub).to receive(:contributors).and_return([])
-        expect(subject.contributors).to be_nil
-      end
+    it "has the main_author has the first object" do
+      ma = subject.main_author.data.first
+      expect(ma.partial).to eq("browse")
+      expect(ma.locals).to eq(@bib_stub.main_author)
+    end
+    it "has the vernacular main_author as the second field" do
+      vma = subject.main_author.data[1]
+      expect(vma.partial).to eq("browse")
+      expect(vma.locals).to eq(@bib_stub.vernacular_main_author)
+    end
+    it "handles missing vernacular main author" do
+      allow(@bib_stub).to receive(:vernacular_main_author).and_return(nil)
+      expect(subject.main_author.data.count).to eq(1)
+    end
+  end
+  context "#contributors" do
+    it "returns the appropriate field" do
+      expect(subject.contributors.field).to eq("Contributors")
+    end
+    it "returns a browse object for data" do
+      expect(subject.contributors.data.first.partial).to eq("browse")
+      expect(subject.contributors.data.first.locals).to eq(@bib_stub.contributors.first)
+    end
+    it "returns nil if Contributors is nil" do
+      allow(@bib_stub).to receive(:contributors).and_return([])
+      expect(subject.contributors).to be_nil
+    end
+  end
+  context "#other_titles" do
+    it "returns the appropriate field" do
+      expect(subject.other_titles.field).to eq("Other Titles")
+    end
+    it "returns a link_to object for data" do
+      expect(subject.other_titles.data.first.partial).to eq("link_to")
+      expect(subject.other_titiels.data.first.locals).to eq(@bib_stub.other_titles.first)
     end
   end
 end

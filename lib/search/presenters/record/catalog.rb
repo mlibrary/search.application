@@ -69,11 +69,17 @@ module Search
             @data = data
           end
 
+          # Writing this out so it's clear waht a BrowseField returns
           def data
             @data.map do |c|
               OpenStruct.new(
                 partial: "browse",
-                locals: c
+                locals: OpenStruct.new(
+                  text: c.text,
+                  url: c.url,
+                  browse_url: c.browse_url,
+                  kind: c.kind
+                )
               )
             end
           end
