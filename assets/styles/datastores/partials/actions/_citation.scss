@@ -2,6 +2,7 @@
 @use '../../../colors';
 @use '../../../media';
 @use '../../../forms';
+@use '../../../typography';
 
 // --------------------------------------------------
 //
@@ -64,7 +65,7 @@ $class: ".citation";
       background-color: var(--search-color-grey-200);
       border-color: currentColor;
       color: colors.$color-anchor;
-      font-weight: 700;
+      font-weight: typography.$weight-bold;
       @include media.breakpoint('xs') {
         background-color: white;
         border-color: currentColor var(--search-color-grey-400) white var(--search-color-grey-400);

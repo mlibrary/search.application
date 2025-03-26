@@ -1,6 +1,7 @@
 @use '../../utilities';
 @use '../../icons';
 @use '../../media';
+@use './actions/email';
 @use './actions/citation';
 
 // --------------------------------------------------
@@ -16,6 +17,7 @@
 //     4.1 Tabs
 //   5. Tabpanel
 //     5.1 Form
+//     5.2 Alert
 //
 // --------------------------------------------------
 
@@ -164,4 +166,15 @@ body.no-javascript .#{$class}__tablist {
       margin-top: 0;
     }
   }
+}
+
+
+
+// *           * //
+// * 5.2 ALERT * //
+// *           * //
+
+[role="tabpanel"] .alert {
+  display: none;
+  margin-bottom: 1rem;
 }
