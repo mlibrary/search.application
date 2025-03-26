@@ -1,3 +1,9 @@
+/*
+  Make button disabled on load.
+  Check if aria-selected="true" exists. If so, remove disabled attribute.
+  Continue clicking...
+  If copied, set success alert
+*/
 const copyCitation = () => {
   const tabList = document.querySelector('.citation__tablist');
   const copyCitationButton = document.querySelector('.citation .citation__copy');

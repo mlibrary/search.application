@@ -26,6 +26,11 @@ const tabControl = (element) => {
           otherTab.setAttribute(attribute, false);
           const otherTabPanel = getTabPanel({ tab: otherTab, tabContainer });
           otherTabPanel.style.display = 'none';
+          // Hide alerts when tabpanel is hidden
+          const alerts = otherTabPanel.querySelectorAll('.alert');
+          alerts.forEach((alert) => {
+            alert.style.display = 'none';
+          });
         }
       });
     });
@@ -49,4 +54,11 @@ const actionsPlacement = () => {
   moveElementBasedOnWindowSize();
 };
 
-export { actionsPlacement, tabControl };
+const changeAlert = ({ element, message, type = 'success' }) => {
+  const alert = document.querySelector(element);
+  alert.classList.replace('alert__warning', `alert__${type}`);
+  alert.textContent = message;
+  alert.style.display = 'block';
+};
+
+export { actionsPlacement, changeAlert, tabControl };
