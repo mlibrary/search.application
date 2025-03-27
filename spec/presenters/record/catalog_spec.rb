@@ -27,7 +27,7 @@ describe Search::Presenters::Record::Catalog::Full do
         kind: "browse"
       ),
       other_titles: [
-        OpenStruct.new(text: "other_title_text", search: "other_title_search")
+        OpenStruct.new(text: "other_title_text", url: "other_title_search")
       ],
       contributors: [OpenStruct.new(
         text: "contributors_text",
@@ -98,7 +98,7 @@ describe Search::Presenters::Record::Catalog::Full do
     end
     it "returns a link_to object for data" do
       expect(subject.other_titles.data.first.partial).to eq("link_to")
-      expect(subject.other_titiels.data.first.locals).to eq(@bib_stub.other_titles.first)
+      expect(subject.other_titles.data.first.locals).to eq(@bib_stub.other_titles.first)
     end
   end
 end

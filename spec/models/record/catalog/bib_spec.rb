@@ -32,7 +32,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       @data["other_titles"][0]["text"] = "text_string"
       @data["other_titles"][0]["search"] = "search_string"
       expect(subject.other_titles.first.text).to eq("text_string")
-      expect(subject.other_titles.first.search).to eq("search_string")
+      expect(subject.other_titles.first.url).to eq("#{S.base_url}/catalog?query=title%3Asearch_string")
     end
   end
   context "#main_author" do

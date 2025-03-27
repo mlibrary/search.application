@@ -31,7 +31,7 @@ class Search::Models::Record::Catalog::Bib
 
   def other_titles
     _map_field("other_titles") do |item|
-      OpenStruct.new(text: item["text"], search: item["search"])
+      _link_to_item(item: item, kind: title)
     end
   end
 
@@ -66,6 +66,13 @@ class Search::Models::Record::Catalog::Bib
     list.map do |item|
       yield(item)
     end
+  end
+
+  def _link_to_item(item:, kind:)
+    OpenStruct.new(
+      text: item["text"],
+      url: "#{S.base_url}/catalog?" + {query: "title:#{item["search"]}"}.to_query
+    )
   end
 
   def _browse_item(item:, kind:)

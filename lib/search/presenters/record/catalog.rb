@@ -55,9 +55,13 @@ module Search
           def contributors
             BrowseField.for(field: "Contributors", data: @record.bib.contributors)
           end
+
+          def other_titles
+            LinkToField.for(field: "Other Titles", data: @record.bib.other_titles)
+          end
         end
 
-        class BrowseField
+        class Field
           attr_reader :field
           def self.for(field:, data:)
             compact_data = data.compact
@@ -69,19 +73,49 @@ module Search
             @data = data
           end
 
-          # Writing this out so it's clear waht a BrowseField returns
           def data
-            @data.map do |c|
+            @data.map do |i|
               OpenStruct.new(
-                partial: "browse",
-                locals: OpenStruct.new(
-                  text: c.text,
-                  url: c.url,
-                  browse_url: c.browse_url,
-                  kind: c.kind
-                )
+                partial: partial,
+                locals: item(i)
               )
             end
+          end
+
+          def partial
+            raise NotImplementedError
+          end
+
+          def item(i)
+            raise NotImplementedError
+          end
+        end
+
+        class LinkToField < Field
+          def partial
+            "link_to"
+          end
+
+          def item(i)
+            OpenStruct.new(
+              text: i.text,
+              url: i.url
+            )
+          end
+        end
+
+        class BrowseField < Field
+          def partial
+            "browse"
+          end
+
+          def item(i)
+            OpenStruct.new(
+              text: i.text,
+              url: i.url,
+              browse_url: i.browse_url,
+              kind: i.kind
+            )
           end
         end
       end
