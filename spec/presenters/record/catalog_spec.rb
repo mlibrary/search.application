@@ -1,11 +1,24 @@
 describe Search::Presenters::Record::Catalog::Full do
-  before(:each) do
-    single_string_fields = [:edition, :series, :series_statement, :note, :physical_description].map do |f|
-      [f, OpenStruct.new(text: f.to_s)]
-    end.to_h
+  single_string_fields = {
+    edition: "Edition",
+    series: "Series (transcribed)",
+    series_statement: "Series Statement",
+    note: "Note",
+    physical_description: "Physical Description"
+  }
+  multiple_string_fields = {
+    language: "Language",
+    published: "Published/Created",
+    manufactured: "Manufactured",
+    oclc: "OCLC Number",
+    isbn: "ISBN",
+    call_number: "Call Number",
+    lcsh_subjects: "Subjects (LCSH)"
+  }
 
-    array_string_fields = [:language, :published, :manufactured, :oclc, :isbn, :call_number, :lcsh_subjects].map do |f|
-      [f, [OpenStruct.new(text: f.to_s)]]
+  before(:each) do
+    plain_text_fields = (single_string_fields.keys + multiple_string_fields.keys).map do |f|
+      [f, [OpenStruct.new(text: f.to_s), OpenStruct.new(text: "something_else")]]
     end.to_h
 
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
@@ -38,8 +51,7 @@ describe Search::Presenters::Record::Catalog::Full do
       academic_discipline: [
         ["Science", "Engineering"]
       ],
-      **single_string_fields,
-      **array_string_fields)
+      **plain_text_fields)
   end
   subject do
     described_class.new(OpenStruct.new(bib: @bib_stub))
@@ -96,9 +108,43 @@ describe Search::Presenters::Record::Catalog::Full do
     it "returns the appropriate field" do
       expect(subject.other_titles.field).to eq("Other Titles")
     end
-    it "returns a link_to object for data" do
+    it "returns a link_to object for data entity" do
       expect(subject.other_titles.data.first.partial).to eq("link_to")
       expect(subject.other_titles.data.first.locals).to eq(@bib_stub.other_titles.first)
+    end
+  end
+
+  context "Multiple String plain text fields" do
+    multiple_string_fields.each do |field, name|
+      context "##{field}" do
+        it "returns the appropriate field" do
+          expect(subject.public_send(field).field).to eq(name)
+        end
+        it "returns a plain_text object for data entity" do
+          expect(subject.public_send(field).data.first.partial).to eq("plain_text")
+          expect(subject.public_send(field).data.first.locals).to eq(@bib_stub.public_send(field).first)
+        end
+        it "can have more than one data entity" do
+          expect(subject.public_send(field).data.count).to eq(2)
+        end
+      end
+    end
+  end
+
+  context "Single String plain text fields" do
+    single_string_fields.each do |field, name|
+      context "##{field}" do
+        it "returns the appropriate field" do
+          expect(subject.public_send(field).field).to eq(name)
+        end
+        it "returns a plain_text object for data entity" do
+          expect(subject.public_send(field).data.first.partial).to eq("plain_text")
+          expect(subject.public_send(field).data.first.locals).to eq(@bib_stub.public_send(field).first)
+        end
+        it "can have more than one data entity" do
+          expect(subject.public_send(field).data.count).to eq(1)
+        end
+      end
     end
   end
 end

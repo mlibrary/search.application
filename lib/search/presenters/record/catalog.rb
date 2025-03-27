@@ -59,6 +59,31 @@ module Search
           def other_titles
             LinkToField.for(field: "Other Titles", data: @record.bib.other_titles)
           end
+          [
+            {uid: :edition, field: "Edition"},
+            {uid: :series, field: "Series (transcribed)"},
+            {uid: :series_statement, field: "Series Statement"},
+            {uid: :note, field: "Note"},
+            {uid: :physical_description, field: "Physical Description"}
+          ].each do |f|
+            define_method(f[:uid]) do
+              PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
+            end
+          end
+
+          [
+            {uid: :language, field: "Language"},
+            {uid: :published, field: "Published/Created"},
+            {uid: :manufactured, field: "Manufactured"},
+            {uid: :oclc, field: "OCLC Number"},
+            {uid: :isbn, field: "ISBN"},
+            {uid: :call_number, field: "Call Number"},
+            {uid: :lcsh_subjects, field: "Subjects (LCSH)"}
+          ].each do |f|
+            define_method(f[:uid]) do
+              PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))
+            end
+          end
         end
 
         class Field
@@ -88,6 +113,16 @@ module Search
 
           def item(i)
             raise NotImplementedError
+          end
+        end
+
+        class PlainTextField < Field
+          def partial
+            "plain_text"
+          end
+
+          def item(i)
+            OpenStruct.new(text: i.text)
           end
         end
 

@@ -47,17 +47,15 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  [:edition, :series, :series_statement, :note, :physical_description].each do |uid|
-    define_method(uid) { @data.dig(uid.to_s, 0, "text") }
-  end
-
-  [:language, :published, :manufactured, :oclc, :isbn, :call_number, :lcsh_subjects].each do |uid|
+  [:edition, :series, :series_statement, :note, :physical_description,
+    :language, :published, :manufactured, :oclc, :isbn, :call_number,
+    :lcsh_subjects].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 
   def _map_text_field(uid)
     _map_field(uid) do |item|
-      item["text"]
+      OpenStruct.new(text: item["text"])
     end
   end
 
