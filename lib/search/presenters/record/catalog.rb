@@ -90,6 +90,10 @@ module Search
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))
             end
           end
+
+          def academic_discipline
+            AcademicDisciplineField.for(field: "Academic Discipline", data: @record.bib.academic_discipline)
+          end
         end
 
         class Field
@@ -156,6 +160,18 @@ module Search
               url: i.url,
               browse_url: i.browse_url,
               kind: i.kind
+            )
+          end
+        end
+
+        class AcademicDisciplineField < Field
+          def partial
+            "academic_discipline"
+          end
+
+          def item(i)
+            OpenStruct.new(
+              disciplines: i
             )
           end
         end

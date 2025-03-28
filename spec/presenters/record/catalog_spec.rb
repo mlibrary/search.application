@@ -100,6 +100,15 @@ describe Search::Presenters::Record::Catalog::Full do
       expect(subject.main_author.data.count).to eq(1)
     end
   end
+  context "#academic_discipline" do
+    it "returns an appropriate field" do
+      expect(subject.academic_discipline.field).to eq("Academic Discipline")
+    end
+    it "returns an academic_discipline object for data" do
+      expect(subject.academic_discipline.data.first.partial).to eq("academic_discipline")
+      expect(subject.academic_discipline.data.first.locals.disciplines).to eq(@bib_stub.academic_discipline.first)
+    end
+  end
   context "Array browse fields" do
     browse_fields.each do |field, name|
       context "##{field}" do
