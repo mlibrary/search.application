@@ -11,13 +11,16 @@ describe Search::Presenters::Record::Catalog::Full do
     published: "Published/Created",
     manufactured: "Manufactured",
     oclc: "OCLC Number",
-    isbn: "ISBN",
+    isbn: "ISBN"
+  }
+  basic_browse_fields = {
+
     call_number: "Call Number",
     lcsh_subjects: "Subjects (LCSH)"
   }
 
   before(:each) do
-    plain_text_fields = (single_string_fields.keys + multiple_string_fields.keys).map do |f|
+    plain_text_fields = (single_string_fields.keys + multiple_string_fields.keys + basic_browse_fields.keys).map do |f|
       [f, [OpenStruct.new(text: f.to_s), OpenStruct.new(text: "something_else")]]
     end.to_h
 

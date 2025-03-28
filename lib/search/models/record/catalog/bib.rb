@@ -21,12 +21,12 @@ class Search::Models::Record::Catalog::Bib
 
   def main_author
     ma = @data.dig("main_author", 0)
-    _browse_item(item: ma, kind: "author") if ma
+    _author_browse_item(item: ma) if ma
   end
 
   def vernacular_main_author
     vma = @data.dig("main_author", 1)
-    _browse_item(item: vma, kind: "author") if vma
+    _author_browse_item(item: vma) if vma
   end
 
   def other_titles
@@ -37,7 +37,19 @@ class Search::Models::Record::Catalog::Bib
 
   def contributors
     _map_field("contributors") do |c|
-      _browse_item(item: c, kind: "author")
+      _author_browse_item(item: c)
+    end
+  end
+
+  def call_number
+    _map_field("call_number") do |item|
+      _call_number_browse_item(item: item)
+    end
+  end
+
+  def lcsh_subjects
+    _map_field("lcsh_subjects") do |item|
+      _subject_browse_item(item: item)
     end
   end
 
@@ -48,8 +60,7 @@ class Search::Models::Record::Catalog::Bib
   end
 
   [:edition, :series, :series_statement, :note, :physical_description,
-    :language, :published, :manufactured, :oclc, :isbn, :call_number,
-    :lcsh_subjects].each do |uid|
+    :language, :published, :manufactured, :oclc, :isbn].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 
@@ -73,12 +84,30 @@ class Search::Models::Record::Catalog::Bib
     )
   end
 
-  def _browse_item(item:, kind:)
+  def _subject_browse_item(item:)
+    normalized_subject = item["text"].split(" -- ").join(" ")
     OpenStruct.new(
       text: item["text"],
-      url: "#{S.base_url}/catalog?query=#{kind}:(\"#{item["search"]}\")",
-      browse_url: "#{S.base_url}/catalog/browse/#{kind}?query=#{item["browse"]}",
-      kind: kind
+      url: "#{S.base_url}/catalog?" + {query: "subject:\"#{normalized_subject}\""}.to_query,
+      browse_url: "#{S.base_url}/catalog/browse/subject?" + {query: normalized_subject}.to_query,
+      kind: "subject"
+    )
+  end
+
+  def _call_number_browse_item(item:)
+    OpenStruct.new(
+      text: item["text"],
+      browse_url: "#{S.base_url}/catalog/browse/callnumber?query=#{item["text"]}",
+      kind: "call_number"
+    )
+  end
+
+  def _author_browse_item(item:)
+    OpenStruct.new(
+      text: item["text"],
+      url: "#{S.base_url}/catalog?query=author:(\"#{item["search"]}\")",
+      browse_url: "#{S.base_url}/catalog/browse/author?query=#{item["browse"]}",
+      kind: "author"
     )
   end
 end

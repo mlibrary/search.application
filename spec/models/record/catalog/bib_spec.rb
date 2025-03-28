@@ -68,6 +68,29 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       author_browse_item_expectations(subject.contributors.first)
     end
   end
+  # call_number: "QL 691 .J3 S25 1983",
+
+  context "#call_number" do
+    it "is an array with objects of text, url, browse_url, and kind" do
+      cn = "QL 691 .J3 S25 1983"
+      s = subject.call_number.first
+      expect(s.text).to eq(cn)
+      expect(s.url).to be_nil
+      expect(s.browse_url).to eq("#{S.base_url}/catalog/browse/callnumber?query=#{cn}")
+      expect(s.kind).to eq("call_number")
+    end
+  end
+
+  context "#lcsh_subjects" do
+    it "is an array objects of text, url, browse_url, and kind" do
+      lcsh = "Birds -- Japan -- Identification"
+      lcsh_norm = "Birds Japan Identification"
+      s = subject.lcsh_subjects.first
+      expect(s.text).to eq(lcsh)
+      expect(CGI.unescape(s.url)).to eq("#{S.base_url}/catalog?query=subject:\"#{lcsh_norm}\"")
+      expect(CGI.unescape(s.browse_url)).to eq("#{S.base_url}/catalog/browse/subject?query=#{lcsh_norm}")
+    end
+  end
   context "#format" do
     it "shows the icons for the formats in the marc" do
       format = subject.format.first
@@ -110,8 +133,6 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     language: "Japanese",
     oclc: "23343161",
     isbn: "4931150012 :",
-    call_number: "QL 691 .J3 S25 1983",
-    lcsh_subjects: "Birds -- Japan -- Identification",
     edition: "3-teiban.",
     series: "Yagai kansatsu handobukku ; 1",
     series_statement: "Yagai kansatsu handobukku ; 1.",
