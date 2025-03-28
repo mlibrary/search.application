@@ -13,15 +13,26 @@ describe Search::Presenters::Record::Catalog::Full do
     oclc: "OCLC Number",
     isbn: "ISBN"
   }
-  basic_browse_fields = {
-
+  browse_fields = {
+    contributors: "Contributors",
     call_number: "Call Number",
     lcsh_subjects: "Subjects (LCSH)"
   }
 
   before(:each) do
-    plain_text_fields = (single_string_fields.keys + multiple_string_fields.keys + basic_browse_fields.keys).map do |f|
+    plain_text_fields = (single_string_fields.keys + multiple_string_fields.keys).map do |f|
       [f, [OpenStruct.new(text: f.to_s), OpenStruct.new(text: "something_else")]]
+    end.to_h
+
+    browse_bib_fields = browse_fields.keys.map do |f|
+      [
+        f, [OpenStruct.new(
+          text: "#{f}_text",
+          url: "#{f}_url",
+          browse_url: "#{f}_browse_url",
+          kind: "#{f}_kind"
+        )]
+      ]
     end.to_h
 
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
@@ -45,16 +56,11 @@ describe Search::Presenters::Record::Catalog::Full do
       other_titles: [
         OpenStruct.new(text: "other_title_text", url: "other_title_search")
       ],
-      contributors: [OpenStruct.new(
-        text: "contributors_text",
-        url: "contributors_url",
-        browse_url: "contributors_browse_url",
-        kind: "browse"
-      )],
       academic_discipline: [
         ["Science", "Engineering"]
       ],
-      **plain_text_fields)
+      **plain_text_fields,
+      **browse_bib_fields)
   end
   subject do
     described_class.new(OpenStruct.new(bib: @bib_stub))
@@ -94,17 +100,21 @@ describe Search::Presenters::Record::Catalog::Full do
       expect(subject.main_author.data.count).to eq(1)
     end
   end
-  context "#contributors" do
-    it "returns the appropriate field" do
-      expect(subject.contributors.field).to eq("Contributors")
-    end
-    it "returns a browse object for data" do
-      expect(subject.contributors.data.first.partial).to eq("browse")
-      expect(subject.contributors.data.first.locals).to eq(@bib_stub.contributors.first)
-    end
-    it "returns nil if Contributors is nil" do
-      allow(@bib_stub).to receive(:contributors).and_return([])
-      expect(subject.contributors).to be_nil
+  context "Array browse fields" do
+    browse_fields.each do |field, name|
+      context "##{field}" do
+        it "returns the appropriate field" do
+          expect(subject.public_send(field).field).to eq(name)
+        end
+        it "returns a browse object for data" do
+          expect(subject.public_send(field).data.first.partial).to eq("browse")
+          expect(subject.public_send(field).data.first.locals).to eq(@bib_stub.public_send(field).first)
+        end
+        it "returns nil if #{field} is nil" do
+          allow(@bib_stub).to receive(field).and_return([])
+          expect(subject.public_send(field)).to be_nil
+        end
+      end
     end
   end
   context "#other_titles" do

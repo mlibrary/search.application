@@ -52,6 +52,14 @@ module Search
             BrowseField.for(field: "Author/Creator", data: [@record.bib.main_author, @record.bib.vernacular_main_author])
           end
 
+          [
+            {uid: :call_number, field: "Call Number"},
+            {uid: :lcsh_subjects, field: "Subjects (LCSH)"}
+          ].each do |f|
+            define_method(f[:uid]) do
+              BrowseField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))
+            end
+          end
           def contributors
             BrowseField.for(field: "Contributors", data: @record.bib.contributors)
           end
@@ -76,9 +84,7 @@ module Search
             {uid: :published, field: "Published/Created"},
             {uid: :manufactured, field: "Manufactured"},
             {uid: :oclc, field: "OCLC Number"},
-            {uid: :isbn, field: "ISBN"},
-            {uid: :call_number, field: "Call Number"},
-            {uid: :lcsh_subjects, field: "Subjects (LCSH)"}
+            {uid: :isbn, field: "ISBN"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))
