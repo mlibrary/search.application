@@ -11,6 +11,81 @@ module Search
         end
 
         class Full < Base
+          RECORD_INFO_METHODS =
+            [:format, # 00-catalog mirlyn_format
+              :main_author,
+              :contributors,
+              # :uniform_title, 00-catalog ???
+              :related_title,
+              :other_titles,
+              :new_title,
+              :new_title_issn,
+              :previous_title,
+              :previous_title_issn,
+              :contributors,
+              :published_brief,
+              :created,
+              :distributed,
+              :manufactured,
+              :edition,
+              :series,
+              :series_statement,
+              :biography_history,
+              :summary, # 00-catalog mirlyn summary
+              :in_collection,
+              :access, # 00-catalog marc_access
+              # :indexes, 00-catalog ???
+              :terms_of_use,
+              :language,
+              :language_note,
+              :performers,
+              :date_place_of_event,
+              :preferred_citation,
+              :location_of_originals,
+              :funding_information,
+              :source_of_acquisition,
+              :related_items,
+              :numbering,
+              :current_publication_frequency,
+              :former_publication_frequency,
+              :numbering_notes,
+              :source_of_description_note,
+              :copy_specific_note,
+              :references,
+              :copyright_status_information,
+              :note,
+              :arrangement,
+              :copyright,
+              :physical_description,
+              :map_scale,
+              :reproduction_note,
+              :original_version_note,
+              :playing_time,
+              :media_format,
+              :audience,
+              :content_advice,
+              :awards,
+              :production_credits,
+              :bibliography,
+              :isbn,
+              :issn, # 00-catalog marc_issn
+              :call_number, # 00-catalog callnumber_browse
+              :oclc,
+              :gov_doc_no,
+              :publisher_number,
+              :report_number,
+              :chronology,
+              :place,
+              :printer,
+              :association,
+              :lcsh_subjects, # 00-catalog lc_subject_display
+              :remediated_lcsh_subjects, # 00-catalog remediated_lc_subject_display
+              :other_subjects,
+              :academic_discipline,
+              :contents_listing, # 00-catalog contents_listing
+              :bookplate,
+              :extended_summary]
+
           def self.for(id)
             record = Search::Models::Record::Catalog.for(id)
             new(record)
@@ -31,8 +106,18 @@ module Search
           def icons
           end
 
+          def respond_to_missing?(method, *args, **kwargs, &block)
+            RECORD_INFO_METHODS.any?(method)
+          end
+
+          def method_missing(method, *args, **kwargs, &block)
+            super unless respond_to_missing?(method)
+            S.logger.debug("#{method} not defined in Presenters::Record::Catalog::Full")
+            nil
+          end
+
           def record_info
-            [format, contributors]
+            RECORD_INFO_METHODS.map { |field| public_send(field) }.compact
           end
 
           def marc_record
