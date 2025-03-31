@@ -2,6 +2,12 @@ import { changeAlert } from '../_actions';
 
 const sendEmail = () => {
   const form = document.querySelector('#actions__email--tabpanel .action__email--form');
+
+  // Return if form not found because the user is not logged in
+  if (!form) {
+    return;
+  }
+
   const element = '#actions__email--tabpanel .alert';
   form.addEventListener('submit', (event) => {
     event.preventDefault();

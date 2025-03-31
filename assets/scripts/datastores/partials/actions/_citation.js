@@ -1,12 +1,12 @@
-/*
-  Make button disabled on load.
-  Check if aria-selected="true" exists. If so, remove disabled attribute.
-  Continue clicking...
-  If copied, set success alert
-*/
 const copyCitation = () => {
-  const tabList = document.querySelector('.citation__tablist');
-  const copyCitationButton = document.querySelector('.citation .citation__copy');
+  const citations = document.querySelector('.citation');
+  const tabList = citations.querySelector('.citation__tablist');
+  const copyCitationButton = citations.querySelector('.citation__copy');
+
+  // Enable "Copy citation" button if a tab is already selected
+  if (tabList.querySelector('[aria-selected="true"]')) {
+    copyCitationButton.removeAttribute('disabled');
+  }
 
   tabList.addEventListener('click', (event) => {
     const tab = event.target.closest('[role="tab"]');
@@ -15,7 +15,8 @@ const copyCitation = () => {
     }
 
     const isSelected = tab.getAttribute('aria-selected') === 'true';
-    const tabContent = document.querySelector(`#${tab.getAttribute('aria-controls')} .citation__input`);
+    const currentTab = citations.querySelector(`#${tab.getAttribute('aria-controls')}`);
+    const tabContent = currentTab.querySelector('.citation__input');
 
     if (isSelected && tabContent) {
       // Enable "Copy citation" button if a tab is selected
@@ -23,6 +24,9 @@ const copyCitation = () => {
       // Grab the citation content of the selected tab
       copyCitationButton.onclick = () => {
         navigator.clipboard.writeText(tabContent.textContent.trim());
+        // Display alert
+        const alert = currentTab.querySelector('.actions__alert');
+        alert.style.display = 'block';
       };
     } else {
       // Disable "Copy citation" button if no tab is selected
