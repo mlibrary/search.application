@@ -85,6 +85,13 @@ Search::Datastores.each do |datastore|
       erb :"datastores/#{datastore.slug}"
     end
   end
+  if datastore.slug == "catalog"
+    get "/#{datastore.slug}/record/:id" do
+      @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, record_id: params["id"])
+      content_type :json
+      @presenter.record.to_json
+    end
+  end
 end
 
 Search::Presenters.static_pages.each do |page|
