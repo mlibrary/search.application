@@ -9,6 +9,7 @@ module Search
 end
 
 require "search/helpers"
+require "search/clients"
 require "search/libraries"
 require "search/datastores"
 require "search/patron"
