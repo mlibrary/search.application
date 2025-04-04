@@ -1,5 +1,5 @@
-import { handleFormResults, sendEmail } from '../../../../../assets/scripts/datastores/partials/actions/_email.js';
 import { expect } from 'chai';
+import { sendEmail } from '../../../../../assets/scripts/datastores/partials/actions/_email.js';
 import sinon from 'sinon';
 
 describe('sendEmail', function () {
@@ -35,18 +35,6 @@ describe('sendEmail', function () {
 
     // Remove the HTML of the body
     document.body.innerHTML = '';
-  });
-
-  it('should handle successful form results', async function () {
-    const response = Response.json({ message: 'Email successfully sent.' }, { status: 200 });
-    await handleFormResults({ panel: '#actions__email--tabpanel', response });
-    expect(getAlert().textContent).to.include('Email successfully sent.');
-  });
-
-  it('Should handle unsuccessful form results', async function () {
-    const response = Response.json({ message: 'Fail' }, { status: 500 });
-    await handleFormResults({ panel: '#actions__email--tabpanel', response });
-    expect(getAlert().textContent).to.include('Fail');
   });
 
   it('should prevent the default form submission and call sendEmail with the input email', async function () {

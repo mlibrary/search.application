@@ -85,43 +85,46 @@ describe('actions', function () {
       document.body.innerHTML = '';
     });
 
-    it('should change the type from `warning` to `success`', function () {
+    it('should change the type from `warning` to `success`', async function () {
       expect([...getAlert().classList], '`alert__warning` should be a class').to.include('alert__warning');
       expect([...getAlert().classList], '`alert__success` should not be a class').to.not.include('alert__success');
 
       // Call the function to apply the event listener
-      changeAlert(alert);
+      const response = Response.json({}, { status: 200 });
+      await changeAlert({ element: alert.element, response });
 
       expect([...getAlert().classList], '`alert__warning` should not be a class').to.not.include('alert__warning');
       expect([...getAlert().classList], '`alert__success` should be a class').to.include('alert__success');
     });
 
-    it('should change the type from `warning` to `error`', function () {
+    it('should change the type from `warning` to `error`', async function () {
       expect([...getAlert().classList], '`alert__warning` should be a class').to.include('alert__warning');
       expect([...getAlert().classList], '`alert__error` should not be a class').to.not.include('alert__error');
 
       // Call the function to apply the event listener
-      alert.type = 'error';
-      changeAlert(alert);
+      const response = Response.json({}, { status: 500 });
+      await changeAlert({ element: alert.element, response });
 
       expect([...getAlert().classList], '`alert__warning` should not be a class').to.not.include('alert__warning');
       expect([...getAlert().classList], '`alert__error` should be a class').to.include('alert__error');
     });
 
-    it('should change the message', function () {
+    it('should change the message', async function () {
       expect(getAlert().textContent).to.not.equal(alert.message);
 
       // Call the function to apply the event listener
-      changeAlert(alert);
+      const response = Response.json({ message: alert.message }, { status: 200 });
+      await changeAlert({ element: alert.element, response });
 
       expect(getAlert().textContent).to.equal(alert.message);
     });
 
-    it('should show the alert', function () {
+    it('should show the alert', async function () {
       expect(getAlert().style.display).to.equal('');
 
       // Call the function to apply the event listener
-      changeAlert(alert);
+      const response = Response.json({ message: alert.message }, { status: 200 });
+      await changeAlert({ element: alert.element, response });
 
       expect(getAlert().style.display).to.equal('block');
     });

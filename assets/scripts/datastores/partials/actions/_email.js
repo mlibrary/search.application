@@ -1,23 +1,4 @@
-import { changeAlert } from '../_actions.js';
-
-const fetchFormResults = async (form) => {
-  const formData = new FormData(form);
-
-  const response = await fetch(form.action, {
-    body: formData,
-    method: form.method
-  });
-
-  return response;
-};
-
-const handleFormResults = async ({ panel, response }) => {
-  const json = await response.json();
-  const { message } = json;
-  const type = response.ok ? 'success' : 'error';
-
-  changeAlert({ element: `${panel} .alert`, message, type });
-};
+import { changeAlert, fetchFormResults } from '../_actions.js';
 
 const sendEmail = (panel, formResults = fetchFormResults) => {
   const form = document.querySelector(`${panel} form`);
@@ -31,8 +12,8 @@ const sendEmail = (panel, formResults = fetchFormResults) => {
     event.preventDefault();
 
     const response = await formResults(form);
-    handleFormResults({ panel, response });
+    changeAlert({ element: `${panel} .alert`, response });
   });
 };
 
-export { sendEmail, handleFormResults };
+export { sendEmail };

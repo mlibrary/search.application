@@ -54,11 +54,28 @@ const actionsPlacement = () => {
   moveElementBasedOnWindowSize();
 };
 
-const changeAlert = ({ element, message, type = 'success' }) => {
+const fetchFormResults = async (form) => {
+  const formData = new FormData(form);
+
+  const response = await fetch(form.action, {
+    body: formData,
+    method: form.method
+  });
+
+  return response;
+};
+
+const changeAlert = async ({ element, response }) => {
+  const json = await response.json();
   const alert = document.querySelector(element);
-  alert.classList.replace('alert__warning', `alert__${type}`);
-  alert.textContent = message;
+  alert.classList.replace('alert__warning', `alert__${response.ok ? 'success' : 'error'}`);
+  alert.textContent = json.message;
   alert.style.display = 'block';
 };
 
-export { actionsPlacement, changeAlert, tabControl };
+export {
+  actionsPlacement,
+  changeAlert,
+  fetchFormResults,
+  tabControl
+};
