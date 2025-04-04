@@ -1,7 +1,7 @@
 /* eslint-disable prefer-destructuring */
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
-import sendEmail from '../../../../../assets/scripts/datastores/partials/actions/_email.js';
+import { sendEmail, handleFormResults } from '../../../../../assets/scripts/datastores/partials/actions/_email.js';
 import sinon from 'sinon';
 
 describe('form handlers', function () {
@@ -24,10 +24,22 @@ describe('form handlers', function () {
     global.document = document;
   });
 
-  it('should prevent the default form submission and call sendEmail with the input email', function () {
-    const response = Response.json({}, { status: 200 });
+  it('should handle successful form results', async function () {
+    const response = Response.json({ message: 'Email successfully sent.' }, { status: 200 });
+    await handleFormResults(response)
+    expect(document.querySelector('.alert').textContent).to.include('Email successfully sent.');
+  })
 
-    const fetchFormFake = sinon.fake.returns(response);
+  it('Should handle unsuccessful form results', async function () {
+    const response = Response.json({ message: 'Fail' }, { status: 500 });
+    await handleFormResults(response)
+    expect(document.querySelector('.alert').textContent).to.include('Fail');
+  })
+
+  it('should prevent the default form submission and call sendEmail with the input email', async function () {
+    const response = Response.json({ message: 'Email successfully sent.' }, { status: 200 });
+
+    const fetchFormFake = sinon.fake.resolves(response);
     sendEmail(fetchFormFake);
 
     const form = document.querySelector('.action__email--form');
@@ -38,12 +50,14 @@ describe('form handlers', function () {
       cancelable: true
     });
     form.dispatchEvent(submitEvent);
+    //Wait until the async calls resolve
+    await new Promise(resolve => setTimeout(resolve, 10));
 
     expect(document.querySelector('.alert').textContent).to.include('Email successfully sent.');
   });
 
-  it('should error', function () {
-    const response = Response.json({ message: 'asdf' }, { status: 500 });
+  it('should error', async function () {
+    const response = Response.json({ message: 'Please enter a valid email address (e.g. uniqname@umich.edu)' }, { status: 500 });
 
     const fetchFormFake = sinon.fake.returns(response);
     sendEmail(fetchFormFake);
@@ -56,6 +70,8 @@ describe('form handlers', function () {
       cancelable: true
     });
     form.dispatchEvent(submitEvent);
+    //Wait until the async calls resolve
+    await new Promise(resolve => setTimeout(resolve, 10));
 
     expect(document.querySelector('.alert').textContent).to.include('Please enter a valid email address (e.g. uniqname@umich.edu)');
   });
