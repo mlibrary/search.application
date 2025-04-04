@@ -92,6 +92,9 @@ Search::Datastores.each do |datastore|
       erb :"datastores/record/layout", layout: :layout do
         erb :"datastores/record/#{datastore.slug}"
       end
+    rescue Faraday::ResourceNotFound => error
+      S.logger.error(error.message, error_response: error.response)
+      redirect not_found
     end
   end
 end
