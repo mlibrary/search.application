@@ -1,0 +1,62 @@
+<section class="marc-data">
+  <button class="button__ghost marc-data__button" aria-expanded="false" aria-controls="marc-data__table">
+    View MARC data
+  </button>
+  <table class="marc-data__table" id="marc-data__table">
+    <caption class="strong">
+      MARC Data
+    </caption>
+    <thead class="visually-hidden">
+      <tr>
+        <th scope="col">Tag</th>
+        <th scope="col">ind1</th>
+        <th scope="col">ind2</th>
+        <th scope="col">Field</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if data[:leader] %>
+        <tr>
+          <td colspan="3">
+            <abbr title="LEADER">LDR</abbr>
+          </td>
+          <td><%= data[:leader] %></td>
+        </tr>
+      <% end %>
+      <% data[:fields].each do |field| %>
+        <% field_name, field_data = field.first %>
+        <tr>
+          <% if field_data.is_a?(String) %>
+            <td colspan="3">
+              <%= field_name %>
+            </td>
+            <td>
+              <%= field_data %>
+            </td>
+          <% else %>
+            <td>
+              <%= field_name %>
+            </td>
+            <td>
+              <%= field_data[:ind1] %>
+            </td>
+            <td>
+              <%= field_data[:ind2] %>
+            </td>
+            <td>
+              <div class="marc-data__table--subfield">
+                <% field_data[:subfields].each do |subfield| %>
+                  <span class="marc-data__table--subfield-entry">
+                    <% subfield.each do |subfield_name, subfield_value| %>
+                      <span class="strong">|<%= subfield_name %></span> <span><%= subfield_value %></span>
+                    <% end %>
+                  </span>
+                <% end %>
+              </div>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>

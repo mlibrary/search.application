@@ -1,0 +1,16 @@
+<% if @patron.logged_in? %>
+  <div class="alert alert__warning actions__alert">
+    We're sorry. Something went wrong. Please us <%= link_to(url: "https://www.lib.umich.edu/ask-librarian", body: "Ask a Librarian") %> for help.
+  </div>
+  <form method="post" action="/action_text" class="actions__form action__text--form">
+    <label for="action__text--input">Phone number</label>
+    <input type="tel" id="action__text--input" name="action__text--input" aria-describedby="action__text--description" required autocomplete="on" value="" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+    <small id="action__text--description">Please enter using this format: 000-111-5555</small>
+    <button type="submit">Send text</button>
+  </form>
+<% else %>
+  <form method="post" action="/auth/openid_connect">
+    <input type="hidden" name="authenticity_token" value="#{request.env["rack.session"]["csrf"]}">
+    <button type="submit">Log in to continue</button>
+  </form>
+<% end %>

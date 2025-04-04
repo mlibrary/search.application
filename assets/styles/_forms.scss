@@ -105,7 +105,8 @@ $radius: 4px;
 // *** 2. INPUTS *** //
 // ***************** //
 
-input:not([type="checkbox"], [type="radio"]) {
+input:not([type="checkbox"], [type="radio"]),
+[role="textbox"] {
   @include input;
   cursor: initial;
 }

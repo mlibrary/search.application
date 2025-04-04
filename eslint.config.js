@@ -16,7 +16,7 @@ export default [
       }
     }
   },
-  stylistic.configs['recommended-flat'],
+  stylistic.configs.recommended,
   {
     plugins: {
       '@stylistic': stylistic
@@ -24,6 +24,7 @@ export default [
     rules: {
       '@stylistic/brace-style': ['error', '1tbs'],
       '@stylistic/comma-dangle': ['error', 'never'],
+      '@stylistic/indent': ['error', 2],
       '@stylistic/operator-linebreak': ['error', 'before'],
       '@stylistic/quote-props': ['error', 'as-needed'],
       '@stylistic/semi': ['error', 'always'],
@@ -32,6 +33,7 @@ export default [
       'arrow-body-style': ['error', 'always'],
       'max-lines-per-function': 'off',
       'max-statements': 'off',
+      'no-magic-numbers': 'off',
       'no-ternary': 'off',
       'one-var': ['error', { initialized: 'never' }],
       'sort-imports': ['error', { ignoreCase: true }]
@@ -41,7 +43,6 @@ export default [
     files: ['test/**/*.spec.js'],
     rules: {
       'func-names': 'off',
-      'no-magic-numbers': 'off',
       'no-unused-expressions': 'off',
       'prefer-arrow-callback': 'off'
     }

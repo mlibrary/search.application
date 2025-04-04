@@ -93,7 +93,7 @@ $class: 'search-form';
 // * 3.2 INPUT * //
 // *           * //
 
-.#{$class}__inputs input {
+.#{$class}__inputs input[type="search"] {
   border-color: var(--search-color-blue-400);
   grid-area: input;
   @include media.breakpoint('xs') {

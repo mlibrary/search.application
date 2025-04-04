@@ -1,0 +1,62 @@
+@use './messages';
+@use 'sass:map';
+
+// --------------------------------------------------
+//
+// # Alerts
+//   Default styling for alerts.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Alert
+//     2.1 Variants
+//
+// --------------------------------------------------
+
+
+
+
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.alert';
+$variants: (
+  'error': 'red',
+  'success': 'green',
+  'warning': 'orange'
+);
+
+
+
+
+
+// **************** //
+// *** 2. ALERT *** //
+// **************** //
+
+#{$class} {
+  background: var(--search-color-blue-100);
+  border-bottom: solid 1px var(--search-color-blue-300);
+  color: var(--search-color-blue-500);
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+  a {
+    color: inherit;
+  }
+}
+
+
+
+// *              * //
+// * 2.1 VARIANTS * //
+// *              * //
+
+@each $variant, $color in $variants {
+  #{$class}__#{$variant} {
+    background: var(--search-color-#{$color}-100);
+    border-color: var(--search-color-#{$color}-200);
+    color: var(--search-color-#{$color}-300);
+  }
+}

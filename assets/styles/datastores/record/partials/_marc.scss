@@ -1,0 +1,122 @@
+@use '../../../utilities';
+
+// --------------------------------------------------
+//
+// # MARC Data
+//   Styles to apply directly to `views/datastores/record/partials/_marc.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Button
+//   3. Table
+//     3.1 Caption
+//     3.2 TBody
+//     3.3 Rows
+//     3.4 Cells
+//       3.4.1 Subfields
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.marc-data';
+$table: '#{$class}__table';
+
+
+
+
+
+// ***************** //
+// *** 2. BUTTON *** //
+// ***************** //
+
+#{$class}__button {
+  margin: 0 auto;
+  @media print {
+    display: none;
+  }
+  body.no-javascript & {
+    display: none;
+  }
+}
+
+
+
+
+
+// **************** //
+// *** 3. TABLE *** //
+// **************** //
+
+body:not(.no-javascript) #{$class}__button[aria-expanded="false"] + #{$table} {
+  display: none;
+}
+
+
+
+// *             * //
+// * 3.1 CAPTION * //
+// *             * //
+
+#{$table} caption {
+  margin-bottom: 1rem;
+  #{$class}__button[aria-expanded="true"] & {
+    margin-top: 1rem;
+  }
+}
+
+
+
+// *           * //
+// * 3.2 TBODY * //
+// *           * //
+
+#{$table} tbody {
+  border: 1px solid var(--search-color-grey-400);
+  font-family: monospace;
+  font-size: .875rem;
+  vertical-align: top;
+}
+
+
+
+// *          * //
+// * 3.3 ROWS * //
+// *          * //
+
+#{$table} tr {
+  background: white;
+  &:nth-child(even) {
+    background: var(--search-color-grey-100);
+  }
+  & + tr {
+    border-top: 1px solid var(--search-color-grey-400);
+  }
+}
+
+
+
+// *           * //
+// * 3.4 CELLS * //
+// *           * //
+
+#{$table} td {
+  padding: 0.75rem 1rem;
+}
+
+// * 3.4.1 SUBFIELDS * //
+
+#{$table} #{$table}--subfield {
+  @include utilities.flex($wrap: true);
+  #{$table}--subfield-entry {
+    @include utilities.flex($align: baseline);
+    & {
+      gap: 0.5rem;
+    }
+    span:not(.strong) {
+      word-break: break-word;
+    }
+  }
+}

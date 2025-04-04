@@ -1,0 +1,36 @@
+<%
+  citations = {
+    "MLA" => @record.citations.mla,
+    "APA" => @record.citations.apa,
+    "Chicago" => @record.citations.chicago,
+    "IEEE" => @record.citations.ieee,
+    "NLM" => @record.citations.nlm,
+    "BibTex" => @record.citations.bibtex
+  }
+%>
+<div class="citation">
+  <div role="tablist" aria-labelledby="actions__citation" class="citation__tablist">
+    <% citations.each do |key, value| %>
+      <button type="button" role="tab" aria-selected="<%= key == "MLA" %>" id="citation__<%= key.downcase %>" aria-controls="citation__<%= key.downcase %>--tabpanel">
+        <%= key %>
+      </button>
+    <% end %>
+  </div>
+  <% citations.each do |key, value| %>
+    <div id="citation__<%= key.downcase %>--tabpanel" role="tabpanel" aria-labelledby="citation__<%= key.downcase %>" class="citation__tabpanel">
+      <div class="alert alert__success actions__alert">
+        Citation copied to clipboard!
+      </div>
+      <span id="citation__<%= key.downcase %>--label"><%= key %> citation</span>
+      <div role="textbox" contenteditable="true" aria-labelledby="citation__<%= key.downcase %>--label" aria-describedby="citation__input-disclaimer" class="citation__input" id="citation__<%= key.downcase %>--text">
+        <%= value %>
+      </div>
+    </div>
+  <% end %>
+  <p>
+    <small id="citation__input-disclaimer">
+      These citations are generated from a variety of data sources. Remember to check citation format and content for accuracy before including them in your work. View the <%= link_to(body: "Citation Management guide on U-M Library Website", url: "https://lib.umich.edu/research-and-scholarship/help-research/citation-management", open_in_new: true) %>.
+    </small>
+  </p>
+  <button class="citation__copy" disabled>Copy citation</button>
+</div>

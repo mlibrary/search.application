@@ -1,0 +1,180 @@
+@use '../../utilities';
+@use '../../icons';
+@use '../../media';
+@use './actions/email';
+@use './actions/citation';
+
+// --------------------------------------------------
+//
+// # Actions
+//   Styles to apply directly to `views/datastores/partials/_actions.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//   3. Header
+//   4. Tablist
+//     4.1 Tabs
+//   5. Tabpanel
+//     5.1 Form
+//     5.2 Alert
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: "actions";
+$tabs: (
+  "email": "mail",
+  "text": "chat",
+  "citation": "format_quote",
+  "endnote": "draft",
+  "ris": "draft",
+  "link": "link"
+);
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+.#{$class} {
+  margin-top: 1rem;
+  padding: 1rem;
+  @media print {
+    display: none;
+  }
+  & > * + * {
+    margin-top: 0.5rem;
+  }
+}
+
+
+
+
+
+// ***************** //
+// *** 3. HEADER *** //
+// ***************** //
+
+.#{$class}__header {
+  @include utilities.flex($wrap: true, $align: baseline);
+  gap: 0.25rem 1.5rem;
+}
+
+
+
+
+
+// ****************** //
+// *** 4. TABLIST *** //
+// ****************** //
+
+.#{$class}__tablist {
+  @include utilities.flex($align: start, $responsive: true);
+  & {
+    justify-content: space-between;
+  }
+}
+
+
+
+// *          * //
+// * 4.1 TABS * //
+// *          * //
+
+body.no-javascript .#{$class}__tablist {
+  display: none;
+}
+
+.#{$class}__tablist > button[role="tab"] {
+  @include utilities.flex();
+  & {
+    flex: 0 1 auto;
+    font-size: 1rem;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  @include media.breakpoint('xs') {
+    flex-direction: column;
+    gap: 0rem;
+  }
+  @each $tab, $icon in $tabs {
+    &##{$class}__#{$tab}:before {
+      @include icons.icon($icon: $icon, $fill: true);
+      & {
+        font-size: 1.25rem;
+      }
+    }
+  }
+  &[aria-selected="false"] {
+    border-color: transparent;
+  }
+  &[aria-selected="true"] {
+    background: var(--search-color-blue-200);
+    color: var(--search-color-blue-500);
+  }
+}
+
+
+
+
+
+// ******************* //
+// *** 5. TABPANEL *** //
+// ******************* //
+
+[role="tabpanel"] {
+  margin-top: 1rem;
+}
+
+
+
+// *          * //
+// * 5.1 FORM * //
+// *          * //
+
+[role="tabpanel"] .#{$class}__form {
+  button[type="submit"] {
+    margin-top: 1rem;
+  }
+  @include media.breakpoint('xs') {
+    display: grid;
+    gap: 0.125rem 1rem;
+    grid-template-areas:
+      "label ."
+      "input submit"
+      "description .";
+    grid-template-columns: 1fr auto;
+    max-width: 30rem;
+    label {
+      grid-area: label;
+    }
+    input {
+      grid-area: input;
+    }
+    small {
+      grid-area: description;
+    }
+    button[type="submit"] {
+      grid-area: submit;
+      margin-top: 0;
+    }
+  }
+}
+
+
+
+// *           * //
+// * 5.2 ALERT * //
+// *           * //
+
+[role="tabpanel"] .alert {
+  display: none;
+  margin-bottom: 1rem;
+}

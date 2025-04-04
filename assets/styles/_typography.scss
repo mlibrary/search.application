@@ -6,9 +6,10 @@
 // # Typography
 //   Styling for common text elements and classes.
 //
-//   1. Headings
-//   2. Sizes
-//   3. Weight
+//   1. Variables
+//   2. Headings
+//   3. Sizes
+//   4. Weight
 //
 // --------------------------------------------------
 
@@ -16,8 +17,19 @@
 
 
 
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$size-small: 0.875rem;
+$weight-bold: 700;
+
+
+
+
+
 // ******************* //
-// *** 1. HEADINGS *** //
+// *** 2. HEADINGS *** //
 // ******************* //
 
 h1 {
@@ -41,7 +53,7 @@ h5 {
 }
 
 h6 {
-  font-size: 0.875rem;
+  font-size: $size-small;
 }
 
 
@@ -49,21 +61,28 @@ h6 {
 
 
 // **************** //
-// *** 2. SIZES *** //
+// *** 3. SIZES *** //
 // **************** //
 
 .text__large {
   font-size: 1.125rem;
 }
 
+small,
+.text__small {
+  font-size: $size-small;
+}
+
 
 
 
 
 // ****************** //
-// *** 3. WEIGHTS *** //
+// *** 4. WEIGHTS *** //
 // ****************** //
 
+strong,
+b,
 .strong {
-  font-weight: 700;
+  font-weight: $weight-bold;
 }

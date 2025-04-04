@@ -1,0 +1,42 @@
+// --------------------------------------------------
+//
+// # Table
+//   Default styling for `table` elements.
+//
+// ## Table of Contents
+//   1. Table
+//     1.1 Caption
+//     1.2 Rows
+//
+// --------------------------------------------------
+
+// **************** //
+// *** 1. TABLE *** //
+// **************** //
+
+table {
+  border-collapse: collapse;
+}
+
+
+
+// *             * //
+// * 1.1 CAPTION * //
+// *             * //
+
+table caption {
+  text-align: left;
+}
+
+
+
+// *          * //
+// * 1.2 ROWS * //
+// *          * //
+
+table tr {
+  @media print {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
