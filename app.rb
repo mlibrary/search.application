@@ -3,8 +3,11 @@ require "puma"
 require "ostruct"
 require_relative "lib/services"
 require_relative "lib/search"
+require_relative "lib/metrics"
 require "debug" if S.app_env == "development"
 require_relative "lib/sinatra_helpers"
+
+Metrics::Yabeda.configure!
 
 enable :sessions
 set :session_secret, S.session_secret
@@ -80,6 +83,7 @@ end
 
 Search::Datastores.each do |datastore|
   get "/#{datastore.slug}" do
+    Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
     @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
     erb :"datastores/layout", layout: :layout do
       erb :"datastores/#{datastore.slug}"

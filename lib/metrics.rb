@@ -3,7 +3,18 @@ require "prometheus/middleware/collector"
 module Metrics
 end
 
+module Metrics::Yabeda
+  def self.configure!
+    Yabeda.configure do
+      counter :datastore_request_count, comment: "Total number of requests to a datastore", tags: %i[datastore]
+    end
+
+    Yabeda.configure!
+  end
+end
+
 class Metrics::Middleware < Prometheus::Middleware::Collector
+  KNOWN_PATHS = ["/everything", "/catalog", "/articles", "/onlinejournals", "/guidesandmore", "/index.html"]
   APP_PATHS = ["/auth", "/login", "/logout"]
 
   protected
@@ -33,8 +44,9 @@ class Metrics::Middleware < Prometheus::Middleware::Collector
 
   def strip_ids_from_path(path)
     p = super
-    return "/not-a-path" unless APP_PATHS.any? { |app_path| p.start_with?(app_path) }
-    p.gsub(%r{/record/[^/]+}, "/record/:record_id")
+    p.gsub!(%r{/record/[^/]+}, "/record/:record_id")
+    return "/not-a-path" unless (KNOWN_PATHS + APP_PATHS).any? { |app_path| p.start_with?(app_path) }
+    p
   end
 end
 
