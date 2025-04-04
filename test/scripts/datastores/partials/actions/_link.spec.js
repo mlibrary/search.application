@@ -32,6 +32,7 @@ describe('copyLink', function () {
     };
 
     clipboardSpy = sinon.spy();
+    global.navigator = {};
     global.navigator.clipboard = { writeText: clipboardSpy };
   });
 
@@ -44,7 +45,7 @@ describe('copyLink', function () {
 
     // Clean up
     sinon.restore();
-    delete global.navigator.clipboard;
+    delete global.navigator;
   });
 
   it('should remove the `disabled` attribute from the button', function () {
