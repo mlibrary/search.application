@@ -24,6 +24,7 @@ export default [
     rules: {
       '@stylistic/brace-style': ['error', '1tbs'],
       '@stylistic/comma-dangle': ['error', 'never'],
+      '@stylistic/indent': ['error', 2],
       '@stylistic/operator-linebreak': ['error', 'before'],
       '@stylistic/quote-props': ['error', 'as-needed'],
       '@stylistic/semi': ['error', 'always'],

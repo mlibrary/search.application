@@ -1,6 +1,6 @@
 <% if @patron.logged_in? %>
   <div class="alert alert__warning actions__alert">
-    We're sorry. Something went wrong. Please us <%= link_to(url: "https://www.lib.umich.edu/ask-librarian", body: "Ask a Librarian") %> for help.
+    We're sorry. Something went wrong. Please use <%= link_to(url: "https://www.lib.umich.edu/ask-librarian", body: "Ask a Librarian") %> for help.
   </div>
   <form method="post" action="/action_email" class="actions__form action__email--form">
     <label for="action__email--input">Email address</label>

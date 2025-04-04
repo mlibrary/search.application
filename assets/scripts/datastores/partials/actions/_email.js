@@ -1,6 +1,17 @@
-import { changeAlert } from '../_actions';
+import { changeAlert } from '../_actions.js';
 
-const sendEmail = () => {
+const fetchFormResults = async (form) => {
+  const formData = new FormData(form);
+
+  const response = await fetch(form.action, {
+    body: formData,
+    method: form.method
+  });
+
+  return response;
+};
+
+const sendEmail = (formResults = fetchFormResults) => {
   const form = document.querySelector('#actions__email--tabpanel .action__email--form');
 
   // Return if form not found because the user is not logged in
@@ -8,25 +19,17 @@ const sendEmail = () => {
     return;
   }
 
-  const element = '#actions__email--tabpanel .alert';
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(form);
+    const response = formResults(form);
+    const json = await response.json();
+    const { message } = json;
+    // const message = response.ok ? 'Email successfully sent.' : 'Please enter a valid email address (e.g. uniqname@umich.edu)';
+    const type = response.ok ? 'success' : 'error';
+    console.log(type, message);
 
-    fetch(form.action, {
-      body: formData,
-      method: form.method
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then(() => {
-        return changeAlert({ element, message: 'Email successfully sent.' });
-      })
-      .catch(() => {
-        return changeAlert({ element, message: 'Please enter a valid email address (e.g. uniqname@umich.edu)', type: 'error' });
-      });
+    changeAlert({ element: '#actions__email--tabpanel .alert', message, type });
   });
 };
 
