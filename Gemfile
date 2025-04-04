@@ -12,6 +12,12 @@ gem "alma_rest_client",
 gem "semantic_logger"
 gem "activesupport", "~> 7.0", ">= 7.0.1"
 
+group :metrics do
+  gem "yabeda-puma-plugin"
+  gem "yabeda-prometheus"
+  gem "prometheus-client"
+end
+
 group :development, :test do
   gem "debug"
 end

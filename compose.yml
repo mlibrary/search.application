@@ -20,6 +20,7 @@ services:
         GID: ${GID:-1000}
     ports:
       - 4567:4567
+      - 9100:9100
     volumes:
       - .:/app
     env_file:
@@ -27,19 +28,17 @@ services:
     command:
       - bundle
       - exec
-      - rackup
-      - -p
-      - "4567"
-      - --host
-      - 0.0.0.0
+      - puma
+      - -b
+      - "tcp://0.0.0.0:4567"
 
-  catalog-api: 
+  catalog-api:
     image: ghcr.io/mlibrary/search.catalog-api-unstable:latest
     env_file:
       - .env
     ports:
       - 8000:8000
-    command: 
+    command:
       - python
       - -m
       - uvicorn
