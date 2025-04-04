@@ -11,17 +11,16 @@ const fetchFormResults = async (form) => {
   return response;
 };
 
-const handleFormResults = async (response) => {
+const handleFormResults = async ({ panel, response }) => {
   const json = await response.json();
   const { message } = json;
   const type = response.ok ? 'success' : 'error';
-  console.log(type, message);
 
-  changeAlert({ element: '#actions__email--tabpanel .alert', message, type });
-}
+  changeAlert({ element: `${panel} .alert`, message, type });
+};
 
-const sendEmail = async (formResults = fetchFormResults) => {
-  const form = document.querySelector('#actions__email--tabpanel .action__email--form');
+const sendEmail = (panel, formResults = fetchFormResults) => {
+  const form = document.querySelector(`${panel} form`);
 
   // Return if form not found because the user is not logged in
   if (!form) {
@@ -32,7 +31,7 @@ const sendEmail = async (formResults = fetchFormResults) => {
     event.preventDefault();
 
     const response = await formResults(form);
-    handleFormResults(response)
+    handleFormResults({ panel, response });
   });
 };
 
