@@ -15,7 +15,7 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   curl \
   gpg \
   git
-  
+
 
 RUN mkdir -p /etc/apt/keyrings
 RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
@@ -42,7 +42,7 @@ USER root
 
 WORKDIR /app
 
-CMD ["bundle", "exec", "rackup", "-p", "4567", "--host", "0.0.0.0"]
+CMD ["bundle", "exec", "puma", "-b", "tcp://0.0.0.0:4567"]
 
 ################################################################################
 # DEVELOPMENT                                           								       # 
