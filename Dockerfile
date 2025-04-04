@@ -42,7 +42,7 @@ USER root
 
 WORKDIR /app
 
-CMD ["bundle", "exec", "rackup", "-p", "4567", "--host", "0.0.0.0"]
+CMD ["bundle", "exec", "puma", "-b", "tcp://0.0.0.0:4567"]
 
 ################################################################################
 # DEVELOPMENT                                           								       # 

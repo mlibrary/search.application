@@ -13,6 +13,12 @@ gem "alma_rest_client",
 gem "activesupport"
 gem "semantic_logger"
 
+group :metrics do
+  gem "yabeda-puma-plugin"
+  gem "yabeda-prometheus"
+  gem "prometheus-client"
+end
+
 group :development, :test do
   gem "debug"
 end
