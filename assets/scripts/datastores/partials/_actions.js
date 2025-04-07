@@ -73,9 +73,26 @@ const changeAlert = async ({ element, response }) => {
   alert.style.display = 'block';
 };
 
+const shareForm = (panel, formResults = fetchFormResults) => {
+  const form = document.querySelector(`${panel} form`);
+
+  // Return if form not found because the user is not logged in
+  if (!form) {
+    return;
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const response = await formResults(form);
+    changeAlert({ element: `${panel} .alert`, response });
+  });
+};
+
 export {
   actionsPlacement,
   changeAlert,
   fetchFormResults,
+  shareForm,
   tabControl
 };

@@ -1,5 +1,6 @@
-import { actionsPlacement, changeAlert, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { actionsPlacement, changeAlert, shareForm, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { expect } from 'chai';
+import sinon from 'sinon';
 
 describe('actions', function () {
   describe('actionsPlacement()', function () {
@@ -127,6 +128,82 @@ describe('actions', function () {
       await changeAlert({ element: alert.element, response });
 
       expect(getAlert().style.display).to.equal('block');
+    });
+  });
+
+  describe('shareForm()', function () {
+    let getForm = null;
+    let getAlert = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = `
+        <div id="actions__record--tabpanel">
+          <div class="alert alert__warning actions__alert">
+            We're sorry. Something went wrong. Please use Ask a Librarian for help.
+          </div>
+          <form class="action__record--form" action="/submit" method="post">
+            <input type="email" id="record" name="record" required>
+            <button type="submit">Send Record</button>
+          </form>
+        </div>
+      `;
+
+      getForm = () => {
+        return document.querySelector('.action__record--form');
+      };
+
+      getAlert = () => {
+        return document.querySelector('.alert');
+      };
+    });
+
+    afterEach(function () {
+      getForm = null;
+      getAlert = null;
+
+      // Remove the HTML of the body
+      document.body.innerHTML = '';
+    });
+
+    it('should prevent the default form submission and call shareForm', async function () {
+      const response = Response.json({ message: 'Record sent successfully.' }, { status: 200 });
+
+      const fetchFormFake = sinon.fake.resolves(response);
+      shareForm('#actions__record--tabpanel', fetchFormFake);
+
+      // Simulate form submission
+      const submitEvent = new window.Event('submit', {
+        bubbles: true,
+        cancelable: true
+      });
+      getForm().dispatchEvent(submitEvent);
+      // Wait until the async calls resolve
+      await new Promise((resolve) => {
+        setTimeout(resolve, 10);
+      });
+
+      expect(getAlert().textContent).to.include('Record sent successfully.');
+    });
+
+    it('should show an error on submission', async function () {
+      const response = Response.json({ message: 'Please enter a valid email address (e.g. uniqname@umich.edu)' }, { status: 500 });
+
+      const fetchFormFake = sinon.fake.returns(response);
+      shareForm('#actions__record--tabpanel', fetchFormFake);
+
+      // Simulate form submission
+      const submitEvent = new window.Event('submit', {
+        bubbles: true,
+        cancelable: true
+      });
+      getForm().dispatchEvent(submitEvent);
+      // Wait until the async calls resolve
+      await new Promise((resolve) => {
+        setTimeout(resolve, 10);
+      });
+
+      expect(getAlert().textContent).to.include('Please enter a valid email address (e.g. uniqname@umich.edu)');
     });
   });
 
