@@ -1,3 +1,5 @@
+import { copyToClipboard } from '../_actions.js';
+
 const copyLink = () => {
   const link = document.querySelector('#actions__link--tabpanel');
   const urlInput = link.querySelector('#action__link--input');
@@ -7,8 +9,7 @@ const copyLink = () => {
   copyLinkButton.removeAttribute('disabled');
   copyLinkButton.addEventListener('click', (event) => {
     event.preventDefault();
-    navigator.clipboard.writeText(urlInput.value);
-    alert.style.display = 'block';
+    return copyToClipboard({ alert, text: urlInput.value });
   });
 };
 

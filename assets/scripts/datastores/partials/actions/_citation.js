@@ -1,3 +1,5 @@
+import { copyToClipboard } from '../_actions.js';
+
 const copyCitation = () => {
   const citations = document.querySelector('.citation');
   const tabList = citations.querySelector('.citation__tablist');
@@ -17,16 +19,14 @@ const copyCitation = () => {
     const isSelected = tab.getAttribute('aria-selected') === 'true';
     const currentTab = citations.querySelector(`#${tab.getAttribute('aria-controls')}`);
     const tabContent = currentTab.querySelector('.citation__input');
+    const alert = currentTab.querySelector('.actions__alert');
 
     if (isSelected && tabContent) {
       // Enable "Copy citation" button if a tab is selected
       copyCitationButton.removeAttribute('disabled');
       // Grab the citation content of the selected tab
       copyCitationButton.onclick = () => {
-        navigator.clipboard.writeText(tabContent.textContent.trim());
-        // Display alert
-        const alert = currentTab.querySelector('.actions__alert');
-        alert.style.display = 'block';
+        return copyToClipboard({ alert, text: tabContent.textContent.trim() });
       };
     } else {
       // Disable "Copy citation" button if no tab is selected

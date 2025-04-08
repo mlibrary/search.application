@@ -89,9 +89,17 @@ const shareForm = (panel, formResults = fetchFormResults) => {
   });
 };
 
+const copyToClipboard = ({ alert, text }) => {
+  if (alert) {
+    alert.style.display = 'block';
+  }
+  return navigator.clipboard.writeText(text);
+};
+
 export {
   actionsPlacement,
   changeAlert,
+  copyToClipboard,
   fetchFormResults,
   shareForm,
   tabControl

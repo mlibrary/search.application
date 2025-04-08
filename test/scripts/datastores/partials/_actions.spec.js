@@ -1,4 +1,4 @@
-import { actionsPlacement, changeAlert, shareForm, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { actionsPlacement, changeAlert, copyToClipboard, shareForm, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -128,6 +128,62 @@ describe('actions', function () {
       await changeAlert({ element: alert.element, response });
 
       expect(getAlert().style.display).to.equal('block');
+    });
+  });
+
+  describe('copyToClipboard()', function () {
+    let getAlert = null;
+    let getText = null;
+    let clipboardSpy = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = `
+        <div class="alert" style="display: none;">This is an alert.</div>
+        <div class="copy-this">The text has been successfully copied.</div>
+      `;
+
+      getAlert = () => {
+        return document.querySelector('.alert');
+      };
+
+      getText = () => {
+        return document.querySelector('.copy-this').innerHTML;
+      };
+
+      clipboardSpy = sinon.spy();
+      global.navigator = {};
+      global.navigator.clipboard = { writeText: clipboardSpy };
+    });
+
+    afterEach(function () {
+      getAlert = null;
+      getText = null;
+
+      // Remove the HTML of the body
+      document.body.innerHTML = '';
+
+      // Clean up
+      sinon.restore();
+      delete global.navigator;
+    });
+
+    it('should show the alert', function () {
+      expect(getAlert().style.display, 'alert should not be displayed').to.equal('none');
+
+      // Call the function
+      copyToClipboard({ alert: getAlert(), text: getText() });
+
+      expect(getAlert().style.display, 'alert should be displayed').to.equal('block');
+    });
+
+    it('should copy the text', function () {
+      // Call the function
+      copyToClipboard({ alert: getAlert(), text: getText() });
+
+      // Check that the clipboard should have been called with the correct value
+      expect(clipboardSpy.calledOnce, 'should be called once').to.be.true;
+      expect(clipboardSpy.calledWith(getText()), `should be called with ${getText()}`).to.be.true;
     });
   });
 
