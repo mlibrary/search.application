@@ -13,9 +13,7 @@
     "build:js": "npm run lint && npx esbuild \"assets/scripts/**/scripts.js\" --entry-names=[dir]/[name] --outbase=assets/scripts --bundle --minify --outdir=public/scripts $*",
     "lint": "npx eslint eslint.config.js assets/scripts/ test/ $*",
     "lint:fix": "npm run lint -- --fix",
-    "test": "npm run test:mocha && npm run test:rspec",
-    "test:mocha": "npm run lint && npx mocha --require ./test/setup.js --recursive",
-    "test:rspec": "bundle exec rspec",
+    "test": "npm run lint && npx mocha --require ./test/setup.js --recursive",
     "watch:css": "npm run build:css -- --watch",
     "watch:js": "npm run build:js -- --watch=forever"
   },
