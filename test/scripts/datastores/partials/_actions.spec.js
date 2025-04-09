@@ -1,68 +1,8 @@
-import { actionsPlacement, changeAlert, copyToClipboard, shareForm, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { changeAlert, copyToClipboard, shareForm, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
 describe('actions', function () {
-  describe('actionsPlacement()', function () {
-    let getActions = null;
-    let getActionsDesktop = null;
-    let getActionsMobile = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = `
-        <div class="record">
-          <div class="actions__desktop"></div>
-          <div class="actions"></div>
-          <div class="actions__mobile"></div>
-        </div>
-      `;
-
-      getActions = () => {
-        return document.querySelector('.actions');
-      };
-
-      getActionsDesktop = () => {
-        return document.querySelector('.actions__desktop');
-      };
-
-      getActionsMobile = () => {
-        return document.querySelector('.actions__mobile');
-      };
-    });
-
-    afterEach(function () {
-      getActions = null;
-      getActionsDesktop = null;
-      getActionsMobile = null;
-    });
-
-    it('should places `.actions` inside `.actions__desktop`', function () {
-      expect(window.innerWidth, '`window.innerWidth should be greater than 820').to.be.at.least(820);
-      expect(getActionsDesktop().innerHTML, '`.actions__desktop` should be empty').to.be.empty;
-      expect(getActionsMobile().innerHTML, '`.actions__mobile` should be empty').to.be.empty;
-
-      // Call the function to apply the event listener
-      actionsPlacement();
-
-      expect(getActionsDesktop().innerHTML, '`.actions__desktop` should contain `.actions`').to.equal(getActions().outerHTML);
-      expect(getActionsMobile().innerHTML, '`.actions__mobile` should still be empty').to.be.empty;
-    });
-
-    it('should places `.actions` inside `.actions__mobile`', function () {
-      window.innerWidth = 640;
-      expect(window.innerWidth, '`window.innerWidth should be less than or equal to 820').to.be.below(821);
-      expect(getActionsDesktop().innerHTML, '`.actions__desktop` should be empty').to.be.empty;
-      expect(getActionsMobile().innerHTML, '`.actions__mobile` should be empty').to.be.empty;
-
-      // Call the function to apply the event listener
-      actionsPlacement();
-
-      expect(getActionsDesktop().innerHTML, '`.actions__desktop` should still be empty').to.be.empty;
-      expect(getActionsMobile().innerHTML, '`.actions__mobile` should contain `.actions`').to.equal(getActions().outerHTML);
-    });
-  });
-
   describe('changeAlert()', function () {
     let getAlert = null;
     const alert = { element: '.alert__warning', message: 'This is a message.' };
