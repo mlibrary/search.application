@@ -37,23 +37,6 @@ const tabControl = (element) => {
   });
 };
 
-const actionsPlacement = () => {
-  const record = document.querySelector('.record');
-  const actions = record.querySelector('.actions');
-  const actionsDesktop = record.querySelector('.actions__desktop');
-  const actionsMobile = record.querySelector('.actions__mobile');
-  const moveElementBasedOnWindowSize = () => {
-    const targetParent = window.innerWidth > 820 ? actionsDesktop : actionsMobile;
-    if (actions.parentNode !== targetParent) {
-      targetParent.appendChild(actions);
-    }
-  };
-
-  window.addEventListener('resize', moveElementBasedOnWindowSize);
-
-  moveElementBasedOnWindowSize();
-};
-
 const fetchFormResults = async (form) => {
   const formData = new FormData(form);
 
@@ -97,7 +80,6 @@ const copyToClipboard = ({ alert, text }) => {
 };
 
 export {
-  actionsPlacement,
   changeAlert,
   copyToClipboard,
   fetchFormResults,

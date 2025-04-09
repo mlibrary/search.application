@@ -1,8 +1,6 @@
 <div class="record">
   <%= erb :'datastores/partials/_breadcrumbs', locals: { current_page: "Record" } %>
-  <div class="actions__desktop">
-    <%# Place Actions here using JavaScript if window size is greater than 820px. %>
-  </div>
+  <%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
   <div class="container__rounded">
     <ul class="record__formats list__no-style">
       <%
@@ -31,9 +29,6 @@
     <p>Resource Access: Needs to be a partial for Results</p>
   </div>
   <p>Shelf browse</p>
-  <div class="actions__mobile">
-    <%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
-  </div>
   <% if @record.indexing_date %>
     <p class="indexing-date">
       <span class="strong">Date Last Indexed:</span> <%= @record.indexing_date %>

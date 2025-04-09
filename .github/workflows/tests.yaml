@@ -33,4 +33,4 @@ jobs:
           cache: npm
       - run: npm ci
       - name: run tests
-        run: npm run test:mocha
+        run: npm run test
