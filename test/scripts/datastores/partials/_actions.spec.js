@@ -151,6 +151,11 @@ describe('actions', function () {
         return document.querySelector('.copy-this').innerHTML;
       };
 
+      /*
+        If you receive this error locally:
+        `TypeError: Cannot set property navigator of #<Object> which has only a getter`
+        it works in GitHub Actions.
+      */
       clipboardSpy = sinon.spy();
       global.navigator = {};
       global.navigator.clipboard = { writeText: clipboardSpy };
