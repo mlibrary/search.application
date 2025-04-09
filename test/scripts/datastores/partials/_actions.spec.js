@@ -1,5 +1,6 @@
-import { actionsPlacement, changeAlert, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { actionsPlacement, changeAlert, copyToClipboard, shareForm, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { expect } from 'chai';
+import sinon from 'sinon';
 
 describe('actions', function () {
   describe('actionsPlacement()', function () {
@@ -127,6 +128,143 @@ describe('actions', function () {
       await changeAlert({ element: alert.element, response });
 
       expect(getAlert().style.display).to.equal('block');
+    });
+  });
+
+  describe('copyToClipboard()', function () {
+    let getAlert = null;
+    let getText = null;
+    let clipboardSpy = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = `
+        <div class="alert" style="display: none;">This is an alert.</div>
+        <div class="copy-this">The text has been successfully copied.</div>
+      `;
+
+      getAlert = () => {
+        return document.querySelector('.alert');
+      };
+
+      getText = () => {
+        return document.querySelector('.copy-this').innerHTML;
+      };
+
+      /*
+        If you receive this error locally:
+        `TypeError: Cannot set property navigator of #<Object> which has only a getter`
+        it works in GitHub Actions.
+      */
+      clipboardSpy = sinon.spy();
+      global.navigator = {};
+      global.navigator.clipboard = { writeText: clipboardSpy };
+    });
+
+    afterEach(function () {
+      getAlert = null;
+      getText = null;
+
+      // Remove the HTML of the body
+      document.body.innerHTML = '';
+
+      // Clean up
+      sinon.restore();
+      delete global.navigator;
+    });
+
+    it('should show the alert', function () {
+      expect(getAlert().style.display, 'alert should not be displayed').to.equal('none');
+
+      // Call the function
+      copyToClipboard({ alert: getAlert(), text: getText() });
+
+      expect(getAlert().style.display, 'alert should be displayed').to.equal('block');
+    });
+
+    it('should copy the text', function () {
+      // Call the function
+      copyToClipboard({ alert: getAlert(), text: getText() });
+
+      // Check that the clipboard should have been called with the correct value
+      expect(clipboardSpy.calledOnce, 'should be called once').to.be.true;
+      expect(clipboardSpy.calledWith(getText()), `should be called with ${getText()}`).to.be.true;
+    });
+  });
+
+  describe('shareForm()', function () {
+    let getForm = null;
+    let getAlert = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = `
+        <div id="actions__record--tabpanel">
+          <div class="alert alert__warning actions__alert">
+            We're sorry. Something went wrong. Please use Ask a Librarian for help.
+          </div>
+          <form class="action__record--form" action="/submit" method="post">
+            <input type="email" id="record" name="record" required>
+            <button type="submit">Send Record</button>
+          </form>
+        </div>
+      `;
+
+      getForm = () => {
+        return document.querySelector('.action__record--form');
+      };
+
+      getAlert = () => {
+        return document.querySelector('.alert');
+      };
+    });
+
+    afterEach(function () {
+      getForm = null;
+      getAlert = null;
+
+      // Remove the HTML of the body
+      document.body.innerHTML = '';
+    });
+
+    it('should prevent the default form submission and call shareForm', async function () {
+      const response = Response.json({ message: 'Record sent successfully.' }, { status: 200 });
+
+      const fetchFormFake = sinon.fake.resolves(response);
+      shareForm('#actions__record--tabpanel', fetchFormFake);
+
+      // Simulate form submission
+      const submitEvent = new window.Event('submit', {
+        bubbles: true,
+        cancelable: true
+      });
+      getForm().dispatchEvent(submitEvent);
+      // Wait until the async calls resolve
+      await new Promise((resolve) => {
+        setTimeout(resolve, 10);
+      });
+
+      expect(getAlert().textContent).to.include('Record sent successfully.');
+    });
+
+    it('should show an error on submission', async function () {
+      const response = Response.json({ message: 'Please enter a valid email address (e.g. uniqname@umich.edu)' }, { status: 500 });
+
+      const fetchFormFake = sinon.fake.returns(response);
+      shareForm('#actions__record--tabpanel', fetchFormFake);
+
+      // Simulate form submission
+      const submitEvent = new window.Event('submit', {
+        bubbles: true,
+        cancelable: true
+      });
+      getForm().dispatchEvent(submitEvent);
+      // Wait until the async calls resolve
+      await new Promise((resolve) => {
+        setTimeout(resolve, 10);
+      });
+
+      expect(getAlert().textContent).to.include('Please enter a valid email address (e.g. uniqname@umich.edu)');
     });
   });
 

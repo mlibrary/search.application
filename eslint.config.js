@@ -43,6 +43,7 @@ export default [
     files: ['test/**/*.spec.js'],
     rules: {
       'func-names': 'off',
+      'max-lines': 'off',
       'no-unused-expressions': 'off',
       'prefer-arrow-callback': 'off'
     }

@@ -1,8 +1,6 @@
-import { actionsPlacement, tabControl } from '../partials/_actions.js';
+import { actionsPlacement, shareForm, tabControl } from '../partials/_actions.js';
 import copyCitation from '../partials/actions/_citation.js';
 import copyLink from '../partials/actions/_link.js';
-import { sendEmail } from '../partials/actions/_email.js';
-import sendText from '../partials/actions/_text.js';
 import toggleMARCData from './partials/_marc.js';
 
 // Actions panel
@@ -10,10 +8,10 @@ actionsPlacement();
 tabControl('.actions');
 
 // Email
-sendEmail('#actions__email--tabpanel');
+shareForm('#actions__email--tabpanel');
 
 // Text
-sendText();
+shareForm('#actions__text--tabpanel');
 
 // Citations
 tabControl('.citation');
