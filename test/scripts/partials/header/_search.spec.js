@@ -89,9 +89,6 @@ describe('displaySearchTip', function () {
     getSearchOption = null;
     getSearchTips = null;
     allTipsAreHidden = null;
-
-    // Remove the HTML of the body
-    document.body.innerHTML = '';
   });
 
   describe('on load', function () {

@@ -36,9 +36,6 @@ describe('toggleMARCData', function () {
     getButton = null;
     getButtonAttribute = null;
     getButtonText = null;
-
-    // Remove the HTML of the body
-    document.body.innerHTML = '';
   });
 
   it('should update the `aria-expanded` attribute', function () {

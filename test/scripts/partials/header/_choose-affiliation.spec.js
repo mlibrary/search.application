@@ -79,9 +79,6 @@ describe('chooseAffiliation', function () {
     getDismissButtons = null;
     getSubmitButton = null;
 
-    // Remove the HTML of the body
-    document.body.innerHTML = '';
-
     // Delete global variables
     delete global.HTMLDialogElement;
   });

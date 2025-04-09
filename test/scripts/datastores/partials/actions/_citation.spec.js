@@ -44,9 +44,6 @@ describe('copyCitation', function () {
     getTab = null;
     getInput = null;
     getButton = null;
-
-    // Remove the HTML of the body
-    document.body.innerHTML = '';
   });
 
   it('should remove the `disabled` attribute from the button', function () {
