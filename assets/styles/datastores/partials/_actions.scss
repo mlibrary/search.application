@@ -44,13 +44,10 @@ $tabs: (
 // ******************** //
 
 .#{$class} {
+  border-top: 0;
   margin-top: 1rem;
-  padding: 1rem;
   @media print {
     display: none;
-  }
-  & > * + * {
-    margin-top: 0.5rem;
   }
 }
 
@@ -62,7 +59,7 @@ $tabs: (
 // *** 3. HEADER *** //
 // ***************** //
 
-.#{$class}__header {
+.#{$class}__summary--header {
   @include utilities.flex($wrap: true, $align: baseline);
   gap: 0.25rem 1.5rem;
 }
@@ -79,6 +76,7 @@ $tabs: (
   @include utilities.flex($align: start, $responsive: true);
   & {
     justify-content: space-between;
+    padding-top: 0.5rem;
   }
 }
 
@@ -130,7 +128,7 @@ body.no-javascript .#{$class}__tablist {
 // ******************* //
 
 [role="tabpanel"] {
-  margin-top: 1rem;
+  padding-top: 0;
 }
 
 

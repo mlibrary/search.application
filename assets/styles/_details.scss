@@ -1,0 +1,71 @@
+@use './utilities';
+@use './icons';
+
+// --------------------------------------------------
+//
+// # Details
+//   Default styling for `details` elements.
+//
+// ## Table of Contents
+//   1. Details
+//     1.1 Summary
+//     1.1 Content
+//
+// --------------------------------------------------
+
+// ****************** //
+// *** 1. DETAILS *** //
+// ****************** //
+
+details {
+  border-top: 1px solid var(--color-neutral-100);
+}
+
+
+
+// *             * //
+// * 1.1 SUMMARY * //
+// *             * //
+summary {
+  @include utilities.flex();
+  & {
+    cursor: pointer;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0.75rem 1rem;
+  }
+  &:after {
+    @include icons.icon($icon: 'keyboard_arrow_down');
+    & {
+      color: var(--color-neutral-300);
+      font-size: 1.75rem;
+      line-height: 1;
+    }
+  }
+  &:hover .strong {
+    text-decoration: underline;
+  }
+  details[open] & {
+    &.summary__highlight {
+      background-color: var(--color-blue-100);
+    }
+    &:after {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+
+
+// *             * //
+// * 1.2 CONTENT * //
+// *             * //
+summary ~ * {
+  padding: 1rem;
+  & > *:first-child {
+    margin-top: 0;
+  }
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+}
