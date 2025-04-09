@@ -40,11 +40,7 @@ describe('copyLink', function () {
     getButton = null;
     getAlert = null;
 
-    // Remove the HTML of the body
-    document.body.innerHTML = '';
-
     // Clean up
-    sinon.restore();
     delete global.navigator;
   });
 

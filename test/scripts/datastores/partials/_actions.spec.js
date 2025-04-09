@@ -35,9 +35,6 @@ describe('actions', function () {
       getActions = null;
       getActionsDesktop = null;
       getActionsMobile = null;
-
-      // Remove the HTML of the body
-      document.body.innerHTML = '';
     });
 
     it('should places `.actions` inside `.actions__desktop`', function () {
@@ -81,9 +78,6 @@ describe('actions', function () {
 
     afterEach(function () {
       getAlert = null;
-
-      // Remove the HTML of the body
-      document.body.innerHTML = '';
     });
 
     it('should change the type from `warning` to `success`', async function () {
@@ -165,11 +159,7 @@ describe('actions', function () {
       getAlert = null;
       getText = null;
 
-      // Remove the HTML of the body
-      document.body.innerHTML = '';
-
       // Clean up
-      sinon.restore();
       delete global.navigator;
     });
 
@@ -222,9 +212,6 @@ describe('actions', function () {
     afterEach(function () {
       getForm = null;
       getAlert = null;
-
-      // Remove the HTML of the body
-      document.body.innerHTML = '';
     });
 
     it('should prevent the default form submission and call shareForm', async function () {
@@ -318,9 +305,6 @@ describe('actions', function () {
       firstTab = null;
       secondTab = null;
       getAlert = null;
-
-      // Remove the HTML of the body
-      document.body.innerHTML = '';
     });
 
     it('should hide all other tab panels on click', function () {
