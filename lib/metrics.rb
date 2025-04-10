@@ -52,12 +52,6 @@ end
 
 module Metrics::PrometheusConfig
   class << self
-    def configure_datastore
-      data_store_dir = ENV.fetch("PROMETHEUS_MONITORING_DIR", "/tmp/metrics")
-      Prometheus::Client.config.data_store =
-        Prometheus::Client::DataStores::DirectFileStore.new(dir: data_store_dir)
-    end
-
     def exporter_url
       ENV.fetch("PROMETHEUS_EXPORTER_URL", "tcp://0.0.0.0:9100/metrics")
     end
@@ -66,16 +60,20 @@ end
 
 module Metrics::PumaConfig
   class << self
+    # The actual puma default the control app is tcp://0.0.0.0:9293, but we
+    # don't need this to be a tcp socket.
+    #
+    # @return [String]
     def control_app_url
-      ENV.fetch("PUMA_CONTROL_APP", "tcp://0.0.0.0:9293")
+      ENV.fetch("PUMA_CONTROL_APP", "unix:///tmp/search.sock")
     end
 
+    # The control app doesn't require authentication so we don't provide a
+    # token
+    #
+    # @return [Hash]
     def control_app_opts
-      if ENV["PUMA_CONTROl_APP_TOKEN"]
-        {auth_token: ENV["PUMA_CONTROL_APP_TOKEN"]}
-      else
-        {no_token: true}
-      end
+      {no_token: true}
     end
   end
 end
