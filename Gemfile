@@ -6,11 +6,12 @@ gem "rackup"
 gem "canister"
 gem "omniauth"
 gem "omniauth_openid_connect"
+gem "ostruct"
 gem "alma_rest_client",
   git: "https://github.com/mlibrary/alma_rest_client",
-  tag: "v2.0.0"
+  tag: "alma_rest_client/v2.1.0"
+gem "activesupport"
 gem "semantic_logger"
-gem "activesupport", "~> 7.0", ">= 7.0.1"
 
 group :development, :test do
   gem "debug"

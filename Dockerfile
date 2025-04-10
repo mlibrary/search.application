@@ -1,7 +1,7 @@
 ################################################################################
 # BASE
 ################################################################################
-FROM ruby:3.3-slim AS base
+FROM ruby:3.4-slim AS base
 
 ARG UID=1000
 ARG GID=1000
@@ -15,7 +15,7 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   curl \
   gpg \
   git
-  
+
 
 RUN mkdir -p /etc/apt/keyrings
 RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
