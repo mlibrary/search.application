@@ -1,0 +1,30 @@
+@use '../../../utilities';
+
+// --------------------------------------------------
+//
+// # Actions
+//   Styles to apply directly to `views/datastores/record/partials/_title.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Title
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: "record__title";
+
+
+
+
+
+// **************** //
+// *** 2. TITLE *** //
+// **************** //
+
+body:not(.no-javascript) .#{$class}--toggle {
+  @include utilities.truncate;
+}

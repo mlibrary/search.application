@@ -7,6 +7,7 @@
 //
 // ## Table of Contents
 //   1. Flex
+//   2. Truncate
 //
 // --------------------------------------------------
 
@@ -27,4 +28,20 @@
       flex-direction: row;
     }
   }
+}
+
+
+
+
+
+// ******************* //
+// *** 2. TRUNCATE *** //
+// ******************* //
+
+@mixin truncate($lines: 3) {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
 }

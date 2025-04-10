@@ -1,6 +1,7 @@
 @use '../partials/breadcrumbs';
 @use '../partials/actions';
 @use './partials/marc';
+@use './partials/title';
 @use '../../utilities';
 
 // --------------------------------------------------
@@ -9,25 +10,41 @@
 //   Styles to apply directly to `views/datastores/record/layout.erb`.
 //
 // ## Table of Contents
-//   2. Formats
-//   2. Information
-//   2. Date Last Indexed
+//   1. Variables
+//   2. Record
+//   3. Formats
+//   4. Information
+//   5. Date Last Indexed
 //
 // --------------------------------------------------
 
-// ****************** //
-// *** 1. RECORD *** //
-// ****************** //
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
 
-.record > * + * {
+$class: 'record';
+
+
+
+
+
+// ***************** //
+// *** 2. RECORD *** //
+// ***************** //
+
+.#{$class} > * + * {
   margin-top: 1rem;
 }
 
+
+
+
+
 // ****************** //
-// *** 1. FORMATS *** //
+// *** 3. FORMATS *** //
 // ****************** //
 
-.record__formats {
+.#{$class} .#{$class}__formats {
   @include utilities.flex($wrap: true);
   & {
     background: var(--search-color-blue-200);
@@ -42,18 +59,26 @@
   }
 }
 
-// ***************************** //
-// *** 2. INFORMATION *** //
-// ***************************** //
 
-.record__information {
+
+
+
+// ********************** //
+// *** 4. INFORMATION *** //
+// ********************** //
+
+.#{$class} .#{$class}__information {
   padding: 1rem;
 }
 
+
+
+
+
 // **************************** //
-// *** 3. DATE LAST INDEXED *** //
+// *** 5. DATE LAST INDEXED *** //
 // **************************** //
 
-.indexing-date {
+.#{$class} .#{$class}__indexing-date {
   color: var(--search-color-grey-600);
 }
