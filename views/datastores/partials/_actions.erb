@@ -8,11 +8,13 @@
     "link" => "Copy link"
   }
 %>
-<section class="container__rounded--no-shadow actions">
-  <div class="actions__header">
-    <span class="strong" id="actions__label">Actions</span>
-    <small>Select what to do with this record.</small>
-  </div>
+<details open class="container__rounded--no-shadow actions">
+  <summary class="actions__summary">
+    <div class="actions__summary--header">
+      <span class="strong" id="actions__label">Actions</span>
+      <small>Select what to do with this record.</small>
+    </div>
+  </summary>
   <div role="tablist" aria-labelledby="actions__label" class="actions__tablist">
     <% tabs.each do |key, value| %>
       <button type="button" role="tab" id="actions__<%= key %>" aria-selected="false" aria-controls="actions__<%= key %>--tabpanel" class="button__ghost">
@@ -25,4 +27,4 @@
       <%= erb :"datastores/partials/actions/_#{key}" %>
     </div>
   <% end %>
-</section>
+</details>
