@@ -13,7 +13,7 @@ OmniAuth.config.test_mode = true
 module RSpecMixin
   include Rack::Test::Methods
   include AlmaRestClient::Test::Helpers
-  def app = Sinatra::Application
+  def app = Search::Application
 end
 
 RSpec.configure do |config|

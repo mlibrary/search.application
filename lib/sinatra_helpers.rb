@@ -1,6 +1,6 @@
 require "sinatra/base"
 require_relative "search"
-module Sinatra
+class Search::Application < Sinatra::Base
   module SearchHelpers
     include Search::ViewHelpers
   end

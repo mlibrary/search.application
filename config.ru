@@ -1,4 +1,4 @@
 require "./app"
 
 use Metrics::Middleware
-run Sinatra::Application
+run Search::Application
