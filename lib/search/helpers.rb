@@ -1,3 +1,4 @@
+require "yaml"
 module Search
   module ViewHelpers
     def link_to(body:, url:, classes: [], open_in_new: false, utm_source: "library-search", rest: nil)
