@@ -25,6 +25,4 @@ $class: "record__title";
 // *** 2. TITLE *** //
 // **************** //
 
-body:not(.no-javascript) .#{$class}--toggle {
-  @include utilities.truncate;
-}
+

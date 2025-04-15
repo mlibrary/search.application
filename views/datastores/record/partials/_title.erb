@@ -1,6 +1,6 @@
 <h1 id="maincontent" tabindex="-1" class="record__title">
   <% titles.each do |title| %>
-    <span class="<%= title.css_class %> record__title--toggle">
+    <span class="<%= title.css_class %>" data-truncate>
       <%= title.text %>
     </span>
   <% end %>
