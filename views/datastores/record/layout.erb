@@ -22,12 +22,11 @@
     <section class="record__information">
       <p>Add to list: Needs to be a partial for Results</p>
       <%= erb :'datastores/record/partials/_title', locals: { titles: @record.title } %>
-      <h2>Record info:</h2>
+      <h2 class="text__normal">Record info:</h2>
       <p>Metadata: Needs to be a partial for Results</p>
       <%= yield %>
-      <p>Harmful language</p>
     </section>
-    <h2>Available at:</h2>
+    <h2 class="text__normal">Available at:</h2>
     <p>Resource Access: Needs to be a partial for Results</p>
   </div>
   <p>Shelf browse</p>
