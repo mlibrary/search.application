@@ -8,6 +8,8 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Title
+//     2.1 Vernacular
+//     2.2 Truncate
 //
 // --------------------------------------------------
 
@@ -25,4 +27,37 @@ $class: "record__title";
 // *** 2. TITLE *** //
 // **************** //
 
+.#{$class} {
+  font-size: 1.75rem;
+  font-weight: normal;
+  & > span {
+    display: block;
+  }
+}
 
+
+
+// *                * //
+// * 2.1 VERNACULAR * //
+// *                * //
+
+.#{$class} > .vernacular {
+  color: var(--search-color-grey-500);
+}
+
+
+
+// *              * //
+// * 2.2 TRUNCATE * //
+// *              * //
+
+.#{$class} > span {
+  .truncate__text {
+    margin-right: 0.5rem;
+  }
+  .truncate__button {
+    bottom: 0.25rem;
+    display: inline-block;
+    position: relative;
+  }
+}
