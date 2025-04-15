@@ -35,6 +35,12 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
+  def related_title
+    _map_field("related_title") do |item|
+      _link_to_item(item: item, kind: title)
+    end
+  end
+
   def contributors
     _map_field("contributors") do |c|
       _author_browse_item(item: c)

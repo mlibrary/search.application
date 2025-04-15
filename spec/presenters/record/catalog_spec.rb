@@ -56,6 +56,9 @@ describe Search::Presenters::Record::Catalog::Full do
       other_titles: [
         OpenStruct.new(text: "other_title_text", url: "other_title_search")
       ],
+      related_title: [
+        OpenStruct.new(text: "related_title_text", url: "related_title_search")
+      ],
       academic_discipline: [
         ["Science", "Engineering"]
       ],
@@ -133,6 +136,15 @@ describe Search::Presenters::Record::Catalog::Full do
     it "returns a link_to object for data entity" do
       expect(subject.other_titles.data.first.partial).to eq("link_to")
       expect(subject.other_titles.data.first.locals).to eq(@bib_stub.other_titles.first)
+    end
+  end
+  context "#related_title" do
+    it "returns the appropriate field" do
+      expect(subject.related_title.field).to eq("Related Title")
+    end
+    it "returns a link_to object for data entity" do
+      expect(subject.related_title.data.first.partial).to eq("link_to")
+      expect(subject.related_title.data.first.locals).to eq(@bib_stub.related_title.first)
     end
   end
 

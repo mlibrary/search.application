@@ -35,6 +35,13 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       expect(subject.other_titles.first.url).to eq("#{S.base_url}/catalog?query=title%3Asearch_string")
     end
   end
+  context "#related_title" do
+    it "has text and search" do
+      @data["related_title"] = [{"text" => "text_string", "search" => "search_string"}]
+      expect(subject.related_title.first.text).to eq("text_string")
+      expect(subject.related_title.first.url).to eq("#{S.base_url}/catalog?query=title%3Asearch_string")
+    end
+  end
   context "#main_author" do
     it "has text, url, browse_url, and kind" do
       @data["main_author"][0]["text"] = "text_string"

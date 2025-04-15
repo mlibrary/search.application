@@ -165,6 +165,11 @@ module Search
           def other_titles
             LinkToField.for(field: "Other Titles", data: @record.bib.other_titles)
           end
+
+          def related_title
+            LinkToField.for(field: "Related Title", data: @record.bib.related_title)
+          end
+
           [
             {uid: :edition, field: "Edition"},
             {uid: :series, field: "Series (transcribed)"},
