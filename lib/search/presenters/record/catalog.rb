@@ -23,7 +23,6 @@ module Search
             :previous_title,
             :previous_title_issn,
             :contributors,
-            :published_brief,
             :created,
             :distributed,
             :manufactured,
