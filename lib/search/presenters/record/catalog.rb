@@ -23,6 +23,7 @@ module Search
             :previous_title,
             :previous_title_issn,
             :contributors,
+            :published,
             :created,
             :distributed,
             :manufactured,
@@ -174,7 +175,8 @@ module Search
             {uid: :series, field: "Series (transcribed)"},
             {uid: :series_statement, field: "Series Statement"},
             {uid: :note, field: "Note"},
-            {uid: :physical_description, field: "Physical Description"}
+            {uid: :physical_description, field: "Physical Description"},
+            {uid: :created, field: "Created"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
