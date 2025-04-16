@@ -40,7 +40,8 @@ describe Search::Presenters::Record::Catalog::Full do
     funding_information: "Funding Information",
     source_of_acquisition: "Source of Acquisition",
     related_items: "Related Items",
-    numbering_notes: "Numbering Note"
+    numbering_notes: "Numbering Note",
+    source_of_description_note: "Source of Description Note"
   }
   browse_fields = {
     contributors: "Contributors",
