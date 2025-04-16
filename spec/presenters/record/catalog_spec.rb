@@ -32,7 +32,8 @@ describe Search::Presenters::Record::Catalog::Full do
     oclc: "OCLC Number",
     isbn: "ISBN",
     distributed: "Distributed",
-    summary: "Summary"
+    summary: "Summary",
+    language_note: "Language note"
   }
   browse_fields = {
     contributors: "Contributors",
