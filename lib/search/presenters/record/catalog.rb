@@ -223,7 +223,8 @@ module Search
             {uid: :copy_specific_note, field: "Copy Specific Note"},
             {uid: :arrangement, field: "Arrangement"},
             {uid: :reproduction_note, field: "Reproduction note"},
-            {uid: :original_version_note, field: "Original version note"}
+            {uid: :original_version_note, field: "Original version note"},
+            {uid: :content_advice, field: "Content advice"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))
