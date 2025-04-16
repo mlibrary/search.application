@@ -73,7 +73,7 @@ class Search::Models::Record::Catalog::Bib
     :report_number, :chronology, :place, :printer, :association, :distributed,
     :summary, :language_note, :performers, :preferred_citation, :location_of_originals,
     :funding_information, :source_of_acquisition, :related_items, :numbering_notes,
-    :source_of_description_note, :copy_specific_note, :arrangement].each do |uid|
+    :source_of_description_note, :copy_specific_note, :arrangement, :reproduction_note].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 
