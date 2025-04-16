@@ -46,7 +46,8 @@ describe Search::Presenters::Record::Catalog::Full do
     arrangement: "Arrangement",
     reproduction_note: "Reproduction note",
     original_version_note: "Original version note",
-    content_advice: "Content advice"
+    content_advice: "Content advice",
+    awards: "Awards"
   }
   browse_fields = {
     contributors: "Contributors",
