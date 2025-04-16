@@ -1,0 +1,141 @@
+[
+{
+  partial: electronic_holding,
+  items: [
+    {
+      link: {
+        partial: link,
+	text: "Full text",
+	url: "http://whatever"
+      },
+      description: {
+        partial: plain_text,
+	text: "some description"
+      },
+      source: {
+        partial: plain_text,
+	text: "some source"
+      }
+      
+    }
+  ]
+},
+{
+  partial: physical_holding,
+  location_url: "http://lib.umich.edu/locations-and-hours/buhr-building",
+  holding_info: [
+    "Missing",
+    "1:3-22; 2:1-66,68-278"
+  ],
+  items: [
+    {
+      action: {
+        partial: link,
+	text: "Full text",
+	url: "http://whatever"
+      },
+      description: {
+        partial: plain_text,
+	text: "some description"
+      },
+      status: {
+        partial: status,
+	text: "some status",
+	intent: "success"
+      },
+      call_number: {
+        partial: plain_text,
+	text: "call_number"
+      }
+      
+    }
+   
+  ]
+}
+]
+
+===
+
+finding_aid: {
+ "url": "https://na04.alma...", 
+ "status": Available,
+ "note": "some text"
+},
+
+holdings: {
+  
+  alma_digital_items:  [
+    "url": "whatever",
+    "delivery_description": "1 file/s (pdf)"
+    "label": "some label",
+    "public_note": "Access requires whatever"
+  ],
+  
+  electronic_items:  [
+  {
+   "url": "https://na04.alma...", 
+   "status": Available,
+   "note": "some text"
+  }
+  ]
+  
+  hathi_trust_items: [
+  {
+    "id": "mdp.39015017893416",
+    "rights": "ic",
+    "description": "",
+    "collection_code": "MIU",
+    "access": false,
+    "source": "University of Michigan",
+    "status": "Search only (no full text)"
+    }
+  ]
+  
+  physical: [
+    {
+      holding_id: "22957681780006381",
+      call_number: "LB 2331.72 .S371 1990",
+      physical_location:  {
+        url: "https://lib.umich.edu/locations-and-hours/hatcher-library",
+        text: "Hatcher Graduate",
+        floor: "6 South"
+        code: {
+          library: "HATCH"
+  	location: "GRAD
+        }
+      }
+      public_note: 
+      summary:
+      items: [
+        {
+  	 item_id
+           barcode: "39whatever"
+  	 fulfillment_unit: "General"
+  	 physical_location: {
+  		url: "https://lib.umich.edu/locations-and-hours/hatcher-library",
+  		text: "Hatcher Graduate"
+        	 	floor: "6 South"
+        	 	code: {
+        	 	  library: "HATCH"
+        	 	  location: "GRAD
+        	 	}
+  		temporary: false
+  	 }
+  	 call_number: "TR whatever"
+  	 public_note: 
+  	 process_type
+  	 item_policy
+  	 description
+  	 inventory_number
+  	 material_type
+        }
+      ]
+    }
+  ]
+}
+
+
+# Extra notes
+
+Finding aids is a bit of a question mark. 
+
