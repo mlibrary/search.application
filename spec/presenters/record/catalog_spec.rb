@@ -34,7 +34,8 @@ describe Search::Presenters::Record::Catalog::Full do
     distributed: "Distributed",
     summary: "Summary",
     language_note: "Language note",
-    performers: "Performers"
+    performers: "Performers",
+    preferred_citation: "Preferred Citation"
   }
   browse_fields = {
     contributors: "Contributors",
