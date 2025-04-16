@@ -7,7 +7,8 @@ describe Search::Presenters::Record::Catalog::Full do
     physical_description: "Physical Description",
     created: "Created",
     biography_history: "Biography/History",
-    in_collection: "In Collection"
+    in_collection: "In Collection",
+    terms_of_use: "Terms of Use"
   }
   multiple_string_fields = {
     language: "Language",
