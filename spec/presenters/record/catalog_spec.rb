@@ -25,7 +25,8 @@ describe Search::Presenters::Record::Catalog::Full do
     printer: "Printer",
     association: "Association",
     numbering: "Numbering",
-    current_publication_frequency: "Current Publication Frequency"
+    current_publication_frequency: "Current Publication Frequency",
+    former_publication_frequency: "Former Publication Frequency"
   }
   multiple_string_fields = {
     language: "Language",

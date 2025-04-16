@@ -41,6 +41,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     @data["access"] = [{"text" => "Access text"}]
     @data["numbering"] = [{"text" => "Numbering text"}]
     @data["current_publication_frequency"] = [{"text" => "Current Publication Frequency text"}]
+    @data["former_publication_frequency"] = [{"text" => "Former Publication Frequency text"}]
   end
 
   def author_browse_item_expectations(subject)
@@ -224,7 +225,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     bookplate: "Donor Information text",
     access: "Access text",
     numbering: "Numbering text",
-    current_publication_frequency: "Current Publication Frequency text"
+    current_publication_frequency: "Current Publication Frequency text",
+    former_publication_frequency: "Former Publication Frequency text"
   }.each do |uid, value|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do
