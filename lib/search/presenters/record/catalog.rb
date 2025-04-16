@@ -170,19 +170,22 @@ module Search
             LinkToField.for(field: "Related Title", data: @record.bib.related_title)
           end
 
+          # Plain content, single field display
           [
             {uid: :edition, field: "Edition"},
             {uid: :series, field: "Series (transcribed)"},
             {uid: :series_statement, field: "Series Statement"},
             {uid: :note, field: "Note"},
             {uid: :physical_description, field: "Physical Description"},
-            {uid: :created, field: "Created"}
+            {uid: :created, field: "Created"},
+            {uid: :biography_history, field: "Biography/History"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
             end
           end
 
+          # Plain content, multiple field display
           [
             {uid: :language, field: "Language"},
             {uid: :published, field: "Published/Created"},

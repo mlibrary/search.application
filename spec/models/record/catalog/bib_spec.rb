@@ -2,6 +2,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   before(:each) do
     @data = JSON.parse(fixture("record/catalog/land_birds.json"))
     @data["created"] = [{"text" => "Created text"}]
+    @data["biography_history"] = [{"text" => "Biography/History text"}]
   end
 
   def author_browse_item_expectations(subject)
@@ -146,7 +147,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     series_statement: "Yagai kansatsu handobukku ; 1.",
     note: "Includes index.",
     physical_description: "64 p. : ill. ; 18 cm.",
-    created: "Created text"
+    created: "Created text",
+    biography_history: "Biography/History text"
   }.each do |uid, value|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do

@@ -5,7 +5,8 @@ describe Search::Presenters::Record::Catalog::Full do
     series_statement: "Series Statement",
     note: "Note",
     physical_description: "Physical Description",
-    created: "Created"
+    created: "Created",
+    biography_history: "Biography/History"
   }
   multiple_string_fields = {
     language: "Language",
