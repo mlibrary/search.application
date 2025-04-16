@@ -19,7 +19,8 @@ describe Search::Presenters::Record::Catalog::Full do
     bibliography: "Bibliography",
     gov_doc_no: "Government Document Number",
     publisher_number: "Publisher Number",
-    report_number: "Report Number"
+    report_number: "Report Number",
+    chronology: "Chronology"
   }
   multiple_string_fields = {
     language: "Language",
