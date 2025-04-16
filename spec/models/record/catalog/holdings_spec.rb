@@ -19,6 +19,14 @@ RSpec.describe Search::Models::Record::Catalog::Holdings do
             "source" => "University of Michigan",
             "status" => "Search only (no full text)"
           }
+        ],
+        "alma_digital_items" => [
+          {
+            "url" => "some_url",
+            "delivery_description" => "some delivery description",
+            "label" => "some label",
+            "public_note" => "some note"
+          }
         ]
       }
     }
@@ -40,6 +48,12 @@ RSpec.describe Search::Models::Record::Catalog::Holdings do
     it "returns HathiTrust items" do
       first_item = subject.hathi_trust.items.first
       expect(first_item.rights).to eq("ic")
+    end
+  end
+  context "#alma_digital" do
+    it "returns Alma Digital items" do
+      first_item = subject.alma_digital.items.first
+      expect(first_item.delivery_description).to eq("some delivery description")
     end
   end
 end
