@@ -26,7 +26,8 @@ describe Search::Presenters::Record::Catalog::Full do
     association: "Association",
     numbering: "Numbering",
     current_publication_frequency: "Current Publication Frequency",
-    former_publication_frequency: "Former Publication Frequency"
+    former_publication_frequency: "Former Publication Frequency",
+    map_scale: "Map Scale"
   }
   multiple_string_fields = {
     language: "Language",
