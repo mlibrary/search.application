@@ -23,7 +23,8 @@ describe Search::Presenters::Record::Catalog::Full do
     chronology: "Chronology",
     place: "Place",
     printer: "Printer",
-    association: "Association"
+    association: "Association",
+    numbering: "Numbering"
   }
   multiple_string_fields = {
     language: "Language",
