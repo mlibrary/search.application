@@ -44,7 +44,8 @@ describe Search::Presenters::Record::Catalog::Full do
     source_of_description_note: "Source of Description Note",
     copy_specific_note: "Copy Specific Note",
     arrangement: "Arrangement",
-    reproduction_note: "Reproduction Note"
+    reproduction_note: "Reproduction note",
+    original_version_note: "Original version note"
   }
   browse_fields = {
     contributors: "Contributors",
