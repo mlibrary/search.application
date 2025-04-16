@@ -196,7 +196,8 @@ module Search
             {uid: :place, field: "Place"},
             {uid: :printer, field: "Printer"},
             {uid: :association, field: "Association"},
-            {uid: :numbering, field: "Numbering"}
+            {uid: :numbering, field: "Numbering"},
+            {uid: :current_publication_frequency, field: "Current Publication Frequency"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
