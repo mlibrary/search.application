@@ -30,7 +30,8 @@ describe Search::Presenters::Record::Catalog::Full do
     published: "Published/Created",
     manufactured: "Manufactured",
     oclc: "OCLC Number",
-    isbn: "ISBN"
+    isbn: "ISBN",
+    distributed: "Distributed"
   }
   browse_fields = {
     contributors: "Contributors",
