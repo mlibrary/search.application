@@ -27,6 +27,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     @data["preferred_citation"] = [{"text" => "Preferred Citation text"}]
     @data["location_of_originals"] = [{"text" => "Location of Originals text"}]
     @data["funding_information"] = [{"text" => "Funding Information text"}]
+    @data["source_of_acquisition"] = [{"text" => "Source of Acquisition text"}]
   end
 
   def author_browse_item_expectations(subject)
@@ -196,7 +197,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     performers: "Performers text",
     preferred_citation: "Preferred Citation text",
     location_of_originals: "Location of Originals text",
-    funding_information: "Funding Information text"
+    funding_information: "Funding Information text",
+    source_of_acquisition: "Source of Acquisition text"
   }.each do |uid, value|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do
