@@ -68,7 +68,7 @@ class Search::Models::Record::Catalog::Bib
   [:edition, :series, :series_statement, :note, :physical_description,
     :language, :published, :manufactured, :oclc, :isbn, :created, :biography_history,
     :in_collection, :terms_of_use, :date_place_of_event, :references,
-    :copyright_status_information, :copyright].each do |uid|
+    :copyright_status_information, :copyright, :playing_time].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 

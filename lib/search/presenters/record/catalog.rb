@@ -184,7 +184,8 @@ module Search
             {uid: :date_place_of_event, field: "Date/Place of Event"},
             {uid: :references, field: "References"},
             {uid: :copyright_status_information, field: "Copyright status information"},
-            {uid: :copyright, field: "Copyright"}
+            {uid: :copyright, field: "Copyright"},
+            {uid: :playing_time, field: "Playing Time"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))

@@ -12,7 +12,8 @@ describe Search::Presenters::Record::Catalog::Full do
     date_place_of_event: "Date/Place of Event",
     references: "References",
     copyright_status_information: "Copyright status information",
-    copyright: "Copyright"
+    copyright: "Copyright",
+    playing_time: "Playing Time"
   }
   multiple_string_fields = {
     language: "Language",
