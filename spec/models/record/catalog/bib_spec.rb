@@ -38,6 +38,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     @data["content_advice"] = [{"text" => "Content advice text"}]
     @data["awards"] = [{"text" => "Awards text"}]
     @data["bookplate"] = [{"text" => "Donor Information text"}]
+    @data["access"] = [{"text" => "Access text"}]
   end
 
   def author_browse_item_expectations(subject)
@@ -218,7 +219,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     original_version_note: "Original version note text",
     content_advice: "Content advice text",
     awards: "Awards text",
-    bookplate: "Donor Information text"
+    bookplate: "Donor Information text",
+    access: "Access text"
   }.each do |uid, value|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do
