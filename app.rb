@@ -88,6 +88,7 @@ class Search::Application < Sinatra::Base
 
   Search::Datastores.each do |datastore|
     get "/#{datastore.slug}" do
+      headers "metrics.datastore" => datastore.slug, "metrics.route" => "static_page"
       Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
       @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
       erb :"datastores/layout", layout: :layout do
@@ -96,6 +97,7 @@ class Search::Application < Sinatra::Base
     end
     if datastore.slug == "catalog"
       get "/#{datastore.slug}/record/:id" do
+        headers "metrics.datastore" => datastore.slug, "metrics.route" => "full_record"
         @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, record_id: params["id"])
         @record = @presenter.record
         erb :"datastores/record/layout", layout: :layout do
@@ -110,6 +112,7 @@ class Search::Application < Sinatra::Base
 
   Search::Presenters.static_pages.each do |page|
     get "/#{page[:slug]}" do
+      headers "metrics.route" => "static_page"
       @presenter = Search::Presenters.for_static_page(slug: page[:slug], uri: URI.parse(request.fullpath), patron: @patron)
       erb :"pages/layout", layout: :layout do
         erb :"pages/#{page[:slug]}"
@@ -118,6 +121,7 @@ class Search::Application < Sinatra::Base
   end
 
   not_found do
+    headers "metrics.route" => "not_found"
     @presenter = Search::Presenters.for_404_page(uri: URI.parse(request.fullpath), patron: @patron)
     status 404
     erb :"errors/404"

@@ -1,5 +1,7 @@
 Bundler.require(:metrics)
 require "prometheus/middleware/collector"
+require "sinatra/base"
+
 module Metrics
 end
 
@@ -7,46 +9,54 @@ module Metrics::Yabeda
   def self.configure!
     Yabeda.configure do
       counter :datastore_request_count, comment: "Total number of requests to a datastore", tags: %i[datastore]
+      counter :http_server_requests_total,
+        comment: "The total number of http requests handled by the Search::Application",
+        tags: [:method, :datastore, :route, :code]
+      histogram :http_server_request_duration_seconds do
+        comment "The HTTP response duration of requests to Search::Application"
+        tags [:method, :datastore, :route]
+        unit :seconds
+        buckets [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 15, 20, 30]
+      end
     end
 
     Yabeda.configure!
   end
 end
 
-class Metrics::Middleware < Prometheus::Middleware::Collector
-  KNOWN_PATHS = ["/everything", "/catalog", "/articles", "/onlinejournals", "/guidesandmore", "/index.html"]
-  APP_PATHS = ["/auth", "/login", "/logout"]
+class Metrics::Middleware
+  attr_reader :app
 
-  protected
-
-  def init_request_metrics
-    @requests = @registry.counter(
-      :"#{@metrics_prefix}_requests_total",
-      docstring:
-        "The total number of HTTP requests handled by the Rack application.",
-      labels: %i[code method path]
-    )
-    @durations = @registry.histogram(
-      :"#{@metrics_prefix}_request_duration_seconds",
-      docstring: "The HTTP response duration of the Rack application.",
-      labels: %i[method path],
-      buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 15, 20, 30]
-    )
+  def initialize(app, options = {})
+    @app = app
   end
 
-  def init_exception_metrics
-    @exceptions = @registry.counter(
-      :"#{@metrics_prefix}_exceptions_total",
-      docstring: "The total number of exceptions raised by the Rack application.",
-      labels: [:exception]
-    )
+  def call(env)
+    trace(env) { @app.call(env) }
   end
 
-  def strip_ids_from_path(path)
-    p = super
-    p.gsub!(%r{/record/[^/]+}, "/record/:record_id")
-    return "/not-a-path" unless (KNOWN_PATHS + APP_PATHS).any? { |app_path| p.start_with?(app_path) }
-    p
+  def trace(env)
+    response = nil
+    duration = Benchmark.realtime { response = yield }
+    record(env, response.first.to_s, duration, response[1])
+    remove_metrics_headers(response[1])
+    response
+  end
+
+  def remove_metrics_headers(response_headers)
+    response_headers.keys.each { |key| response_headers.delete(key) if key.match?(/^metrics/) }
+  end
+
+  def record(env, code, duration, response_headers)
+    method = env["REQUEST_METHOD"].downcase
+    tags = {
+      datastore: response_headers["metrics.datastore"],
+      route: response_headers["metrics.route"],
+      method: method
+    }
+
+    Yabeda.http_server_requests_total.increment(tags.merge({code: code}))
+    Yabeda.http_server_request_duration_seconds.measure(tags, duration)
   end
 end
 
