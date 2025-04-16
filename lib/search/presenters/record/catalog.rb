@@ -180,7 +180,8 @@ module Search
             {uid: :created, field: "Created"},
             {uid: :biography_history, field: "Biography/History"},
             {uid: :in_collection, field: "In Collection"},
-            {uid: :terms_of_use, field: "Terms of Use"}
+            {uid: :terms_of_use, field: "Terms of Use"},
+            {uid: :date_place_of_event, field: "Date/Place of Event"},
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
