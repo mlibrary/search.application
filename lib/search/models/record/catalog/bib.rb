@@ -71,7 +71,8 @@ class Search::Models::Record::Catalog::Bib
     :copyright_status_information, :copyright, :playing_time, :audience,
     :production_credits, :bibliography, :gov_doc_no, :publisher_number,
     :report_number, :chronology, :place, :printer, :association, :distributed,
-    :summary, :language_note, :performers, :preferred_citation, :location_of_originals].each do |uid|
+    :summary, :language_note, :performers, :preferred_citation, :location_of_originals,
+    :funding_information].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 

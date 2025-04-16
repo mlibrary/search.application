@@ -214,7 +214,8 @@ module Search
             {uid: :language_note, field: "Language note"},
             {uid: :performers, field: "Performers"},
             {uid: :preferred_citation, field: "Preferred Citation"},
-            {uid: :location_of_originals, field: "Location of Originals"}
+            {uid: :location_of_originals, field: "Location of Originals"},
+            {uid: :funding_information, field: "Funding Information"},
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))

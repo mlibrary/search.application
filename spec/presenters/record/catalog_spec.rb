@@ -36,7 +36,8 @@ describe Search::Presenters::Record::Catalog::Full do
     language_note: "Language note",
     performers: "Performers",
     preferred_citation: "Preferred Citation",
-    location_of_originals: "Location of Originals"
+    location_of_originals: "Location of Originals",
+    funding_information: "Funding Information"
   }
   browse_fields = {
     contributors: "Contributors",
