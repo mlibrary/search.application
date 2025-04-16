@@ -8,6 +8,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     @data["date_place_of_event"] = [{"text" => "Date/Place of Event text"}]
     @data["references"] = [{"text" => "References text"}]
     @data["copyright_status_information"] = [{"text" => "Copyright status information text"}]
+    @data["copyright"] = [{"text" => "Copyright text"}]
   end
 
   def author_browse_item_expectations(subject)
@@ -158,7 +159,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     terms_of_use: "Terms of Use text",
     date_place_of_event: "Date/Place of Event text",
     references: "References text",
-    copyright_status_information: "Copyright status information text"
+    copyright_status_information: "Copyright status information text",
+    copyright: "Copyright text"
   }.each do |uid, value|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do

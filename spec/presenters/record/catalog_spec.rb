@@ -11,7 +11,8 @@ describe Search::Presenters::Record::Catalog::Full do
     terms_of_use: "Terms of Use",
     date_place_of_event: "Date/Place of Event",
     references: "References",
-    copyright_status_information: "Copyright status information"
+    copyright_status_information: "Copyright status information",
+    copyright: "Copyright"
   }
   multiple_string_fields = {
     language: "Language",
