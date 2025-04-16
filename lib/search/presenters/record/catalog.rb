@@ -209,7 +209,8 @@ module Search
             {uid: :manufactured, field: "Manufactured"},
             {uid: :oclc, field: "OCLC Number"},
             {uid: :isbn, field: "ISBN"},
-            {uid: :distributed, field: "Distributed"}
+            {uid: :distributed, field: "Distributed"},
+            {uid: :summary, field: "Summary"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))

@@ -31,7 +31,8 @@ describe Search::Presenters::Record::Catalog::Full do
     manufactured: "Manufactured",
     oclc: "OCLC Number",
     isbn: "ISBN",
-    distributed: "Distributed"
+    distributed: "Distributed",
+    summary: "Summary"
   }
   browse_fields = {
     contributors: "Contributors",
