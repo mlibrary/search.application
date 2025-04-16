@@ -20,7 +20,8 @@ describe Search::Presenters::Record::Catalog::Full do
     gov_doc_no: "Government Document Number",
     publisher_number: "Publisher Number",
     report_number: "Report Number",
-    chronology: "Chronology"
+    chronology: "Chronology",
+    place: "Place"
   }
   multiple_string_fields = {
     language: "Language",
