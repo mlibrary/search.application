@@ -14,7 +14,8 @@ describe Search::Presenters::Record::Catalog::Full do
     copyright_status_information: "Copyright status information",
     copyright: "Copyright",
     playing_time: "Playing Time",
-    audience: "Audience"
+    audience: "Audience",
+    production_credits: "Production Credits"
   }
   multiple_string_fields = {
     language: "Language",
