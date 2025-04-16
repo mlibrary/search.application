@@ -38,7 +38,8 @@ describe Search::Presenters::Record::Catalog::Full do
     preferred_citation: "Preferred Citation",
     location_of_originals: "Location of Originals",
     funding_information: "Funding Information",
-    source_of_acquisition: "Source of Acquisition"
+    source_of_acquisition: "Source of Acquisition",
+    related_items: "Related Items"
   }
   browse_fields = {
     contributors: "Contributors",
