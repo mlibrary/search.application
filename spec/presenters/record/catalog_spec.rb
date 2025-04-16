@@ -33,7 +33,8 @@ describe Search::Presenters::Record::Catalog::Full do
     isbn: "ISBN",
     distributed: "Distributed",
     summary: "Summary",
-    language_note: "Language note"
+    language_note: "Language note",
+    performers: "Performers"
   }
   browse_fields = {
     contributors: "Contributors",
