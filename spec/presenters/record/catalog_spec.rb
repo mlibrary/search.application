@@ -36,6 +36,7 @@ describe Search::Presenters::Record::Catalog::Full do
     manufactured: "Manufactured",
     oclc: "OCLC Number",
     isbn: "ISBN",
+    issn: "ISSN",
     distributed: "Distributed",
     summary: "Summary",
     language_note: "Language note",

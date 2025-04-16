@@ -214,6 +214,7 @@ module Search
             {uid: :manufactured, field: "Manufactured"},
             {uid: :oclc, field: "OCLC Number"},
             {uid: :isbn, field: "ISBN"},
+            {uid: :issn, field: "ISSN"},
             {uid: :distributed, field: "Distributed"},
             {uid: :summary, field: "Summary"},
             {uid: :language_note, field: "Language note"},

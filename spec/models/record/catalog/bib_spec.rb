@@ -44,6 +44,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     @data["former_publication_frequency"] = [{"text" => "Former Publication Frequency text"}]
     @data["map_scale"] = [{"text" => "Map Scale text"}]
     @data["extended_summary"] = [{"text" => "Expanded Summary text"}]
+    @data["issn"] = [{"text" => "ISSN text"}]
   end
 
   def author_browse_item_expectations(subject)
@@ -230,7 +231,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     current_publication_frequency: "Current Publication Frequency text",
     former_publication_frequency: "Former Publication Frequency text",
     map_scale: "Map Scale text",
-    extended_summary: "Expanded Summary text"
+    extended_summary: "Expanded Summary text",
+    issn: "ISSN text"
   }.each do |uid, value|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do
