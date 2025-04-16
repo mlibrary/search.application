@@ -74,7 +74,7 @@ class Search::Models::Record::Catalog::Bib
     :summary, :language_note, :performers, :preferred_citation, :location_of_originals,
     :funding_information, :source_of_acquisition, :related_items, :numbering_notes,
     :source_of_description_note, :copy_specific_note, :arrangement, :reproduction_note,
-    :original_version_note, :content_advice, :awards].each do |uid|
+    :original_version_note, :content_advice, :awards, :bookplate].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 

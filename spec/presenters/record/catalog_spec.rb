@@ -47,7 +47,8 @@ describe Search::Presenters::Record::Catalog::Full do
     reproduction_note: "Reproduction note",
     original_version_note: "Original version note",
     content_advice: "Content advice",
-    awards: "Awards"
+    awards: "Awards",
+    bookplate: "Donor Information"
   }
   browse_fields = {
     contributors: "Contributors",
