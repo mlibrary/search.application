@@ -18,7 +18,8 @@ describe Search::Presenters::Record::Catalog::Full do
     production_credits: "Production Credits",
     bibliography: "Bibliography",
     gov_doc_no: "Government Document Number",
-    publisher_number: "Publisher Number"
+    publisher_number: "Publisher Number",
+    report_number: "Report Number"
   }
   multiple_string_fields = {
     language: "Language",
