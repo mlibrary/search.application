@@ -42,7 +42,8 @@ describe Search::Presenters::Record::Catalog::Full do
     related_items: "Related Items",
     numbering_notes: "Numbering Note",
     source_of_description_note: "Source of Description Note",
-    copy_specific_note: "Copy Specific Note"
+    copy_specific_note: "Copy Specific Note",
+    arrangement: "Arrangement"
   }
   browse_fields = {
     contributors: "Contributors",
