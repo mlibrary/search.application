@@ -188,7 +188,8 @@ module Search
             {uid: :playing_time, field: "Playing Time"},
             {uid: :audience, field: "Audience"},
             {uid: :production_credits, field: "Production Credits"},
-            {uid: :bibliography, field: "Bibliography"}
+            {uid: :bibliography, field: "Bibliography"},
+            {uid: :gov_doc_no, field: "Government Document Number"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))

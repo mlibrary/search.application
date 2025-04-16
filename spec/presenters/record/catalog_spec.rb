@@ -16,7 +16,8 @@ describe Search::Presenters::Record::Catalog::Full do
     playing_time: "Playing Time",
     audience: "Audience",
     production_credits: "Production Credits",
-    bibliography: "Bibliography"
+    bibliography: "Bibliography",
+    gov_doc_no: "Government Document Number"
   }
   multiple_string_fields = {
     language: "Language",
