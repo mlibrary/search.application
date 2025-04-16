@@ -13,7 +13,8 @@ describe Search::Presenters::Record::Catalog::Full do
     references: "References",
     copyright_status_information: "Copyright status information",
     copyright: "Copyright",
-    playing_time: "Playing Time"
+    playing_time: "Playing Time",
+    audience: "Audience"
   }
   multiple_string_fields = {
     language: "Language",
