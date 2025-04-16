@@ -199,7 +199,8 @@ module Search
             {uid: :numbering, field: "Numbering"},
             {uid: :current_publication_frequency, field: "Current Publication Frequency"},
             {uid: :former_publication_frequency, field: "Former Publication Frequency"},
-            {uid: :map_scale, field: "Map Scale"}
+            {uid: :map_scale, field: "Map Scale"},
+            {uid: :extended_summary, field: "Expanded Summary"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
