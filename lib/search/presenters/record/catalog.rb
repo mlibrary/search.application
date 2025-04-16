@@ -178,7 +178,8 @@ module Search
             {uid: :note, field: "Note"},
             {uid: :physical_description, field: "Physical Description"},
             {uid: :created, field: "Created"},
-            {uid: :biography_history, field: "Biography/History"}
+            {uid: :biography_history, field: "Biography/History"},
+            {uid: :in_collection, field: "In Collection"},
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
