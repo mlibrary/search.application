@@ -9,7 +9,8 @@ describe Search::Presenters::Record::Catalog::Full do
     biography_history: "Biography/History",
     in_collection: "In Collection",
     terms_of_use: "Terms of Use",
-    date_place_of_event: "Date/Place of Event"
+    date_place_of_event: "Date/Place of Event",
+    references: "References"
   }
   multiple_string_fields = {
     language: "Language",

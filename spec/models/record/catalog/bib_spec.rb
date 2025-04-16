@@ -6,6 +6,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     @data["in_collection"] = [{"text" => "In Collection text"}]
     @data["terms_of_use"] = [{"text" => "Terms of Use text"}]
     @data["date_place_of_event"] = [{"text" => "Date/Place of Event text"}]
+    @data["references"] = [{"text" => "References text"}]
   end
 
   def author_browse_item_expectations(subject)
@@ -154,7 +155,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     biography_history: "Biography/History text",
     in_collection: "In Collection text",
     terms_of_use: "Terms of Use text",
-    date_place_of_event: "Date/Place of Event text"
+    date_place_of_event: "Date/Place of Event text",
+    references: "References text"
   }.each do |uid, value|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do

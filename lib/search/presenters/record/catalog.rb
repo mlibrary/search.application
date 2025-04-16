@@ -182,6 +182,7 @@ module Search
             {uid: :in_collection, field: "In Collection"},
             {uid: :terms_of_use, field: "Terms of Use"},
             {uid: :date_place_of_event, field: "Date/Place of Event"},
+            {uid: :references, field: "References"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
