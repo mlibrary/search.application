@@ -114,11 +114,11 @@ holdings: {
   	 physical_location: {
   		url: "https://lib.umich.edu/locations-and-hours/hatcher-library",
   		text: "Hatcher Graduate"
-        	 	floor: "6 South"
-        	 	code: {
-        	 	  library: "HATCH"
-        	 	  location: "GRAD
-        	 	}
+      floor: "6 South"
+      code: {
+        library: "HATCH"
+        location: "GRAD
+      }
   		temporary: false
   	 }
   	 call_number: "TR whatever"

@@ -4,6 +4,7 @@ end
 require_relative "holdings/electronic"
 require_relative "holdings/hathi_trust"
 require_relative "holdings/alma_digital"
+require_relative "holdings/physical"
 
 class Search::Models::Record::Catalog::Holdings
   def initialize(data)
@@ -20,5 +21,9 @@ class Search::Models::Record::Catalog::Holdings
 
   def alma_digital
     AlmaDigital.new(@data)
+  end
+
+  def physical
+    Physical.new(@data)
   end
 end
