@@ -3,7 +3,7 @@ const toggleTruncatedText = () => {
   const attribute = 'data-truncate';
   const elements = document.querySelectorAll(`[${attribute}]`);
 
-  elements.forEach((element) => {
+  elements.forEach((element, index) => {
     // Ensure element only contains text
     if (element.children.length > 0) {
       return;
@@ -34,11 +34,13 @@ const toggleTruncatedText = () => {
     // Create a span and button for toggling
     const span = document.createElement('span');
     span.className = 'truncate__text';
+    span.id = `truncate__text-${index}`;
     span.textContent = truncatedText;
 
     const button = document.createElement('button');
     button.className = 'button__ghost truncate__button';
     button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-controls', span.id);
     button.textContent = 'Show more';
 
     button.addEventListener('click', () => {
@@ -46,6 +48,20 @@ const toggleTruncatedText = () => {
       span.textContent = isExpanded ? truncatedText : fullText;
       button.textContent = `Show ${isExpanded ? 'more' : 'less'}`;
       button.setAttribute('aria-expanded', !isExpanded);
+    });
+
+    // Add print overrides to show full text and hide the button
+    window.addEventListener('beforeprint', () => {
+      if (button.getAttribute('aria-expanded') === 'false') {
+        span.textContent = fullText;
+      }
+      button.style.display = 'none';
+    });
+    window.addEventListener('afterprint', () => {
+      if (button.getAttribute('aria-expanded') === 'false') {
+        span.textContent = truncatedText;
+      }
+      button.removeAttribute('style');
     });
 
     // Clear element and append span and button

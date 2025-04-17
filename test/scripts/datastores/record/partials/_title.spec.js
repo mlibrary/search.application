@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import sinon from 'sinon';
 import toggleTruncatedText from '../../../../../assets/scripts/datastores/record/partials/_title.js';
 
 describe('toggleTruncatedText', function () {
@@ -180,6 +181,14 @@ describe('toggleTruncatedText', function () {
       expect(button.getAttribute('aria-expanded'), 'should have `aria-expanded` set to `false` after collapsing').to.equal('false');
     });
 
+    it('should control the correct element', function () {
+      // Call the function
+      toggleTruncatedText();
+
+      // Check the `span` ID matches the `aria-controls` attribute
+      expect(getButton().getAttribute('aria-controls'), 'should have a value that matches the `span` ID').to.equal(getSpan().id);
+    });
+
     it('should toggle the truncated text on click', function () {
       // Call the function
       toggleTruncatedText();
@@ -216,6 +225,30 @@ describe('toggleTruncatedText', function () {
       // Click the button to change the text again
       button.click();
       expect(button.innerHTML.trim(), 'should have button text "Show more" before click').to.equal('Show more');
+    });
+  });
+
+  describe('print listeners', function () {
+    let addEventListenerStub = null;
+
+    beforeEach(function () {
+      // Stub the window.addEventListener method
+      addEventListenerStub = sinon.stub(window, 'addEventListener');
+
+      // Call the function
+      toggleTruncatedText();
+    });
+
+    afterEach(function () {
+      addEventListenerStub.restore();
+    });
+
+    it('should set up beforeprint event listener', function () {
+      expect(addEventListenerStub.calledWith('beforeprint', sinon.match.func)).to.be.true;
+    });
+
+    it('should set up afterprint event listener', function () {
+      expect(addEventListenerStub.calledWith('afterprint', sinon.match.func)).to.be.true;
     });
   });
 });
