@@ -7,12 +7,14 @@ require "simplecov"
 SimpleCov.start
 
 ENV["APP_ENV"] = "test"
+require_relative "factories"
 require_relative "../app"
 OmniAuth.config.test_mode = true
 
 module RSpecMixin
   include Rack::Test::Methods
   include AlmaRestClient::Test::Helpers
+  include Factories
   def app = Search::Application
 end
 
