@@ -35,20 +35,20 @@ module Factories
     end
 
     def text_fields
-      ["language", "note", "physical_description", "isbn", "call_number",
-        "oclc", "lcsh_subjects", "created", "biography_history", "summary",
-        "in_collection", "access", "terms_of_use", "date_place_of_event",
-        "references", "copyright_status_information", "copyright", "playing_time",
-        "audience", "production_credits", "bibliography", "gov_doc_no",
-        "publisher_number", "report_number", "chronology", "place", "printer",
-        "association", "language_note", "performers", "preferred_citation",
-        "location_of_originals", "funding_information", "source_of_acquisition",
-        "related_items", "numbering_notes", "source_of_description_note",
-        "copy_specific_note", "arrangement", "reproduction_note",
-        "original_version_note", "content_advice", "awards", "bookplate",
-        "numbering", "current_publication_frequency",
-        "former_publication_frequency", "map_scale", "extended_summary",
-        "issn"].map do |f|
+      ["access", "arrangement", "association", "audience", "awards",
+        "bibliography", "biography_history", "bookplate", "call_number",
+        "chronology", "content_advice", "copy_specific_note", "copyright",
+        "copyright_status_information", "created",
+        "current_publication_frequency", "date_place_of_event",
+        "extended_summary", "former_publication_frequency", "funding_information",
+        "gov_doc_no", "in_collection", "isbn", "issn", "language",
+        "language_note", "lcsh_subjects", "location_of_originals", "map_scale",
+        "note", "numbering", "numbering_notes", "oclc", "original_version_note",
+        "performers", "physical_description", "place", "playing_time",
+        "preferred_citation", "printer", "production_credits", "publisher_number",
+        "references", "related_items", "report_number", "reproduction_note",
+        "source_of_acquisition", "source_of_description_note", "summary",
+        "terms_of_use"].map do |f|
         [f, text_field]
       end
     end
