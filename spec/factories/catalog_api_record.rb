@@ -2,7 +2,7 @@ module Factories
   class CatalogAPIRecord
     def to_h
       ([
-        ["id", "990008019700106381"],
+        ["id", "99#{Faker::Number.number(digits: 12)}6381"],
         ["format", ["Book"]],
         ["academic_discipline", [{
           "list" => [
@@ -60,17 +60,17 @@ module Factories
     end
 
     def text_field
-      [{"text" => "Japanese"}]
+      [{"text" => Faker::Lorem.sentence}]
     end
 
     def paired_text_field
       [
         {
-          text: "Sanʼya no tori = Concise field guide to land birds / kaisetsu Saeki Akimitsu ; e Taniguchi Takashi.",
+          text: Faker::Lorem.sentence,
           script: "default"
         },
         {
-          text: "山野の鳥 = Concise field guide to land birds / 解說佐伯彰光 ; 絵谷口高司.",
+          text: Faker::Lorem.sentence,
           script: "vernacular"
         }
       ]
@@ -79,24 +79,24 @@ module Factories
     def author_browse_field
       [
         {
-          text: "Saeki, Akimitsu.",
+          text: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
           script: "default",
-          search: "Saeki, Akimitsu.",
-          browse: "Saeki, Akimitsu."
+          search: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
+          browse: "#{Faker::Name.last_name}, #{Faker::Name.first_name}"
         },
         {
-          text: "佐伯彰光.",
+          text: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
           script: "vernacular",
-          search: "佐伯彰光.",
-          browse: "佐伯彰光."
+          search: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
+          browse: "#{Faker::Name.last_name}, #{Faker::Name.first_name}"
         }
       ]
     end
 
     def link_field
       [{
-        text: "Concise field guide to land birds.",
-        search: "Concise field guid to land birds."
+        text: Faker::Lorem.sentence,
+        search: Faker::Lorem.sentence
       }]
     end
   end

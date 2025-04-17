@@ -1,3 +1,4 @@
+require "faker"
 module Factories
 end
 require_relative "factories/catalog_api_record"
