@@ -52,9 +52,7 @@ const toggleTruncatedText = () => {
 
     // Add print overrides to show full text and hide the button
     window.addEventListener('beforeprint', () => {
-      if (button.getAttribute('aria-expanded') === 'false') {
-        span.textContent = fullText;
-      }
+      span.textContent = fullText;
       button.style.display = 'none';
     });
     window.addEventListener('afterprint', () => {

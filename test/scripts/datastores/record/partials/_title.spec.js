@@ -228,7 +228,7 @@ describe('toggleTruncatedText', function () {
     });
   });
 
-  describe('print listeners', function () {
+  describe('print event listeners', function () {
     let addEventListenerStub = null;
 
     beforeEach(function () {
@@ -243,12 +243,28 @@ describe('toggleTruncatedText', function () {
       addEventListenerStub.restore();
     });
 
-    it('should set up beforeprint event listener', function () {
-      expect(addEventListenerStub.calledWith('beforeprint', sinon.match.func)).to.be.true;
-    });
+    it('should show full text and hide the button on print', function () {
+      // Check that the text is truncated and the button is showing
+      expect(getSpan().textContent.length, `should show the first ${characterTrim} plus ellipses before printing`).to.equal(characterTrim + 3);
+      expect(getButton().style.display).to.equal('');
 
-    it('should set up afterprint event listener', function () {
-      expect(addEventListenerStub.calledWith('afterprint', sinon.match.func)).to.be.true;
+      // Simulate beforeprint event
+      const [beforePrintListener, afterPrintListener] = [
+        addEventListenerStub.getCall(0).args[1],
+        addEventListenerStub.getCall(1).args[1]
+      ];
+      expect(addEventListenerStub.calledWith('beforeprint', sinon.match.func)).to.be.true;
+      beforePrintListener();
+
+      // Check that the text is now the full text, and the button no longer displays
+      expect(getSpan().textContent, 'should show the full text').to.equal(text);
+      expect(getButton().style.display, 'should hide the button').to.equal('none');
+
+      // Simulate afterprint event
+      afterPrintListener();
+      // Check the length of the truncated text plus ellipses, and the button should be visible again
+      expect(getSpan().textContent.length, `should show the first ${characterTrim} plus ellipses after collapsing`).to.equal(characterTrim + 3);
+      expect(getButton().style.display).to.equal('');
     });
   });
 });
