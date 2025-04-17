@@ -1,6 +1,50 @@
 RSpec.describe Search::Models::Record::Catalog::Bib do
   before(:each) do
     @data = JSON.parse(fixture("record/catalog/land_birds.json"))
+    @data["created"] = [{"text" => "Created text"}]
+    @data["biography_history"] = [{"text" => "Biography/History text"}]
+    @data["in_collection"] = [{"text" => "In Collection text"}]
+    @data["terms_of_use"] = [{"text" => "Terms of Use text"}]
+    @data["date_place_of_event"] = [{"text" => "Date/Place of Event text"}]
+    @data["references"] = [{"text" => "References text"}]
+    @data["copyright_status_information"] = [{"text" => "Copyright status information text"}]
+    @data["copyright"] = [{"text" => "Copyright text"}]
+    @data["playing_time"] = [{"text" => "Playing Time text"}]
+    @data["audience"] = [{"text" => "Audience text"}]
+    @data["production_credits"] = [{"text" => "Production Credits text"}]
+    @data["bibliography"] = [{"text" => "Bibliography text"}]
+    @data["gov_doc_no"] = [{"text" => "Government Document Number text"}]
+    @data["publisher_number"] = [{"text" => "Publisher Number text"}]
+    @data["report_number"] = [{"text" => "Report Number text"}]
+    @data["chronology"] = [{"text" => "Chronology text"}]
+    @data["place"] = [{"text" => "Place text"}]
+    @data["printer"] = [{"text" => "Printer text"}]
+    @data["association"] = [{"text" => "Association text"}]
+    @data["distributed"] = [{"text" => "Distributed text"}]
+    @data["summary"] = [{"text" => "Summary text"}]
+    @data["language_note"] = [{"text" => "Language note text"}]
+    @data["performers"] = [{"text" => "Performers text"}]
+    @data["preferred_citation"] = [{"text" => "Preferred Citation text"}]
+    @data["location_of_originals"] = [{"text" => "Location of Originals text"}]
+    @data["funding_information"] = [{"text" => "Funding Information text"}]
+    @data["source_of_acquisition"] = [{"text" => "Source of Acquisition text"}]
+    @data["related_items"] = [{"text" => "Related Items text"}]
+    @data["numbering_notes"] = [{"text" => "Numbering Note text"}]
+    @data["source_of_description_note"] = [{"text" => "Source of Description Note text"}]
+    @data["copy_specific_note"] = [{"text" => "Copy Specific Note text"}]
+    @data["arrangement"] = [{"text" => "Arrangement text"}]
+    @data["reproduction_note"] = [{"text" => "Reproduction note text"}]
+    @data["original_version_note"] = [{"text" => "Original version note text"}]
+    @data["content_advice"] = [{"text" => "Content advice text"}]
+    @data["awards"] = [{"text" => "Awards text"}]
+    @data["bookplate"] = [{"text" => "Donor Information text"}]
+    @data["access"] = [{"text" => "Access text"}]
+    @data["numbering"] = [{"text" => "Numbering text"}]
+    @data["current_publication_frequency"] = [{"text" => "Current Publication Frequency text"}]
+    @data["former_publication_frequency"] = [{"text" => "Former Publication Frequency text"}]
+    @data["map_scale"] = [{"text" => "Map Scale text"}]
+    @data["extended_summary"] = [{"text" => "Expanded Summary text"}]
+    @data["issn"] = [{"text" => "ISSN text"}]
   end
 
   def author_browse_item_expectations(subject)
@@ -33,6 +77,13 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       @data["other_titles"][0]["search"] = "search_string"
       expect(subject.other_titles.first.text).to eq("text_string")
       expect(subject.other_titles.first.url).to eq("#{S.base_url}/catalog?query=title%3Asearch_string")
+    end
+  end
+  context "#related_title" do
+    it "has text and search" do
+      @data["related_title"] = [{"text" => "text_string", "search" => "search_string"}]
+      expect(subject.related_title.first.text).to eq("text_string")
+      expect(subject.related_title.first.url).to eq("#{S.base_url}/catalog?query=title%3Asearch_string")
     end
   end
   context "#main_author" do
@@ -137,7 +188,51 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     series: "Yagai kansatsu handobukku ; 1",
     series_statement: "Yagai kansatsu handobukku ; 1.",
     note: "Includes index.",
-    physical_description: "64 p. : ill. ; 18 cm."
+    physical_description: "64 p. : ill. ; 18 cm.",
+    created: "Created text",
+    biography_history: "Biography/History text",
+    in_collection: "In Collection text",
+    terms_of_use: "Terms of Use text",
+    date_place_of_event: "Date/Place of Event text",
+    references: "References text",
+    copyright_status_information: "Copyright status information text",
+    copyright: "Copyright text",
+    playing_time: "Playing Time text",
+    audience: "Audience text",
+    production_credits: "Production Credits text",
+    bibliography: "Bibliography text",
+    gov_doc_no: "Government Document Number text",
+    publisher_number: "Publisher Number text",
+    report_number: "Report Number text",
+    chronology: "Chronology text",
+    place: "Place text",
+    printer: "Printer text",
+    association: "Association text",
+    distributed: "Distributed text",
+    summary: "Summary text",
+    language_note: "Language note text",
+    performers: "Performers text",
+    preferred_citation: "Preferred Citation text",
+    location_of_originals: "Location of Originals text",
+    funding_information: "Funding Information text",
+    source_of_acquisition: "Source of Acquisition text",
+    related_items: "Related Items text",
+    numbering_notes: "Numbering Note text",
+    source_of_description_note: "Source of Description Note text",
+    copy_specific_note: "Copy Specific Note text",
+    arrangement: "Arrangement text",
+    reproduction_note: "Reproduction note text",
+    original_version_note: "Original version note text",
+    content_advice: "Content advice text",
+    awards: "Awards text",
+    bookplate: "Donor Information text",
+    access: "Access text",
+    numbering: "Numbering text",
+    current_publication_frequency: "Current Publication Frequency text",
+    former_publication_frequency: "Former Publication Frequency text",
+    map_scale: "Map Scale text",
+    extended_summary: "Expanded Summary text",
+    issn: "ISSN text"
   }.each do |uid, value|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do

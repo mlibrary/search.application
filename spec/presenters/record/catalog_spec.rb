@@ -4,14 +4,58 @@ describe Search::Presenters::Record::Catalog::Full do
     series: "Series (transcribed)",
     series_statement: "Series Statement",
     note: "Note",
-    physical_description: "Physical Description"
+    physical_description: "Physical Description",
+    created: "Created",
+    biography_history: "Biography/History",
+    in_collection: "In Collection",
+    terms_of_use: "Terms of Use",
+    date_place_of_event: "Date/Place of Event",
+    references: "References",
+    copyright_status_information: "Copyright status information",
+    copyright: "Copyright",
+    playing_time: "Playing Time",
+    audience: "Audience",
+    production_credits: "Production Credits",
+    bibliography: "Bibliography",
+    gov_doc_no: "Government Document Number",
+    publisher_number: "Publisher Number",
+    report_number: "Report Number",
+    chronology: "Chronology",
+    place: "Place",
+    printer: "Printer",
+    association: "Association",
+    numbering: "Numbering",
+    current_publication_frequency: "Current Publication Frequency",
+    former_publication_frequency: "Former Publication Frequency",
+    map_scale: "Map Scale",
+    extended_summary: "Expanded Summary"
   }
   multiple_string_fields = {
     language: "Language",
     published: "Published/Created",
     manufactured: "Manufactured",
     oclc: "OCLC Number",
-    isbn: "ISBN"
+    isbn: "ISBN",
+    issn: "ISSN",
+    distributed: "Distributed",
+    summary: "Summary",
+    language_note: "Language note",
+    performers: "Performers",
+    preferred_citation: "Preferred Citation",
+    location_of_originals: "Location of Originals",
+    funding_information: "Funding Information",
+    source_of_acquisition: "Source of Acquisition",
+    related_items: "Related Items",
+    numbering_notes: "Numbering Note",
+    source_of_description_note: "Source of Description Note",
+    copy_specific_note: "Copy Specific Note",
+    arrangement: "Arrangement",
+    reproduction_note: "Reproduction note",
+    original_version_note: "Original version note",
+    content_advice: "Content advice",
+    awards: "Awards",
+    bookplate: "Donor Information",
+    access: "Access"
   }
   browse_fields = {
     contributors: "Contributors",
@@ -55,6 +99,9 @@ describe Search::Presenters::Record::Catalog::Full do
       ),
       other_titles: [
         OpenStruct.new(text: "other_title_text", url: "other_title_search")
+      ],
+      related_title: [
+        OpenStruct.new(text: "related_title_text", url: "related_title_search")
       ],
       academic_discipline: [
         ["Science", "Engineering"]
@@ -133,6 +180,15 @@ describe Search::Presenters::Record::Catalog::Full do
     it "returns a link_to object for data entity" do
       expect(subject.other_titles.data.first.partial).to eq("link_to")
       expect(subject.other_titles.data.first.locals).to eq(@bib_stub.other_titles.first)
+    end
+  end
+  context "#related_title" do
+    it "returns the appropriate field" do
+      expect(subject.related_title.field).to eq("Related Title")
+    end
+    it "returns a link_to object for data entity" do
+      expect(subject.related_title.data.first.partial).to eq("link_to")
+      expect(subject.related_title.data.first.locals).to eq(@bib_stub.related_title.first)
     end
   end
 

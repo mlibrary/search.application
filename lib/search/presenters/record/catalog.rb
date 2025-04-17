@@ -11,80 +11,81 @@ module Search
         end
 
         class Full < Base
-          RECORD_INFO_METHODS =
-            [:format, # 00-catalog mirlyn_format
-              :main_author,
-              :contributors,
-              # :uniform_title, 00-catalog ???
-              :related_title,
-              :other_titles,
-              :new_title,
-              :new_title_issn,
-              :previous_title,
-              :previous_title_issn,
-              :contributors,
-              :published_brief,
-              :created,
-              :distributed,
-              :manufactured,
-              :edition,
-              :series,
-              :series_statement,
-              :biography_history,
-              :summary, # 00-catalog mirlyn summary
-              :in_collection,
-              :access, # 00-catalog marc_access
-              # :indexes, 00-catalog ???
-              :terms_of_use,
-              :language,
-              :language_note,
-              :performers,
-              :date_place_of_event,
-              :preferred_citation,
-              :location_of_originals,
-              :funding_information,
-              :source_of_acquisition,
-              :related_items,
-              :numbering,
-              :current_publication_frequency,
-              :former_publication_frequency,
-              :numbering_notes,
-              :source_of_description_note,
-              :copy_specific_note,
-              :references,
-              :copyright_status_information,
-              :note,
-              :arrangement,
-              :copyright,
-              :physical_description,
-              :map_scale,
-              :reproduction_note,
-              :original_version_note,
-              :playing_time,
-              :media_format,
-              :audience,
-              :content_advice,
-              :awards,
-              :production_credits,
-              :bibliography,
-              :isbn,
-              :issn, # 00-catalog marc_issn
-              :call_number, # 00-catalog callnumber_browse
-              :oclc,
-              :gov_doc_no,
-              :publisher_number,
-              :report_number,
-              :chronology,
-              :place,
-              :printer,
-              :association,
-              :lcsh_subjects, # 00-catalog lc_subject_display
-              :remediated_lcsh_subjects, # 00-catalog remediated_lc_subject_display
-              :other_subjects,
-              :academic_discipline,
-              :contents_listing, # 00-catalog contents_listing
-              :bookplate,
-              :extended_summary]
+          RECORD_INFO_METHODS = [
+            :format, # 00-catalog mirlyn_format
+            :main_author,
+            :contributors,
+            # :uniform_title, 00-catalog ???
+            :related_title,
+            :other_titles,
+            :new_title,
+            :new_title_issn,
+            :previous_title,
+            :previous_title_issn,
+            :contributors,
+            :published,
+            :created,
+            :distributed,
+            :manufactured,
+            :edition,
+            :series,
+            :series_statement,
+            :biography_history,
+            :summary, # 00-catalog mirlyn summary
+            :in_collection,
+            :access, # 00-catalog marc_access
+            # :indexes, 00-catalog ???
+            :terms_of_use,
+            :language,
+            :language_note,
+            :performers,
+            :date_place_of_event,
+            :preferred_citation,
+            :location_of_originals,
+            :funding_information,
+            :source_of_acquisition,
+            :related_items,
+            :numbering,
+            :current_publication_frequency,
+            :former_publication_frequency,
+            :numbering_notes,
+            :source_of_description_note,
+            :copy_specific_note,
+            :references,
+            :copyright_status_information,
+            :note,
+            :arrangement,
+            :copyright,
+            :physical_description,
+            :map_scale,
+            :reproduction_note,
+            :original_version_note,
+            :playing_time,
+            :media_format,
+            :audience,
+            :content_advice,
+            :awards,
+            :production_credits,
+            :bibliography,
+            :isbn,
+            :issn, # 00-catalog marc_issn
+            :call_number, # 00-catalog callnumber_browse
+            :oclc,
+            :gov_doc_no,
+            :publisher_number,
+            :report_number,
+            :chronology,
+            :place,
+            :printer,
+            :association,
+            :lcsh_subjects, # 00-catalog lc_subject_display
+            :remediated_lcsh_subjects, # 00-catalog remediated_lc_subject_display
+            :other_subjects,
+            :academic_discipline,
+            :contents_listing, # 00-catalog contents_listing
+            :bookplate,
+            :extended_summary
+          ]
 
           def self.for(id)
             record = Search::Models::Record::Catalog.for(id)
@@ -164,24 +165,75 @@ module Search
           def other_titles
             LinkToField.for(field: "Other Titles", data: @record.bib.other_titles)
           end
+
+          def related_title
+            LinkToField.for(field: "Related Title", data: @record.bib.related_title)
+          end
+
+          # Plain content, single field display
           [
             {uid: :edition, field: "Edition"},
             {uid: :series, field: "Series (transcribed)"},
             {uid: :series_statement, field: "Series Statement"},
             {uid: :note, field: "Note"},
-            {uid: :physical_description, field: "Physical Description"}
+            {uid: :physical_description, field: "Physical Description"},
+            {uid: :created, field: "Created"},
+            {uid: :biography_history, field: "Biography/History"},
+            {uid: :in_collection, field: "In Collection"},
+            {uid: :terms_of_use, field: "Terms of Use"},
+            {uid: :date_place_of_event, field: "Date/Place of Event"},
+            {uid: :references, field: "References"},
+            {uid: :copyright_status_information, field: "Copyright status information"},
+            {uid: :copyright, field: "Copyright"},
+            {uid: :playing_time, field: "Playing Time"},
+            {uid: :audience, field: "Audience"},
+            {uid: :production_credits, field: "Production Credits"},
+            {uid: :bibliography, field: "Bibliography"},
+            {uid: :gov_doc_no, field: "Government Document Number"},
+            {uid: :publisher_number, field: "Publisher Number"},
+            {uid: :report_number, field: "Report Number"},
+            {uid: :chronology, field: "Chronology"},
+            {uid: :place, field: "Place"},
+            {uid: :printer, field: "Printer"},
+            {uid: :association, field: "Association"},
+            {uid: :numbering, field: "Numbering"},
+            {uid: :current_publication_frequency, field: "Current Publication Frequency"},
+            {uid: :former_publication_frequency, field: "Former Publication Frequency"},
+            {uid: :map_scale, field: "Map Scale"},
+            {uid: :extended_summary, field: "Expanded Summary"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
             end
           end
 
+          # Plain content, multiple field display
           [
             {uid: :language, field: "Language"},
             {uid: :published, field: "Published/Created"},
             {uid: :manufactured, field: "Manufactured"},
             {uid: :oclc, field: "OCLC Number"},
-            {uid: :isbn, field: "ISBN"}
+            {uid: :isbn, field: "ISBN"},
+            {uid: :issn, field: "ISSN"},
+            {uid: :distributed, field: "Distributed"},
+            {uid: :summary, field: "Summary"},
+            {uid: :language_note, field: "Language note"},
+            {uid: :performers, field: "Performers"},
+            {uid: :preferred_citation, field: "Preferred Citation"},
+            {uid: :location_of_originals, field: "Location of Originals"},
+            {uid: :funding_information, field: "Funding Information"},
+            {uid: :source_of_acquisition, field: "Source of Acquisition"},
+            {uid: :related_items, field: "Related Items"},
+            {uid: :numbering_notes, field: "Numbering Note"},
+            {uid: :source_of_description_note, field: "Source of Description Note"},
+            {uid: :copy_specific_note, field: "Copy Specific Note"},
+            {uid: :arrangement, field: "Arrangement"},
+            {uid: :reproduction_note, field: "Reproduction note"},
+            {uid: :original_version_note, field: "Original version note"},
+            {uid: :content_advice, field: "Content advice"},
+            {uid: :awards, field: "Awards"},
+            {uid: :bookplate, field: "Donor Information"},
+            {uid: :access, field: "Access"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))

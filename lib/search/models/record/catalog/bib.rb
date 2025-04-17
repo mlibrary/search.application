@@ -35,6 +35,12 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
+  def related_title
+    _map_field("related_title") do |item|
+      _link_to_item(item: item, kind: title)
+    end
+  end
+
   def contributors
     _map_field("contributors") do |c|
       _author_browse_item(item: c)
@@ -60,7 +66,17 @@ class Search::Models::Record::Catalog::Bib
   end
 
   [:edition, :series, :series_statement, :note, :physical_description,
-    :language, :published, :manufactured, :oclc, :isbn].each do |uid|
+    :language, :published, :manufactured, :oclc, :isbn, :created, :biography_history,
+    :in_collection, :terms_of_use, :date_place_of_event, :references,
+    :copyright_status_information, :copyright, :playing_time, :audience,
+    :production_credits, :bibliography, :gov_doc_no, :publisher_number,
+    :report_number, :chronology, :place, :printer, :association, :distributed,
+    :summary, :language_note, :performers, :preferred_citation, :location_of_originals,
+    :funding_information, :source_of_acquisition, :related_items, :numbering_notes,
+    :source_of_description_note, :copy_specific_note, :arrangement, :reproduction_note,
+    :original_version_note, :content_advice, :awards, :bookplate, :access,
+    :numbering, :current_publication_frequency, :former_publication_frequency,
+    :map_scale, :extended_summary, :issn].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 

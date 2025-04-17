@@ -1,0 +1,11 @@
+<%= h1(
+  body:
+    titles.map do |title|
+      <<-HTML
+      <span class="#{title.css_class}" data-truncate>
+        #{title.text}
+      </span>
+      HTML
+    end.join,
+  classes: ["record__title"]
+) %>

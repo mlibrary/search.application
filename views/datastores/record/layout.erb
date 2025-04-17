@@ -21,16 +21,17 @@
     </ul>
     <section class="record__information">
       <p>Add to list: Needs to be a partial for Results</p>
-      <%= h1(body: @presenter.title) %>
+      <%= erb :'datastores/record/partials/_title', locals: { titles: @record.title } %>
+      <h2 class="text__normal">Record info:</h2>
       <p>Metadata: Needs to be a partial for Results</p>
       <%= yield %>
-      <p>Harmful language</p>
     </section>
+    <h2 class="text__normal">Available at:</h2>
     <p>Resource Access: Needs to be a partial for Results</p>
   </div>
   <p>Shelf browse</p>
   <% if @record.indexing_date %>
-    <p class="indexing-date">
+    <p class="record__indexing-date">
       <span class="strong">Date Last Indexed:</span> <%= @record.indexing_date %>
     </p>
   <% end %>
