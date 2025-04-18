@@ -77,7 +77,7 @@ class Search::Models::Record::Catalog::Bib
     :current_publication_frequency, :date_place_of_event, :distributed, :edition,
     :extended_summary, :former_publication_frequency, :funding_information,
     :gov_doc_no, :in_collection, :isbn, :issn, :language, :language_note,
-    :location_of_originals, :manufactured, :map_scale, :new_title_issn, :note,
+    :location_of_originals, :manufactured, :map_scale, :media_format, :new_title_issn, :note,
     :numbering, :numbering_notes, :oclc, :other_subjects, :original_version_note,
     :performers, :physical_description, :place, :playing_time,
     :preferred_citation, :previous_title_issn, :printer, :production_credits,

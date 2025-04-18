@@ -46,6 +46,7 @@ describe Search::Presenters::Record::Catalog::Full do
     language_note: "Language note",
     location_of_originals: "Location of Originals",
     manufactured: "Manufactured",
+    media_format: "Media Format",
     new_title_issn: "New Title ISSN",
     numbering_notes: "Numbering Note",
     oclc: "OCLC Number",

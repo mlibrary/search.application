@@ -225,6 +225,7 @@ module Search
             {uid: :language_note, field: "Language note"},
             {uid: :location_of_originals, field: "Location of Originals"},
             {uid: :manufactured, field: "Manufactured"},
+            {uid: :media_format, field: "Media Format"},
             {uid: :numbering_notes, field: "Numbering Note"},
             {uid: :new_title_issn, field: "New Title ISSN"},
             {uid: :oclc, field: "OCLC Number"},
