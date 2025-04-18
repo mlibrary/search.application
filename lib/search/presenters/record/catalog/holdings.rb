@@ -3,23 +3,34 @@ class Search::Presenters::Record::Catalog::Holdings
   # <Description>
   #
   # @param [Search::Models::Record::Catalog] data is the catalog record model
-  S #
+  #
   def initialize(data)
     @data = data
+    @holdings = @data.holdings
   end
 
   def list
-  end
-
-  def online
-  end
-
-  def physical
+    [
+      HathiTrust.new(@holdings.hathi_trust.items)
+    ].reject { |x| x.empty? }
   end
 
   class HathiTrust
-    def initialize(data)
-      @items = data.hathi_trust
+    #
+    # <Description>
+    #
+    # @param items [Array<Search::Models::Record::Catalog::Holdings::HathiTrust::Item>] the HathiTrust items
+    #
+    def initialize(items)
+      @items = items
+    end
+
+    def empty?
+      @items.empty?
+    end
+
+    def heading
+      "HathiTrust Digital Library"
     end
 
     def partial

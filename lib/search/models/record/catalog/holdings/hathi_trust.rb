@@ -1,6 +1,6 @@
 class Search::Models::Record::Catalog::Holdings::HathiTrust
   def initialize(data)
-    @hathi_trust_items = data.dig("holdings", "hathi_trust_items")
+    @hathi_trust_items = data.dig("holdings", "hathi_trust_items") || []
   end
 
   def items
