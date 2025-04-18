@@ -1,0 +1,24 @@
+<div class="container__rounded shelf-browse">
+  <header class="shelf-browse__header">
+    <h2>Shelf browse</h2>
+    <%= link_to(body: "Browse in call number list", url: "") %>
+  </header>
+  <div class="shelf-browse__carousel">
+    <button class="shelf-browse__carousel--button" disabled>
+      <span class="material-symbols-rounded" aria-hidden="true">chevron_left</span>
+      <span class="visually-hidden">Previous 5 records</span>
+    </button>
+    <ul class="shelf-browse__carousel--items">
+      <li>
+        <%# Shelf item %>
+      </li>
+    </ul>
+    <button class="shelf-browse__carousel--button" disabled>
+      <span class="material-symbols-rounded" aria-hidden="true">chevron_right</span>
+      <span class="visually-hidden">Next 5 records</span>
+    </button>
+  </div>
+  <button class="shelf-browse__return" disabled>
+    Return to current record
+  </button>
+</div>

@@ -29,7 +29,9 @@
     <h2 class="text__normal">Available at:</h2>
     <p>Resource Access: Needs to be a partial for Results</p>
   </div>
-  <p>Shelf browse</p>
+  <% if @record.call_number %>
+    <%= erb :'datastores/record/partials/_shelf-browse', locals: { call_number: @record.call_number } %>
+  <% end %>
   <% if @record.indexing_date %>
     <p class="record__indexing-date">
       <span class="strong">Date Last Indexed:</span> <%= @record.indexing_date %>
