@@ -191,6 +191,11 @@ describe Search::Presenters::Record::Catalog::Full do
       expect(subject.related_title.data.first.locals).to eq(@bib_stub.related_title.first)
     end
   end
+  context "#shelf_browse_call_number" do
+    it "returns the first call number" do
+      expect(subject.shelf_browse_call_number).to eq("call_number_text")
+    end
+  end
 
   context "Multiple String plain text fields" do
     multiple_string_fields.each do |field, name|

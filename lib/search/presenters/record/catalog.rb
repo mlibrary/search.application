@@ -158,6 +158,11 @@ module Search
               BrowseField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))
             end
           end
+
+          def shelf_browse_call_number
+            @record.bib.call_number&.first&.text
+          end
+
           def contributors
             BrowseField.for(field: "Contributors", data: @record.bib.contributors)
           end
