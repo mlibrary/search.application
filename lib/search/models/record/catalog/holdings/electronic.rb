@@ -5,7 +5,7 @@ class Search::Models::Record::Catalog::Holdings::Electronic
 
   def items
     @electronic_items.map do |item|
-      OpenStruct.new(url: item["url"], status: item["status"], note: item["note"])
+      OpenStruct.new(url: item["url"], status: item["status"], note: item["note"], description: item["description"])
     end
   end
 end
