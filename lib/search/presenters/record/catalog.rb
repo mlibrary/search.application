@@ -11,6 +11,7 @@ module Search
         end
 
         class Full < Base
+          # order matters!
           RECORD_INFO_METHODS = [
             :format, # 00-catalog mirlyn_format
             :main_author,
@@ -82,7 +83,7 @@ module Search
             :remediated_lcsh_subjects, # 00-catalog remediated_lc_subject_display
             :other_subjects,
             :academic_discipline,
-            :contents_listing, # 00-catalog contents_listing
+            :contents, # 00-catalog contents_listing
             :bookplate,
             :extended_summary
           ]
@@ -214,6 +215,7 @@ module Search
             {uid: :awards, field: "Awards"},
             {uid: :bookplate, field: "Donor Information"},
             {uid: :content_advice, field: "Content advice"},
+            {uid: :contents, field: "Contents Listing"},
             {uid: :copy_specific_note, field: "Copy Specific Note"},
             {uid: :distributed, field: "Distributed"},
             {uid: :funding_information, field: "Funding Information"},

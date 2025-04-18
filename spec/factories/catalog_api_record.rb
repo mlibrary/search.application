@@ -23,7 +23,7 @@ module Factories
 
     def paired_text_fields
       ["title", "published", "manufactured", "edition", "series",
-        "series_statement", "distributed"].map do |f|
+        "series_statement", "distributed", "contents"].map do |f|
         [f, paired_text_field]
       end
     end
@@ -37,7 +37,7 @@ module Factories
     def text_fields
       ["access", "arrangement", "association", "audience", "awards",
         "bibliography", "biography_history", "bookplate", "call_number",
-        "chronology", "content_advice", "copy_specific_note", "copyright",
+        "chronology", "content_advice", "contents", "copy_specific_note", "copyright",
         "copyright_status_information", "created",
         "current_publication_frequency", "date_place_of_event",
         "extended_summary", "former_publication_frequency", "funding_information",

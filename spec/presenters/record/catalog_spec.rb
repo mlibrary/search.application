@@ -36,6 +36,7 @@ describe Search::Presenters::Record::Catalog::Full do
     awards: "Awards",
     bookplate: "Donor Information",
     content_advice: "Content advice",
+    contents: "Contents Listing",
     copy_specific_note: "Copy Specific Note",
     distributed: "Distributed",
     funding_information: "Funding Information",

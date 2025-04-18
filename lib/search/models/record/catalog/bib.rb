@@ -72,7 +72,7 @@ class Search::Models::Record::Catalog::Bib
   end
 
   [:access, :arrangement, :association, :audience, :awards, :bibliography,
-    :biography_history, :bookplate, :chronology, :content_advice,
+    :biography_history, :bookplate, :chronology, :content_advice, :contents,
     :copy_specific_note, :copyright, :copyright_status_information, :created,
     :current_publication_frequency, :date_place_of_event, :distributed, :edition,
     :extended_summary, :former_publication_frequency, :funding_information,
