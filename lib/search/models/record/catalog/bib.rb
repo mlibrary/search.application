@@ -59,6 +59,12 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
+  def remediated_lcsh_subjects
+    _map_field("remediated_lcsh_subjects") do |item|
+      _subject_browse_item(item: item)
+    end
+  end
+
   def academic_discipline
     _map_field("academic_discipline") do |ad|
       ad["list"]
@@ -76,7 +82,7 @@ class Search::Models::Record::Catalog::Bib
     :source_of_description_note, :copy_specific_note, :arrangement, :reproduction_note,
     :original_version_note, :content_advice, :awards, :bookplate, :access,
     :numbering, :current_publication_frequency, :former_publication_frequency,
-    :map_scale, :extended_summary, :issn].each do |uid|
+    :map_scale, :extended_summary, :issn, :other_subjects].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 

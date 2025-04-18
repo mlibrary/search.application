@@ -43,10 +43,11 @@ module Factories
         "extended_summary", "former_publication_frequency", "funding_information",
         "gov_doc_no", "in_collection", "isbn", "issn", "language",
         "language_note", "lcsh_subjects", "location_of_originals", "map_scale",
-        "note", "numbering", "numbering_notes", "oclc", "original_version_note",
-        "performers", "physical_description", "place", "playing_time",
-        "preferred_citation", "printer", "production_credits", "publisher_number",
-        "references", "related_items", "report_number", "reproduction_note",
+        "note", "numbering", "numbering_notes", "oclc", "other_subjects",
+        "original_version_note", "performers", "physical_description", "place",
+        "playing_time", "preferred_citation", "printer", "production_credits",
+        "publisher_number", "references", "related_items",
+        "remediated_lcsh_subjects", "report_number", "reproduction_note",
         "source_of_acquisition", "source_of_description_note", "summary",
         "terms_of_use"].map do |f|
         [f, text_field]
