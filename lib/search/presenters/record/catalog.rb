@@ -2,6 +2,17 @@ module Search
   module Presenters
     module Record
       module Catalog
+      end
+    end
+  end
+end
+
+require_relative "catalog/holdings"
+
+module Search
+  module Presenters
+    module Record
+      module Catalog
         class Base
           [:title, :icons, :record_info].each do |m|
             define_method m do
