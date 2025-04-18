@@ -35,7 +35,7 @@ module Search
             :summary, # 00-catalog mirlyn summary
             :in_collection,
             :access, # 00-catalog marc_access
-            # :indexes, 00-catalog ???
+            :finding_aid, # 00-catalog indexes #should it go here or at the bottom?
             :terms_of_use,
             :language,
             :language_note,
