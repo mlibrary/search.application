@@ -59,24 +59,31 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
+  def remediated_lcsh_subjects
+    _map_field("remediated_lcsh_subjects") do |item|
+      _subject_browse_item(item: item)
+    end
+  end
+
   def academic_discipline
     _map_field("academic_discipline") do |ad|
       ad["list"]
     end
   end
 
-  [:edition, :series, :series_statement, :note, :physical_description,
-    :language, :published, :manufactured, :oclc, :isbn, :created, :biography_history,
-    :in_collection, :terms_of_use, :date_place_of_event, :references,
-    :copyright_status_information, :copyright, :playing_time, :audience,
-    :production_credits, :bibliography, :gov_doc_no, :publisher_number,
-    :report_number, :chronology, :place, :printer, :association, :distributed,
-    :summary, :language_note, :performers, :preferred_citation, :location_of_originals,
-    :funding_information, :source_of_acquisition, :related_items, :numbering_notes,
-    :source_of_description_note, :copy_specific_note, :arrangement, :reproduction_note,
-    :original_version_note, :content_advice, :awards, :bookplate, :access,
-    :numbering, :current_publication_frequency, :former_publication_frequency,
-    :map_scale, :extended_summary, :issn].each do |uid|
+  [:access, :arrangement, :association, :audience, :awards, :bibliography,
+    :biography_history, :bookplate, :chronology, :content_advice, :contents,
+    :copy_specific_note, :copyright, :copyright_status_information, :created,
+    :current_publication_frequency, :date_place_of_event, :distributed, :edition,
+    :extended_summary, :former_publication_frequency, :funding_information,
+    :gov_doc_no, :in_collection, :isbn, :issn, :language, :language_note,
+    :location_of_originals, :manufactured, :map_scale, :media_format, :new_title_issn, :note,
+    :numbering, :numbering_notes, :oclc, :other_subjects, :original_version_note,
+    :performers, :physical_description, :place, :playing_time,
+    :preferred_citation, :previous_title_issn, :printer, :production_credits,
+    :published, :publisher_number, :references, :related_items, :report_number,
+    :reproduction_note, :series, :series_statement, :source_of_acquisition,
+    :source_of_description_note, :summary, :terms_of_use].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 

@@ -95,10 +95,26 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       lcsh = "Birds -- Japan -- Identification"
       @data["lcsh_subjects"][0]["text"] = lcsh
       lcsh_norm = "Birds Japan Identification"
+
       s = subject.lcsh_subjects.first
+
       expect(s.text).to eq(lcsh)
       expect(CGI.unescape(s.url)).to eq("#{S.base_url}/catalog?query=subject:\"#{lcsh_norm}\"")
       expect(CGI.unescape(s.browse_url)).to eq("#{S.base_url}/catalog/browse/subject?query=#{lcsh_norm}")
+    end
+  end
+
+  context "#remediated_lcsh_subjects" do
+    it "is an array objects of text, url, browse_url, and kind" do
+      r_lcsh = "Birds -- Japan -- Identification"
+      @data["remediated_lcsh_subjects"][0]["text"] = r_lcsh
+      r_lcsh_norm = "Birds Japan Identification"
+
+      s = subject.remediated_lcsh_subjects.first
+
+      expect(s.text).to eq(r_lcsh)
+      expect(CGI.unescape(s.url)).to eq("#{S.base_url}/catalog?query=subject:\"#{r_lcsh_norm}\"")
+      expect(CGI.unescape(s.browse_url)).to eq("#{S.base_url}/catalog/browse/subject?query=#{r_lcsh_norm}")
     end
   end
   context "#format" do
@@ -143,17 +159,18 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   end
 
   [:access, :arrangement, :association, :audience, :awards, :bibliography,
-    :biography_history, :bookplate, :chronology, :content_advice,
+    :biography_history, :bookplate, :chronology, :content_advice, :contents,
     :copy_specific_note, :copyright, :copyright_status_information, :created,
     :current_publication_frequency, :date_place_of_event, :distributed, :edition,
     :extended_summary, :former_publication_frequency, :funding_information,
     :gov_doc_no, :in_collection, :isbn, :issn, :language, :language_note,
-    :location_of_originals, :map_scale, :note, :numbering, :numbering_notes, :oclc,
-    :original_version_note, :performers, :physical_description, :place,
-    :playing_time, :preferred_citation, :printer, :production_credits,
-    :publisher_number, :references, :related_items, :report_number,
-    :reproduction_note, :series, :series_statement, :source_of_acquisition,
-    :source_of_description_note, :summary, :terms_of_use].each do |uid|
+    :location_of_originals, :map_scale, :media_format, :new_title_issn, :note, :numbering,
+    :numbering_notes, :oclc, :other_subjects, :original_version_note, :performers,
+    :physical_description, :place, :playing_time, :preferred_citation,
+    :previous_title_issn, :printer, :production_credits, :publisher_number,
+    :references, :related_items, :report_number, :reproduction_note, :series,
+    :series_statement, :source_of_acquisition, :source_of_description_note,
+    :summary, :terms_of_use].each do |uid|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do
         expected = @data[uid.to_s].first["text"]

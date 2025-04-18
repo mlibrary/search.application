@@ -11,6 +11,7 @@ module Search
         end
 
         class Full < Base
+          # order matters!
           RECORD_INFO_METHODS = [
             :format, # 00-catalog mirlyn_format
             :main_author,
@@ -34,7 +35,7 @@ module Search
             :summary, # 00-catalog mirlyn summary
             :in_collection,
             :access, # 00-catalog marc_access
-            # :indexes, 00-catalog ???
+            :finding_aid, # 00-catalog indexes #should it go here or at the bottom?
             :terms_of_use,
             :language,
             :language_note,
@@ -82,7 +83,7 @@ module Search
             :remediated_lcsh_subjects, # 00-catalog remediated_lc_subject_display
             :other_subjects,
             :academic_discipline,
-            :contents_listing, # 00-catalog contents_listing
+            :contents, # 00-catalog contents_listing
             :bookplate,
             :extended_summary
           ]
@@ -172,35 +173,35 @@ module Search
 
           # Plain content, single field display
           [
+            {uid: :association, field: "Association"},
+            {uid: :audience, field: "Audience"},
+            {uid: :bibliography, field: "Bibliography"},
+            {uid: :biography_history, field: "Biography/History"},
+            {uid: :chronology, field: "Chronology"},
+            {uid: :copyright, field: "Copyright"},
+            {uid: :copyright_status_information, field: "Copyright status information"},
+            {uid: :created, field: "Created"},
+            {uid: :current_publication_frequency, field: "Current Publication Frequency"},
+            {uid: :date_place_of_event, field: "Date/Place of Event"},
             {uid: :edition, field: "Edition"},
+            {uid: :extended_summary, field: "Expanded Summary"},
+            {uid: :former_publication_frequency, field: "Former Publication Frequency"},
+            {uid: :gov_doc_no, field: "Government Document Number"},
+            {uid: :in_collection, field: "In Collection"},
+            {uid: :map_scale, field: "Map Scale"},
+            {uid: :note, field: "Note"},
+            {uid: :numbering, field: "Numbering"},
+            {uid: :physical_description, field: "Physical Description"},
+            {uid: :place, field: "Place"},
+            {uid: :playing_time, field: "Playing Time"},
+            {uid: :printer, field: "Printer"},
+            {uid: :production_credits, field: "Production Credits"},
+            {uid: :publisher_number, field: "Publisher Number"},
+            {uid: :references, field: "References"},
+            {uid: :report_number, field: "Report Number"},
             {uid: :series, field: "Series (transcribed)"},
             {uid: :series_statement, field: "Series Statement"},
-            {uid: :note, field: "Note"},
-            {uid: :physical_description, field: "Physical Description"},
-            {uid: :created, field: "Created"},
-            {uid: :biography_history, field: "Biography/History"},
-            {uid: :in_collection, field: "In Collection"},
-            {uid: :terms_of_use, field: "Terms of Use"},
-            {uid: :date_place_of_event, field: "Date/Place of Event"},
-            {uid: :references, field: "References"},
-            {uid: :copyright_status_information, field: "Copyright status information"},
-            {uid: :copyright, field: "Copyright"},
-            {uid: :playing_time, field: "Playing Time"},
-            {uid: :audience, field: "Audience"},
-            {uid: :production_credits, field: "Production Credits"},
-            {uid: :bibliography, field: "Bibliography"},
-            {uid: :gov_doc_no, field: "Government Document Number"},
-            {uid: :publisher_number, field: "Publisher Number"},
-            {uid: :report_number, field: "Report Number"},
-            {uid: :chronology, field: "Chronology"},
-            {uid: :place, field: "Place"},
-            {uid: :printer, field: "Printer"},
-            {uid: :association, field: "Association"},
-            {uid: :numbering, field: "Numbering"},
-            {uid: :current_publication_frequency, field: "Current Publication Frequency"},
-            {uid: :former_publication_frequency, field: "Former Publication Frequency"},
-            {uid: :map_scale, field: "Map Scale"},
-            {uid: :extended_summary, field: "Expanded Summary"}
+            {uid: :terms_of_use, field: "Terms of Use"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
@@ -209,31 +210,35 @@ module Search
 
           # Plain content, multiple field display
           [
-            {uid: :language, field: "Language"},
-            {uid: :published, field: "Published/Created"},
-            {uid: :manufactured, field: "Manufactured"},
-            {uid: :oclc, field: "OCLC Number"},
-            {uid: :isbn, field: "ISBN"},
-            {uid: :issn, field: "ISSN"},
-            {uid: :distributed, field: "Distributed"},
-            {uid: :summary, field: "Summary"},
-            {uid: :language_note, field: "Language note"},
-            {uid: :performers, field: "Performers"},
-            {uid: :preferred_citation, field: "Preferred Citation"},
-            {uid: :location_of_originals, field: "Location of Originals"},
-            {uid: :funding_information, field: "Funding Information"},
-            {uid: :source_of_acquisition, field: "Source of Acquisition"},
-            {uid: :related_items, field: "Related Items"},
-            {uid: :numbering_notes, field: "Numbering Note"},
-            {uid: :source_of_description_note, field: "Source of Description Note"},
-            {uid: :copy_specific_note, field: "Copy Specific Note"},
+            {uid: :access, field: "Access"},
             {uid: :arrangement, field: "Arrangement"},
-            {uid: :reproduction_note, field: "Reproduction note"},
-            {uid: :original_version_note, field: "Original version note"},
-            {uid: :content_advice, field: "Content advice"},
             {uid: :awards, field: "Awards"},
             {uid: :bookplate, field: "Donor Information"},
-            {uid: :access, field: "Access"}
+            {uid: :content_advice, field: "Content advice"},
+            {uid: :contents, field: "Contents Listing"},
+            {uid: :copy_specific_note, field: "Copy Specific Note"},
+            {uid: :distributed, field: "Distributed"},
+            {uid: :funding_information, field: "Funding Information"},
+            {uid: :isbn, field: "ISBN"},
+            {uid: :issn, field: "ISSN"},
+            {uid: :language, field: "Language"},
+            {uid: :language_note, field: "Language note"},
+            {uid: :location_of_originals, field: "Location of Originals"},
+            {uid: :manufactured, field: "Manufactured"},
+            {uid: :media_format, field: "Media Format"},
+            {uid: :numbering_notes, field: "Numbering Note"},
+            {uid: :new_title_issn, field: "New Title ISSN"},
+            {uid: :oclc, field: "OCLC Number"},
+            {uid: :original_version_note, field: "Original version note"},
+            {uid: :performers, field: "Performers"},
+            {uid: :preferred_citation, field: "Preferred Citation"},
+            {uid: :previous_title_issn, field: "Previous Title ISSN"},
+            {uid: :published, field: "Published/Created"},
+            {uid: :related_items, field: "Related Items"},
+            {uid: :reproduction_note, field: "Reproduction note"},
+            {uid: :source_of_acquisition, field: "Source of Acquisition"},
+            {uid: :source_of_description_note, field: "Source of Description Note"},
+            {uid: :summary, field: "Summary"}
           ].each do |f|
             define_method(f[:uid]) do
               PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))
