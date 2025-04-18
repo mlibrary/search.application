@@ -164,12 +164,13 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     :current_publication_frequency, :date_place_of_event, :distributed, :edition,
     :extended_summary, :former_publication_frequency, :funding_information,
     :gov_doc_no, :in_collection, :isbn, :issn, :language, :language_note,
-    :location_of_originals, :map_scale, :note, :numbering, :numbering_notes, :oclc, :other_subjects,
-    :original_version_note, :performers, :physical_description, :place,
-    :playing_time, :preferred_citation, :printer, :production_credits,
-    :publisher_number, :references, :related_items, :report_number,
-    :reproduction_note, :series, :series_statement, :source_of_acquisition,
-    :source_of_description_note, :summary, :terms_of_use].each do |uid|
+    :location_of_originals, :map_scale, :new_title_issn, :note, :numbering,
+    :numbering_notes, :oclc, :other_subjects, :original_version_note, :performers,
+    :physical_description, :place, :playing_time, :preferred_citation,
+    :previous_title_issn, :printer, :production_credits, :publisher_number,
+    :references, :related_items, :report_number, :reproduction_note, :series,
+    :series_statement, :source_of_acquisition, :source_of_description_note,
+    :summary, :terms_of_use].each do |uid|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do
         expected = @data[uid.to_s].first["text"]

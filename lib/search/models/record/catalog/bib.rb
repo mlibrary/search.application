@@ -71,19 +71,19 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  [:edition, :access, :arrangement, :association, :audience, :awards,
-    :bibliography, :biography_history, :bookplate, :chronology, :content_advice,
+  [:access, :arrangement, :association, :audience, :awards, :bibliography,
+    :biography_history, :bookplate, :chronology, :content_advice,
     :copy_specific_note, :copyright, :copyright_status_information, :created,
-    :current_publication_frequency, :date_place_of_event, :distributed,
+    :current_publication_frequency, :date_place_of_event, :distributed, :edition,
     :extended_summary, :former_publication_frequency, :funding_information,
     :gov_doc_no, :in_collection, :isbn, :issn, :language, :language_note,
-    :location_of_originals, :manufactured, :map_scale, :note, :numbering,
-    :numbering_notes, :oclc, :other_subjects, :original_version_note, :performers,
-    :physical_description, :place, :playing_time, :preferred_citation, :printer,
-    :production_credits, :published, :publisher_number, :references, :related_items,
-    :report_number, :reproduction_note, :series, :series_statement,
-    :source_of_acquisition, :source_of_description_note, :summary, :terms_of_use]
-    .each do |uid|
+    :location_of_originals, :manufactured, :map_scale, :new_title_issn, :note,
+    :numbering, :numbering_notes, :oclc, :other_subjects, :original_version_note,
+    :performers, :physical_description, :place, :playing_time,
+    :preferred_citation, :previous_title_issn, :printer, :production_credits,
+    :published, :publisher_number, :references, :related_items, :report_number,
+    :reproduction_note, :series, :series_statement, :source_of_acquisition,
+    :source_of_description_note, :summary, :terms_of_use].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 
