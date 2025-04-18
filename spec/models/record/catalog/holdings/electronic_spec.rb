@@ -4,9 +4,10 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Electronic do
       "holdings" => {
         "electronic_items" => [
           {
-            "url" => "some_url",
+            "url" => Faker::Internet.url,
             "status" => "available",
-            "note" => "some note"
+            "note" => Faker::Lorem.sentence,
+            "description" => Faker::Lorem.sentence
           }
         ]
       }
@@ -18,11 +19,13 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Electronic do
   end
 
   context "#items" do
-    it "passes an array of items containing the url, status, and note" do
+    it "passes an array of items containing the url, status, description, and note" do
+      expected = @data["holdings"]["electronic_items"][0]
       first_item = subject.items.first
-      expect(first_item.url).to eq("some_url")
-      expect(first_item.status).to eq("available")
-      expect(first_item.note).to eq("some note")
+      expect(first_item.url).to eq(expected["url"])
+      expect(first_item.status).to eq(expected["status"])
+      expect(first_item.note).to eq(expected["note"])
+      expect(first_item.description).to eq(expected["description"])
     end
   end
 end
