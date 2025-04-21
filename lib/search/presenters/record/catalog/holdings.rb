@@ -1,4 +1,12 @@
 class Search::Presenters::Record::Catalog::Holdings
+  def self.electronic_item(url:, availability_text:, description:, source:)
+    OpenStruct.new(
+      link: OpenStruct.new(partial: "link", text: availability_text, url: url),
+      description: OpenStruct.new(partial: "plain_text", text: description),
+      source: OpenStruct.new(partial: "plain_text", text: source)
+    )
+  end
+
   #
   # <Description>
   #
@@ -42,18 +50,16 @@ class Search::Presenters::Record::Catalog::Holdings
 
     def items
       @items.map do |item|
-        OpenStruct.new(
-          link: OpenStruct.new(partial: "link", text: item.status, url: item.url),
-          description: OpenStruct.new(partial: "plain_text", text: item.description),
-          source: OpenStruct.new(partial: "plain_text", text: item.source)
-        )
+        Search::Presenters::Record::Catalog::Holdings.electronic_item(url: item.url, availability_text: item.status,
+          description: item.description, source: item.source)
       end
     end
   end
 
   class Online
-    def initialize(data)
-      @data = data
+    # take in holdings?
+    def initialize(holdings)
+      @holdings = holdings
     end
 
     def empty?
@@ -69,8 +75,8 @@ class Search::Presenters::Record::Catalog::Holdings
     end
 
     def items
-      @items ||= AlmaDigital.new(data.holdings.alma_digital).items
-      + Electronic.new(data.holdings.electronic).items
+      @items ||= AlmaDigital.new(@holdings.alma_digital.items).items
+        .concat(Electronic.new(@holdings.electronic.items).items)
     end
   end
 
@@ -81,10 +87,9 @@ class Search::Presenters::Record::Catalog::Holdings
 
     def items
       @items.map do |item|
-        OpenStruct.new(
-          link: OpenStruct.new(partial: "link", text: "Available online", url: item.url),
-          description: OpenStruct.new(partial: "plain_text", text: item.label),
-          source: OpenStruct.new(partial: "plain_text", text: item.source)
+        Search::Presenters::Record::Catalog::Holdings.electronic_item(
+          url: item.url, availability_text: "Available online",
+          description: item.label, source: item.public_note
         )
       end
     end
@@ -97,10 +102,9 @@ class Search::Presenters::Record::Catalog::Holdings
 
     def items
       @items.map do |item|
-        OpenStruct.new(
-          link: OpenStruct.new(partial: "link", text: availability_text(item), url: item.url),
-          description: OpenStruct.new(partial: "plain_text", text: description_text(item)),
-          source: OpenStruct.new(partial: "plain_text", text: item.source)
+        Search::Presenters::Record::Catalog::Holdings.electronic_item(
+          url: item.url, availability_text: availability_text(item),
+          description: description_text(item), source: item.note
         )
       end
     end
