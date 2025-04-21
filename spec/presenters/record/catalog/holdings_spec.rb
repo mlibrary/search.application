@@ -129,14 +129,24 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
           expect(electronic_item.status).to eq("Available")
           expect(item.link.text).to eq("Available online")
         end
-        it "is 'Coming Soon' when status is 'Not Available'"
+        it "is 'Coming Soon' when status is 'Not Available'" do
+          allow(electronic_item).to receive(:status).and_return("Not Available")
+          expect(item.link.text).to eq("Coming Soon")
+        end
       end
 
-      it "has a description" do
-        expect(item.description.partial).to eq("plain_text")
-        expect(item.description.text).to eq(electronic_item.description)
+      context "description" do
+        it "has a description" do
+          expect(item.description.partial).to eq("plain_text")
+          expect(item.description.text).to eq(electronic_item.description)
+        end
+        it "has coming-soon releated text when unavailable" do
+          allow(electronic_item).to receive(:status).and_return("Not Available")
+          expect(item.description.text).to include("Link will update")
+          expect(item.description.text).to include(electronic_item.description)
+        end
       end
-      it "has a source" do
+      it "gets its source from the note" do
         expect(item.source.partial).to eq("plain_text")
         expect(item.source.text).to eq(electronic_item.note)
       end
