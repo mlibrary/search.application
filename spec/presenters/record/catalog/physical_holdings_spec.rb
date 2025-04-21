@@ -82,6 +82,34 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
       expect(subject.action.text).to eq("Get This")
       expect(subject.action.url).to eq("#{S.base_url}/catalog/record/#{record.bib.id}/get-this/#{item.barcode}")
     end
+    context "no action" do
+      let(:expect_no_action) do
+        expect(subject.action.partial).to eq("plain_text")
+        expect(subject.action.text).to eq("N/A")
+      end
+      it "when barcode is nil" do
+        allow(item).to receive(:barcode).and_return(nil)
+        expect_no_action
+      end
+      it "when in SHAP GAME" do
+        allow(item.physical_location.code).to receive(:library).and_return("SHAP")
+        allow(item.physical_location.code).to receive(:location).and_return("GAME")
+        allow(item).to receive(:process_type).and_return("WORK_ORDER_DEPARTMENT")
+        expect_no_action
+      end
+      it "when 05 AAEL" do
+        allow(item.physical_location.code).to receive(:library).and_return("AAEL")
+        allow(item).to receive(:item_policy).and_return("05")
+        expect_no_action
+      end
+      it "when 10 FLINT" do
+        allow(item.physical_location.code).to receive(:library).and_return("FLINT")
+        allow(item).to receive(:item_policy).and_return("10")
+        expect_no_action
+      end
+    end
+    context "finding aid"
+    context "request_this"
   end
 
   context "status" do
