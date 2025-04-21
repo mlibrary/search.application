@@ -2,12 +2,17 @@ module Factories::CatalogRecord
   class << self
     include RSpec::Mocks::ExampleMethods
     def record
-      double("Search::Models::Record::Catalog#for", holdings: holdings)
+      double("Search::Models::Record::Catalog#for", bib: bib, holdings: holdings)
+    end
+
+    def bib
+      instance_double(Search::Models::Record::Catalog::Bib, id: "99#{Faker::Number.number(digits: 12)}6381")
     end
 
     def holdings
       instance_double(Search::Models::Record::Catalog::Holdings, hathi_trust: hathi_trust_holdings,
-        alma_digital: alma_digital_holdings, electronic: electronic_holdings)
+        alma_digital: alma_digital_holdings, electronic: electronic_holdings,
+        physical: physical_holdings)
     end
 
     def hathi_trust_holdings
@@ -44,6 +49,44 @@ module Factories::CatalogRecord
         note: Faker::Lorem.sentence,
         status: "Available",
         description: Faker::Lorem.sentence)
+    end
+
+    def physical_holdings
+      instance_double(Search::Models::Record::Catalog::Holdings::Physical, list: [physical_holding])
+    end
+
+    def physical_holding
+      instance_double(Search::Models::Record::Catalog::Holdings::Physical::Holding,
+        holding_id: "22#{Faker::Number.number(digits: 8)}",
+        call_number: Faker::Lorem.sentence,
+        public_note: Faker::Lorem.sentence,
+        summary: [Faker::Lorem.sentence],
+        physical_location: physical_location,
+        items: [physical_item])
+    end
+
+    def physical_item
+      instance_double(Search::Models::Record::Catalog::Holdings::Physical::Item,
+        item_id: "22#{Faker::Number.number(digits: 8)}",
+        barcode: Faker::Barcode.ean,
+        fulfillment_unit: Faker::Lorem.word,
+        call_number: Faker::Lorem.sentence,
+        public_note: Faker::Lorem.sentence,
+        process_type: Faker::Lorem.word,
+        item_policy: Faker::Lorem.word,
+        description: Faker::Lorem.sentence,
+        inventory_number: Faker::Lorem.sentence,
+        material_type: Faker::Lorem.word,
+        physical_location: physical_location)
+    end
+
+    def physical_location
+      instance_double(Search::Models::Record::Catalog::Holdings::Physical::PhysicalLocation,
+        url: Faker::Internet.url,
+        text: Faker::Lorem.sentence,
+        floor: Faker::Lorem.sentence,
+        temporary?: false,
+        code: double("code", library: Faker::Lorem.word.upcase, location: Faker::Lorem.word.upcase))
     end
   end
 end

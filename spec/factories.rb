@@ -15,6 +15,8 @@ module Factories
       CatalogRecord.holdings
     when :hathi_trust_holdings
       CatalogRecord.hathi_trust_holdings
+    when :physical_item
+      CatalogRecord.physical_item
     end
   end
 end

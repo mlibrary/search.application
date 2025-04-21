@@ -1,4 +1,7 @@
 class Search::Presenters::Record::Catalog::Holdings
+end
+require_relative "physical_holdings"
+class Search::Presenters::Record::Catalog::Holdings
   def self.electronic_item(url:, availability_text:, description:, source:)
     OpenStruct.new(
       link: OpenStruct.new(partial: "link", text: availability_text, url: url),
