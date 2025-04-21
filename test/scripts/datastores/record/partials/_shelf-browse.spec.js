@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
 import shelfBrowse from '../../../../../assets/scripts/datastores/record/partials/_shelf-browse';
+// Import sinon from 'sinon';
 
 describe('shelfBrowse', function () {
   beforeEach(function () {
