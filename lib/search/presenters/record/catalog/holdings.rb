@@ -19,7 +19,8 @@ class Search::Presenters::Record::Catalog::Holdings
 
   def list
     [
-      HathiTrust.new(@holdings.hathi_trust.items)
+      HathiTrust.new(@holdings.hathi_trust.items),
+      Online.new(@holdings)
     ].reject { |x| x.empty? }
   end
 
@@ -57,7 +58,6 @@ class Search::Presenters::Record::Catalog::Holdings
   end
 
   class Online
-    # take in holdings?
     def initialize(holdings)
       @holdings = holdings
     end
