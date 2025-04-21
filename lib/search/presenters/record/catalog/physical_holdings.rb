@@ -43,11 +43,37 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     end
 
     def action
-      OpenStruct.new(partial: "link_to", text: "Get This",
-        url: "#{S.base_url}/catalog/record/#{@bib.id}/get-this/#{@item.barcode}")
+      if no_action?
+        OpenStruct.new(partial: "plain_text", text: "N/A")
+      else # Get This
+        OpenStruct.new(partial: "link_to", text: "Get This",
+          url: "#{S.base_url}/catalog/record/#{@bib.id}/get-this/#{@item.barcode}")
+      end
     end
 
     def status
+    end
+
+    private
+
+    def in_game?
+      in_library?("SHAP") && in_location?("GAME")
+    end
+
+    def in_library?(code)
+      @item.physical_location.code.library == code
+    end
+
+    def in_location?(code)
+      @item.physical_location.code.location == code
+    end
+
+    def no_action?
+      return true if @item.barcode.nil?
+      return true if in_game? && @item.process_type == "WORK_ORDER_DEPARTMENT"
+      return true if in_library?("AAEL") && @item.item_policy == "05"
+      return true if in_library?("FLINT") && @item.item_policy == "10"
+      false
     end
   end
 end
