@@ -1,23 +1,40 @@
+
+<% 
+require 'net/http'
+require 'json'
+require 'uri'
+
+# Define the URL and parse the URI
+url = "https://search.lib.umich.edu/catalog/browse/carousel?query=#{call_number}"
+uri = URI(url)
+
+# Make the HTTP request and parse the JSON response
+response = Net::HTTP.get(uri)
+items = JSON.parse(response)
+%>
 <div class="container__rounded shelf-browse">
   <header class="shelf-browse__header">
     <h2>Shelf browse</h2>
-    <%= link_to(body: "Browse in call number list", url: "") %>
+    <%= link_to(body: "Browse in call number list", url: "https://search.lib.umich.edu/catalog/browse/callnumber?query=#{call_number}") %>
   </header>
   <div class="shelf-browse__carousel">
-    <button class="shelf-browse__carousel--button" disabled>
+    <button class="shelf-browse__carousel--button" id="prev-button" title="Previous page">
       <span class="material-symbols-rounded" aria-hidden="true">chevron_left</span>
       <span class="visually-hidden">Previous 5 records</span>
     </button>
-    <ul class="shelf-browse__carousel--items">
-      <li>
-        <%# Shelf item %>
-      </li>
+    <ul class="shelf-browse__carousel--items" id="paginated-list" data-current-page="1" aria-live="polite">
+      <% items.each do | item | %>
+        <li>
+          <%= item %>
+        </li>
+      <% end %>
     </ul>
-    <button class="shelf-browse__carousel--button" disabled>
+    <button class="shelf-browse__carousel--button" id="next-button" title="Next page">
       <span class="material-symbols-rounded" aria-hidden="true">chevron_right</span>
       <span class="visually-hidden">Next 5 records</span>
     </button>
   </div>
+  <%# <div id="pagination-numbers"></div> %>
   <button class="shelf-browse__return" disabled>
     Return to current record
   </button>

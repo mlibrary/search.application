@@ -3,6 +3,7 @@ import copyCitation from '../partials/actions/_citation.js';
 import copyLink from '../partials/actions/_link.js';
 import toggleMARCData from './partials/_marc.js';
 import toggleTruncatedText from './partials/_title.js';
+import shelfBrowse from './partials/_shelf-browse.js';
 
 // Actions panel
 tabControl('.actions');
@@ -22,6 +23,9 @@ copyLink();
 
 // Record Title
 toggleTruncatedText();
+
+// Shelf Browse
+shelfBrowse();
 
 // View MARC Data
 toggleMARCData();

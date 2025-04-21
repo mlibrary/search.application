@@ -3,12 +3,7 @@
   <%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
   <div class="container__rounded">
     <ul class="record__formats list__no-style">
-      <%
-        formats = @record.record_info.select do |entry|
-          entry.field == "Formats"
-        end
-      %>
-      <% formats.first.data.each do |format| %>
+      <% @record.format.data.each do |format| %>
         <li class="record__format">
           <span class="material-symbols-rounded">
             <%= format.icon %>
