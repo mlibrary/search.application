@@ -5,6 +5,12 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings do
   let(:ht_holdings) do
     record.holdings.hathi_trust
   end
+  let(:alma_digital_holdings) do
+    record.holdings.alma_digital
+  end
+  let(:electronic_holdings) do
+    record.holdings.electronic
+  end
   subject do
     described_class.new(record)
   end
@@ -15,6 +21,14 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings do
     it "does not include HathiTrust when it does not have items" do
       allow(ht_holdings).to receive(:items).and_return([])
       expect(subject.list.first&.heading).not_to eq("HathiTrust Digital Library")
+    end
+    it "includes Online when there are online items" do
+      expect(subject.list[1]&.heading).to eq("Online Resources")
+    end
+    it "does not include Online when there are none" do
+      allow(alma_digital_holdings).to receive(:items).and_return([])
+      allow(electronic_holdings).to receive(:items).and_return([])
+      expect(subject.list[1]&.heading).not_to eq("Online Resources")
     end
   end
 end
