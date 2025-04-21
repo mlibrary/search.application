@@ -55,6 +55,8 @@ GEM
     dry-initializer (3.2.0)
     email_validator (2.2.4)
       activemodel
+    faker (3.5.1)
+      i18n (>= 1.8.11, < 2)
     faraday (2.12.2)
       faraday-net_http (>= 2.0, < 3.5)
       json
@@ -291,6 +293,7 @@ DEPENDENCIES
   alma_rest_client!
   canister
   debug
+  faker
   omniauth
   omniauth_openid_connect
   ostruct

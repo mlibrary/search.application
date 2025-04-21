@@ -21,6 +21,7 @@ end
 
 group :development, :test do
   gem "debug"
+  gem "faker"
 end
 
 group :test do
