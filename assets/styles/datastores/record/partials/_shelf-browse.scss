@@ -1,3 +1,9 @@
+@use '../../../colors';
+@use '../../../forms';
+@use '../../../icons';
+@use '../../../media';
+@use '../../../utilities';
+
 // --------------------------------------------------
 //
 // # Record
@@ -13,3 +19,110 @@
 // ******************** //
 
 $class: 'shelf-browse';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+.#{$class} {
+  display: grid;
+  gap: 1rem;
+  grid-template-areas:
+    "header header header"
+    "carousel carousel carousel"
+    ". return .";
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: auto;
+  padding: 1rem;
+  @include media.breakpoint('xs') {
+    grid-template-areas:
+      "header return"
+      "carousel carousel";
+    grid-template-columns: 1fr auto;
+  }
+}
+
+
+
+
+
+// ***************** //
+// *** 3. HEADER *** //
+// ***************** //
+
+.#{$class} > header {
+  @include utilities.flex($responsive: true, $wrap: true);
+  h2 {
+    margin: 0;
+  }
+  a {
+
+  }
+}
+
+
+
+
+
+// ******************* //
+// *** 4. CAROUSEL *** //
+// ******************* //
+
+.#{$class} > .#{$class}__carousel {
+  display: grid;
+  gap: 1rem;
+  grid-area: carousel;
+  grid-template-areas: "prev list next";
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto;
+}
+
+
+
+// *             * //
+// * 4.1 BUTTONS * //
+// *             * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--button {
+  @include forms.button;
+  & {
+    color: colors.$color-anchor;
+  }
+  &:first-of-type {
+    grid-area: prev;
+  }
+  &:last-of-type {
+    grid-area: next;
+  }
+  .material-symbols-rounded {
+    font-size: 2rem;
+  }
+}
+
+
+
+// *           * //
+// * 4.2 ITEMS * //
+// *           * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--items {
+  display: grid;
+  column-gap: 1rem;
+  font-family: "noto-sans-semicondensed", sans-serif;
+  font-size: 0.75rem;
+  grid-area: list;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: 2.5rem auto;
+  position: relative;
+  & > li {
+    grid-row: 3 / 2;
+    & > a {
+      color: inherit;
+      display: block;
+    }
+  }
+}

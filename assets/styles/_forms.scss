@@ -237,6 +237,11 @@ input[type="submit"],
     border-color: currentColor;
     box-shadow: 0 0 0 2px $background, 0 0 0 3px currentColor;
   }
+  &:disabled {
+    background: var(--search-color-grey-200);
+    color: var(--search-color-grey-500);
+    filter: unset;
+  }
 }
 
 // * 5.2.1 ACTIVE * //

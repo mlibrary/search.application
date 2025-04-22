@@ -4,9 +4,7 @@ require 'net/http'
 require 'json'
 require 'uri'
 
-# Define the URL and parse the URI
-url = "https://search.lib.umich.edu/catalog/browse/carousel?query=#{call_number}"
-uri = URI(url)
+uri = URI("https://search.lib.umich.edu/catalog/browse/carousel?query=#{call_number}")
 
 # Make the HTTP request and parse the JSON response
 response = Net::HTTP.get(uri)
@@ -14,28 +12,61 @@ items = JSON.parse(response)
 %>
 <div class="container__rounded shelf-browse">
   <header class="shelf-browse__header">
-    <h2>Shelf browse</h2>
-    <%= link_to(body: "Browse in call number list", url: "https://search.lib.umich.edu/catalog/browse/callnumber?query=#{call_number}") %>
+    <h2 class="h4">Shelf browse</h2>
+    <%= link_to(body: "Browse in call number list", url: uri.to_s.sub("carousel", "callnumber"), classes: ["shelf-browse__header--link"]) %>
   </header>
   <div class="shelf-browse__carousel">
     <button class="shelf-browse__carousel--button" id="prev-button" title="Previous page">
-      <span class="material-symbols-rounded" aria-hidden="true">chevron_left</span>
+      <span class="material-symbols-rounded" aria-hidden="true">arrow_back_ios</span>
       <span class="visually-hidden">Previous 5 records</span>
     </button>
-    <ul class="shelf-browse__carousel--items" id="paginated-list" data-current-page="1" aria-live="polite">
-      <% items.each do | item | %>
+    <ul class="shelf-browse__carousel--items list__no-style" id="paginated-list" data-current-page="5" aria-live="polite">
+      <% items.each_with_index do | item, index | %>
         <li>
-          <%= item %>
+          <a href="<%= item["url"] %>" class="container__rounded underline__none">
+            <dl>
+              <dd class="visually-hidden">
+                Book Cover
+              </dd>
+              <dt class="shelf-browse__carousel--book_cover">
+                <img src="<%= item["book_cover_url"] %>" onerror="this.src='/images/placeholders/placeholder-<%= index % 15 %>.svg'" alt="Book cover for <%= item["title"] %>">
+              </dt>
+              <dd class="visually-hidden">
+                Title
+              </dd>
+              <dt class="shelf-browse__carousel--title">
+                <%= item["title"] %>
+              </dt>
+              <dd class="visually-hidden">
+                Author
+              </dd>
+              <dt class="shelf-browse__carousel--author">
+                <%= item["author"] %>
+              </dt>
+              <dd class="visually-hidden">
+                Date
+              </dd>
+              <dt class="shelf-browse__carousel--date">
+                <%= item["date"] %>
+              </dt>
+              <dd class="visually-hidden">
+                Call Number
+              </dd>
+              <dt class="shelf-browse__carousel--call_number">
+                <%= item["call_number"] %>
+              </dt>
+            </dl>
+          </a>
         </li>
       <% end %>
     </ul>
     <button class="shelf-browse__carousel--button" id="next-button" title="Next page">
-      <span class="material-symbols-rounded" aria-hidden="true">chevron_right</span>
+      <span class="material-symbols-rounded" aria-hidden="true">arrow_forward_ios</span>
       <span class="visually-hidden">Next 5 records</span>
     </button>
   </div>
-  <%# <div id="pagination-numbers"></div> %>
-  <button class="shelf-browse__return" disabled>
+  <div id="pagination-numbers" style="display: none;"></div>
+  <button class="shelf-browse__return button__ghost" disabled>
     Return to current record
   </button>
 </div>

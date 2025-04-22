@@ -35,10 +35,10 @@ const shelfBrowse = () => {
 
   const handleActivePageNumber = () => {
     document.querySelectorAll('.pagination-number').forEach((button) => {
-      button.classList.remove('active');
+      button.classList.remove('button__ghost');
       const pageIndex = Number(button.getAttribute('page-index'));
       if (pageIndex === currentPage) {
-        button.classList.add('active');
+        button.classList.add('button__ghost');
       }
     });
   };
