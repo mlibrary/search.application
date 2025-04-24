@@ -54,13 +54,23 @@ $class: 'shelf-browse';
 // *** 3. HEADER *** //
 // ***************** //
 
-.#{$class} > header {
-  @include utilities.flex($responsive: true, $wrap: true);
+.#{$class} > .#{$class}__header {
+  @include utilities.flex($wrap: true);
+  & {
+    grid-area: header;
+  }
   h2 {
     margin: 0;
   }
-  a {
-
+  a.#{$class}__header--link {
+    &:before {
+      @include icons.icon($icon: "list");
+      & {
+        font-size: 1.25rem;
+        line-height: 1;
+        margin-right: 0.25rem;
+      }
+    }
   }
 }
 
@@ -112,17 +122,35 @@ $class: 'shelf-browse';
 .#{$class} > .#{$class}__carousel > .#{$class}__carousel--items {
   display: grid;
   column-gap: 1rem;
-  font-family: "noto-sans-semicondensed", sans-serif;
   font-size: 0.75rem;
+  font-variation-settings: "wdth" 87.5;
   grid-area: list;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 2.5rem auto;
   position: relative;
   & > li {
     grid-row: 3 / 2;
+    &.current-item {
+      background: red;
+    }
+    &.hidden {
+      display: none;
+    }
     & > a {
       color: inherit;
       display: block;
     }
   }
+}
+
+
+
+
+
+// *********************************** //
+// *** 5. RETURN TO CURRENT RECORD *** //
+// *********************************** //
+
+.#{$class} > .#{$class}__return {
+  grid-area: return;
 }

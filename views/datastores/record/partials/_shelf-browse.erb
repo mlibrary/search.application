@@ -22,7 +22,7 @@ items = JSON.parse(response)
     </button>
     <ul class="shelf-browse__carousel--items list__no-style" id="paginated-list" data-current-page="5" aria-live="polite">
       <% items.each_with_index do | item, index | %>
-        <li>
+        <li <%= "class=\"current-item\"" if item["call_number"] == call_number %>>
           <a href="<%= item["url"] %>" class="container__rounded underline__none">
             <dl>
               <dd class="visually-hidden">
@@ -65,8 +65,8 @@ items = JSON.parse(response)
       <span class="visually-hidden">Next 5 records</span>
     </button>
   </div>
-  <div id="pagination-numbers" style="display: none;"></div>
   <button class="shelf-browse__return button__ghost" disabled>
     Return to current record
   </button>
+  <div id="pagination-numbers" style="display: none;"></div>
 </div>

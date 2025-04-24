@@ -9,28 +9,11 @@ const shelfBrowse = () => {
   const pageCount = Math.ceil(listItems.length / paginationLimit);
   let currentPage = 1;
 
-  const disableButton = (button) => {
-    button.classList.add('disabled');
-    button.setAttribute('disabled', true);
-  };
-
-  const enableButton = (button) => {
-    button.classList.remove('disabled');
-    button.removeAttribute('disabled');
-  };
-
   const handlePageButtonsStatus = () => {
-    if (currentPage === 1) {
-      disableButton(prevButton);
-    } else {
-      enableButton(prevButton);
-    }
-
-    if (pageCount === currentPage) {
-      disableButton(nextButton);
-    } else {
-      enableButton(nextButton);
-    }
+    // Disabled previous button if on the first page
+    prevButton.toggleAttribute('disabled', currentPage === 1);
+    // Disabled next button if on the last page
+    nextButton.toggleAttribute('disabled', pageCount === currentPage);
   };
 
   const handleActivePageNumber = () => {
@@ -71,12 +54,8 @@ const shelfBrowse = () => {
 
     listItems.forEach((item, index) => {
       item.classList.add('hidden');
-      // Remove line below when rewriting
-      item.classList.add('visually-hidden');
       if (index >= prevRange && index < currRange) {
         item.classList.remove('hidden');
-        // Remove line below when rewriting
-        item.classList.remove('visually-hidden');
       }
     });
   };
