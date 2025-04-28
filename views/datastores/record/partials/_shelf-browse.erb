@@ -16,14 +16,16 @@ items = JSON.parse(response)
     <%= link_to(body: "Browse in call number list", url: uri.to_s.sub("carousel", "callnumber"), classes: ["shelf-browse__header--link"]) %>
   </header>
   <div class="shelf-browse__carousel">
-    <button class="shelf-browse__carousel--button" id="prev-button" title="Previous page">
+    <button class="shelf-browse__carousel--button shelf-browse__carousel--button-previous" id="prev-button" title="Previous page">
       <span class="material-symbols-rounded" aria-hidden="true">arrow_back_ios</span>
       <span class="visually-hidden">Previous 5 records</span>
     </button>
-    <ul class="shelf-browse__carousel--items list__no-style" id="paginated-list" data-current-page="5" aria-live="polite">
+    <ul class="shelf-browse__carousel--items list__no-style" id="paginated-list" data-current-page="0" aria-live="polite">
       <% items.each_with_index do | item, index | %>
-        <li <%= "class=\"current-item\"" if item["call_number"] == call_number %>>
-          <a href="<%= item["url"] %>" class="container__rounded underline__none">
+        <% is_current_record = item["call_number"] == call_number %>
+        <li <%= "class=\"current-record\" data-page=\"0\"" if is_current_record %>>
+          <a href="<%= item["url"] %>" class="container__rounded">
+            <p class="current-record__badge strong">Current Record</p>
             <dl>
               <dd class="visually-hidden">
                 Book Cover
@@ -60,7 +62,7 @@ items = JSON.parse(response)
         </li>
       <% end %>
     </ul>
-    <button class="shelf-browse__carousel--button" id="next-button" title="Next page">
+    <button class="shelf-browse__carousel--button shelf-browse__carousel--button-next" id="next-button" title="Next page">
       <span class="material-symbols-rounded" aria-hidden="true">arrow_forward_ios</span>
       <span class="visually-hidden">Next 5 records</span>
     </button>

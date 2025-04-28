@@ -26,6 +26,9 @@ toggleTruncatedText();
 
 // Shelf Browse
 shelfBrowse();
+window.addEventListener('resize', () => {
+  return shelfBrowse();
+});
 
 // View MARC Data
 toggleMARCData();

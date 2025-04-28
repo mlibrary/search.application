@@ -1,86 +1,148 @@
-const shelfBrowse = () => {
-  const paginationNumbers = document.getElementById('pagination-numbers');
-  const paginatedList = document.getElementById('paginated-list');
-  const listItems = paginatedList.querySelectorAll('li');
-  const nextButton = document.getElementById('next-button');
-  const prevButton = document.getElementById('prev-button');
+/*
+  - [x] List has data-current-page=0
+  - [x] List item has data-page= -1/0/1
+  - [x] Clicking on move(-1) will change data-current-page=-1
+  - [x] All list items of data-page=-1 will display and the rest will not
+  - [] Set data-current-page=0 on resize
+  - [] Apply animations on previous/next click
+  - [] Change pagination button titles on resize
+*/
 
-  const paginationLimit = 5;
-  const pageCount = Math.ceil(listItems.length / paginationLimit);
-  let currentPage = 1;
+const pageLimit = () => {
+  const screenWidth = window.innerWidth;
 
-  const handlePageButtonsStatus = () => {
-    // Disabled previous button if on the first page
-    prevButton.toggleAttribute('disabled', currentPage === 1);
-    // Disabled next button if on the last page
-    nextButton.toggleAttribute('disabled', pageCount === currentPage);
+  if (screenWidth >= 820) {
+    return 5;
+  } else if (screenWidth >= 640) {
+    return 3;
+  }
+  return 1;
+};
+
+const getButtons = () => {
+  const shelfBrowseContainer = document.querySelector('.shelf-browse');
+  const previousButton = shelfBrowseContainer.querySelector('button.shelf-browse__carousel--button-previous');
+  const nextButton = shelfBrowseContainer.querySelector('button.shelf-browse__carousel--button-next');
+  const returnButton = shelfBrowseContainer.querySelector('button.shelf-browse__return');
+
+  return {
+    nextButton,
+    previousButton,
+    returnButton
   };
+};
 
-  const handleActivePageNumber = () => {
-    document.querySelectorAll('.pagination-number').forEach((button) => {
-      button.classList.remove('button__ghost');
-      const pageIndex = Number(button.getAttribute('page-index'));
-      if (pageIndex === currentPage) {
-        button.classList.add('button__ghost');
-      }
-    });
-  };
+const setPageNumbers = () => {
+  const shelfBrowseContainer = document.querySelector('.shelf-browse');
+  const list = shelfBrowseContainer.querySelector('.shelf-browse__carousel--items');
+  const items = list.querySelectorAll('li');
+  // Default value in case the class is not found
+  let currentIndex = -1;
+  const itemCount = pageLimit();
 
-  const appendPageNumber = (index) => {
-    const pageNumber = document.createElement('button');
-    pageNumber.className = 'pagination-number';
-    pageNumber.innerHTML = index;
-    pageNumber.setAttribute('page-index', index);
-    pageNumber.setAttribute('aria-label', `Page ${index}`);
-
-    paginationNumbers.appendChild(pageNumber);
-  };
-
-  const getPaginationNumbers = () => {
-    // eslint-disable-next-line no-plusplus
-    for (let index = 1; index <= pageCount; index++) {
-      appendPageNumber(index);
+  // Store the index of the matching item
+  items.forEach((item, index) => {
+    if (item.classList.contains('current-record')) {
+      currentIndex = index;
     }
-  };
+  });
 
-  const setCurrentPage = (pageNum) => {
-    currentPage = pageNum;
+  // Define the previous items to show on the default page
+  for (let index = currentIndex + 1; index < (currentIndex + Math.ceil(itemCount / 2)); index++) {
+    items[index].setAttribute('data-page', 0);
+  }
 
-    handleActivePageNumber();
-    handlePageButtonsStatus();
+  // Loop through each list item starting from index 22
+  for (let index = currentIndex - Math.ceil(itemCount / 2); index >= 0; index--) {
+    // Calculate the current page number based on position
+    const currentPage = (Math.floor(index / itemCount) + 1) - itemCount;
+    items[index].setAttribute('data-page', currentPage);
+  }
 
-    const prevRange = (pageNum - 1) * paginationLimit;
-    const currRange = pageNum * paginationLimit;
+  // Define the next items to show on the default page
+  for (let index = currentIndex - Math.floor(itemCount / 2); index < currentIndex; index++) {
+    items[index].setAttribute('data-page', 0);
+  }
 
-    listItems.forEach((item, index) => {
-      item.classList.add('hidden');
-      if (index >= prevRange && index < currRange) {
-        item.classList.remove('hidden');
-      }
-    });
-  };
+  // Loop through each list item starting from index 22
+  for (let index = currentIndex + Math.ceil(itemCount / 2); index < items.length; index++) {
+    // Calculate the current page number based on position
+    const currentPage = (Math.floor(index / itemCount) + 1) - itemCount;
+    items[index].setAttribute('data-page', currentPage);
+  }
+};
 
-  window.addEventListener('load', () => {
-    getPaginationNumbers();
-    setCurrentPage(1);
+const move = (direction) => {
+  // Direction must be a number
+  if (typeof direction !== 'number') {
+    return;
+  }
 
-    prevButton.addEventListener('click', () => {
-      setCurrentPage(currentPage - 1);
-    });
+  // Get list and items
+  const shelfBrowseContainer = document.querySelector('.shelf-browse');
+  const list = shelfBrowseContainer.querySelector('.shelf-browse__carousel--items');
+  const items = list.querySelectorAll('li');
 
-    nextButton.addEventListener('click', () => {
-      setCurrentPage(currentPage + 1);
-    });
+  // Set current page
+  list.setAttribute('data-current-page', Number(list.getAttribute('data-current-page')) + direction);
+  const currentPage = list.getAttribute('data-current-page');
 
-    document.querySelectorAll('.pagination-number').forEach((button) => {
-      const pageIndex = Number(button.getAttribute('page-index'));
+  // Toggle list items
+  items.forEach((item) => {
+    if (item.getAttribute('data-page') === currentPage) {
+      item.removeAttribute('style');
+    } else {
+      item.style.display = 'none';
+    }
+  });
 
-      if (pageIndex) {
-        button.addEventListener('click', () => {
-          setCurrentPage(pageIndex);
-        });
-      }
-    });
+  // Toggle disabled buttons
+  const { nextButton, previousButton, returnButton } = getButtons();
+
+  // Disable return button if on starting page
+  returnButton.toggleAttribute('disabled', currentPage === '0');
+
+  // Get array of pages
+  const dataPageValues = Array.from(items, (item) => {
+    return item.getAttribute('data-page');
+  });
+  const pages = [...new Set(dataPageValues)];
+
+  // Disable previous button if on first page
+  previousButton.toggleAttribute('disabled', currentPage === pages[0]);
+
+  // Disable next button if on last page
+  nextButton.toggleAttribute('disabled', currentPage === pages[pages.length - 1]);
+};
+
+const shelfBrowse = () => {
+  // Set page numbers
+  setPageNumbers();
+
+  // Toggle items on load
+  move(0);
+
+  // Get buttons
+  const shelfBrowseContainer = document.querySelector('.shelf-browse');
+  const { nextButton, previousButton, returnButton } = getButtons();
+
+  // Previous page
+  previousButton.addEventListener('click', () => {
+    return move(-1);
+  });
+
+  // Next page
+  nextButton.addEventListener('click', () => {
+    return move(1);
+  });
+
+  // Return button
+  returnButton.addEventListener('click', () => {
+    // Get current page value
+    const items = shelfBrowseContainer.querySelector('.shelf-browse__carousel--items');
+    const currentPage = Number(items.getAttribute('data-current-page'));
+    // Convert to a positive or negative value to move to page 0
+    return move(-currentPage);
   });
 };
 
