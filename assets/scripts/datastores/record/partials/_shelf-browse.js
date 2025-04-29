@@ -132,14 +132,21 @@ const move = (direction) => {
 };
 
 const shelfBrowse = () => {
+  // Get elements
+  const { list, nextButton, previousButton, returnButton } = getElements();
+
   // Set page numbers
   setPageNumbers();
+  window.addEventListener('resize', () => {
+    // Get current page value
+    const currentPage = Number(list.getAttribute('data-current-page'));
+    // Convert to a positive or negative value to move to page 0
+    move(-currentPage);
+    return setPageNumbers();
+  });
 
   // Toggle items on load
   move(0);
-
-  // Get buttons
-  const { list, nextButton, previousButton, returnButton } = getElements();
 
   // Previous page
   previousButton.addEventListener('click', () => {
