@@ -31,7 +31,20 @@ const getElements = () => {
   const list = shelfBrowseContainer.querySelector('.shelf-browse__carousel--items');
   const items = list.querySelectorAll('li');
 
+  // Current Record
+  const currentRecordIndex = Array.from(items).findIndex((item) => {
+    return item.classList.contains('current-record');
+  });
+
+  // Directions
+  const directions = {
+    next: 1,
+    previous: -1
+  };
+
   return {
+    currentRecordIndex,
+    directions,
     items,
     list,
     nextButton,
@@ -41,12 +54,9 @@ const getElements = () => {
 };
 
 const setPageNumbers = () => {
-  const { items, list } = getElements();
+  const { currentRecordIndex, directions, items, list } = getElements();
 
-  // Find where the current record is located in the list
-  const currentRecordIndex = Array.from(items).findIndex((item) => {
-    return item.classList.contains('current-record');
-  });
+  // Find the difference of the current page count
   const itemCount = pageLimit();
   const difference = Math.floor(itemCount / 2);
 
@@ -57,37 +67,36 @@ const setPageNumbers = () => {
   list.setAttribute('data-current-page', 0);
 
   // Define the items to show on the default page
-  for (let index = currentRecordIndex - difference; index <= (currentRecordIndex + difference); index += 1) {
+  const start = currentRecordIndex - difference;
+  const end = currentRecordIndex + difference;
+  for (let index = start; index <= end; index += 1) {
     items[index].setAttribute('data-page', 0);
   }
 
-  // Loop through each previous item starting from the current record
-  let previousCount = -1;
-  let previousDataPage = -1;
-  for (let index = currentRecordIndex - (difference + 1); index >= 0; index -= 1) {
-    // Decrease page count for every number of records
-    previousCount += 1;
-    if (previousCount === itemCount) {
-      previousCount = 0;
-      previousDataPage -= 1;
-    }
-    // Set calculated page number
-    items[index].setAttribute('data-page', previousDataPage);
-  }
+  // Loop through each item, depending on the direction
+  Object.keys(directions).forEach((direction) => {
+    const movePage = directions[direction];
 
-  // Loop through each next item starting from the current record
-  let nextCount = -1;
-  let nextDataPage = 1;
-  for (let index = currentRecordIndex + (difference + 1); index < items.length; index += 1) {
-    // Increase page count for every number of records
-    nextCount += 1;
-    if (nextCount === itemCount) {
-      nextCount = 0;
-      nextDataPage += 1;
+    const startIndex = currentRecordIndex + (Math.ceil(itemCount / 2) * movePage);
+    const endIndex = movePage < 0 ? movePage : items.length;
+    const step = movePage;
+
+    let page = movePage;
+    let count = 0;
+
+    // Loop through items, adjusting index by movePage
+    for (let index = startIndex; index !== endIndex; index += step) {
+      // Assign current page number to the item's data-page attribute
+      items[index].setAttribute('data-page', page);
+
+      // Break the loop if page increment condition is met
+      count += 1;
+      if (count === itemCount) {
+        count = 0;
+        page += movePage;
+      }
     }
-    // Set calculated page number
-    items[index].setAttribute('data-page', nextDataPage);
-  }
+  });
 };
 
 const move = (direction) => {
@@ -131,17 +140,23 @@ const move = (direction) => {
   nextButton.toggleAttribute('disabled', currentPage === pages[pages.length - 1]);
 };
 
+const returnToCurrentRecord = () => {
+  const { list } = getElements();
+  // Get current page value
+  const currentPage = Number(list.getAttribute('data-current-page'));
+  // Convert to a positive or negative value to move to page 0
+  return move(-currentPage);
+};
+
 const shelfBrowse = () => {
   // Get elements
-  const { list, nextButton, previousButton, returnButton } = getElements();
+  const { directions, nextButton, previousButton, returnButton } = getElements();
 
   // Set page numbers
   setPageNumbers();
+  // Reset and recalculate pages on resize
   window.addEventListener('resize', () => {
-    // Get current page value
-    const currentPage = Number(list.getAttribute('data-current-page'));
-    // Convert to a positive or negative value to move to page 0
-    move(-currentPage);
+    returnToCurrentRecord();
     return setPageNumbers();
   });
 
@@ -150,20 +165,17 @@ const shelfBrowse = () => {
 
   // Previous page
   previousButton.addEventListener('click', () => {
-    return move(-1);
+    return move(directions.previous);
   });
 
   // Next page
   nextButton.addEventListener('click', () => {
-    return move(1);
+    return move(directions.next);
   });
 
   // Return button
   returnButton.addEventListener('click', () => {
-    // Get current page value
-    const currentPage = Number(list.getAttribute('data-current-page'));
-    // Convert to a positive or negative value to move to page 0
-    return move(-currentPage);
+    returnToCurrentRecord();
   });
 };
 
