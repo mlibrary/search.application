@@ -1,14 +1,3 @@
-/*
-  - [x] List has data-current-page=0
-  - [x] List item has data-page= -1/0/1
-  - [x] Clicking on move(-1) will change data-current-page=-1
-  - [x] All list items of data-page=-1 will display and the rest will not
-  - [x] Set data-current-page=0 on resize
-  - [x] Apply animations on previous/next click
-  - [] Change pagination button titles on resize
-  - [] Update UI of first and last cards
-*/
-
 const pageLimit = () => {
   const screenWidth = window.innerWidth;
 
@@ -115,12 +104,15 @@ const move = (direction) => {
   // Get list and items
   const { items, list } = getElements();
 
-  // Set current page
+  // Get prior
   const priorPage = list.getAttribute('data-current-page');
+  const priorItems = filteredItems({ items, page: priorPage });
+
+  // Set current
   list.setAttribute('data-current-page', Number(list.getAttribute('data-current-page')) + direction);
   const currentPage = list.getAttribute('data-current-page');
-  const priorItems = filteredItems({ items, page: priorPage });
   const currentItems = filteredItems({ items, page: currentPage });
+
   // 0.25s animation duration according to assets/styles/datastores/record/partials/_shelf-browse.scss
   const animationDuration = 250;
 
@@ -169,9 +161,15 @@ const move = (direction) => {
   });
   const pages = [...new Set(dataPageValues)];
 
+  // Update previous button hidden text
+  const previousPageItems = filteredItems({ items, page: String(Number(currentPage) - 1) }).length;
+  previousButton.querySelector('.visually-hidden').textContent = `Previous ${previousPageItems} record${previousPageItems === 1 ? '' : 's'}`;
   // Disable previous button if on first page
   previousButton.toggleAttribute('disabled', currentPage === pages[0]);
 
+  // Update next button hidden text
+  const nextPageItems = filteredItems({ items, page: String(Number(currentPage) + 1) }).length;
+  nextButton.querySelector('.visually-hidden').textContent = `Next ${nextPageItems} record${previousPageItems === 1 ? '' : 's'}`;
   // Disable next button if on last page
   nextButton.toggleAttribute('disabled', currentPage === pages[pages.length - 1]);
 };
