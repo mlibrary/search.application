@@ -22,41 +22,63 @@ items = JSON.parse(response)
     </button>
     <ul class="shelf-browse__carousel--items list__no-style" id="paginated-list" data-current-page="0" aria-live="polite">
       <% items.each_with_index do | item, index | %>
-        <% is_current_record = item["call_number"] == call_number %>
-        <li <%= "class=\"current-record\" data-page=\"0\"" if is_current_record %>>
+        <%
+          is_current_record = item["call_number"] == call_number
+          is_end_and_not_current = (index == 0 || index == (items.length - 1)) && !is_current_record
+        %>
+        <% if is_current_record %>
+          <li class="highlighted-record current-record" data-page="0">
+        <% elsif is_end_and_not_current%>
+          <li class="highlighted-record end-record">
+        <% else %>
+          <li>
+        <% end %>
           <a href="<%= item["url"] %>" class="container__rounded">
-            <p class="current-record__badge strong">Current Record</p>
+            <% if is_current_record %>
+              <p class="current-record__badge strong">Current Record</p>
+            <% elsif is_end_and_not_current%>
+              <span class="material-symbols-rounded" aria-hidden="true">list</span>
+            <% end %>
             <dl>
-              <dd class="visually-hidden">
-                Book Cover
-              </dd>
-              <dt class="shelf-browse__carousel--book_cover">
-                <img src="<%= item["book_cover_url"] %>" onerror="this.src='/images/placeholders/placeholder-<%= index % 15 %>.svg'" alt="Book cover for <%= item["title"] %>">
-              </dt>
-              <dd class="visually-hidden">
-                Title
-              </dd>
-              <dt class="shelf-browse__carousel--title">
-                <%= item["title"] %>
-              </dt>
-              <dd class="visually-hidden">
-                Author
-              </dd>
-              <dt class="shelf-browse__carousel--author">
-                <%= item["author"] %>
-              </dt>
-              <dd class="visually-hidden">
-                Date
-              </dd>
-              <dt class="shelf-browse__carousel--date">
-                <%= item["date"] %>
-              </dt>
-              <dd class="visually-hidden">
+              <% if is_end_and_not_current %>
+                <dt class="visually-hidden">
+                  Navigate
+                </dt>
+                <dd class="shelf-browse__carousel--title strong">
+                  Continue browsing in call number list
+                </dd>
+              <% else %>
+                <dt class="visually-hidden">
+                  Book Cover
+                </dt>
+                <dd class="shelf-browse__carousel--book_cover">
+                  <img src="<%= item["book_cover_url"] %>" onerror="this.src='/images/placeholders/placeholder-<%= index % 15 %>.svg'" alt="Book cover for <%= item["title"] %>">
+                </dd>
+                <dt class="visually-hidden">
+                  Title
+                </dt>
+                <dd class="shelf-browse__carousel--title strong">
+                  <%= item["title"] %>
+                </dd>
+                <dt class="visually-hidden">
+                  Author
+                </dt>
+                <dd class="shelf-browse__carousel--author">
+                  <%= item["author"] %>
+                </dd>
+                <dt class="visually-hidden">
+                  Date
+                </dt>
+                <dd class="shelf-browse__carousel--date">
+                  <%= item["date"] %>
+                </dd>
+              <% end %>
+              <dt class="visually-hidden">
                 Call Number
-              </dd>
-              <dt class="shelf-browse__carousel--call_number">
-                <%= item["call_number"] %>
               </dt>
+              <dd class="shelf-browse__carousel--call_number">
+                <%= item["call_number"] %>
+              </dd>
             </dl>
           </a>
         </li>
