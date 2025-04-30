@@ -14,11 +14,27 @@
 //
 // --------------------------------------------------
 
-// ******************** //
-// *** 1. VARIABLES *** //
-// ******************** //
+// ******************************* //
+// *** 1. VARIABLES AND MIXINS *** //
+// ******************************* //
+
+// *               * //
+// * 1.1 VARIABLES * //
+// *               * //
 
 $class: 'shelf-browse';
+
+
+
+// *            * //
+// * 1.2 MIXINS * //
+// *            * //
+
+@mixin carouselAnimation($fade: Out, $direction: Left) {
+  animation:
+    0.25s ease-in-out fade#{$fade} forwards,
+    0.25s ease-in-out slide#{$fade}From#{$direction} forwards;
+}
 
 
 
@@ -158,14 +174,28 @@ $class: 'shelf-browse';
           display: none;
         }
       }
-      &.hidden {
-        display: none;
-      }
       & > a {
         color: inherit;
         display: block;
         height: 100%;
         padding: 0.5rem 0.75rem;
+      }
+      &.animation-out-next {
+        @include carouselAnimation;
+      }
+      &.animation-out-previous {
+        @include carouselAnimation($direction: Right);
+      }
+      &.animation-in-next {
+        @include carouselAnimation($fade: In, $direction: Right);
+      }
+      &.animation-in-previous {
+        @include carouselAnimation($fade: In);
+      }
+      @media (prefers-reduced-motion) {
+        &[class*="animation-"] {
+          animation: none;
+        }
       }
     }
   }
@@ -177,6 +207,61 @@ $class: 'shelf-browse';
   }
 }
 
+// * 4.2.1 ANIMATIONS * //
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-1rem);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(1rem);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutFromLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-1rem);
+  }
+}
+
+@keyframes slideOutFromRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(1rem);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
 
 
 

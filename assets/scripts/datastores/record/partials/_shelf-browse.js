@@ -4,8 +4,9 @@
   - [x] Clicking on move(-1) will change data-current-page=-1
   - [x] All list items of data-page=-1 will display and the rest will not
   - [x] Set data-current-page=0 on resize
-  - [] Apply animations on previous/next click
+  - [x] Apply animations on previous/next click
   - [] Change pagination button titles on resize
+  - [] Update UI of first and last cards
 */
 
 const pageLimit = () => {
@@ -99,6 +100,12 @@ const setPageNumbers = () => {
   });
 };
 
+const filteredItems = ({ items, page }) => {
+  return Array.from(items).filter((item) => {
+    return item.getAttribute('data-page') === page;
+  });
+};
+
 const move = (direction) => {
   // Direction must be a number
   if (typeof direction !== 'number') {
@@ -109,17 +116,46 @@ const move = (direction) => {
   const { items, list } = getElements();
 
   // Set current page
+  const priorPage = list.getAttribute('data-current-page');
   list.setAttribute('data-current-page', Number(list.getAttribute('data-current-page')) + direction);
   const currentPage = list.getAttribute('data-current-page');
+  const priorItems = filteredItems({ items, page: priorPage });
+  const currentItems = filteredItems({ items, page: currentPage });
+  // 0.25s animation duration according to assets/styles/datastores/record/partials/_shelf-browse.scss
+  const animationDuration = 250;
 
-  // Toggle list items
-  items.forEach((item) => {
-    if (item.getAttribute('data-page') === currentPage) {
-      item.removeAttribute('style');
-    } else {
-      item.style.display = 'none';
-    }
-  });
+  // Toggle display on load
+  if (direction === 0) {
+    items.forEach((item) => {
+      if (item.getAttribute('data-page') === currentPage) {
+        item.removeAttribute('style');
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  } else {
+    const way = direction > 0 ? 'next' : 'previous';
+    // Apply class to prior items, then hide
+    const priorClass = `animation-out-${way}`;
+    priorItems.forEach((item) => {
+      item.classList.add(priorClass);
+      setTimeout(() => {
+        item.classList.remove(priorClass);
+        item.style.display = 'none';
+      }, animationDuration);
+    });
+    // Display current items, then add class
+    const currentClass = `animation-in-${way}`;
+    currentItems.forEach((item) => {
+      setTimeout(() => {
+        item.removeAttribute('style');
+        item.classList.add(currentClass);
+      }, animationDuration);
+      setTimeout(() => {
+        item.classList.remove(currentClass);
+      }, (animationDuration * 2));
+    });
+  }
 
   // Toggle disabled buttons
   const { nextButton, previousButton, returnButton } = getElements();
