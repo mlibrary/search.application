@@ -10,7 +10,13 @@
 //   Styles to apply directly to `views/datastores/record/partials/_shelf-browse.erb`.
 //
 // ## Table of Contents
-//   1. Variables
+//   1. Variables and Mixins
+//     1.1. Variables
+//     1.2. Mixins
+//   2. Container
+//   3. Header
+//   4. Carousel
+//   5. Return to Current Record
 //
 // --------------------------------------------------
 
@@ -48,10 +54,10 @@ $class: 'shelf-browse';
   display: grid;
   gap: 1rem;
   grid-template-areas:
-    "header header header"
-    "carousel carousel carousel"
-    ". return .";
-  grid-template-columns: 1fr auto 1fr;
+    "header"
+    "carousel"
+    "return";
+  grid-template-columns: auto;
   grid-template-rows: auto;
   padding: 1rem;
   @include media.breakpoint('xs') {
@@ -292,5 +298,7 @@ $class: 'shelf-browse';
 // *********************************** //
 
 .#{$class} > .#{$class}__return {
+  align-self: center;
   grid-area: return;
+  justify-self: center;
 }

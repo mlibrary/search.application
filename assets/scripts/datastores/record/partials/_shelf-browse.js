@@ -1,86 +1,68 @@
-const pageLimit = () => {
-  const screenWidth = window.innerWidth;
-
-  if (screenWidth >= 820) {
-    return 5;
-  } else if (screenWidth >= 640) {
-    return 3;
-  }
-  return 1;
-};
-
 const getElements = () => {
   const shelfBrowseContainer = document.querySelector('.shelf-browse');
-
-  // Buttons
-  const previousButton = shelfBrowseContainer.querySelector('button.shelf-browse__carousel--button-previous');
-  const nextButton = shelfBrowseContainer.querySelector('button.shelf-browse__carousel--button-next');
-  const returnButton = shelfBrowseContainer.querySelector('button.shelf-browse__return');
-
-  // List
-  const list = shelfBrowseContainer.querySelector('.shelf-browse__carousel--items');
-  const items = list.querySelectorAll('li');
-
-  // Current Record
-  const currentRecordIndex = Array.from(items).findIndex((item) => {
-    return item.classList.contains('current-record');
-  });
-
-  // Directions
-  const directions = {
-    next: 1,
-    previous: -1
+  const selectors = {
+    list: '.shelf-browse__carousel--items',
+    nextButton: 'button.shelf-browse__carousel--button-next',
+    previousButton: 'button.shelf-browse__carousel--button-previous',
+    returnButton: 'button.shelf-browse__return'
   };
 
+  const elements = Object.fromEntries(
+    Object.entries(selectors).map(([key, selector]) => {
+      return [key, shelfBrowseContainer.querySelector(selector)];
+    })
+  );
+
   return {
-    currentRecordIndex,
-    directions,
-    items,
-    list,
-    nextButton,
-    previousButton,
-    returnButton
+    ...elements,
+    directions: { next: 1, previous: -1 },
+    items: elements.list.querySelectorAll('li')
   };
 };
 
 const setPageNumbers = () => {
-  const { currentRecordIndex, directions, items, list } = getElements();
+  const { directions, items, list } = getElements();
 
-  // Find the difference of the current page count
-  const itemCount = pageLimit();
+  // Set the item count based on 'xs' and 'sm' breakpoints found in `./assets/styles/_media.scss`
+  let itemCount = 1;
+  if (window.innerWidth >= 820) {
+    itemCount = 5;
+  } else if (window.innerWidth >= 640) {
+    itemCount = 3;
+  }
+
+  // Get the position of the current record
+  const currentRecordIndex = Array.from(items).findIndex((item) => {
+    return item.classList.contains('current-record');
+  });
+
+  // Calculate the difference
   const difference = Math.floor(itemCount / 2);
 
-  // Reset data attributes
-  items.forEach((item) => {
-    return item.removeAttribute('data-page');
-  });
+  // Initialize items for current page
   list.setAttribute('data-current-page', 0);
-
-  // Define the items to show on the default page
-  const start = currentRecordIndex - difference;
-  const end = currentRecordIndex + difference;
-  for (let index = start; index <= end; index += 1) {
-    items[index].setAttribute('data-page', 0);
-  }
+  items.forEach((item, index) => {
+    item.removeAttribute('data-page');
+    if (index >= (currentRecordIndex - difference) && index <= (currentRecordIndex + difference)) {
+      items[index].setAttribute('data-page', 0);
+      item.removeAttribute('style');
+    } else {
+      item.style.display = 'none';
+    }
+  });
 
   // Loop through each item, depending on the direction
   Object.keys(directions).forEach((direction) => {
     const movePage = directions[direction];
-
-    const startIndex = currentRecordIndex + (Math.ceil(itemCount / 2) * movePage);
-    const endIndex = movePage < 0 ? movePage : items.length;
-    const step = movePage;
-
     let page = movePage;
     let count = 0;
+    const startIndex = currentRecordIndex + (Math.ceil(itemCount / 2) * movePage);
 
-    // Loop through items, adjusting index by movePage
-    for (let index = startIndex; index !== endIndex; index += step) {
-      // Assign current page number to the item's data-page attribute
+    // Set up pagination
+    for (let index = startIndex; index >= 0 && index < items.length; index += movePage) {
       items[index].setAttribute('data-page', page);
-
-      // Break the loop if page increment condition is met
       count += 1;
+      // Break the loop if page increment condition is met
       if (count === itemCount) {
         count = 0;
         page += movePage;
@@ -102,7 +84,7 @@ const move = (direction) => {
   }
 
   // Get list and items
-  const { items, list } = getElements();
+  const { items, list, nextButton, previousButton, returnButton } = getElements();
 
   // Get prior
   const priorPage = list.getAttribute('data-current-page');
@@ -113,19 +95,10 @@ const move = (direction) => {
   const currentPage = list.getAttribute('data-current-page');
   const currentItems = filteredItems({ items, page: currentPage });
 
-  // 0.25s animation duration according to assets/styles/datastores/record/partials/_shelf-browse.scss
+  // 0.25s animation duration according to `./assets/styles/datastores/record/partials/_shelf-browse.scss`
   const animationDuration = 250;
 
-  // Toggle display on load
-  if (direction === 0) {
-    items.forEach((item) => {
-      if (item.getAttribute('data-page') === currentPage) {
-        item.removeAttribute('style');
-      } else {
-        item.style.display = 'none';
-      }
-    });
-  } else {
+  if (currentPage !== '0') {
     const way = direction > 0 ? 'next' : 'previous';
     // Apply class to prior items, then hide
     const priorClass = `animation-out-${way}`;
@@ -148,9 +121,6 @@ const move = (direction) => {
       }, (animationDuration * 2));
     });
   }
-
-  // Toggle disabled buttons
-  const { nextButton, previousButton, returnButton } = getElements();
 
   // Disable return button if on starting page
   returnButton.toggleAttribute('disabled', currentPage === '0');
@@ -178,33 +148,35 @@ const returnToCurrentRecord = () => {
   const { list } = getElements();
   // Get current page value
   const currentPage = Number(list.getAttribute('data-current-page'));
-  // Convert to a positive or negative value to move to page 0
-  return move(-currentPage);
+  // Move to current page if not already on current page
+  if (currentPage !== 0) {
+    // Convert to a positive or negative value to move to page 0
+    move(-currentPage);
+  }
 };
 
 const shelfBrowse = () => {
   // Get elements
   const { directions, nextButton, previousButton, returnButton } = getElements();
 
-  // Set page numbers
+  // Initialize carousel records
   setPageNumbers();
+  move(0);
+
   // Reset and recalculate pages on resize
   window.addEventListener('resize', () => {
     returnToCurrentRecord();
-    return setPageNumbers();
+    setPageNumbers();
   });
-
-  // Toggle items on load
-  move(0);
 
   // Previous page
   previousButton.addEventListener('click', () => {
-    return move(directions.previous);
+    move(directions.previous);
   });
 
   // Next page
   nextButton.addEventListener('click', () => {
-    return move(directions.next);
+    move(directions.next);
   });
 
   // Return button
