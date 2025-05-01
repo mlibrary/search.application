@@ -31,10 +31,29 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   end
   context "#other_titles" do
     it "has text and search" do
-      @data["other_titles"][0]["text"] = "text_string"
-      @data["other_titles"][0]["search"] = "search_string"
-      expect(subject.other_titles.first.text).to eq("text_string")
-      expect(subject.other_titles.first.url).to eq("#{S.base_url}/catalog?query=title%3Asearch_string")
+      expected = {
+        transliterated:
+        {
+          text: @data["other_titles"].first["transliterated"]["text"],
+          search_string: @data["other_titles"].first["transliterated"]["search"].first["value"],
+          field: @data["other_titles"].first["transliterated"]["search"].first["field"]
+        },
+        original:
+        {
+          text: @data["other_titles"].first["original"]["text"],
+          search_string: @data["other_titles"].first["original"]["search"].first["value"],
+          field: @data["other_titles"].first["original"]["search"].first["field"]
+        }
+      }
+      other_title = subject.other_titles.first
+
+      expect(other_title.transliterated.text).to eq(expected[:transliterated][:text])
+      expect(other_title.transliterated.url)
+        .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:transliterated][:field]}:\"#{expected[:transliterated][:search_string]}\""}.to_query)
+
+      expect(other_title.original.text).to eq(expected[:original][:text])
+      expect(other_title.original.url)
+        .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:original][:field]}:\"#{expected[:original][:search_string]}\""}.to_query)
     end
   end
   context "#related_title" do

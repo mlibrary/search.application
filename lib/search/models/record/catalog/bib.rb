@@ -94,10 +94,18 @@ class Search::Models::Record::Catalog::Bib
   end
 
   def _link_to_item(item:, kind:)
-    OpenStruct.new(
-      text: item["text"],
-      url: "#{S.base_url}/catalog?" + {query: "title:#{item["search"]}"}.to_query
-    )
+    result = OpenStruct.new
+    item.to_a.each do |key, value|
+      query_string = value["search"].map do |x|
+        "#{x["field"]}:\"#{x["value"]}\""
+      end.join(" AND ")
+
+      result[key.to_sym] = OpenStruct.new(
+        text: value["text"],
+        url: "#{S.base_url}/catalog?" + {query: query_string}.to_query
+      )
+    end
+    result
   end
 
   def _subject_browse_item(item:)

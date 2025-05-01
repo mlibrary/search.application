@@ -18,7 +18,7 @@ module Factories
               "Ecology and Evolutionary Biology"
             ]
           }]]
-      ] + paired_text_fields + link_fields + text_fields + author_browse_fields).to_h
+      ] + paired_text_fields + title_link_fields + text_fields + author_browse_fields).to_h
     end
 
     def paired_text_fields
@@ -28,9 +28,9 @@ module Factories
       end
     end
 
-    def link_fields
+    def title_link_fields
       ["other_titles"].map do |f|
-        [f, link_field]
+        [f, link_field("title")]
       end
     end
 
@@ -65,39 +65,51 @@ module Factories
 
     def paired_text_field
       [
-        {
-          text: Faker::Lorem.sentence,
-          script: "default"
-        },
-        {
-          text: Faker::Lorem.sentence,
-          script: "vernacular"
-        }
+        {"transliterated" => {
+           text: Faker::Lorem.sentence
+         },
+         "original" => {
+           text: Faker::Lorem.sentence
+         }}
       ]
     end
 
     def author_browse_field
       [
         {
-          text: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
-          script: "default",
-          search: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
-          browse: "#{Faker::Name.last_name}, #{Faker::Name.first_name}"
-        },
-        {
-          text: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
-          script: "vernacular",
-          search: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
-          browse: "#{Faker::Name.last_name}, #{Faker::Name.first_name}"
+          "transliterated" => {
+            "text" => "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
+            "search" => search_field,
+            "browse" => "#{Faker::Name.last_name}, #{Faker::Name.first_name}"
+          },
+          "original" => {
+            "text" => "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
+            "search" => search_field,
+            "browse" => "#{Faker::Name.last_name}, #{Faker::Name.first_name}"
+          }
         }
       ]
     end
 
-    def link_field
-      [{
-        text: Faker::Lorem.sentence,
-        search: Faker::Lorem.sentence
-      }]
+    def search_field(field = "author")
+      [
+        {"field" => field, "value" => "#{Faker::Name.last_name}, #{Faker::Name.first_name}"}
+      ]
+    end
+
+    def link_field(field = author)
+      [
+        {
+          "transliterated" => {
+            "text" => Faker::Lorem.sentence,
+            "search" => search_field(field)
+          },
+          "original" => {
+            "text" => Faker::Lorem.sentence,
+            "search" => search_field(field)
+          }
+        }
+      ]
     end
   end
 end
