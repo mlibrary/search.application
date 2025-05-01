@@ -98,7 +98,16 @@ const move = (direction) => {
   // 0.25s animation duration according to `./assets/styles/datastores/record/partials/_shelf-browse.scss`
   const animationDuration = 250;
 
-  if (currentPage !== '0') {
+  // Toggle display on load
+  if (direction === 0) {
+    items.forEach((item) => {
+      if (item.getAttribute('data-page') === currentPage) {
+        item.removeAttribute('style');
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  } else {
     const way = direction > 0 ? 'next' : 'previous';
     // Apply class to prior items, then hide
     const priorClass = `animation-out-${way}`;
@@ -125,34 +134,25 @@ const move = (direction) => {
   // Disable return button if on starting page
   returnButton.toggleAttribute('disabled', currentPage === '0');
 
-  // Get array of pages
-  const dataPageValues = Array.from(items, (item) => {
-    return item.getAttribute('data-page');
-  });
-  const pages = [...new Set(dataPageValues)];
-
   // Update previous button hidden text
   const previousPageItems = filteredItems({ items, page: String(Number(currentPage) - 1) }).length;
   previousButton.querySelector('.visually-hidden').textContent = `Previous ${previousPageItems} record${previousPageItems === 1 ? '' : 's'}`;
   // Disable previous button if on first page
-  previousButton.toggleAttribute('disabled', currentPage === pages[0]);
+  previousButton.toggleAttribute('disabled', currentPage === items[0].getAttribute('data-page'));
 
   // Update next button hidden text
   const nextPageItems = filteredItems({ items, page: String(Number(currentPage) + 1) }).length;
   nextButton.querySelector('.visually-hidden').textContent = `Next ${nextPageItems} record${previousPageItems === 1 ? '' : 's'}`;
   // Disable next button if on last page
-  nextButton.toggleAttribute('disabled', currentPage === pages[pages.length - 1]);
+  nextButton.toggleAttribute('disabled', currentPage === items[items.length - 1].getAttribute('data-page'));
 };
 
 const returnToCurrentRecord = () => {
   const { list } = getElements();
   // Get current page value
   const currentPage = Number(list.getAttribute('data-current-page'));
-  // Move to current page if not already on current page
-  if (currentPage !== 0) {
-    // Convert to a positive or negative value to move to page 0
-    move(-currentPage);
-  }
+  // Convert to a positive or negative value to move to page 0
+  return move(-currentPage);
 };
 
 const shelfBrowse = () => {
