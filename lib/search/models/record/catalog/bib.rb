@@ -5,11 +5,11 @@ class Search::Models::Record::Catalog::Bib
   end
 
   def title
-    @data.dig("title", 0, "text")
-  end
-
-  def vernacular_title
-    @data.dig("title", 1, "text")
+    result = OpenStruct.new
+    @data["title"].first.to_a.each do |key, value|
+      result[key.to_sym] = OpenStruct.new(text: value["text"])
+    end
+    result
   end
 
   def format
@@ -20,24 +20,20 @@ class Search::Models::Record::Catalog::Bib
   end
 
   def main_author
-    ma = @data.dig("main_author", 0)
-    _author_browse_item(item: ma) if ma
-  end
-
-  def vernacular_main_author
-    vma = @data.dig("main_author", 1)
-    _author_browse_item(item: vma) if vma
+    _map_field("main_author") do |ma|
+      _author_browse_item(item: ma)
+    end
   end
 
   def other_titles
     _map_field("other_titles") do |item|
-      _link_to_item(item: item, kind: title)
+      _link_to_item(item)
     end
   end
 
   def related_title
     _map_field("related_title") do |item|
-      _link_to_item(item: item, kind: title)
+      _link_to_item(item)
     end
   end
 
@@ -93,7 +89,7 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  def _link_to_item(item:, kind:)
+  def _link_to_item(item)
     result = OpenStruct.new
     item.to_a.each do |key, value|
       query_string = value["search"].map do |x|
@@ -127,11 +123,25 @@ class Search::Models::Record::Catalog::Bib
   end
 
   def _author_browse_item(item:)
-    OpenStruct.new(
-      text: item["text"],
-      url: "#{S.base_url}/catalog?query=author:(\"#{item["search"]}\")",
-      browse_url: "#{S.base_url}/catalog/browse/author?query=#{item["browse"]}",
-      kind: "author"
-    )
+    result = OpenStruct.new
+    item.to_a.each do |key, value|
+      query_string = value["search"].map do |x|
+        "#{x["field"]}:\"#{x["value"]}\""
+      end.join(" AND ")
+
+      result[key.to_sym] = OpenStruct.new(
+        text: value["text"],
+        url: "#{S.base_url}/catalog?" + {query: query_string}.to_query,
+        browse_url: "#{S.base_url}/catalog/browse/author?" + {query: value["browse"]}.to_query,
+        kind: "author"
+      )
+    end
+    result
+    # OpenStruct.new(
+    #   text: item["text"],
+    #   url: "#{S.base_url}/catalog?query=author:(\"#{item["search"]}\")",
+    #   browse_url: "#{S.base_url}/catalog/browse/author?query=#{item["browse"]}",
+    #   kind: "author"
+    # )
   end
 end

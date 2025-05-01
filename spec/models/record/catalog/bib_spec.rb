@@ -15,87 +15,88 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   end
   context "#title" do
     it "has a title" do
-      expected = @data["title"][0]["text"]
-      expect(subject.title).to eq(expected)
+      expect(subject.title.transliterated.text).to eq(@data["title"].first["transliterated"]["text"])
+      expect(subject.title.original.text).to eq(@data["title"].first["original"]["text"])
     end
   end
-  context "#vernacular_title" do
-    it "has a vernacular_title" do
-      expected = @data["title"][1]["text"]
-      expect(subject.vernacular_title).to eq(expected)
-    end
-    it "in nil if there is no vernacular_title" do
-      @data["title"].delete_at(1)
-      expect(subject.vernacular_title).to be_nil
-    end
-  end
-  context "#other_titles" do
-    it "has text and search" do
-      expected = {
-        transliterated:
-        {
-          text: @data["other_titles"].first["transliterated"]["text"],
-          search_string: @data["other_titles"].first["transliterated"]["search"].first["value"],
-          field: @data["other_titles"].first["transliterated"]["search"].first["field"]
-        },
-        original:
-        {
-          text: @data["other_titles"].first["original"]["text"],
-          search_string: @data["other_titles"].first["original"]["search"].first["value"],
-          field: @data["other_titles"].first["original"]["search"].first["field"]
+  ["other_titles", "related_title"].each do |field|
+    context "##{field}" do
+      it "has text and search" do
+        expected = {
+          transliterated:
+          {
+            text: @data[field].first["transliterated"]["text"],
+            search_string: @data[field].first["transliterated"]["search"].first["value"],
+            field: @data[field].first["transliterated"]["search"].first["field"]
+          },
+          original:
+          {
+            text: @data[field].first["original"]["text"],
+            search_string: @data[field].first["original"]["search"].first["value"],
+            field: @data[field].first["original"]["search"].first["field"]
+          }
         }
-      }
-      other_title = subject.other_titles.first
 
-      expect(other_title.transliterated.text).to eq(expected[:transliterated][:text])
-      expect(other_title.transliterated.url)
-        .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:transliterated][:field]}:\"#{expected[:transliterated][:search_string]}\""}.to_query)
+        my_subject = subject.public_send(field).first
+        expect(my_subject.transliterated.text).to eq(expected[:transliterated][:text])
+        expect(my_subject.transliterated.url)
+          .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:transliterated][:field]}:\"#{expected[:transliterated][:search_string]}\""}.to_query)
 
-      expect(other_title.original.text).to eq(expected[:original][:text])
-      expect(other_title.original.url)
-        .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:original][:field]}:\"#{expected[:original][:search_string]}\""}.to_query)
+        expect(my_subject.original.text).to eq(expected[:original][:text])
+        expect(my_subject.original.url)
+          .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:original][:field]}:\"#{expected[:original][:search_string]}\""}.to_query)
+      end
     end
   end
-  context "#related_title" do
-    it "has text and search" do
-      @data["related_title"] = [{"text" => "text_string", "search" => "search_string"}]
-      expect(subject.related_title.first.text).to eq("text_string")
-      expect(subject.related_title.first.url).to eq("#{S.base_url}/catalog?query=title%3Asearch_string")
-    end
-  end
-  context "#main_author" do
-    it "has text, url, browse_url, and kind" do
-      @data["main_author"][0]["text"] = "text_string"
-      @data["main_author"][0]["search"] = "search_string"
-      @data["main_author"][0]["browse"] = "browse_string"
-      author_browse_item_expectations(subject.main_author)
-    end
-    it "handles empty main author" do
-      @data["main_author"] = nil
-      expect(subject.main_author).to be_nil
-    end
-  end
-  context "#vernacular_main_author" do
-    it "has text, url, browse_url, and kind" do
-      @data["main_author"][1]["text"] = "text_string"
-      @data["main_author"][1]["search"] = "search_string"
-      @data["main_author"][1]["browse"] = "browse_string"
-      author_browse_item_expectations(subject.vernacular_main_author)
-    end
+  ["main_author", "contributors"].each do |field|
+    context "##{field}" do
+      it "has an author browse result" do
+        expected = {
+          transliterated:
+          {
+            text: @data[field].first["transliterated"]["text"],
+            search_string: @data[field].first["transliterated"]["search"].first["value"],
+            field: @data[field].first["transliterated"]["search"].first["field"],
+            browse: @data[field].first["transliterated"]["browse"]
+          },
+          original:
+          {
+            text: @data[field].first["original"]["text"],
+            search_string: @data[field].first["original"]["search"].first["value"],
+            field: @data[field].first["original"]["search"].first["field"],
+            browse: @data[field].first["original"]["browse"]
+          }
+        }
 
-    it "handles empty vernacular main author" do
-      @data["main_author"].delete_at(1)
-      expect(subject.vernacular_main_author).to be_nil
+        my_subject = subject.public_send(field).first
+        expect(my_subject.transliterated.url)
+          .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:transliterated][:field]}:\"#{expected[:transliterated][:search_string]}\""}.to_query)
+        expect(my_subject.transliterated.text).to eq(expected[:transliterated][:text])
+        expect(my_subject.transliterated.browse_url)
+          .to eq("#{S.base_url}/catalog/browse/author?" + {query: expected[:transliterated][:browse]}.to_query)
+        expect(my_subject.transliterated.kind).to eq("author")
+
+        expect(my_subject.original.url)
+          .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:original][:field]}:\"#{expected[:original][:search_string]}\""}.to_query)
+        expect(my_subject.original.text).to eq(expected[:original][:text])
+        expect(my_subject.original.browse_url)
+          .to eq("#{S.base_url}/catalog/browse/author?" + {query: expected[:original][:browse]}.to_query)
+        expect(my_subject.original.kind).to eq("author")
+      end
+      it "handles empty #{field}" do
+        @data[field] = []
+        expect(subject.public_send(field)).to eq([])
+      end
     end
   end
-  context "#contributors" do
-    it "is an array with text, url, browse_url, and kind" do
-      @data["contributors"][0]["text"] = "text_string"
-      @data["contributors"][0]["search"] = "search_string"
-      @data["contributors"][0]["browse"] = "browse_string"
-      author_browse_item_expectations(subject.contributors.first)
-    end
-  end
+  # context "#contributors" do
+  #   it "is an array with text, url, browse_url, and kind" do
+  #     @data["contributors"][0]["text"] = "text_string"
+  #     @data["contributors"][0]["search"] = "search_string"
+  #     @data["contributors"][0]["browse"] = "browse_string"
+  #     author_browse_item_expectations(subject.contributors.first)
+  #   end
+  # end
   # call_number: "QL 691 .J3 S25 1983",
 
   context "#call_number" do

@@ -29,7 +29,7 @@ module Factories
     end
 
     def title_link_fields
-      ["other_titles"].map do |f|
+      ["other_titles", "related_title"].map do |f|
         [f, link_field("title")]
       end
     end
@@ -66,10 +66,10 @@ module Factories
     def paired_text_field
       [
         {"transliterated" => {
-           text: Faker::Lorem.sentence
+           "text" => Faker::Lorem.sentence
          },
          "original" => {
-           text: Faker::Lorem.sentence
+           "text" => Faker::Lorem.sentence
          }}
       ]
     end
