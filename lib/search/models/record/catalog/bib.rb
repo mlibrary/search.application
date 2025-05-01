@@ -4,6 +4,10 @@ class Search::Models::Record::Catalog::Bib
     @data = data
   end
 
+  def id
+    @data["id"]
+  end
+
   def title
     @data.dig("title", 0, "text")
   end
