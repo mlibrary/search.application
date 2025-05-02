@@ -151,8 +151,19 @@ module Search
             )
           end
 
-          def main_author
-            BrowseField.for(field: "Author/Creator", data: [@record.bib.main_author, @record.bib.vernacular_main_author])
+          [
+            {uid: :main_author, field: "Author/Creator"},
+            {uid: :contributors, field: "Contributors"}
+          ].each do |f|
+            define_method(f[:uid]) do
+              if @record.bib.public_send(f[:uid]).present?
+                OpenStruct.new(
+                  field: f[:field],
+                  partial: "parallel_browse",
+                  locals: @record.bib.public_send(f[:uid])
+                )
+              end
+            end
           end
 
           [
@@ -160,11 +171,14 @@ module Search
             {uid: :lcsh_subjects, field: "Subjects (LCSH)"}
           ].each do |f|
             define_method(f[:uid]) do
-              BrowseField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))
+              if @record.bib.public_send(f[:uid]).present?
+                OpenStruct.new(
+                  field: f[:field],
+                  partial: "browse",
+                  locals: @record.bib.public_send(f[:uid])
+                )
+              end
             end
-          end
-          def contributors
-            BrowseField.for(field: "Contributors", data: @record.bib.contributors)
           end
 
           def other_titles
@@ -225,11 +239,13 @@ module Search
             {uid: :terms_of_use, field: "Terms of Use"}
           ].each do |f|
             define_method(f[:uid]) do
-              OpenStruct.new(
-                field: f[:field],
-                partial: "parallel_plain_text",
-                locals: @record.bib.public_send(f[:uid])
-              )
+              if @record.bib.public_send(f[:uid]).present?
+                OpenStruct.new(
+                  field: f[:field],
+                  partial: "parallel_plain_text",
+                  locals: @record.bib.public_send(f[:uid])
+                )
+              end
             end
           end
 
@@ -240,11 +256,13 @@ module Search
             {uid: :report_number, field: "Report Number"}
           ].each do |f|
             define_method(f[:uid]) do
-              OpenStruct.new(
-                field: f[:field],
-                partial: "plain_text",
-                locals: @record.bib.public_send(f[:uid]).slice(0, 1)
-              )
+              if @record.bib.public_send(f[:uid]).present?
+                OpenStruct.new(
+                  field: f[:field],
+                  partial: "plain_text",
+                  locals: @record.bib.public_send(f[:uid]).slice(0, 1)
+                )
+              end
             end
           end
 
@@ -257,11 +275,13 @@ module Search
             {uid: :oclc, field: "OCLC Number"}
           ].each do |f|
             define_method(f[:uid]) do
-              OpenStruct.new(
-                field: f[:field],
-                partial: "plain_text",
-                locals: @record.bib.public_send(f[:uid])
-              )
+              if @record.bib.public_send(f[:uid]).present?
+                OpenStruct.new(
+                  field: f[:field],
+                  partial: "plain_text",
+                  locals: @record.bib.public_send(f[:uid])
+                )
+              end
             end
           end
 

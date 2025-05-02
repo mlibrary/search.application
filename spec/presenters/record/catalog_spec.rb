@@ -60,9 +60,13 @@ describe Search::Presenters::Record::Catalog::Full do
     bookplate: "Donor Information"
   }
   browse_fields = {
-    contributors: "Contributors",
     call_number: "Call Number",
     lcsh_subjects: "Subjects (LCSH)"
+  }
+  author_browse_fields = {
+    main_author: "Author/Creator",
+    contributors: "Contributors"
+
   }
 
   before(:each) do
@@ -78,6 +82,24 @@ describe Search::Presenters::Record::Catalog::Full do
       ]]
     end.to_h
 
+    author_browse_bib_fields = author_browse_fields.keys.map do |f|
+      [f, [
+
+        double("paired",
+          transliterated: double("author_browse",
+            text: Faker::Lorem.sentence,
+            url: Faker::Internet.url,
+            browse_url: Faker::Internet.url,
+            kind: "author"),
+          original: double("author_browse",
+            text: Faker::Lorem.sentence,
+            url: Faker::Internet.url,
+            browse_url: Faker::Internet.url,
+            kind: "author"))
+
+      ]]
+    end.to_h
+
     browse_bib_fields = browse_fields.keys.map do |f|
       [
         f, [OpenStruct.new(
@@ -90,18 +112,12 @@ describe Search::Presenters::Record::Catalog::Full do
     end.to_h
 
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
-      title: double("paired_text",
+      title: double("paired",
         transliterated: double("text", text: Faker::Book.title),
         original: double("text", text: Faker::Book.title)),
       format: [
         OpenStruct.new(text: "format_text", icon: "icon_name")
       ],
-      main_author: OpenStruct.new(
-        text: "main_author_text",
-        url: "main_author_url",
-        browse_url: "main_author_browse_url",
-        kind: "browse"
-      ),
       other_titles: [
         OpenStruct.new(text: "other_title_text", url: "other_title_search")
       ],
@@ -111,6 +127,7 @@ describe Search::Presenters::Record::Catalog::Full do
       academic_discipline: [
         ["Science", "Engineering"]
       ],
+      **author_browse_bib_fields,
       **parallel_plain_text_fields,
       **plain_text_fields,
       **browse_bib_fields)
@@ -141,23 +158,24 @@ describe Search::Presenters::Record::Catalog::Full do
       expect(title.count).to eq(1)
     end
   end
-  context "#main_author" do
-    it "returns an appropriate field" do
-      expect(subject.main_author.field).to eq("Author/Creator")
-    end
-    it "has the main_author has the first object" do
-      ma = subject.main_author.data.first
-      expect(ma.partial).to eq("browse")
-      expect(ma.locals).to eq(@bib_stub.main_author)
-    end
-    it "has the vernacular main_author as the second field" do
-      vma = subject.main_author.data[1]
-      expect(vma.partial).to eq("browse")
-      expect(vma.locals).to eq(@bib_stub.vernacular_main_author)
-    end
-    it "handles missing vernacular main author" do
-      allow(@bib_stub).to receive(:vernacular_main_author).and_return(nil)
-      expect(subject.main_author.data.count).to eq(1)
+
+  context "Author Browse Fields" do
+    author_browse_fields.each do |uid, name|
+      context "##{uid}" do
+        it "returns an appropriate field" do
+          expect(subject.public_send(uid).field).to eq(name)
+        end
+        it "returns a 'parallel_browse' partial" do
+          expect(subject.public_send(uid).partial).to eq("parallel_browse")
+        end
+        it "returns locals that match model" do
+          expect(subject.public_send(uid).locals.first.original.text).to eq(@bib_stub.public_send(uid).first.original.text)
+        end
+        it "returns nil if #{uid} is nil" do
+          allow(@bib_stub).to receive(uid).and_return([])
+          expect(subject.public_send(uid)).to be_nil
+        end
+      end
     end
   end
   context "#academic_discipline" do
@@ -175,10 +193,14 @@ describe Search::Presenters::Record::Catalog::Full do
         it "returns the appropriate field" do
           expect(subject.public_send(field).field).to eq(name)
         end
-        it "returns a browse object for data" do
-          expect(subject.public_send(field).data.first.partial).to eq("browse")
-          expect(subject.public_send(field).data.first.locals).to eq(@bib_stub.public_send(field).first)
+        it "returns a 'browse' partial" do
+          expect(subject.public_send(field).partial).to eq("browse")
         end
+
+        it "returns locals that match model" do
+          expect(subject.public_send(field).locals).to eq(@bib_stub.public_send(field))
+        end
+
         it "returns nil if #{field} is nil" do
           allow(@bib_stub).to receive(field).and_return([])
           expect(subject.public_send(field)).to be_nil
@@ -217,6 +239,10 @@ describe Search::Presenters::Record::Catalog::Full do
         it "returns the appropriate data" do
           expect(subject.public_send(uid).locals).to eq(@bib_stub.public_send(uid))
         end
+        it "returns nil if #{uid} is nil" do
+          allow(@bib_stub).to receive(uid).and_return([])
+          expect(subject.public_send(uid)).to be_nil
+        end
       end
     end
   end
@@ -234,6 +260,10 @@ describe Search::Presenters::Record::Catalog::Full do
         end
         it "can have more than one data entity" do
           expect(subject.public_send(field).locals.count).to eq(2)
+        end
+        it "returns nil if #{field} is nil" do
+          allow(@bib_stub).to receive(field).and_return([])
+          expect(subject.public_send(field)).to be_nil
         end
       end
     end
@@ -253,6 +283,10 @@ describe Search::Presenters::Record::Catalog::Full do
         end
         it "can have more than one locals entity" do
           expect(subject.public_send(field).locals.count).to eq(1)
+        end
+        it "returns nil if #{field} is nil" do
+          allow(@bib_stub).to receive(field).and_return([])
+          expect(subject.public_send(field)).to be_nil
         end
       end
     end

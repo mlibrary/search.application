@@ -156,11 +156,5 @@ class Search::Models::Record::Catalog::Bib
       )
     end
     result
-    # OpenStruct.new(
-    #   text: item["text"],
-    #   url: "#{S.base_url}/catalog?query=author:(\"#{item["search"]}\")",
-    #   browse_url: "#{S.base_url}/catalog/browse/author?query=#{item["browse"]}",
-    #   kind: "author"
-    # )
   end
 end
