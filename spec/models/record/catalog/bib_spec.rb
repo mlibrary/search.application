@@ -13,12 +13,40 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   subject do
     described_class.new(@data)
   end
-  context "#title" do
-    it "has a title" do
-      expect(subject.title.transliterated.text).to eq(@data["title"].first["transliterated"]["text"])
-      expect(subject.title.original.text).to eq(@data["title"].first["original"]["text"])
+  [:title].each do |field|
+    context "##{field}" do
+      it "has transliterated and original text" do
+        expect(subject.public_send(field).transliterated.text).to eq(@data[field.to_s].first["transliterated"]["text"])
+        expect(subject.public_send(field).original.text).to eq(@data[field.to_s].first["original"]["text"])
+      end
     end
   end
+  # These return a structure like this:
+  # [
+  #   {
+  #     transliterated: {text:"" },
+  #     original: {text: "" }
+  #   }
+  # ]
+  [:access, :arrangement, :association, :audience, :awards, :bibliography,
+    :biography_history, :bookplate, :chronology, :content_advice,
+    :copy_specific_note, :copyright, :copyright_status_information, :created,
+    :current_publication_frequency, :date_place_of_event, :distributed, :edition,
+    :extended_summary, :former_publication_frequency, :funding_information,
+    :in_collection, :language_note, :location_of_originals, :manufactured,
+    :map_scale, :note, :numbering, :numbering_notes, :original_version_note,
+    :performers, :physical_description, :place, :playing_time,
+    :preferred_citation, :printer, :production_credits, :published, :references,
+    :related_items, :reproduction_note, :series, :series_statement,
+    :source_of_acquisition, :source_of_description_note, :summary, :terms_of_use].each do |field|
+    context "##{field}" do
+      it "has transliterated and original text" do
+        expect(subject.public_send(field).first.transliterated.text).to eq(@data[field.to_s].first["transliterated"]["text"])
+        expect(subject.public_send(field).first.original.text).to eq(@data[field.to_s].first["original"]["text"])
+      end
+    end
+  end
+
   ["other_titles", "related_title"].each do |field|
     context "##{field}" do
       it "has text and search" do
@@ -89,15 +117,6 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       end
     end
   end
-  # context "#contributors" do
-  #   it "is an array with text, url, browse_url, and kind" do
-  #     @data["contributors"][0]["text"] = "text_string"
-  #     @data["contributors"][0]["search"] = "search_string"
-  #     @data["contributors"][0]["browse"] = "browse_string"
-  #     author_browse_item_expectations(subject.contributors.first)
-  #   end
-  # end
-  # call_number: "QL 691 .J3 S25 1983",
 
   context "#call_number" do
     it "is an array with objects of text, url, browse_url, and kind" do
@@ -128,23 +147,6 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       expect(format.icon).to eq("book")
     end
   end
-  context "#published" do
-    it "is an array of strings" do
-      expected = @data["published"].map { |x| x["text"] }
-      p = subject.published
-      expect(p[0].text).to eq(expected[0])
-      expect(p[1].text).to eq(expected[1])
-    end
-  end
-  context "#manufactured" do
-    it "is an array of strings" do
-      @data["manufactured"][1]["text"] = "vernacular manufactured text"
-      expected = @data["manufactured"].map { |x| x["text"] }
-
-      expect(subject.manufactured[0].text).to eq(expected[0])
-      expect(subject.manufactured[1].text).to eq(expected[1])
-    end
-  end
 
   context "#academic_discipline" do
     it "is an array of arrays of strings" do
@@ -162,18 +164,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     end
   end
 
-  [:access, :arrangement, :association, :audience, :awards, :bibliography,
-    :biography_history, :bookplate, :chronology, :content_advice,
-    :copy_specific_note, :copyright, :copyright_status_information, :created,
-    :current_publication_frequency, :date_place_of_event, :distributed, :edition,
-    :extended_summary, :former_publication_frequency, :funding_information,
-    :gov_doc_no, :in_collection, :isbn, :issn, :language, :language_note,
-    :location_of_originals, :map_scale, :note, :numbering, :numbering_notes, :oclc,
-    :original_version_note, :performers, :physical_description, :place,
-    :playing_time, :preferred_citation, :printer, :production_credits,
-    :publisher_number, :references, :related_items, :report_number,
-    :reproduction_note, :series, :series_statement, :source_of_acquisition,
-    :source_of_description_note, :summary, :terms_of_use].each do |uid|
+  [:gov_doc_no, :isbn, :issn, :language, :oclc, :publisher_number,
+    :report_number].each do |uid|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do
         expected = @data[uid.to_s].first["text"]

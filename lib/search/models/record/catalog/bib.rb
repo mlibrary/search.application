@@ -4,12 +4,33 @@ class Search::Models::Record::Catalog::Bib
     @data = data
   end
 
-  def title
-    result = OpenStruct.new
-    @data["title"].first.to_a.each do |key, value|
-      result[key.to_sym] = OpenStruct.new(text: value["text"])
+  [:title].each do |uid|
+    define_method(uid) do
+      result = OpenStruct.new
+      @data[uid.to_s].first.to_a.each do |key, value|
+        result[key.to_sym] = OpenStruct.new(text: value["text"])
+      end
+      result
     end
-    result
+  end
+  [:access, :arrangement, :association, :audience, :awards, :bibliography,
+    :biography_history, :bookplate, :chronology, :content_advice, :copy_specific_note,
+    :copyright, :copyright_status_information, :created, :current_publication_frequency,
+    :date_place_of_event, :distributed, :edition, :extended_summary, :former_publication_frequency,
+    :funding_information, :in_collection, :language_note, :location_of_originals, :manufactured, :map_scale,
+    :note, :numbering, :numbering_notes, :original_version_note, :performers, :physical_description,
+    :place, :playing_time, :preferred_citation, :printer, :production_credits, :published, :references, :related_items,
+    :reproduction_note, :series, :series_statement, :source_of_acquisition, :source_of_description_note,
+    :summary, :terms_of_use].each do |uid|
+    define_method(uid) do
+      @data[uid.to_s].map do |entity|
+        result = OpenStruct.new
+        entity.to_a.each do |key, value|
+          result[key.to_sym] = OpenStruct.new(text: value["text"])
+        end
+        result
+      end
+    end
   end
 
   def format
@@ -61,18 +82,14 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  [:edition, :series, :series_statement, :note, :physical_description,
-    :language, :published, :manufactured, :oclc, :isbn, :created, :biography_history,
-    :in_collection, :terms_of_use, :date_place_of_event, :references,
-    :copyright_status_information, :copyright, :playing_time, :audience,
-    :production_credits, :bibliography, :gov_doc_no, :publisher_number,
-    :report_number, :chronology, :place, :printer, :association, :distributed,
-    :summary, :language_note, :performers, :preferred_citation, :location_of_originals,
-    :funding_information, :source_of_acquisition, :related_items, :numbering_notes,
-    :source_of_description_note, :copy_specific_note, :arrangement, :reproduction_note,
-    :original_version_note, :content_advice, :awards, :bookplate, :access,
-    :numbering, :current_publication_frequency, :former_publication_frequency,
-    :map_scale, :extended_summary, :issn].each do |uid|
+  [
+    :language, :oclc, :isbn,
+
+    :gov_doc_no, :publisher_number,
+    :report_number,
+
+    :issn
+  ].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 
