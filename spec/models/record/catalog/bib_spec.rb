@@ -29,7 +29,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   #   }
   # ]
   [:access, :arrangement, :association, :audience, :awards, :bibliography,
-    :biography_history, :bookplate, :chronology, :content_advice,
+    :biography_history, :chronology, :content_advice,
     :copy_specific_note, :copyright, :copyright_status_information, :created,
     :current_publication_frequency, :date_place_of_event, :distributed, :edition,
     :extended_summary, :former_publication_frequency, :funding_information,
@@ -164,7 +164,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     end
   end
 
-  [:gov_doc_no, :isbn, :issn, :language, :oclc, :publisher_number,
+  [:bookplate, :gov_doc_no, :isbn, :issn, :language, :oclc, :publisher_number,
     :report_number].each do |uid|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do

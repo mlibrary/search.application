@@ -14,14 +14,17 @@ class Search::Models::Record::Catalog::Bib
     end
   end
   [:access, :arrangement, :association, :audience, :awards, :bibliography,
-    :biography_history, :bookplate, :chronology, :content_advice, :copy_specific_note,
-    :copyright, :copyright_status_information, :created, :current_publication_frequency,
-    :date_place_of_event, :distributed, :edition, :extended_summary, :former_publication_frequency,
-    :funding_information, :in_collection, :language_note, :location_of_originals, :manufactured, :map_scale,
-    :note, :numbering, :numbering_notes, :original_version_note, :performers, :physical_description,
-    :place, :playing_time, :preferred_citation, :printer, :production_credits, :published, :references, :related_items,
-    :reproduction_note, :series, :series_statement, :source_of_acquisition, :source_of_description_note,
-    :summary, :terms_of_use].each do |uid|
+    :biography_history, :chronology, :content_advice, :copy_specific_note,
+    :copyright, :copyright_status_information, :created,
+    :current_publication_frequency, :date_place_of_event, :distributed, :edition,
+    :extended_summary, :former_publication_frequency, :funding_information,
+    :in_collection, :language_note, :location_of_originals, :manufactured,
+    :map_scale, :note, :numbering, :numbering_notes, :original_version_note,
+    :performers, :physical_description, :place, :playing_time,
+    :preferred_citation, :printer, :production_credits, :published, :references,
+    :related_items, :reproduction_note, :series, :series_statement,
+    :source_of_acquisition, :source_of_description_note, :summary,
+    :terms_of_use].each do |uid|
     define_method(uid) do
       @data[uid.to_s].map do |entity|
         result = OpenStruct.new
@@ -82,14 +85,13 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  [
+  [:bookplate,
     :language, :oclc, :isbn,
 
     :gov_doc_no, :publisher_number,
     :report_number,
 
-    :issn
-  ].each do |uid|
+    :issn].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 
