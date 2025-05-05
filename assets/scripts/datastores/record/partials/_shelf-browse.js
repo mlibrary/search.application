@@ -20,6 +20,12 @@ const getElements = () => {
   };
 };
 
+const filteredItems = ({ items, page }) => {
+  return Array.from(items).filter((item) => {
+    return item.getAttribute('data-page') === page;
+  });
+};
+
 const setPageNumbers = () => {
   const { directions, items, list } = getElements();
 
@@ -69,12 +75,11 @@ const setPageNumbers = () => {
       }
     }
   });
-};
 
-const filteredItems = ({ items, page }) => {
-  return Array.from(items).filter((item) => {
-    return item.getAttribute('data-page') === page;
-  });
+  // Shift first page items if less than itemCount
+  const firstPage = items[0].getAttribute('data-page');
+  const firstPageItems = filteredItems({ items, page: firstPage });
+  list.setAttribute('data-first-page-difference', itemCount - firstPageItems.length);
 };
 
 const move = (direction) => {

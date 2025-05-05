@@ -16,7 +16,7 @@ items = JSON.parse(response)
     <%= link_to(body: "Browse in call number list", url: uri.to_s.sub("carousel", "callnumber"), classes: ["shelf-browse__header--link"]) %>
   </header>
   <div class="shelf-browse__carousel">
-    <button class="shelf-browse__carousel--button shelf-browse__carousel--button-previous" id="prev-button" title="Previous page">
+    <button class="shelf-browse__carousel--button shelf-browse__carousel--button-previous" id="prev-button" title="Previous page" disabled>
       <span class="material-symbols-rounded" aria-hidden="true">arrow_back_ios</span>
       <span class="visually-hidden">Previous 5 records</span>
     </button>
@@ -84,7 +84,7 @@ items = JSON.parse(response)
         </li>
       <% end %>
     </ul>
-    <button class="shelf-browse__carousel--button shelf-browse__carousel--button-next" id="next-button" title="Next page">
+    <button class="shelf-browse__carousel--button shelf-browse__carousel--button-next" id="next-button" title="Next page" disabled>
       <span class="material-symbols-rounded" aria-hidden="true">arrow_forward_ios</span>
       <span class="visually-hidden">Next 5 records</span>
     </button>
