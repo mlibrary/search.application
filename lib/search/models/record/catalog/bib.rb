@@ -26,10 +26,10 @@ class Search::Models::Record::Catalog::Bib
     :source_of_acquisition, :source_of_description_note, :summary,
     :terms_of_use].each do |uid|
     define_method(uid) do
-      @data[uid.to_s].map do |entity|
+      @data[uid.to_s]&.map do |entity|
         result = OpenStruct.new
         entity.to_a.each do |key, value|
-          result[key.to_sym] = OpenStruct.new(text: value["text"])
+          result[key.to_sym] = OpenStruct.new(text: value["text"]) if value
         end
         result
       end
@@ -114,14 +114,16 @@ class Search::Models::Record::Catalog::Bib
   def _link_to_item(item)
     result = OpenStruct.new
     item.to_a.each do |key, value|
-      query_string = value["search"].map do |x|
-        "#{x["field"]}:\"#{x["value"]}\""
-      end.join(" AND ")
+      if value
+        query_string = value["search"].map do |x|
+          "#{x["field"]}:\"#{x["value"]}\""
+        end.join(" AND ")
 
-      result[key.to_sym] = OpenStruct.new(
-        text: value["text"],
-        url: "#{S.base_url}/catalog?" + {query: query_string}.to_query
-      )
+        result[key.to_sym] = OpenStruct.new(
+          text: value["text"],
+          url: "#{S.base_url}/catalog?" + {query: query_string}.to_query
+        )
+      end
     end
     result
   end
@@ -147,16 +149,18 @@ class Search::Models::Record::Catalog::Bib
   def _author_browse_item(item:)
     result = OpenStruct.new
     item.to_a.each do |key, value|
-      query_string = value["search"].map do |x|
-        "#{x["field"]}:\"#{x["value"]}\""
-      end.join(" AND ")
+      if value
+        query_string = value["search"].map do |x|
+          "#{x["field"]}:\"#{x["value"]}\""
+        end.join(" AND ")
 
-      result[key.to_sym] = OpenStruct.new(
-        text: value["text"],
-        url: "#{S.base_url}/catalog?" + {query: query_string}.to_query,
-        browse_url: "#{S.base_url}/catalog/browse/author?" + {query: value["browse"]}.to_query,
-        kind: "author"
-      )
+        result[key.to_sym] = OpenStruct.new(
+          text: value["text"],
+          url: "#{S.base_url}/catalog?" + {query: query_string}.to_query,
+          browse_url: "#{S.base_url}/catalog/browse/author?" + {query: value["browse"]}.to_query,
+          kind: "author"
+        )
+      end
     end
     result
   end
