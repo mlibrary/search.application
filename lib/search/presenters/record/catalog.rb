@@ -181,12 +181,19 @@ module Search
             end
           end
 
-          def other_titles
-            LinkToField.for(field: "Other Titles", data: @record.bib.other_titles)
-          end
-
-          def related_title
-            LinkToField.for(field: "Related Title", data: @record.bib.related_title)
+          [
+            {uid: :other_titles, field: "Other Titles"},
+            {uid: :related_title, field: "Related Title"}
+          ].each do |f|
+            define_method(f[:uid]) do
+              if @record.bib.public_send(f[:uid]).present?
+                OpenStruct.new(
+                  field: f[:field],
+                  partial: "parallel_link_to",
+                  locals: @record.bib.public_send(f[:uid])
+                )
+              end
+            end
           end
 
           # Parallel Plain text content
@@ -286,7 +293,11 @@ module Search
           end
 
           def academic_discipline
-            AcademicDisciplineField.for(field: "Academic Discipline", data: @record.bib.academic_discipline)
+            OpenStruct.new(
+              field: "Academic Discipline",
+              partial: "academic_discipline",
+              locals: @record.bib.academic_discipline
+            )
           end
         end
 
@@ -358,6 +369,17 @@ module Search
           end
         end
 
+        # Returns something like
+        # { field: "Academic Discipline"
+        #   partial: academic_discipline,
+        #   locals: [
+        #      {
+        #       disciplines: [
+        #         {text: "Science", url: "http://search?query=academic_discipline:Science"}
+        #       ]
+        #      }
+        #   ]
+        # }
         class AcademicDisciplineField < Field
           def partial
             "academic_discipline"

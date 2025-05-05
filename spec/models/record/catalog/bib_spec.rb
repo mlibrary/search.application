@@ -150,17 +150,9 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
 
   context "#academic_discipline" do
     it "is an array of arrays of strings" do
-      expect(subject.academic_discipline).to eq([
-        [
-          "Science",
-          "Biology",
-          "Zoology"
-        ], [
-          "Science",
-          "Biology",
-          "Ecology and Evolutionary Biology"
-        ]
-      ])
+      ad = subject.academic_discipline.first.disciplines.first
+      expect(ad.text).to eq("Science")
+      expect(ad.url).to eq("#{S.base_url}/catalog?" + {query: "academic_discipline:Science"}.to_query)
     end
   end
 

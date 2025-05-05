@@ -81,7 +81,10 @@ class Search::Models::Record::Catalog::Bib
 
   def academic_discipline
     _map_field("academic_discipline") do |ad|
-      ad["list"]
+      disciplines = ad["list"].map do |d|
+        OpenStruct.new(text: d, url: "#{S.base_url}/catalog?" + {query: "academic_discipline:#{d}"}.to_query)
+      end
+      OpenStruct.new(disciplines: disciplines)
     end
   end
 

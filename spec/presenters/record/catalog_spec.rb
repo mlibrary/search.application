@@ -47,6 +47,10 @@ describe Search::Presenters::Record::Catalog::Full do
     summary: "Summary",
     terms_of_use: "Terms of Use"
   }
+  my_parallel_link_to_fields = {
+    related_title: "Related Title",
+    other_titles: "Other Titles"
+  }
   single_string_fields = {
     gov_doc_no: "Government Document Number",
     publisher_number: "Publisher Number",
@@ -69,16 +73,32 @@ describe Search::Presenters::Record::Catalog::Full do
 
   }
 
+  def create_parallel_plain_text(uid, bib_stub)
+    allow(bib_stub).to receive(uid).and_return(
+      [double("paired_text",
+        transliterated: double("text", text: Faker::Lorem.sentence),
+        original: double("text", text: Faker::Lorem.sentence))]
+    )
+  end
+
   before(:each) do
     plain_text_fields = (single_string_fields.keys + multiple_string_fields.keys).map do |f|
       [f, [OpenStruct.new(text: f.to_s), OpenStruct.new(text: "something_else")]]
     end.to_h
 
-    parallel_plain_text_fields = my_parallel_plain_text_fields.keys.map do |uid|
+    # parallel_plain_text_fields = my_parallel_plain_text_fields.keys.map do |uid|
+    #   [uid, [
+    #     double("paired_text",
+    #       transliterated: double("text", text: Faker::Lorem.sentence),
+    #       original: double("text", text: Faker::Lorem.sentence))
+    #   ]]
+    # end.to_h
+
+    parallel_link_to_fields = my_parallel_link_to_fields.keys.map do |uid|
       [uid, [
         double("paired_text",
-          transliterated: double("text", text: Faker::Lorem.sentence),
-          original: double("text", text: Faker::Lorem.sentence))
+          transliterated: double("text", text: Faker::Lorem.sentence, url: Faker::Internet.url),
+          original: double("text", text: Faker::Lorem.sentence, url: Faker::Internet.url))
       ]]
     end.to_h
 
@@ -118,17 +138,14 @@ describe Search::Presenters::Record::Catalog::Full do
       format: [
         OpenStruct.new(text: "format_text", icon: "icon_name")
       ],
-      other_titles: [
-        OpenStruct.new(text: "other_title_text", url: "other_title_search")
-      ],
-      related_title: [
-        OpenStruct.new(text: "related_title_text", url: "related_title_search")
-      ],
       academic_discipline: [
-        ["Science", "Engineering"]
+        OpenStruct.new(disciplines: [
+          OpenStruct.new(text: Faker::Lorem.word, url: Faker::Internet.url)
+        ])
       ],
+      **parallel_link_to_fields,
       **author_browse_bib_fields,
-      **parallel_plain_text_fields,
+      # **parallel_plain_text_fields,
       **plain_text_fields,
       **browse_bib_fields)
   end
@@ -182,9 +199,12 @@ describe Search::Presenters::Record::Catalog::Full do
     it "returns an appropriate field" do
       expect(subject.academic_discipline.field).to eq("Academic Discipline")
     end
+    it "returns an 'academic_discipline' partial" do
+      expect(subject.academic_discipline.partial).to eq("academic_discipline")
+    end
     it "returns an academic_discipline object for data" do
-      expect(subject.academic_discipline.data.first.partial).to eq("academic_discipline")
-      expect(subject.academic_discipline.data.first.locals.disciplines).to eq(@bib_stub.academic_discipline.first)
+      first_discipline = subject.academic_discipline.locals.first.disciplines.first
+      expect(first_discipline).to eq(@bib_stub.academic_discipline.first.disciplines.first)
     end
   end
   context "Array browse fields" do
@@ -208,27 +228,27 @@ describe Search::Presenters::Record::Catalog::Full do
       end
     end
   end
-  context "#other_titles" do
-    it "returns the appropriate field" do
-      expect(subject.other_titles.field).to eq("Other Titles")
-    end
-    it "returns a link_to object for data entity" do
-      expect(subject.other_titles.data.first.partial).to eq("link_to")
-      expect(subject.other_titles.data.first.locals).to eq(@bib_stub.other_titles.first)
-    end
-  end
-  context "#related_title" do
-    it "returns the appropriate field" do
-      expect(subject.related_title.field).to eq("Related Title")
-    end
-    it "returns a link_to object for data entity" do
-      expect(subject.related_title.data.first.partial).to eq("link_to")
-      expect(subject.related_title.data.first.locals).to eq(@bib_stub.related_title.first)
+  context "Parallel link_to fields" do
+    my_parallel_link_to_fields.each do |uid, name|
+      context "##{uid}" do
+        it "returns the appropriate field" do
+          expect(subject.public_send(uid).field).to eq(name)
+        end
+        it "returns a parallel_link_to partial" do
+          expect(subject.public_send(uid).partial).to eq("parallel_link_to")
+        end
+        it "returns the appropriate locals" do
+          expect(subject.public_send(uid).locals).to eq(@bib_stub.public_send(uid))
+        end
+      end
     end
   end
 
   context "Parallel plain text fields" do
     my_parallel_plain_text_fields.each do |uid, name|
+      before(:each) do
+        create_parallel_plain_text(uid, @bib_stub)
+      end
       context "##{uid}" do
         it "returns the appropriate field" do
           expect(subject.public_send(uid).field).to eq(name)
