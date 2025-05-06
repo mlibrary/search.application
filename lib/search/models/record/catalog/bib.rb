@@ -8,7 +8,7 @@ class Search::Models::Record::Catalog::Bib
     define_method(uid) do
       result = OpenStruct.new
       @data[uid.to_s].first.to_a.each do |key, value|
-        result[key.to_sym] = OpenStruct.new(text: value["text"])
+        result[key.to_sym] = OpenStruct.new(text: value["text"]) if value
       end
       result
     end
