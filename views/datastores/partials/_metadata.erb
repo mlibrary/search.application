@@ -1,5 +1,12 @@
-<dl>
-  <% data.methods.each do |method| %>
-    <%= method %><%#= data[method] %>
+<dl class="metadata">
+  <% metadata.each do |data| %>
+    <div class="metadata__information">
+      <dt>
+        <%= data.field %>
+      </dt>
+      <% if data.field != "Formats" %>
+        <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { values: data.locals } %>
+      <% end %>
+    </div>
   <% end %>
 </dl>

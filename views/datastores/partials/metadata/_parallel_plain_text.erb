@@ -1,0 +1,6 @@
+<% values.each do |value| %>
+  <% if value.transliterated %>
+    <dd class="metadata__information--transliterated"><%= value.transliterated.text %></dd>
+  <% end %>
+  <dd><%= value.original.text %></dd>
+<% end %>

@@ -23,7 +23,7 @@
       <p>Add to list: Needs to be a partial for Results</p>
       <%= erb :'datastores/record/partials/_title', locals: { titles: @record.title } %>
       <h2 class="text__normal">Record info:</h2>
-      <p>Metadata: Needs to be a partial for Results</p>
+      <%= erb :'datastores/partials/_metadata', locals: { metadata: @record.record_info } %>
       <%= yield %>
     </section>
     <h2 class="text__normal">Available at:</h2>
