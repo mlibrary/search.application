@@ -16,6 +16,8 @@
 //   2. Container
 //   3. Header
 //   4. Carousel
+//     4.2.1 Current Record
+//     4.2.2 Animations
 //   5. Return to Current Record
 //
 // --------------------------------------------------
@@ -288,7 +290,17 @@ $class: 'shelf-browse';
 // * 4.2.1 CURRENT RECORD * //
 
 body.no-javascript .#{$class} > .#{$class}__carousel > .#{$class}__carousel--items {
-  // SET MAX WIDTH FOR RECORD
+  & > li.current-record {
+    @include media.breakpoint('xs') {
+      grid-column: 1 / 4;
+    }
+    @include media.breakpoint('sm') {
+      grid-column: 2 / 5;
+    }
+    img {
+      display: none;
+    }
+  }
   & > li:not(.current-record) {
     display: none;
   }
