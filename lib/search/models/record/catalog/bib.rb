@@ -37,9 +37,15 @@ class Search::Models::Record::Catalog::Bib
   end
 
   def format
-    list = @data.dig("format") || []
-    list.map do |f|
+    _map_field("format") do |f|
       OpenStruct.new(text: f, icon: FORMAT_ICONS[f])
+    end
+  end
+
+  def _map_field(uid)
+    list = @data.dig(uid) || []
+    list.map do |item|
+      yield(item)
     end
   end
 

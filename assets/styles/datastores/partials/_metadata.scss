@@ -79,7 +79,7 @@ $class: ".metadata";
 #{$class}__information > dd {
   grid-column: 2;
   margin: 0;
-  & + dd.metadata__information--transliterated {
+  &:not(.metadata__information--transliterated) + dd[class^="metadata__information--"] {
     margin-top: 0.5rem;
   }
 }

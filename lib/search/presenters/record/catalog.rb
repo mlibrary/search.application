@@ -147,7 +147,8 @@ module Search
           def format
             OpenStruct.new(
               field: "Formats",
-              data: @record.bib.format
+              partial: "format",
+              locals: @record.bib.format
             )
           end
 
