@@ -110,6 +110,9 @@ module Search
           end
 
           def icons
+            @record.bib.format.map do |f|
+              f.icon
+            end
           end
 
           def respond_to_missing?(method, *args, **kwargs, &block)
