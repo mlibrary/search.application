@@ -1,0 +1,85 @@
+@use './metadata/parallel_browse';
+@use '../../utilities';
+@use '../../media';
+@use '../../typography';
+
+// --------------------------------------------------
+//
+// # Metadata
+//   Styles to apply directly to `views/datastores/partials/_metadata.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//   3. Information
+//     3.1. Field
+//     3.2. Data
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".metadata";
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} {
+  @include utilities.flex($align: start);
+  & {
+    flex-direction: column;
+  }
+}
+
+
+
+
+
+// ********************** //
+// *** 3. INFORMATION *** //
+// ********************** //
+
+#{$class}__information {
+  @include utilities.flex($align: start, $responsive: true);
+  & {
+    gap: 0 1rem;
+    width: 100%;
+  }
+  @include media.breakpoint('xs') {
+    display: grid;
+    grid-template-columns: 10rem 1fr;
+  }
+}
+
+
+
+// *            * //
+// * 3.1. FIELD * //
+// *            * //
+
+#{$class}__information > dt {
+  font-weight: typography.$weight-bold;
+  grid-column: 1;
+  grid-row: 1 / -1;
+}
+
+
+
+// *           * //
+// * 3.2. DATA * //
+// *           * //
+
+#{$class}__information > dd {
+  grid-column: 2;
+  margin: 0;
+  & + dd.metadata__information--transliterated {
+    margin-top: 0.5rem;
+  }
+}

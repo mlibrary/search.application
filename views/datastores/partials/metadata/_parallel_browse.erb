@@ -2,17 +2,15 @@
   <% if value.transliterated %>
     <dd class="metadata__information--transliterated">
       <%= link_to(body: value.transliterated.text, url: value.transliterated.url) %>
-      <span class="text__small">
-        |
-        <%= link_to(body: "Browse in #{value.transliterated.kind} list", url: value.transliterated.browse_url, classes: ["text__grey"]) %>
+      <span class="browse__link">
+        <%= link_to(body: "Browse in #{value.transliterated.kind} list", url: value.transliterated.browse_url) %>
       </span>
     </dd>
   <% end %>
-    <dd>
-      <%= link_to(body: value.original.text, url: value.original.url) %>
-      <span class="text__small">
-        |
-        <%= link_to(body: "Browse in #{value.transliterated.kind} list", url: value.transliterated.browse_url, classes: ["text__grey"]) %>
-      </span>
-    </dd>
+  <dd>
+    <%= link_to(body: value.original.text, url: value.original.url) %>
+    <span class="browse__link">
+      <%= link_to(body: "Browse in #{value.transliterated.kind} list", url: value.transliterated.browse_url) %>
+    </span>
+  </dd>
 <% end %>
