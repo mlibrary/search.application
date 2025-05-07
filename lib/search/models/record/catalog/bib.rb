@@ -42,13 +42,6 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  def _map_field(uid)
-    list = @data.dig(uid) || []
-    list.map do |item|
-      yield(item)
-    end
-  end
-
   def main_author
     _map_field("main_author") do |ma|
       _author_browse_item(item: ma)
