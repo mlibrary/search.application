@@ -6,11 +6,11 @@
     <section class="record__information">
       <p>Add to list: Needs to be a partial for Results</p>
       <%= erb :'datastores/record/partials/_title', locals: { titles: @record.title } %>
-      <h2 class="text__normal">Record info:</h2>
+      <h2 class="visually-hidden">Record info:</h2>
       <%= erb :'datastores/partials/_metadata', locals: { metadata: @record.record_info } %>
       <%= yield %>
     </section>
-    <h2 class="text__normal">Available at:</h2>
+    <h2 class="visually-hidden">Available at:</h2>
     <p>Resource Access: Needs to be a partial for Results</p>
   </div>
   <p>Shelf browse</p>
