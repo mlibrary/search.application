@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import shelfBrowse from '../../../../../assets/scripts/datastores/record/partials/_shelf-browse.js';
-// Import sinon from 'sinon';
+import sinon from 'sinon';
 
 describe.only('shelfBrowse', function () {
   /* Uncomment
@@ -120,19 +120,45 @@ describe.only('shelfBrowse', function () {
       expect(getCurrentRecord().getAttribute('data-page'), '`.current-record` should have `data-page` set to `0`').to.equal('0');
     });
 
-    it('should change `data-page` attributes on resize', function () {
-      //
-    });
-
     it('should set `data-page` of list items prior to `.current-record` be less than `0`', function () {
-      //
+      // Call the function
+      shelfBrowse();
+
+      // Check the `data-page` value of the first item
+      const firstPage = Number(getItems()[0].getAttribute('data-page'));
+      expect(firstPage, 'the `data-page` value of the first item should be less than the value of the current record').to.be.lessThan(Number(getCurrentRecord().getAttribute('data-page')));
     });
 
     it('should set `data-page` of list items after `.current-record` be more than `0`', function () {
-      //
+      // Call the function
+      shelfBrowse();
+
+      // Check the `data-page` value of the last item
+      const lastPage = Number(getItems()[getItems().length - 1].getAttribute('data-page'));
+      expect(lastPage, 'the `data-page` value of the last item should be more than the value of the current record').to.be.greaterThan(Number(getCurrentRecord().getAttribute('data-page')));
     });
 
-    it('hides all list items that are not on page 0', function () {
+    it('should change `data-page` attributes on resize', function () {
+      // Call the function
+      shelfBrowse();
+
+      // Check the current window width
+      expect(window.innerWidth, 'window.innerWidth should be `1024` by default').to.equal(1024);
+
+      // Check the `data-page` value of the first item
+      const firstPage = getItems()[0].getAttribute('data-page');
+      expect(firstPage, 'first item should have `data-page` set').to.equal('-1');
+
+      // Change the window width to less than `640`
+      const width = 500;
+      sinon.stub(window, 'innerWidth').value(width);
+      expect(window.innerWidth, `window.innerWidth should be resized to ${width}`).to.equal(width);
+
+      // Check the `data-page` value of the first item again
+      expect(getItems()[0].getAttribute('data-page'), 'first item should have `data-page` set').to.equal(firstPage);
+    });
+
+    it('should hide all list items that are not on page 0', function () {
       // Call the function
       shelfBrowse();
 
@@ -149,6 +175,17 @@ describe.only('shelfBrowse', function () {
       }).every((item) => {
         return item.getAttribute('style') === 'display: none;';
       }), 'all items whose attribute `data-page` does not equal `0` should be hidden').to.be.true;
+    });
+
+    it('should define the page difference', function () {
+      // Call the function
+      shelfBrowse();
+
+      // Check that the `data-first-page-difference` attribute is set
+      expect(getList().hasAttribute('data-first-page-difference'), '`data-first-page-difference` should be set').to.be.true;
+
+      // Check that the `data-first-page-difference` attribute is set to `5`
+      expect(getList().getAttribute('data-first-page-difference'), '`data-first-page-difference` should be set to `5`').to.equal('5');
     });
   });
 
