@@ -1,8 +1,4 @@
-<%
-  classes ||= []
-  classes.push("list__no-style formats")
-%>
-<ul class="<%= classes.compact.join(" ") %>">
+<ul class="list__no-style formats">
   <% values.each do |value| %>
     <li class="formats__item">
       <span class="material-symbols-rounded formats__item--icon" aria-hidden="true">

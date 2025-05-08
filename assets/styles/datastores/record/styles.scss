@@ -3,7 +3,7 @@
 @use '../partials/metadata';
 @use './partials/marc';
 @use './partials/title';
-@use '../../utilities';
+@use '../../forms';
 
 // --------------------------------------------------
 //
@@ -45,6 +45,8 @@ $class: 'record';
 // ********************** //
 
 .#{$class} .#{$class}__information {
+  border-radius: forms.$radius forms.$radius 0 0;
+  border-top: 1rem solid var(--search-color-blue-200);
   padding: 1rem;
 }
 

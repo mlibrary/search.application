@@ -10,9 +10,6 @@
 //   1. Variables
 //   2. Formats
 //     2.1. Icon
-//   3. Record Formats
-//     3.1. Icon
-//     3.2. Text
 //
 // --------------------------------------------------
 
@@ -47,45 +44,4 @@ $class: "formats";
   color: var(--color-neutral-300);
   font-size: 1.25rem;
   font-variation-settings: "FILL" 1;
-}
-
-
-
-
-
-// ************************* //
-// *** 3. RECORD FORMATS *** //
-// ************************* //
-
-.record__#{$class} {
-  @include utilities.flex($wrap: true);
-  &,
-  .#{$class}__item--icon {
-    color: var(--search-color-blue-500);
-  }
-  & {
-    background: var(--search-color-blue-200);
-    padding: 1rem;
-  }
-}
-
-
-
-// *          * //
-// * 3.1 ICON * //
-// *          * //
-
-.record__#{$class} .#{$class}__item--icon {
-  font-size: 1.25rem;
-  font-variation-settings: "FILL" 1;
-}
-
-
-
-// *          * //
-// * 3.1 TEXT * //
-// *          * //
-
-.record__#{$class} .#{$class}__item--text {
-  font-weight: typography.$weight-bold;
 }

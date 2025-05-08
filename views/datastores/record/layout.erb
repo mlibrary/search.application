@@ -2,7 +2,6 @@
   <%= erb :'datastores/partials/_breadcrumbs', locals: { current_page: "Record" } %>
   <%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
   <div class="container__rounded">
-    <%= erb :'datastores/partials/metadata/_format', locals: { values: @record.format.locals, classes: ["record__formats"] } %>
     <section class="record__information">
       <p>Add to list: Needs to be a partial for Results</p>
       <%= erb :'datastores/record/partials/_title', locals: { titles: @record.title } %>
