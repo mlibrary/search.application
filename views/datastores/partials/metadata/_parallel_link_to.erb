@@ -1,10 +1,12 @@
-<% values.each do |value| %>
-  <% if value.transliterated %>
-    <dd class="metadata__information--transliterated">
-      <%= link_to(body: value.transliterated.text, url: value.transliterated.url) %>
-    </dd>
+<ul class="list__no-style">
+  <% values.each do |value| %>
+    <% if value.transliterated %>
+      <li class="metadata__information--transliterated">
+        <%= link_to(body: value.transliterated.text, url: value.transliterated.url) %>
+      </li>
+    <% end %>
+    <li>
+      <%= link_to(body: value.original.text, url: value.original.url) %>
+    </li>
   <% end %>
-  <dd>
-    <%= link_to(body: value.original.text, url: value.original.url) %>
-  </dd>
-<% end %>
+</ul>

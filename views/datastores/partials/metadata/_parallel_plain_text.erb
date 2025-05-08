@@ -1,6 +1,8 @@
-<% values.each do |value| %>
-  <% if value.transliterated %>
-    <dd class="metadata__information--transliterated"><%= value.transliterated.text %></dd>
+<ul class="list__no-style">
+  <% values.each do |value| %>
+    <% if value.transliterated %>
+      <li class="metadata__information--transliterated"><%= value.transliterated.text %></li>
+    <% end %>
+    <li><%= value.original.text %></li>
   <% end %>
-  <dd><%= value.original.text %></dd>
-<% end %>
+</ul>

@@ -1,16 +1,18 @@
-<% values.each do |value| %>
-  <% if value.transliterated %>
-    <dd class="metadata__information--transliterated">
-      <%= link_to(body: value.transliterated.text, url: value.transliterated.url) %>
+<ul class="list__no-style">
+  <% values.each do |value| %>
+    <% if value.transliterated %>
+      <li class="metadata__information--transliterated">
+        <%= link_to(body: value.transliterated.text, url: value.transliterated.url) %>
+        <span class="browse__link">
+          <%= link_to(body: "Browse in #{value.transliterated.kind} list", url: value.transliterated.browse_url) %>
+        </span>
+      </li>
+    <% end %>
+    <li class="metadata__information--original">
+      <%= link_to(body: value.original.text, url: value.original.url) %>
       <span class="browse__link">
-        <%= link_to(body: "Browse in #{value.transliterated.kind} list", url: value.transliterated.browse_url) %>
+        <%= link_to(body: "Browse in #{value.original.kind} list", url: value.original.browse_url) %>
       </span>
-    </dd>
+    </li>
   <% end %>
-  <dd class="metadata__information--original">
-    <%= link_to(body: value.original.text, url: value.original.url) %>
-    <span class="browse__link">
-      <%= link_to(body: "Browse in #{value.original.kind} list", url: value.original.browse_url) %>
-    </span>
-  </dd>
-<% end %>
+</ul>
