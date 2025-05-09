@@ -12,7 +12,7 @@
           <%= data.field %>
         </th>
         <td>
-          <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { values: data.locals } %>
+          <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { values: data } %>
         </td>
       </tr>
     <% end %>

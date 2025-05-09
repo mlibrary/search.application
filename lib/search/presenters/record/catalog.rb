@@ -312,8 +312,10 @@ module Search
             @values = values
           end
 
-          def locals
-            values
+          include Enumerable
+
+          def each(&block)
+            @values.each(&block)
           end
         end
       end
