@@ -185,8 +185,8 @@ describe Search::Presenters::Record::Catalog::Full do
         it "returns a 'parallel_browse' partial" do
           expect(subject.public_send(uid).partial).to eq("parallel_browse")
         end
-        it "returns locals that match model" do
-          expect(subject.public_send(uid).locals.first.original.text).to eq(@bib_stub.public_send(uid).first.original.text)
+        it "returns values that match model" do
+          expect(subject.public_send(uid).values.first.original.text).to eq(@bib_stub.public_send(uid).first.original.text)
         end
         it "returns nil if #{uid} is nil" do
           allow(@bib_stub).to receive(uid).and_return([])
@@ -203,7 +203,7 @@ describe Search::Presenters::Record::Catalog::Full do
       expect(subject.academic_discipline.partial).to eq("academic_discipline")
     end
     it "returns an academic_discipline object for data" do
-      first_discipline = subject.academic_discipline.locals.first.disciplines.first
+      first_discipline = subject.academic_discipline.values.first.disciplines.first
       expect(first_discipline).to eq(@bib_stub.academic_discipline.first.disciplines.first)
     end
   end
@@ -217,8 +217,8 @@ describe Search::Presenters::Record::Catalog::Full do
           expect(subject.public_send(field).partial).to eq("browse")
         end
 
-        it "returns locals that match model" do
-          expect(subject.public_send(field).locals).to eq(@bib_stub.public_send(field))
+        it "returns values that match model" do
+          expect(subject.public_send(field).values).to eq(@bib_stub.public_send(field))
         end
 
         it "returns nil if #{field} is nil" do
@@ -237,8 +237,8 @@ describe Search::Presenters::Record::Catalog::Full do
         it "returns a parallel_link_to partial" do
           expect(subject.public_send(uid).partial).to eq("parallel_link_to")
         end
-        it "returns the appropriate locals" do
-          expect(subject.public_send(uid).locals).to eq(@bib_stub.public_send(uid))
+        it "returns the appropriate values" do
+          expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
         end
       end
     end
@@ -257,7 +257,7 @@ describe Search::Presenters::Record::Catalog::Full do
           expect(subject.public_send(uid).partial).to eq("parallel_plain_text")
         end
         it "returns the appropriate data" do
-          expect(subject.public_send(uid).locals).to eq(@bib_stub.public_send(uid))
+          expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
         end
         it "returns nil if #{uid} is nil" do
           allow(@bib_stub).to receive(uid).and_return([])
@@ -275,11 +275,11 @@ describe Search::Presenters::Record::Catalog::Full do
         it "returns a 'plain_text' partial" do
           expect(subject.public_send(field).partial).to eq("plain_text")
         end
-        it "returns a locals from model" do
-          expect(subject.public_send(field).locals).to eq(@bib_stub.public_send(field))
+        it "returns a values from model" do
+          expect(subject.public_send(field).values).to eq(@bib_stub.public_send(field))
         end
         it "can have more than one data entity" do
-          expect(subject.public_send(field).locals.count).to eq(2)
+          expect(subject.public_send(field).values.count).to eq(2)
         end
         it "returns nil if #{field} is nil" do
           allow(@bib_stub).to receive(field).and_return([])
@@ -298,11 +298,11 @@ describe Search::Presenters::Record::Catalog::Full do
         it "returns the appropriate partial" do
           expect(subject.public_send(field).partial).to eq("plain_text")
         end
-        it "returns locals from the model" do
-          expect(subject.public_send(field).locals.first).to eq(@bib_stub.public_send(field).first)
+        it "returns values from the model" do
+          expect(subject.public_send(field).values.first).to eq(@bib_stub.public_send(field).first)
         end
-        it "can have more than one locals entity" do
-          expect(subject.public_send(field).locals.count).to eq(1)
+        it "can have more than one values entity" do
+          expect(subject.public_send(field).values.count).to eq(1)
         end
         it "returns nil if #{field} is nil" do
           allow(@bib_stub).to receive(field).and_return([])

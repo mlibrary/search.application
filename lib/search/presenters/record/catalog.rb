@@ -148,10 +148,10 @@ module Search
           end
 
           def format
-            OpenStruct.new(
+            Field.for(
               field: "Formats",
               partial: "format",
-              locals: @record.bib.format
+              values: @record.bib.format
             )
           end
 
@@ -161,10 +161,10 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
-                OpenStruct.new(
+                Field.for(
                   field: f[:field],
                   partial: "parallel_browse",
-                  locals: @record.bib.public_send(f[:uid])
+                  values: @record.bib.public_send(f[:uid])
                 )
               end
             end
@@ -176,10 +176,10 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
-                OpenStruct.new(
+                Field.for(
                   field: f[:field],
                   partial: "browse",
-                  locals: @record.bib.public_send(f[:uid])
+                  values: @record.bib.public_send(f[:uid])
                 )
               end
             end
@@ -191,10 +191,10 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
-                OpenStruct.new(
+                Field.for(
                   field: f[:field],
                   partial: "parallel_link_to",
-                  locals: @record.bib.public_send(f[:uid])
+                  values: @record.bib.public_send(f[:uid])
                 )
               end
             end
@@ -251,10 +251,10 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
-                OpenStruct.new(
+                Field.for(
                   field: f[:field],
                   partial: "parallel_plain_text",
-                  locals: @record.bib.public_send(f[:uid])
+                  values: @record.bib.public_send(f[:uid])
                 )
               end
             end
@@ -268,10 +268,10 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
-                OpenStruct.new(
+                Field.for(
                   field: f[:field],
                   partial: "plain_text",
-                  locals: @record.bib.public_send(f[:uid]).slice(0, 1)
+                  values: @record.bib.public_send(f[:uid]).slice(0, 1)
                 )
               end
             end
@@ -286,113 +286,34 @@ module Search
             {uid: :oclc, field: "OCLC Number"}
           ].each do |f|
             define_method(f[:uid]) do
-              if @record.bib.public_send(f[:uid]).present?
-                OpenStruct.new(
-                  field: f[:field],
-                  partial: "plain_text",
-                  locals: @record.bib.public_send(f[:uid])
-                )
-              end
+              Field.for(field: f[:field],
+                partial: "plain_text",
+                values: @record.bib.public_send(f[:uid]))
             end
           end
 
           def academic_discipline
-            OpenStruct.new(
+            Field.for(
               field: "Academic Discipline",
               partial: "academic_discipline",
-              locals: @record.bib.academic_discipline
+              values: @record.bib.academic_discipline
             )
           end
         end
 
         class Field
-          attr_reader :field, :data
-          def self.for(field:, data:)
-            compact_data = data.compact
-            new(field: field, data: compact_data) if compact_data.present?
+          def self.for(field:, partial:, values:)
+            new(field: field, partial: partial, values: values) if values.present?
           end
-
-          def initialize(field:, data:)
+          attr_reader :field, :partial, :values
+          def initialize(field:, partial:, values:)
             @field = field
-            @data = data
+            @partial = partial
+            @values = values
           end
 
-          # def data
-          #   @data.map do |i|
-          #     OpenStruct.new(
-          #       partial: partial,
-          #       locals: item(i)
-          #     )
-          #   end
-          # end
-
-          def partial
-            raise NotImplementedError
-          end
-
-          def item(i)
-            raise NotImplementedError
-          end
-        end
-
-        class PlainTextField < Field
-          def partial
-            "plain_text"
-          end
-
-          def item(i)
-            OpenStruct.new(text: i.text)
-          end
-        end
-
-        class LinkToField < Field
-          def partial
-            "link_to"
-          end
-
-          def item(i)
-            OpenStruct.new(
-              text: i.text,
-              url: i.url
-            )
-          end
-        end
-
-        class BrowseField < Field
-          def partial
-            "browse"
-          end
-
-          def item(i)
-            OpenStruct.new(
-              text: i.text,
-              url: i.url,
-              browse_url: i.browse_url,
-              kind: i.kind
-            )
-          end
-        end
-
-        # Returns something like
-        # { field: "Academic Discipline"
-        #   partial: academic_discipline,
-        #   locals: [
-        #      {
-        #       disciplines: [
-        #         {text: "Science", url: "http://search?query=academic_discipline:Science"}
-        #       ]
-        #      }
-        #   ]
-        # }
-        class AcademicDisciplineField < Field
-          def partial
-            "academic_discipline"
-          end
-
-          def item(i)
-            OpenStruct.new(
-              disciplines: i
-            )
+          def locals
+            values
           end
         end
       end
