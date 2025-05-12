@@ -4,15 +4,10 @@ class Search::Models::Record::Catalog::Bib
     @data = data
   end
 
-  [:title].each do |uid|
-    define_method(uid) do
-      result = OpenStruct.new
-      @data[uid.to_s].first.to_a.each do |key, value|
-        result[key.to_sym] = OpenStruct.new(text: value["text"]) if value
-      end
-      result
-    end
+  def title
+    _map_paired_field("title") { |item| Item.new(item) }.first
   end
+
   [:access, :arrangement, :association, :audience, :awards, :bibliography,
     :biography_history, :chronology, :content_advice, :copy_specific_note,
     :copyright, :copyright_status_information, :created,
@@ -26,12 +21,8 @@ class Search::Models::Record::Catalog::Bib
     :source_of_acquisition, :source_of_description_note, :summary,
     :terms_of_use].each do |uid|
     define_method(uid) do
-      @data[uid.to_s]&.map do |entity|
-        result = OpenStruct.new
-        entity.to_a.each do |key, value|
-          result[key.to_sym] = OpenStruct.new(text: value["text"]) if value
-        end
-        result
+      _map_paired_field(uid.to_s) do |item|
+        Item.new(item)
       end
     end
   end
@@ -43,63 +34,69 @@ class Search::Models::Record::Catalog::Bib
   end
 
   def main_author
-    _map_field("main_author") do |ma|
-      _author_browse_item(item: ma)
+    _map_paired_field("main_author") do |ma|
+      AuthorBrowseItem.new(ma)
     end
   end
 
   def other_titles
-    _map_field("other_titles") do |item|
-      _link_to_item(item)
+    _map_paired_field("other_titles") do |item|
+      LinkToItem.new(item)
     end
   end
 
   def related_title
-    _map_field("related_title") do |item|
-      _link_to_item(item)
+    _map_paired_field("related_title") do |item|
+      LinkToItem.new(item)
     end
   end
 
   def contributors
-    _map_field("contributors") do |c|
-      _author_browse_item(item: c)
+    _map_paired_field("contributors") do |item|
+      AuthorBrowseItem.new(item)
     end
   end
 
   def call_number
     _map_field("call_number") do |item|
-      _call_number_browse_item(item: item)
+      CallNumberBrowseItem.new(item)
     end
   end
 
   def lcsh_subjects
     _map_field("lcsh_subjects") do |item|
-      _subject_browse_item(item: item)
+      SubjectBrowseItem.new(item)
     end
   end
 
   def academic_discipline
     _map_field("academic_discipline") do |ad|
-      disciplines = ad["list"].map do |d|
-        OpenStruct.new(text: d, url: "#{S.base_url}/catalog?" + {query: "academic_discipline:#{d}"}.to_query)
-      end
-      OpenStruct.new(disciplines: disciplines)
+      AcademicDisciplineItem.new(ad)
     end
   end
 
-  [:bookplate,
-    :language, :oclc, :isbn,
-
-    :gov_doc_no, :publisher_number,
-    :report_number,
-
-    :issn].each do |uid|
+  [:bookplate, :language, :oclc, :isbn, :gov_doc_no, :publisher_number,
+    :report_number, :issn].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 
+  private
+
   def _map_text_field(uid)
     _map_field(uid) do |item|
-      OpenStruct.new(text: item["text"])
+      Item.new(item)
+    end
+  end
+
+  def _map_paired_field(uid)
+    _map_field(uid) do |item|
+      result = OpenStruct.new
+      item.to_a.each do |key, value|
+        if value
+          result[key.to_sym] = yield value
+        end
+      end
+      result
     end
   end
 
@@ -110,57 +107,120 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  def _link_to_item(item)
-    result = OpenStruct.new
-    item.to_a.each do |key, value|
-      if value
-        query_string = value["search"].map do |x|
-          "#{x["field"]}:\"#{x["value"]}\""
-        end.join(" AND ")
+  # to include this, the class needs to have @data with a "search" key
+  module SearchUrl
+    def url
+      query_string = @data["search"].map do |x|
+        "#{x["field"]}:\"#{x["value"]}\""
+      end.join(" AND ")
+      "#{S.base_url}/catalog?" + {query: query_string}.to_query
+    end
+  end
 
-        result[key.to_sym] = OpenStruct.new(
-          text: value["text"],
-          url: "#{S.base_url}/catalog?" + {query: query_string}.to_query
-        )
+  # to include this, the class needs to have the methods browse_category and browse_query_string
+  module BrowseUrl
+    def browse_url
+      "#{S.base_url}/catalog/browse/#{browse_category}?" + {query: browse_query_string}.to_query
+    end
+  end
+
+  class Item
+    attr_reader :text
+    def initialize(data)
+      @data = data
+      @text = @data["text"]
+    end
+
+    def to_s
+      text
+    end
+  end
+
+  class LinkToItem < Item
+    include SearchUrl
+  end
+
+  class AuthorBrowseItem < Item
+    include SearchUrl
+    include BrowseUrl
+
+    def kind
+      "author"
+    end
+
+    private
+
+    def browse_category
+      "author"
+    end
+
+    def browse_query_string
+      @data["browse"]
+    end
+  end
+
+  class SubjectBrowseItem < Item
+    include BrowseUrl
+
+    def kind
+      "subject"
+    end
+
+    def url
+      "#{S.base_url}/catalog?" + {query: "subject:\"#{browse_query_string}\""}.to_query
+    end
+
+    private
+
+    def browse_category
+      "subject"
+    end
+
+    def browse_query_string
+      text.split(" -- ").join(" ")
+    end
+  end
+
+  class CallNumberBrowseItem < Item
+    include BrowseUrl
+
+    def kind
+      "call_number"
+    end
+
+    def url
+    end
+
+    private
+
+    def browse_category
+      "callnumber"
+    end
+
+    def browse_query_string
+      text
+    end
+  end
+
+  class AcademicDisciplineItem
+    def initialize(data)
+      @data = data
+    end
+
+    def disciplines
+      @data["list"].map do |text|
+        AcademicDisciplineElement.new(text)
       end
     end
-    result
   end
 
-  def _subject_browse_item(item:)
-    normalized_subject = item["text"].split(" -- ").join(" ")
-    OpenStruct.new(
-      text: item["text"],
-      url: "#{S.base_url}/catalog?" + {query: "subject:\"#{normalized_subject}\""}.to_query,
-      browse_url: "#{S.base_url}/catalog/browse/subject?" + {query: normalized_subject}.to_query,
-      kind: "subject"
-    )
-  end
-
-  def _call_number_browse_item(item:)
-    OpenStruct.new(
-      text: item["text"],
-      browse_url: "#{S.base_url}/catalog/browse/callnumber?query=#{item["text"]}",
-      kind: "call_number"
-    )
-  end
-
-  def _author_browse_item(item:)
-    result = OpenStruct.new
-    item.to_a.each do |key, value|
-      if value
-        query_string = value["search"].map do |x|
-          "#{x["field"]}:\"#{x["value"]}\""
-        end.join(" AND ")
-
-        result[key.to_sym] = OpenStruct.new(
-          text: value["text"],
-          url: "#{S.base_url}/catalog?" + {query: query_string}.to_query,
-          browse_url: "#{S.base_url}/catalog/browse/author?" + {query: value["browse"]}.to_query,
-          kind: "author"
-        )
-      end
+  class AcademicDisciplineElement < Item
+    def initialize(text)
+      @text = text
     end
-    result
+
+    def url
+      "#{S.base_url}/catalog?" + {query: "academic_discipline:#{text}"}.to_query
+    end
   end
 end
