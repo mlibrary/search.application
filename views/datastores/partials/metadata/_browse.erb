@@ -2,9 +2,9 @@
   <% values.each do |value| %>
     <li class="metadata__information--original">
       <% if value.url.present?%>
-        <%= link_to(body: value.text, url: value.url) %>
+        <%= link_to(body: value, url: value.url) %>
       <% else %> 
-        <%= value.text %>
+        <%= value %>
       <% end %>
 
       <span class="browse__link">

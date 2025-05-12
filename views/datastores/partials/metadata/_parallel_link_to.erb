@@ -2,11 +2,11 @@
   <% values.each do |value| %>
     <% if value.transliterated %>
       <li class="metadata__information--transliterated">
-        <%= link_to(body: value.transliterated.text, url: value.transliterated.url) %>
+        <%= link_to(body: value.transliterated, url: value.transliterated.url) %>
       </li>
     <% end %>
     <li>
-      <%= link_to(body: value.original.text, url: value.original.url) %>
+      <%= link_to(body: value.original, url: value.original.url) %>
     </li>
   <% end %>
 </ul>
