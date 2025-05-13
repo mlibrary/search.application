@@ -97,14 +97,22 @@ module Search
           end
 
           def title
-            out = [OpenStruct.new(text: @record.bib.title, css_class: "title")]
-            unless @record.bib.vernacular_title.nil?
-              out.append(OpenStruct.new(text: @record.bib.vernacular_title, css_class: "vernacular"))
+            if @record.bib.title.transliterated && @record.bib.title.original
+              [
+                OpenStruct.new(text: @record.bib.title.transliterated.text, css_class: "title-primary"),
+                OpenStruct.new(text: @record.bib.title.original.text, css_class: "title-secondary")
+              ]
+            elsif @record.bib.title.transliterated
+              [OpenStruct.new(text: @record.bib.title.transliterated.text, css_class: "title-primary")]
+            else
+              [OpenStruct.new(text: @record.bib.title.original.text, css_class: "title-primary")]
             end
-            out
           end
 
           def icons
+            @record.bib.format.map do |f|
+              f.icon
+            end
           end
 
           def respond_to_missing?(method, *args, **kwargs, &block)
@@ -140,14 +148,26 @@ module Search
           end
 
           def format
-            OpenStruct.new(
+            Field.for(
               field: "Formats",
-              data: @record.bib.format
+              partial: "format",
+              values: @record.bib.format
             )
           end
 
-          def main_author
-            BrowseField.for(field: "Author/Creator", data: [@record.bib.main_author, @record.bib.vernacular_main_author])
+          [
+            {uid: :main_author, field: "Author/Creator"},
+            {uid: :contributors, field: "Contributors"}
+          ].each do |f|
+            define_method(f[:uid]) do
+              if @record.bib.public_send(f[:uid]).present?
+                Field.for(
+                  field: f[:field],
+                  partial: "parallel_browse",
+                  values: @record.bib.public_send(f[:uid])
+                )
+              end
+            end
           end
 
           [
@@ -155,173 +175,147 @@ module Search
             {uid: :lcsh_subjects, field: "Subjects (LCSH)"}
           ].each do |f|
             define_method(f[:uid]) do
-              BrowseField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))
+              if @record.bib.public_send(f[:uid]).present?
+                Field.for(
+                  field: f[:field],
+                  partial: "browse",
+                  values: @record.bib.public_send(f[:uid])
+                )
+              end
             end
           end
-          def contributors
-            BrowseField.for(field: "Contributors", data: @record.bib.contributors)
+
+          [
+            {uid: :other_titles, field: "Other Titles"},
+            {uid: :related_title, field: "Related Title"}
+          ].each do |f|
+            define_method(f[:uid]) do
+              if @record.bib.public_send(f[:uid]).present?
+                Field.for(
+                  field: f[:field],
+                  partial: "parallel_link_to",
+                  values: @record.bib.public_send(f[:uid])
+                )
+              end
+            end
           end
 
-          def other_titles
-            LinkToField.for(field: "Other Titles", data: @record.bib.other_titles)
-          end
-
-          def related_title
-            LinkToField.for(field: "Related Title", data: @record.bib.related_title)
+          # Parallel Plain text content
+          [
+            {uid: :access, field: "Access"},
+            {uid: :arrangement, field: "Arrangement"},
+            {uid: :edition, field: "Edition"},
+            {uid: :association, field: "Association"},
+            {uid: :audience, field: "Audience"},
+            {uid: :awards, field: "Awards"},
+            {uid: :bibliography, field: "Bibliography"},
+            {uid: :biography_history, field: "Biography/History"},
+            {uid: :chronology, field: "Chronology"},
+            {uid: :content_advice, field: "Content advice"},
+            {uid: :copy_specific_note, field: "Copy Specific Note"},
+            {uid: :copyright, field: "Copyright"},
+            {uid: :copyright_status_information, field: "Copyright status information"},
+            {uid: :created, field: "Created"},
+            {uid: :current_publication_frequency, field: "Current Publication Frequency"},
+            {uid: :date_place_of_event, field: "Date/Place of Event"},
+            {uid: :distributed, field: "Distributed"},
+            {uid: :extended_summary, field: "Expanded Summary"},
+            {uid: :former_publication_frequency, field: "Former Publication Frequency"},
+            {uid: :funding_information, field: "Funding Information"},
+            {uid: :in_collection, field: "In Collection"},
+            {uid: :language_note, field: "Language note"},
+            {uid: :location_of_originals, field: "Location of Originals"},
+            {uid: :manufactured, field: "Manufactured"},
+            {uid: :map_scale, field: "Map Scale"},
+            {uid: :note, field: "Note"},
+            {uid: :numbering, field: "Numbering"},
+            {uid: :numbering_notes, field: "Numbering Note"},
+            {uid: :original_version_note, field: "Original version note"},
+            {uid: :performers, field: "Performers"},
+            {uid: :physical_description, field: "Physical Description"},
+            {uid: :place, field: "Place"},
+            {uid: :playing_time, field: "Playing Time"},
+            {uid: :preferred_citation, field: "Preferred Citation"},
+            {uid: :printer, field: "Printer"},
+            {uid: :production_credits, field: "Production Credits"},
+            {uid: :published, field: "Published/Created"},
+            {uid: :references, field: "References"},
+            {uid: :related_items, field: "Related Items"},
+            {uid: :reproduction_note, field: "Reproduction note"},
+            {uid: :series, field: "Series (transcribed)"},
+            {uid: :series_statement, field: "Series Statement"},
+            {uid: :source_of_acquisition, field: "Source of Acquisition"},
+            {uid: :source_of_description_note, field: "Source of Description Note"},
+            {uid: :summary, field: "Summary"},
+            {uid: :terms_of_use, field: "Terms of Use"}
+          ].each do |f|
+            define_method(f[:uid]) do
+              if @record.bib.public_send(f[:uid]).present?
+                Field.for(
+                  field: f[:field],
+                  partial: "parallel_plain_text",
+                  values: @record.bib.public_send(f[:uid])
+                )
+              end
+            end
           end
 
           # Plain content, single field display
           [
-            {uid: :edition, field: "Edition"},
-            {uid: :series, field: "Series (transcribed)"},
-            {uid: :series_statement, field: "Series Statement"},
-            {uid: :note, field: "Note"},
-            {uid: :physical_description, field: "Physical Description"},
-            {uid: :created, field: "Created"},
-            {uid: :biography_history, field: "Biography/History"},
-            {uid: :in_collection, field: "In Collection"},
-            {uid: :terms_of_use, field: "Terms of Use"},
-            {uid: :date_place_of_event, field: "Date/Place of Event"},
-            {uid: :references, field: "References"},
-            {uid: :copyright_status_information, field: "Copyright status information"},
-            {uid: :copyright, field: "Copyright"},
-            {uid: :playing_time, field: "Playing Time"},
-            {uid: :audience, field: "Audience"},
-            {uid: :production_credits, field: "Production Credits"},
-            {uid: :bibliography, field: "Bibliography"},
             {uid: :gov_doc_no, field: "Government Document Number"},
             {uid: :publisher_number, field: "Publisher Number"},
-            {uid: :report_number, field: "Report Number"},
-            {uid: :chronology, field: "Chronology"},
-            {uid: :place, field: "Place"},
-            {uid: :printer, field: "Printer"},
-            {uid: :association, field: "Association"},
-            {uid: :numbering, field: "Numbering"},
-            {uid: :current_publication_frequency, field: "Current Publication Frequency"},
-            {uid: :former_publication_frequency, field: "Former Publication Frequency"},
-            {uid: :map_scale, field: "Map Scale"},
-            {uid: :extended_summary, field: "Expanded Summary"}
+            {uid: :report_number, field: "Report Number"}
           ].each do |f|
             define_method(f[:uid]) do
-              PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]).slice(0, 1))
+              if @record.bib.public_send(f[:uid]).present?
+                Field.for(
+                  field: f[:field],
+                  partial: "plain_text",
+                  values: @record.bib.public_send(f[:uid]).slice(0, 1)
+                )
+              end
             end
           end
 
           # Plain content, multiple field display
           [
-            {uid: :language, field: "Language"},
-            {uid: :published, field: "Published/Created"},
-            {uid: :manufactured, field: "Manufactured"},
-            {uid: :oclc, field: "OCLC Number"},
+            {uid: :bookplate, field: "Donor Information"},
             {uid: :isbn, field: "ISBN"},
             {uid: :issn, field: "ISSN"},
-            {uid: :distributed, field: "Distributed"},
-            {uid: :summary, field: "Summary"},
-            {uid: :language_note, field: "Language note"},
-            {uid: :performers, field: "Performers"},
-            {uid: :preferred_citation, field: "Preferred Citation"},
-            {uid: :location_of_originals, field: "Location of Originals"},
-            {uid: :funding_information, field: "Funding Information"},
-            {uid: :source_of_acquisition, field: "Source of Acquisition"},
-            {uid: :related_items, field: "Related Items"},
-            {uid: :numbering_notes, field: "Numbering Note"},
-            {uid: :source_of_description_note, field: "Source of Description Note"},
-            {uid: :copy_specific_note, field: "Copy Specific Note"},
-            {uid: :arrangement, field: "Arrangement"},
-            {uid: :reproduction_note, field: "Reproduction note"},
-            {uid: :original_version_note, field: "Original version note"},
-            {uid: :content_advice, field: "Content advice"},
-            {uid: :awards, field: "Awards"},
-            {uid: :bookplate, field: "Donor Information"},
-            {uid: :access, field: "Access"}
+            {uid: :language, field: "Language"},
+            {uid: :oclc, field: "OCLC Number"}
           ].each do |f|
             define_method(f[:uid]) do
-              PlainTextField.for(field: f[:field], data: @record.bib.public_send(f[:uid]))
+              Field.for(field: f[:field],
+                partial: "plain_text",
+                values: @record.bib.public_send(f[:uid]))
             end
           end
 
           def academic_discipline
-            AcademicDisciplineField.for(field: "Academic Discipline", data: @record.bib.academic_discipline)
+            Field.for(
+              field: "Academic Discipline",
+              partial: "academic_discipline",
+              values: @record.bib.academic_discipline
+            )
           end
         end
 
         class Field
-          attr_reader :field
-          def self.for(field:, data:)
-            compact_data = data.compact
-            new(field: field, data: compact_data) if compact_data.present?
+          def self.for(field:, partial:, values:)
+            new(field: field, partial: partial, values: values) if values.present?
           end
-
-          def initialize(field:, data:)
+          attr_reader :field, :partial, :values
+          def initialize(field:, partial:, values:)
             @field = field
-            @data = data
+            @partial = partial
+            @values = values
           end
 
-          def data
-            @data.map do |i|
-              OpenStruct.new(
-                partial: partial,
-                locals: item(i)
-              )
-            end
-          end
+          include Enumerable
 
-          def partial
-            raise NotImplementedError
-          end
-
-          def item(i)
-            raise NotImplementedError
-          end
-        end
-
-        class PlainTextField < Field
-          def partial
-            "plain_text"
-          end
-
-          def item(i)
-            OpenStruct.new(text: i.text)
-          end
-        end
-
-        class LinkToField < Field
-          def partial
-            "link_to"
-          end
-
-          def item(i)
-            OpenStruct.new(
-              text: i.text,
-              url: i.url
-            )
-          end
-        end
-
-        class BrowseField < Field
-          def partial
-            "browse"
-          end
-
-          def item(i)
-            OpenStruct.new(
-              text: i.text,
-              url: i.url,
-              browse_url: i.browse_url,
-              kind: i.kind
-            )
-          end
-        end
-
-        class AcademicDisciplineField < Field
-          def partial
-            "academic_discipline"
-          end
-
-          def item(i)
-            OpenStruct.new(
-              disciplines: i
-            )
+          def each(&block)
+            @values.each(&block)
           end
         end
       end

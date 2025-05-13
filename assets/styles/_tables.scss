@@ -7,6 +7,9 @@
 //   1. Table
 //     1.1 Caption
 //     1.2 Rows
+//     1.3 Cells
+//     1.4 Thead
+//     1.5 Tbody
 //
 // --------------------------------------------------
 
@@ -16,6 +19,7 @@
 
 table {
   border-collapse: collapse;
+  width: 100%;
 }
 
 
@@ -39,4 +43,46 @@ table tr {
     break-inside: avoid;
     page-break-inside: avoid;
   }
+}
+
+
+
+// *           * //
+// * 1.3 CELLS * //
+// *           * //
+
+table tr {
+  & > * + * {
+    padding-left: 1rem;
+  }
+  & + tr > * {
+    padding-top: 0.5rem;
+  }
+  th {
+    text-align: left;
+    vertical-align: top;
+  }
+}
+
+
+
+// *           * //
+// * 1.4 THEAD * //
+// *           * //
+
+table thead th {
+  border-bottom: 2px solid var(--color-neutral-100);
+  color: var(--color-neutral-300);
+  padding-bottom: 0.5rem;
+  vertical-align: bottom;
+}
+
+
+
+// *           * //
+// * 1.5 TBODY * //
+// *           * //
+
+table thead:not(.visually-hidden) + tbody > tr:first-of-type > * {
+  padding-top: 0.5rem;
 }

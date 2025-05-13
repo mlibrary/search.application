@@ -18,37 +18,41 @@ module Factories
               "Ecology and Evolutionary Biology"
             ]
           }]]
-      ] + paired_text_fields + link_fields + text_fields + author_browse_fields).to_h
+      ] + paired_text_fields + title_link_fields + text_fields + author_browse_fields).to_h
     end
 
     def paired_text_fields
-      ["title", "published", "manufactured", "edition", "series",
+      ["access", "arrangement", "association", "audience", "awards",
+        "bibliography",
+        "biography_history",
+        "chronology", "content_advice", "copy_specific_note", "copyright",
+        "copyright_status_information", "created",
+        "current_publication_frequency", "date_place_of_event",
+        "extended_summary", "former_publication_frequency", "funding_information",
+        "in_collection", "language_note", "location_of_originals", "map_scale",
+        "note", "numbering", "numbering_notes", "original_version_note",
+        "performers", "physical_description", "place", "playing_time", "preferred_citation", "printer", "production_credits",
+        "title", "published", "manufactured", "edition", "series", "references", "related_items", "reproduction_note",
+        "source_of_acquisition", "source_of_description_note", "summary", "terms_of_use",
         "series_statement", "distributed"].map do |f|
         [f, paired_text_field]
       end
     end
 
-    def link_fields
-      ["other_titles"].map do |f|
-        [f, link_field]
+    def title_link_fields
+      ["other_titles", "related_title"].map do |f|
+        [f, link_field("title")]
       end
     end
 
     def text_fields
-      ["access", "arrangement", "association", "audience", "awards",
-        "bibliography", "biography_history", "bookplate", "call_number",
-        "chronology", "content_advice", "copy_specific_note", "copyright",
-        "copyright_status_information", "created",
-        "current_publication_frequency", "date_place_of_event",
-        "extended_summary", "former_publication_frequency", "funding_information",
-        "gov_doc_no", "in_collection", "isbn", "issn", "language",
-        "language_note", "lcsh_subjects", "location_of_originals", "map_scale",
-        "note", "numbering", "numbering_notes", "oclc", "original_version_note",
-        "performers", "physical_description", "place", "playing_time",
-        "preferred_citation", "printer", "production_credits", "publisher_number",
-        "references", "related_items", "report_number", "reproduction_note",
-        "source_of_acquisition", "source_of_description_note", "summary",
-        "terms_of_use"].map do |f|
+      ["bookplate", "call_number", "gov_doc_no", "isbn", "issn", "language",
+        "lcsh_subjects",
+        "oclc",
+
+        "publisher_number",
+        "report_number"]
+        .map do |f|
         [f, text_field]
       end
     end
@@ -65,39 +69,51 @@ module Factories
 
     def paired_text_field
       [
-        {
-          text: Faker::Lorem.sentence,
-          script: "default"
-        },
-        {
-          text: Faker::Lorem.sentence,
-          script: "vernacular"
-        }
+        {"transliterated" => {
+           "text" => Faker::Lorem.sentence
+         },
+         "original" => {
+           "text" => Faker::Lorem.sentence
+         }}
       ]
     end
 
     def author_browse_field
       [
         {
-          text: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
-          script: "default",
-          search: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
-          browse: "#{Faker::Name.last_name}, #{Faker::Name.first_name}"
-        },
-        {
-          text: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
-          script: "vernacular",
-          search: "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
-          browse: "#{Faker::Name.last_name}, #{Faker::Name.first_name}"
+          "transliterated" => {
+            "text" => "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
+            "search" => search_field,
+            "browse" => "#{Faker::Name.last_name}, #{Faker::Name.first_name}"
+          },
+          "original" => {
+            "text" => "#{Faker::Name.last_name}, #{Faker::Name.first_name}",
+            "search" => search_field,
+            "browse" => "#{Faker::Name.last_name}, #{Faker::Name.first_name}"
+          }
         }
       ]
     end
 
-    def link_field
-      [{
-        text: Faker::Lorem.sentence,
-        search: Faker::Lorem.sentence
-      }]
+    def search_field(field = "author")
+      [
+        {"field" => field, "value" => "#{Faker::Name.last_name}, #{Faker::Name.first_name}"}
+      ]
+    end
+
+    def link_field(field = author)
+      [
+        {
+          "transliterated" => {
+            "text" => Faker::Lorem.sentence,
+            "search" => search_field(field)
+          },
+          "original" => {
+            "text" => Faker::Lorem.sentence,
+            "search" => search_field(field)
+          }
+        }
+      ]
     end
   end
 end

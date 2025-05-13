@@ -1,0 +1,47 @@
+@use '../../../utilities';
+@use '../../../typography';
+
+// --------------------------------------------------
+//
+// # Format
+//   Styles to apply directly to `views/datastores/partials/metadata/_format.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Formats
+//     2.1. Icon
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: "formats";
+
+
+
+
+
+// ****************** //
+// *** 2. FORMATS *** //
+// ****************** //
+
+.#{$class} .#{$class}__item {
+  @include utilities.flex($align: start);
+  & {
+    gap: 0.25rem;
+  }
+}
+
+
+
+// *          * //
+// * 2.1 ICON * //
+// *          * //
+
+.#{$class} .#{$class}__item--icon {
+  color: var(--color-neutral-300);
+  font-size: 1.25rem;
+  font-variation-settings: "FILL" 1;
+}

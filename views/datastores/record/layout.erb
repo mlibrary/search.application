@@ -2,31 +2,14 @@
   <%= erb :'datastores/partials/_breadcrumbs', locals: { current_page: "Record" } %>
   <%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
   <div class="container__rounded">
-    <ul class="record__formats list__no-style">
-      <%
-        formats = @record.record_info.select do |entry|
-          entry.field == "Formats"
-        end
-      %>
-      <% formats.first.data.each do |format| %>
-        <li class="record__format">
-          <span class="material-symbols-rounded">
-            <%= format.icon %>
-          </span>
-          <span class="strong">
-            <%= format.text %>
-          </span>
-        </li>
-      <% end %>
-    </ul>
     <section class="record__information">
       <p>Add to list: Needs to be a partial for Results</p>
       <%= erb :'datastores/record/partials/_title', locals: { titles: @record.title } %>
-      <h2 class="text__normal">Record info:</h2>
-      <p>Metadata: Needs to be a partial for Results</p>
+      <h2 class="visually-hidden">Record info:</h2>
+      <%= erb :'datastores/partials/_metadata', locals: { metadata: @record.record_info } %>
       <%= yield %>
     </section>
-    <h2 class="text__normal">Available at:</h2>
+    <h2 class="visually-hidden">Available at:</h2>
     <p>Resource Access: Needs to be a partial for Results</p>
   </div>
   <p>Shelf browse</p>
