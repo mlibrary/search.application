@@ -24,7 +24,7 @@ module Factories
     def paired_text_fields
       ["access", "arrangement", "association", "audience", "awards",
         "bibliography",
-        "biography_history", "call_number",
+        "biography_history",
         "chronology", "content_advice", "copy_specific_note", "copyright",
         "copyright_status_information", "created",
         "current_publication_frequency", "date_place_of_event",
@@ -46,7 +46,7 @@ module Factories
     end
 
     def text_fields
-      ["bookplate", "gov_doc_no", "isbn", "issn", "language",
+      ["bookplate", "call_number", "gov_doc_no", "isbn", "issn", "language",
         "lcsh_subjects",
         "oclc",
 

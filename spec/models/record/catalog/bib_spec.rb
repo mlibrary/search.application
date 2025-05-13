@@ -44,6 +44,11 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
         expect(subject.public_send(field).first.transliterated.text).to eq(@data[field.to_s].first["transliterated"]["text"])
         expect(subject.public_send(field).first.original.text).to eq(@data[field.to_s].first["original"]["text"])
       end
+      it "only has original text if transliterated and original are the same" do
+        @data[field.to_s].first["transliterated"]["text"] = @data[field.to_s].first["original"]["text"]
+        expect(subject.public_send(field).first.original.text).to eq(@data[field.to_s].first["original"]["text"])
+        expect(subject.public_send(field).first.transliterated).to be_nil
+      end
     end
   end
 
@@ -124,7 +129,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       s = subject.call_number.first
       expect(s.text).to eq(cn)
       expect(s.url).to be_nil
-      expect(s.browse_url).to eq("#{S.base_url}/catalog/browse/callnumber?query=#{cn}")
+      expect(s.browse_url).to eq("#{S.base_url}/catalog/browse/callnumber?#{{query: cn}.to_query}")
       expect(s.kind).to eq("call_number")
     end
   end
@@ -162,6 +167,10 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       it "is an array of OpenStructs that respond to text" do
         expected = @data[uid.to_s].first["text"]
         expect(subject.public_send(uid)[0].text).to eq(expected)
+      end
+      it "does not include duplicates entries" do
+        @data[uid.to_s].push({"text" => @data[uid.to_s].first["text"]})
+        expect(subject.public_send(uid).count).to eq(1)
       end
     end
   end

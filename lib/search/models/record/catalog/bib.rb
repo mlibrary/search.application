@@ -90,13 +90,16 @@ class Search::Models::Record::Catalog::Bib
 
   def _map_paired_field(uid)
     _map_field(uid) do |item|
-      result = OpenStruct.new
+      temp = {}
       item.to_a.each do |key, value|
         if value
-          result[key.to_sym] = yield value
+          temp[key] = yield value
         end
       end
-      result
+      if temp["original"] == temp["transliterated"]
+        temp.delete("transliterated")
+      end
+      OpenStruct.new(**temp)
     end
   end
 
@@ -104,7 +107,7 @@ class Search::Models::Record::Catalog::Bib
     list = @data.dig(uid) || []
     list.map do |item|
       yield(item)
-    end
+    end.uniq(&:text)
   end
 
   # to include this, the class needs to have @data with a "search" key
@@ -125,14 +128,20 @@ class Search::Models::Record::Catalog::Bib
   end
 
   class Item
-    attr_reader :text
     def initialize(data)
       @data = data
-      @text = @data["text"]
+    end
+
+    def text
+      @data["text"].strip
     end
 
     def to_s
       text
+    end
+
+    def ==(other)
+      self.class == other.class && text == other.text
     end
   end
 
@@ -207,6 +216,11 @@ class Search::Models::Record::Catalog::Bib
       @data = data
     end
 
+    # This is here _map_field can work
+    def text
+      @data["list"].join(" > ")
+    end
+
     def disciplines
       @data["list"].map do |text|
         AcademicDisciplineElement.new(text)
@@ -215,6 +229,7 @@ class Search::Models::Record::Catalog::Bib
   end
 
   class AcademicDisciplineElement < Item
+    attr_reader :text
     def initialize(text)
       @text = text
     end
