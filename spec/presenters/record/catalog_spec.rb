@@ -1,71 +1,123 @@
 describe Search::Presenters::Record::Catalog::Full do
-  single_string_fields = {
+  my_parallel_plain_text_fields = {
+    access: "Access",
+    arrangement: "Arrangement",
+    association: "Association",
+    audience: "Audience",
+    awards: "Awards",
+    bibliography: "Bibliography",
+    biography_history: "Biography/History",
+    chronology: "Chronology",
+    content_advice: "Content advice",
+    copy_specific_note: "Copy Specific Note",
+    copyright: "Copyright",
+    copyright_status_information: "Copyright status information",
+    created: "Created",
+    current_publication_frequency: "Current Publication Frequency",
+    date_place_of_event: "Date/Place of Event",
+    distributed: "Distributed",
     edition: "Edition",
+    extended_summary: "Expanded Summary",
+    former_publication_frequency: "Former Publication Frequency",
+    funding_information: "Funding Information",
+    in_collection: "In Collection",
+    language_note: "Language note",
+    location_of_originals: "Location of Originals",
+    manufactured: "Manufactured",
+    map_scale: "Map Scale",
+    note: "Note",
+    numbering: "Numbering",
+    numbering_notes: "Numbering Note",
+    original_version_note: "Original version note",
+    performers: "Performers",
+    physical_description: "Physical Description",
+    place: "Place",
+    playing_time: "Playing Time",
+    preferred_citation: "Preferred Citation",
+    printer: "Printer",
+    production_credits: "Production Credits",
+    published: "Published/Created",
+    references: "References",
+    related_items: "Related Items",
+    reproduction_note: "Reproduction note",
     series: "Series (transcribed)",
     series_statement: "Series Statement",
-    note: "Note",
-    physical_description: "Physical Description",
-    created: "Created",
-    biography_history: "Biography/History",
-    in_collection: "In Collection",
-    terms_of_use: "Terms of Use",
-    date_place_of_event: "Date/Place of Event",
-    references: "References",
-    copyright_status_information: "Copyright status information",
-    copyright: "Copyright",
-    playing_time: "Playing Time",
-    audience: "Audience",
-    production_credits: "Production Credits",
-    bibliography: "Bibliography",
+    source_of_acquisition: "Source of Acquisition",
+    source_of_description_note: "Source of Description Note",
+    summary: "Summary",
+    terms_of_use: "Terms of Use"
+  }
+  my_parallel_link_to_fields = {
+    related_title: "Related Title",
+    other_titles: "Other Titles"
+  }
+  single_string_fields = {
     gov_doc_no: "Government Document Number",
     publisher_number: "Publisher Number",
-    report_number: "Report Number",
-    chronology: "Chronology",
-    place: "Place",
-    printer: "Printer",
-    association: "Association",
-    numbering: "Numbering",
-    current_publication_frequency: "Current Publication Frequency",
-    former_publication_frequency: "Former Publication Frequency",
-    map_scale: "Map Scale",
-    extended_summary: "Expanded Summary"
+    report_number: "Report Number"
   }
   multiple_string_fields = {
     language: "Language",
-    published: "Published/Created",
-    manufactured: "Manufactured",
     oclc: "OCLC Number",
     isbn: "ISBN",
     issn: "ISSN",
-    distributed: "Distributed",
-    summary: "Summary",
-    language_note: "Language note",
-    performers: "Performers",
-    preferred_citation: "Preferred Citation",
-    location_of_originals: "Location of Originals",
-    funding_information: "Funding Information",
-    source_of_acquisition: "Source of Acquisition",
-    related_items: "Related Items",
-    numbering_notes: "Numbering Note",
-    source_of_description_note: "Source of Description Note",
-    copy_specific_note: "Copy Specific Note",
-    arrangement: "Arrangement",
-    reproduction_note: "Reproduction note",
-    original_version_note: "Original version note",
-    content_advice: "Content advice",
-    awards: "Awards",
-    bookplate: "Donor Information",
-    access: "Access"
+    bookplate: "Donor Information"
   }
   browse_fields = {
-    contributors: "Contributors",
     call_number: "Call Number",
     lcsh_subjects: "Subjects (LCSH)"
   }
+  author_browse_fields = {
+    main_author: "Author/Creator",
+    contributors: "Contributors"
+
+  }
+
+  def create_parallel_plain_text(uid, bib_stub)
+    allow(bib_stub).to receive(uid).and_return(
+      [double("paired_text",
+        transliterated: double("text", text: Faker::Lorem.sentence),
+        original: double("text", text: Faker::Lorem.sentence))]
+    )
+  end
 
   before(:each) do
     plain_text_fields = (single_string_fields.keys + multiple_string_fields.keys).map do |f|
       [f, [OpenStruct.new(text: f.to_s), OpenStruct.new(text: "something_else")]]
+    end.to_h
+
+    # parallel_plain_text_fields = my_parallel_plain_text_fields.keys.map do |uid|
+    #   [uid, [
+    #     double("paired_text",
+    #       transliterated: double("text", text: Faker::Lorem.sentence),
+    #       original: double("text", text: Faker::Lorem.sentence))
+    #   ]]
+    # end.to_h
+
+    parallel_link_to_fields = my_parallel_link_to_fields.keys.map do |uid|
+      [uid, [
+        double("paired_text",
+          transliterated: double("text", text: Faker::Lorem.sentence, url: Faker::Internet.url),
+          original: double("text", text: Faker::Lorem.sentence, url: Faker::Internet.url))
+      ]]
+    end.to_h
+
+    author_browse_bib_fields = author_browse_fields.keys.map do |f|
+      [f, [
+
+        double("paired",
+          transliterated: double("author_browse",
+            text: Faker::Lorem.sentence,
+            url: Faker::Internet.url,
+            browse_url: Faker::Internet.url,
+            kind: "author"),
+          original: double("author_browse",
+            text: Faker::Lorem.sentence,
+            url: Faker::Internet.url,
+            browse_url: Faker::Internet.url,
+            kind: "author"))
+
+      ]]
     end.to_h
 
     browse_bib_fields = browse_fields.keys.map do |f|
@@ -80,32 +132,20 @@ describe Search::Presenters::Record::Catalog::Full do
     end.to_h
 
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
-      title: "This is a title",
-      vernacular_title: "This is a v title",
+      title: double("paired",
+        transliterated: double("text", text: Faker::Book.title),
+        original: double("text", text: Faker::Book.title)),
       format: [
         OpenStruct.new(text: "format_text", icon: "icon_name")
       ],
-      main_author: OpenStruct.new(
-        text: "main_author_text",
-        url: "main_author_url",
-        browse_url: "main_author_browse_url",
-        kind: "browse"
-      ),
-      vernacular_main_author: OpenStruct.new(
-        text: "vernacular_main_author_text",
-        url: "vernacular_main_author_url",
-        browse_url: "vernacular_main_author_browse_url",
-        kind: "browse"
-      ),
-      other_titles: [
-        OpenStruct.new(text: "other_title_text", url: "other_title_search")
-      ],
-      related_title: [
-        OpenStruct.new(text: "related_title_text", url: "related_title_search")
-      ],
       academic_discipline: [
-        ["Science", "Engineering"]
+        OpenStruct.new(disciplines: [
+          OpenStruct.new(text: Faker::Lorem.word, url: Faker::Internet.url)
+        ])
       ],
+      **parallel_link_to_fields,
+      **author_browse_bib_fields,
+      # **parallel_plain_text_fields,
       **plain_text_fields,
       **browse_bib_fields)
   end
@@ -115,45 +155,56 @@ describe Search::Presenters::Record::Catalog::Full do
   context "#title" do
     it "returns a title array for both title and v title when v title is present" do
       title = subject.title
-      expect(title.first.text).to eq("This is a title")
-      expect(title.first.css_class).to eq("title")
-      expect(title[1].text).to eq("This is a v title")
-      expect(title[1].css_class).to eq("vernacular")
+      expect(title.first.text).to eq(@bib_stub.title.transliterated.text)
+      expect(title.first.css_class).to eq("title-primary")
+      expect(title[1].text).to eq(@bib_stub.title.original.text)
+      expect(title[1].css_class).to eq("title-secondary")
     end
-    it "only returns a default script title when there isn't a vernacular title" do
-      allow(@bib_stub).to receive(:vernacular_title).and_return(nil)
+    it "only returns original if that's all there is" do
+      allow(@bib_stub.title).to receive(:transliterated).and_return(nil)
       title = subject.title
+      expect(title.first.text).to eq(@bib_stub.title.original.text)
+      expect(title.first.css_class).to eq("title-primary")
       expect(title.count).to eq(1)
-      expect(title.first.text).to eq("This is a title")
-      expect(title.first.css_class).to eq("title")
+    end
+    it "only returns transliterated if that's all there is; this should never happen" do
+      allow(@bib_stub.title).to receive(:original).and_return(nil)
+      title = subject.title
+      expect(title.first.text).to eq(@bib_stub.title.transliterated.text)
+      expect(title.first.css_class).to eq("title-primary")
+      expect(title.count).to eq(1)
     end
   end
-  context "#main_author" do
-    it "returns an appropriate field" do
-      expect(subject.main_author.field).to eq("Author/Creator")
-    end
-    it "has the main_author has the first object" do
-      ma = subject.main_author.data.first
-      expect(ma.partial).to eq("browse")
-      expect(ma.locals).to eq(@bib_stub.main_author)
-    end
-    it "has the vernacular main_author as the second field" do
-      vma = subject.main_author.data[1]
-      expect(vma.partial).to eq("browse")
-      expect(vma.locals).to eq(@bib_stub.vernacular_main_author)
-    end
-    it "handles missing vernacular main author" do
-      allow(@bib_stub).to receive(:vernacular_main_author).and_return(nil)
-      expect(subject.main_author.data.count).to eq(1)
+
+  context "Author Browse Fields" do
+    author_browse_fields.each do |uid, name|
+      context "##{uid}" do
+        it "returns an appropriate field" do
+          expect(subject.public_send(uid).field).to eq(name)
+        end
+        it "returns a 'parallel_browse' partial" do
+          expect(subject.public_send(uid).partial).to eq("parallel_browse")
+        end
+        it "returns values that match model" do
+          expect(subject.public_send(uid).values.first.original.text).to eq(@bib_stub.public_send(uid).first.original.text)
+        end
+        it "returns nil if #{uid} is nil" do
+          allow(@bib_stub).to receive(uid).and_return([])
+          expect(subject.public_send(uid)).to be_nil
+        end
+      end
     end
   end
   context "#academic_discipline" do
     it "returns an appropriate field" do
       expect(subject.academic_discipline.field).to eq("Academic Discipline")
     end
+    it "returns an 'academic_discipline' partial" do
+      expect(subject.academic_discipline.partial).to eq("academic_discipline")
+    end
     it "returns an academic_discipline object for data" do
-      expect(subject.academic_discipline.data.first.partial).to eq("academic_discipline")
-      expect(subject.academic_discipline.data.first.locals.disciplines).to eq(@bib_stub.academic_discipline.first)
+      first_discipline = subject.academic_discipline.values.first.disciplines.first
+      expect(first_discipline).to eq(@bib_stub.academic_discipline.first.disciplines.first)
     end
   end
   context "Array browse fields" do
@@ -162,10 +213,14 @@ describe Search::Presenters::Record::Catalog::Full do
         it "returns the appropriate field" do
           expect(subject.public_send(field).field).to eq(name)
         end
-        it "returns a browse object for data" do
-          expect(subject.public_send(field).data.first.partial).to eq("browse")
-          expect(subject.public_send(field).data.first.locals).to eq(@bib_stub.public_send(field).first)
+        it "returns a 'browse' partial" do
+          expect(subject.public_send(field).partial).to eq("browse")
         end
+
+        it "returns values that match model" do
+          expect(subject.public_send(field).values).to eq(@bib_stub.public_send(field))
+        end
+
         it "returns nil if #{field} is nil" do
           allow(@bib_stub).to receive(field).and_return([])
           expect(subject.public_send(field)).to be_nil
@@ -173,37 +228,62 @@ describe Search::Presenters::Record::Catalog::Full do
       end
     end
   end
-  context "#other_titles" do
-    it "returns the appropriate field" do
-      expect(subject.other_titles.field).to eq("Other Titles")
-    end
-    it "returns a link_to object for data entity" do
-      expect(subject.other_titles.data.first.partial).to eq("link_to")
-      expect(subject.other_titles.data.first.locals).to eq(@bib_stub.other_titles.first)
-    end
-  end
-  context "#related_title" do
-    it "returns the appropriate field" do
-      expect(subject.related_title.field).to eq("Related Title")
-    end
-    it "returns a link_to object for data entity" do
-      expect(subject.related_title.data.first.partial).to eq("link_to")
-      expect(subject.related_title.data.first.locals).to eq(@bib_stub.related_title.first)
+  context "Parallel link_to fields" do
+    my_parallel_link_to_fields.each do |uid, name|
+      context "##{uid}" do
+        it "returns the appropriate field" do
+          expect(subject.public_send(uid).field).to eq(name)
+        end
+        it "returns a parallel_link_to partial" do
+          expect(subject.public_send(uid).partial).to eq("parallel_link_to")
+        end
+        it "returns the appropriate values" do
+          expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
+        end
+      end
     end
   end
 
+  context "Parallel plain text fields" do
+    my_parallel_plain_text_fields.each do |uid, name|
+      before(:each) do
+        create_parallel_plain_text(uid, @bib_stub)
+      end
+      context "##{uid}" do
+        it "returns the appropriate field" do
+          expect(subject.public_send(uid).field).to eq(name)
+        end
+        it "returns the appropriate partial" do
+          expect(subject.public_send(uid).partial).to eq("parallel_plain_text")
+        end
+        it "returns the appropriate data" do
+          expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
+        end
+        it "returns nil if #{uid} is nil" do
+          allow(@bib_stub).to receive(uid).and_return([])
+          expect(subject.public_send(uid)).to be_nil
+        end
+      end
+    end
+  end
   context "Multiple String plain text fields" do
     multiple_string_fields.each do |field, name|
       context "##{field}" do
         it "returns the appropriate field" do
           expect(subject.public_send(field).field).to eq(name)
         end
-        it "returns a plain_text object for data entity" do
-          expect(subject.public_send(field).data.first.partial).to eq("plain_text")
-          expect(subject.public_send(field).data.first.locals).to eq(@bib_stub.public_send(field).first)
+        it "returns a 'plain_text' partial" do
+          expect(subject.public_send(field).partial).to eq("plain_text")
+        end
+        it "returns a values from model" do
+          expect(subject.public_send(field).values).to eq(@bib_stub.public_send(field))
         end
         it "can have more than one data entity" do
-          expect(subject.public_send(field).data.count).to eq(2)
+          expect(subject.public_send(field).values.count).to eq(2)
+        end
+        it "returns nil if #{field} is nil" do
+          allow(@bib_stub).to receive(field).and_return([])
+          expect(subject.public_send(field)).to be_nil
         end
       end
     end
@@ -215,12 +295,18 @@ describe Search::Presenters::Record::Catalog::Full do
         it "returns the appropriate field" do
           expect(subject.public_send(field).field).to eq(name)
         end
-        it "returns a plain_text object for data entity" do
-          expect(subject.public_send(field).data.first.partial).to eq("plain_text")
-          expect(subject.public_send(field).data.first.locals).to eq(@bib_stub.public_send(field).first)
+        it "returns the appropriate partial" do
+          expect(subject.public_send(field).partial).to eq("plain_text")
         end
-        it "can have more than one data entity" do
-          expect(subject.public_send(field).data.count).to eq(1)
+        it "returns values from the model" do
+          expect(subject.public_send(field).values.first).to eq(@bib_stub.public_send(field).first)
+        end
+        it "can have more than one values entity" do
+          expect(subject.public_send(field).values.count).to eq(1)
+        end
+        it "returns nil if #{field} is nil" do
+          allow(@bib_stub).to receive(field).and_return([])
+          expect(subject.public_send(field)).to be_nil
         end
       end
     end
