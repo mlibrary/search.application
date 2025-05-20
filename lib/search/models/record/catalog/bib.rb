@@ -85,7 +85,7 @@ class Search::Models::Record::Catalog::Bib
   def _map_text_field(uid)
     _map_field(uid) do |item|
       Item.new(item)
-    end
+    end.uniq(&:text)
   end
 
   def _map_paired_field(uid)
@@ -104,10 +104,10 @@ class Search::Models::Record::Catalog::Bib
   end
 
   def _map_field(uid)
-    list = @data.dig(uid) || []
+    list = @data.dig(uid.to_s) || []
     list.map do |item|
       yield(item)
-    end.uniq(&:text)
+    end
   end
 
   # to include this, the class needs to have @data with a "search" key
