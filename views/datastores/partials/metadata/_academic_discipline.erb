@@ -1,3 +1,7 @@
 <% values.each do |value| %>
-  <%= value %>
+  <ol class="list__no-style academic-discipline__list">
+    <% value.disciplines.each do |discipline| %>
+      <li><%= link_to(body: discipline.text, url: discipline.url) %></li>
+    <% end %>
+  </ol>
 <% end %>

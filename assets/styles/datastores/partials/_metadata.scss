@@ -1,8 +1,8 @@
 @use './metadata/format';
 @use './metadata/parallel_browse';
+@use './metadata/academic_discipline';
 @use '../../utilities';
 @use '../../media';
-@use '../../typography';
 
 // --------------------------------------------------
 //
@@ -11,10 +11,7 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Container
-//   3. Information
-//     3.1. Field
-//     3.2. Data
+//   2. Tbody
 //
 // --------------------------------------------------
 
@@ -28,10 +25,20 @@ $class: ".metadata";
 
 
 
-// ******************** //
-// *** 2. CONTAINER *** //
-// ******************** //
+// **************** //
+// *** 2. TBODY *** //
+// **************** //
 
-#{$class} {
-  
+#{$class} tbody tr {
+  @include utilities.flex($align: start, $responsive: true);
+  & {
+    gap: 0;
+  }
+  @include media.breakpoint($breakpoint: xs) {
+    display: table-row;
+    th {
+      border-right: 1rem solid transparent; // Space between rows because we can't use margin or padding
+      width: 10rem;
+    }
+  }
 }

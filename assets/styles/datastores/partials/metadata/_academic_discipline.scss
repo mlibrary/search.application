@@ -1,0 +1,55 @@
+@use '../../../utilities';
+@use '../../../icons';
+
+// --------------------------------------------------
+//
+// # Academic Discipline
+//   Styles to apply directly to `views/datastores/partials/metadata/_academic_discipline.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. List
+//     2.1. List Item
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.academic-discipline__list';
+$gap: 0 0.25rem;
+
+
+
+
+
+// *************** //
+// *** 2. LIST *** //
+// *************** //
+
+#{$class} {
+  @include utilities.flex($align: start, $responsive: true, $wrap: true);
+  & {
+    gap: $gap;
+  }
+}
+
+
+
+// *                * //
+// * 2.1. LIST ITEM * //
+// *                * //
+
+#{$class} > li {
+  @include utilities.flex($align: start);
+  & {
+    gap: $gap;
+    & + li:before {
+      @include icons.icon($icon: 'keyboard_arrow_right');
+      & {
+        color: var(--color-neutral-300);
+      }
+    }
+  }
+}
