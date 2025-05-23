@@ -4,7 +4,7 @@
       <% if value.url.present?%>
         <%= link_to(body: value, url: value.url) %>
       <% else %> 
-        <%= value %>
+        <span><%= value %></span>
       <% end %>
 
       <span class="browse__link">

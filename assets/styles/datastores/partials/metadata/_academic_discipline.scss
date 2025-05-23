@@ -33,6 +33,9 @@ $gap: 0 0.25rem;
   & {
     gap: $gap;
   }
+  & + & {
+    margin-top: 0.5rem;
+  }
 }
 
 

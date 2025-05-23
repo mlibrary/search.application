@@ -1,18 +1,27 @@
-<ul class="list__no-style">
+<ul class="list__no-style paired-fields">
   <% values.each do |value| %>
-    <% if value.transliterated %>
-      <li class="metadata__information--transliterated">
-        <%= link_to(body: value.transliterated, url: value.transliterated.url) %>
+    <li>
+      <% if value.transliterated %>
+      <ul class="list__no-style">
+        <li class="metadata__information--transliterated">
+          <%= link_to(body: value.transliterated, url: value.transliterated.url) %>
+          <span class="browse__link">
+            <%= link_to(body: "Browse in #{value.transliterated.kind} list", url: value.transliterated.browse_url) %>
+          </span>
+        </li>
+        <li class="metadata__information--original">
+          <%= link_to(body: value.original, url: value.original.url) %>
+          <span class="browse__link">
+            <%= link_to(body: "Browse in #{value.original.kind} list", url: value.original.browse_url) %>
+          </span>
+        </li>
+      </ul>
+      <% else %>
+        <%= link_to(body: value.original, url: value.original.url) %>
         <span class="browse__link">
-          <%= link_to(body: "Browse in #{value.transliterated.kind} list", url: value.transliterated.browse_url) %>
+          <%= link_to(body: "Browse in #{value.original.kind} list", url: value.original.browse_url) %>
         </span>
-      </li>
-    <% end %>
-    <li class="metadata__information--original">
-      <%= link_to(body: value.original, url: value.original.url) %>
-      <span class="browse__link">
-        <%= link_to(body: "Browse in #{value.original.kind} list", url: value.original.browse_url) %>
-      </span>
+      <% end %>
     </li>
   <% end %>
 </ul>

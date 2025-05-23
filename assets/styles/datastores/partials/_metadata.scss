@@ -12,6 +12,7 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Tbody
+//     2.1. Paired Fields
 //
 // --------------------------------------------------
 
@@ -33,12 +34,25 @@ $class: ".metadata";
   @include utilities.flex($align: start, $responsive: true);
   & {
     gap: 0;
+    & + tr {
+      border-top: 0.5rem solid transparent; // Space between rows because we can't use margin or padding
+    }
   }
   @include media.breakpoint($breakpoint: xs) {
     display: table-row;
     th {
-      border-right: 1rem solid transparent; // Space between rows because we can't use margin or padding
-      width: 10rem;
+      padding-right: 1rem;
+      width: 11rem;
     }
   }
+}
+
+
+
+// *                   * //
+// * 2.1 PAIRED FIELDS * //
+// *                   * //
+
+#{$class} tbody ul.paired-fields:has(> li > ul) > li + li {
+  margin-top: 0.5rem;
 }
