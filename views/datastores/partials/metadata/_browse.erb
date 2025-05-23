@@ -1,4 +1,4 @@
-<ul class="list__no-style">
+<ul class="list__no-style browse-fields">
   <% values.each do |value| %>
     <li class="metadata__information--original">
       <% if value.url.present?%>
@@ -6,8 +6,7 @@
       <% else %> 
         <span><%= value %></span>
       <% end %>
-
-      <span class="browse__link">
+      <span class="browse-field__link">
         <%= link_to(body: "Browse in #{value.kind} list", url: value.browse_url) %>
       </span>
     </li>

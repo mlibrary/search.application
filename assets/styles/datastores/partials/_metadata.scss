@@ -1,8 +1,8 @@
 @use './metadata/format';
-@use './metadata/parallel_browse';
 @use './metadata/academic_discipline';
 @use '../../utilities';
 @use '../../media';
+@use '../../typography';
 
 // --------------------------------------------------
 //
@@ -55,4 +55,35 @@ $class: ".metadata";
 
 #{$class} tbody ul.paired-fields:has(> li > ul) > li + li {
   margin-top: 0.5rem;
+}
+
+
+
+// *                   * //
+// * 2.2 BROWSE FIELDS * //
+// *                   * //
+
+#{$class} tbody ul.browse-fields li {
+  .browse-field__link {
+    display: block;
+    @include media.breakpoint($breakpoint: xs) {
+      display: initial;
+      padding-left: 0.25rem;
+    }
+    &,
+    & > * {
+      color: var(--search-color-grey-600);
+      font-size: typography.$size-small;
+    }
+    &:before {
+      border-left: 1px solid var(--color-neutral-300);
+      content: '';
+      display: inline-block;
+      height: 1em;
+      margin-right: 0.25rem;
+      position: relative;
+      top: 0.125rem;
+      width: 0;
+    }
+  }
 }
