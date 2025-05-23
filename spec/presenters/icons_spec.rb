@@ -15,6 +15,10 @@ RSpec.describe Search::Presenters::Icons do
       expect(icons.all.first).to eq("aaa")
       expect(icons.all.last).to eq("zzz")
     end
+    it "has unique icons" do
+      icons = described_class.new(["book", "book"])
+      expect(icons.all.tally["book"]).to eq(1)
+    end
   end
   context "#to_s" do
     it "returns the icons as a comma separated string" do
