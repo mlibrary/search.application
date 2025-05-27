@@ -1,6 +1,6 @@
 <ul class="list__no-style browse-fields">
   <% values.each do |value| %>
-    <li class="metadata__information--original">
+    <li>
       <% if value.url.present?%>
         <%= link_to(body: value, url: value.url) %>
       <% else %> 

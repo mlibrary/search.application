@@ -13,6 +13,7 @@
 //   1. Variables
 //   2. Tbody
 //     2.1. Paired Fields
+//     2.2. Browse Fields
 //
 // --------------------------------------------------
 
@@ -86,4 +87,14 @@ $class: ".metadata";
       width: 0;
     }
   }
+}
+
+
+
+// *            * //
+// * 2.3 TOGGLE * //
+// *            * //
+
+body.no-javascript #{$class} #{$class}__toggle {
+  display: none;
 }

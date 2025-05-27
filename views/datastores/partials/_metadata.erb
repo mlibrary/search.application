@@ -13,6 +13,9 @@
         </th>
         <td>
           <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { values: data } %>
+          <button class="button__ghost metadata__toggle" aria-expanded="false" aria-controls="<%= data.uid %>">
+            Show all
+          </button>
         </td>
       </tr>
     <% end %>
