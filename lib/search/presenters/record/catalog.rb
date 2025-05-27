@@ -149,7 +149,7 @@ module Search
 
           def format
             Field.for(
-              uid: "formats",
+              uid: "format",
               field: "Formats",
               partial: "format",
               values: @record.bib.format

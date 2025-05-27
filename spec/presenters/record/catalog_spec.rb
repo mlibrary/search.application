@@ -176,6 +176,21 @@ describe Search::Presenters::Record::Catalog::Full do
     end
   end
 
+  context "#format" do
+    it "returns the appropriate uid" do
+      expect(subject.format.uid).to eq("format")
+    end
+    it "returns an appropriate field" do
+      expect(subject.format.field).to eq("Formats")
+    end
+    it "returns a 'format' partial" do
+      expect(subject.format.partial).to eq("format")
+    end
+    it "returns a format object for data" do
+      first_format = subject.format.values.first
+      expect(first_format).to eq(@bib_stub.format.first)
+    end
+  end
   context "Author Browse Fields" do
     author_browse_fields.each do |uid, name|
       context "##{uid}" do
