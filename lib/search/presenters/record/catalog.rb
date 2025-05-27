@@ -149,6 +149,7 @@ module Search
 
           def format
             Field.for(
+              uid: "formats",
               field: "Formats",
               partial: "format",
               values: @record.bib.format
@@ -162,6 +163,7 @@ module Search
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
                 Field.for(
+                  uid: f[:uid],
                   field: f[:field],
                   partial: "parallel_browse",
                   values: @record.bib.public_send(f[:uid])
@@ -177,6 +179,7 @@ module Search
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
                 Field.for(
+                  uid: f[:uid],
                   field: f[:field],
                   partial: "browse",
                   values: @record.bib.public_send(f[:uid])
@@ -192,6 +195,7 @@ module Search
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
                 Field.for(
+                  uid: f[:uid],
                   field: f[:field],
                   partial: "parallel_link_to",
                   values: @record.bib.public_send(f[:uid])
@@ -252,6 +256,7 @@ module Search
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
                 Field.for(
+                  uid: f[:uid],
                   field: f[:field],
                   partial: "parallel_plain_text",
                   values: @record.bib.public_send(f[:uid])
@@ -269,6 +274,7 @@ module Search
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
                 Field.for(
+                  uid: f[:uid],
                   field: f[:field],
                   partial: "plain_text",
                   values: @record.bib.public_send(f[:uid]).slice(0, 1)
@@ -287,6 +293,7 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               Field.for(field: f[:field],
+                uid: f[:uid],
                 partial: "plain_text",
                 values: @record.bib.public_send(f[:uid]))
             end
@@ -294,6 +301,7 @@ module Search
 
           def academic_discipline
             Field.for(
+              uid: "academic_discipline",
               field: "Academic Discipline",
               partial: "academic_discipline",
               values: @record.bib.academic_discipline
@@ -302,14 +310,15 @@ module Search
         end
 
         class Field
-          def self.for(field:, partial:, values:)
-            new(field: field, partial: partial, values: values) if values.present?
+          def self.for(field:, partial:, values:, uid: nil)
+            new(uid: uid, field: field, partial: partial, values: values) if values.present?
           end
-          attr_reader :field, :partial, :values
-          def initialize(field:, partial:, values:)
+          attr_reader :uid, :field, :partial, :values
+          def initialize(field:, partial:, values:, uid: nil)
             @field = field
             @partial = partial
             @values = values
+            @uid = uid
           end
 
           include Enumerable

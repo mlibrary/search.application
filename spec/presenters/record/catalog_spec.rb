@@ -179,6 +179,9 @@ describe Search::Presenters::Record::Catalog::Full do
   context "Author Browse Fields" do
     author_browse_fields.each do |uid, name|
       context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
         it "returns an appropriate field" do
           expect(subject.public_send(uid).field).to eq(name)
         end
@@ -196,6 +199,9 @@ describe Search::Presenters::Record::Catalog::Full do
     end
   end
   context "#academic_discipline" do
+    it "returns the appropriate uid" do
+      expect(subject.academic_discipline.uid).to eq("academic_discipline")
+    end
     it "returns an appropriate field" do
       expect(subject.academic_discipline.field).to eq("Academic Discipline")
     end
@@ -208,22 +214,25 @@ describe Search::Presenters::Record::Catalog::Full do
     end
   end
   context "Array browse fields" do
-    browse_fields.each do |field, name|
-      context "##{field}" do
-        it "returns the appropriate field" do
-          expect(subject.public_send(field).field).to eq(name)
+    browse_fields.each do |uid, name|
+      context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
+        it "returns the appropriate field name" do
+          expect(subject.public_send(uid).field).to eq(name)
         end
         it "returns a 'browse' partial" do
-          expect(subject.public_send(field).partial).to eq("browse")
+          expect(subject.public_send(uid).partial).to eq("browse")
         end
 
         it "returns values that match model" do
-          expect(subject.public_send(field).values).to eq(@bib_stub.public_send(field))
+          expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
         end
 
-        it "returns nil if #{field} is nil" do
-          allow(@bib_stub).to receive(field).and_return([])
-          expect(subject.public_send(field)).to be_nil
+        it "returns nil if #{uid} is nil" do
+          allow(@bib_stub).to receive(uid).and_return([])
+          expect(subject.public_send(uid)).to be_nil
         end
       end
     end
@@ -231,6 +240,9 @@ describe Search::Presenters::Record::Catalog::Full do
   context "Parallel link_to fields" do
     my_parallel_link_to_fields.each do |uid, name|
       context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
         it "returns the appropriate field" do
           expect(subject.public_send(uid).field).to eq(name)
         end
@@ -250,6 +262,9 @@ describe Search::Presenters::Record::Catalog::Full do
         create_parallel_plain_text(uid, @bib_stub)
       end
       context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
         it "returns the appropriate field" do
           expect(subject.public_send(uid).field).to eq(name)
         end
@@ -267,46 +282,52 @@ describe Search::Presenters::Record::Catalog::Full do
     end
   end
   context "Multiple String plain text fields" do
-    multiple_string_fields.each do |field, name|
-      context "##{field}" do
-        it "returns the appropriate field" do
-          expect(subject.public_send(field).field).to eq(name)
+    multiple_string_fields.each do |uid, name|
+      context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
+        it "returns the appropriate field name" do
+          expect(subject.public_send(uid).field).to eq(name)
         end
         it "returns a 'plain_text' partial" do
-          expect(subject.public_send(field).partial).to eq("plain_text")
+          expect(subject.public_send(uid).partial).to eq("plain_text")
         end
         it "returns a values from model" do
-          expect(subject.public_send(field).values).to eq(@bib_stub.public_send(field))
+          expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
         end
         it "can have more than one data entity" do
-          expect(subject.public_send(field).values.count).to eq(2)
+          expect(subject.public_send(uid).values.count).to eq(2)
         end
-        it "returns nil if #{field} is nil" do
-          allow(@bib_stub).to receive(field).and_return([])
-          expect(subject.public_send(field)).to be_nil
+        it "returns nil if #{uid} is nil" do
+          allow(@bib_stub).to receive(uid).and_return([])
+          expect(subject.public_send(uid)).to be_nil
         end
       end
     end
   end
 
   context "Single String plain text fields" do
-    single_string_fields.each do |field, name|
-      context "##{field}" do
-        it "returns the appropriate field" do
-          expect(subject.public_send(field).field).to eq(name)
+    single_string_fields.each do |uid, name|
+      context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
+        it "returns the appropriate field name" do
+          expect(subject.public_send(uid).field).to eq(name)
         end
         it "returns the appropriate partial" do
-          expect(subject.public_send(field).partial).to eq("plain_text")
+          expect(subject.public_send(uid).partial).to eq("plain_text")
         end
         it "returns values from the model" do
-          expect(subject.public_send(field).values.first).to eq(@bib_stub.public_send(field).first)
+          expect(subject.public_send(uid).values.first).to eq(@bib_stub.public_send(uid).first)
         end
         it "can have more than one values entity" do
-          expect(subject.public_send(field).values.count).to eq(1)
+          expect(subject.public_send(uid).values.count).to eq(1)
         end
-        it "returns nil if #{field} is nil" do
-          allow(@bib_stub).to receive(field).and_return([])
-          expect(subject.public_send(field)).to be_nil
+        it "returns nil if #{uid} is nil" do
+          allow(@bib_stub).to receive(uid).and_return([])
+          expect(subject.public_send(uid)).to be_nil
         end
       end
     end
