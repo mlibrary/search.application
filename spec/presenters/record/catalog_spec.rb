@@ -52,20 +52,23 @@ describe Search::Presenters::Record::Catalog::Full do
     other_titles: "Other Titles"
   }
   single_string_fields = {
-    gov_doc_no: "Government Document Number",
+    contents: "Contents",
+    gov_doc_number: "Government Document Number",
     publisher_number: "Publisher Number",
     report_number: "Report Number"
   }
   multiple_string_fields = {
     language: "Language",
     oclc: "OCLC Number",
+    other_subjects: "Subjects (Other)",
     isbn: "ISBN",
     issn: "ISSN",
     bookplate: "Donor Information"
   }
   browse_fields = {
     call_number: "Call Number",
-    lcsh_subjects: "Subjects (LCSH)"
+    lc_subjects: "Subjects (LCSH)",
+    remediated_lc_subjects: "Subjects (Local)"
   }
   author_browse_fields = {
     main_author: "Author/Creator",

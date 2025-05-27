@@ -70,18 +70,18 @@ module Search
             :issn, # 00-catalog marc_issn
             :call_number, # 00-catalog callnumber_browse
             :oclc,
-            :gov_doc_no,
+            :gov_doc_number,
             :publisher_number,
             :report_number,
             :chronology,
             :place,
             :printer,
             :association,
-            :lcsh_subjects, # 00-catalog lc_subject_display
-            :remediated_lcsh_subjects, # 00-catalog remediated_lc_subject_display
+            :lc_subjects,
+            :remediated_lc_subjects,
             :other_subjects,
             :academic_discipline,
-            :contents_listing, # 00-catalog contents_listing
+            :contents, # 00-catalog contents_listing
             :bookplate,
             :extended_summary
           ]
@@ -173,7 +173,8 @@ module Search
 
           [
             {uid: :call_number, field: "Call Number"},
-            {uid: :lcsh_subjects, field: "Subjects (LCSH)"}
+            {uid: :lc_subjects, field: "Subjects (LCSH)"},
+            {uid: :remediated_lc_subjects, field: "Subjects (Local)"}
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
@@ -266,7 +267,8 @@ module Search
 
           # Plain content, single field display
           [
-            {uid: :gov_doc_no, field: "Government Document Number"},
+            {uid: :contents, field: "Contents"},
+            {uid: :gov_doc_number, field: "Government Document Number"},
             {uid: :publisher_number, field: "Publisher Number"},
             {uid: :report_number, field: "Report Number"}
           ].each do |f|
@@ -288,7 +290,8 @@ module Search
             {uid: :isbn, field: "ISBN"},
             {uid: :issn, field: "ISSN"},
             {uid: :language, field: "Language"},
-            {uid: :oclc, field: "OCLC Number"}
+            {uid: :oclc, field: "OCLC Number"},
+            {uid: :other_subjects, field: "Subjects (Other)"}
           ].each do |f|
             define_method(f[:uid]) do
               Field.for(field: f[:field],

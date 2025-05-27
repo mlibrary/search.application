@@ -9,7 +9,7 @@ class Search::Models::Record::Catalog::Bib
   end
 
   [:access, :arrangement, :association, :audience, :awards, :bibliography,
-    :biography_history, :chronology, :content_advice, :copy_specific_note,
+    :biography_history, :chronology, :contents, :content_advice, :copy_specific_note,
     :copyright, :copyright_status_information, :created,
     :current_publication_frequency, :date_place_of_event, :distributed, :edition,
     :extended_summary, :former_publication_frequency, :funding_information,
@@ -63,9 +63,11 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  def lcsh_subjects
-    _map_field("lcsh_subjects") do |item|
-      SubjectBrowseItem.new(item)
+  [:lc_subjects, :remediated_lc_subjects].each do |uid|
+    define_method(uid) do
+      _map_field(uid.to_s) do |item|
+        SubjectBrowseItem.new(item)
+      end
     end
   end
 
@@ -75,7 +77,7 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  [:bookplate, :language, :oclc, :isbn, :gov_doc_no, :publisher_number,
+  [:bookplate, :language, :oclc, :isbn, :gov_doc_number, :publisher_number, :other_subjects,
     :report_number, :issn].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
