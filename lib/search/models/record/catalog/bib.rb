@@ -14,7 +14,7 @@ class Search::Models::Record::Catalog::Bib
     :current_publication_frequency, :date_place_of_event, :distributed, :edition,
     :extended_summary, :former_publication_frequency, :funding_information,
     :in_collection, :language_note, :location_of_originals, :manufactured,
-    :map_scale, :note, :numbering, :numbering_notes, :original_version_note,
+    :map_scale, :media_format, :note, :numbering, :numbering_notes, :original_version_note,
     :performers, :physical_description, :place, :playing_time,
     :preferred_citation, :printer, :production_credits, :published, :references,
     :related_items, :reproduction_note, :series, :series_statement,
@@ -39,9 +39,11 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  def other_titles
-    _map_paired_field("other_titles") do |item|
-      LinkToItem.new(item)
+  [:new_title, :other_titles, :previous_title, :releated_title].each do |uid|
+    define_method(uid) do
+      _map_paired_field(uid.to_s) do |item|
+        LinkToItem.new(item)
+      end
     end
   end
 
@@ -77,8 +79,9 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  [:bookplate, :language, :oclc, :isbn, :gov_doc_number, :publisher_number, :other_subjects,
-    :report_number, :issn].each do |uid|
+  [:bookplate, :language, :oclc, :isbn, :gov_doc_number, :new_title_issn,
+    :previous_title_issn, :publisher_number, :other_subjects, :report_number,
+    :issn].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 

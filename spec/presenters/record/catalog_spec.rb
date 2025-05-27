@@ -25,6 +25,7 @@ describe Search::Presenters::Record::Catalog::Full do
     location_of_originals: "Location of Originals",
     manufactured: "Manufactured",
     map_scale: "Map Scale",
+    media_format: "Media Format",
     note: "Note",
     numbering: "Numbering",
     numbering_notes: "Numbering Note",
@@ -48,7 +49,9 @@ describe Search::Presenters::Record::Catalog::Full do
     terms_of_use: "Terms of Use"
   }
   my_parallel_link_to_fields = {
+    new_title: "New Title",
     related_title: "Related Title",
+    previous_title: "Previous Title",
     other_titles: "Other Titles"
   }
   single_string_fields = {
@@ -58,12 +61,14 @@ describe Search::Presenters::Record::Catalog::Full do
     report_number: "Report Number"
   }
   multiple_string_fields = {
-    language: "Language",
-    oclc: "OCLC Number",
-    other_subjects: "Subjects (Other)",
+    bookplate: "Donor Information",
     isbn: "ISBN",
     issn: "ISSN",
-    bookplate: "Donor Information"
+    language: "Language",
+    new_title_issn: "New Title ISSN",
+    previous_title_issn: "Previous Title ISSN",
+    oclc: "OCLC Number",
+    other_subjects: "Subjects (Other)"
   }
   browse_fields = {
     call_number: "Call Number",

@@ -31,13 +31,14 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   [:access, :arrangement, :association, :audience, :awards, :bibliography,
     :biography_history, :chronology, :contents, :content_advice,
     :copy_specific_note, :copyright, :copyright_status_information, :created,
-    :current_publication_frequency, :date_place_of_event, :distributed, :edition,
-    :extended_summary, :former_publication_frequency, :funding_information,
-    :in_collection, :language_note, :location_of_originals, :manufactured,
-    :map_scale, :note, :numbering, :numbering_notes, :original_version_note,
-    :performers, :physical_description, :place, :playing_time,
-    :preferred_citation, :printer, :production_credits, :published, :references,
-    :related_items, :reproduction_note, :series, :series_statement,
+    :current_publication_frequency, :date_place_of_event, :distributed,
+    :edition, :extended_summary, :former_publication_frequency,
+    :funding_information, :in_collection, :language_note,
+    :location_of_originals, :manufactured, :map_scale, :media_format, :note,
+    :numbering, :numbering_notes, :original_version_note, :performers,
+    :physical_description, :place, :playing_time, :preferred_citation, :printer,
+    :production_credits, :published, :references, :related_items,
+    :reproduction_note, :series, :series_statement,
     :source_of_acquisition, :source_of_description_note, :summary, :terms_of_use].each do |field|
     context "##{field}" do
       it "has transliterated and original text" do
@@ -52,7 +53,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     end
   end
 
-  ["other_titles", "related_title"].each do |field|
+  ["new_title", "other_titles", "previous_title", "related_title"].each do |field|
     context "##{field}" do
       it "has text and search" do
         expected = {
@@ -172,7 +173,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     end
   end
 
-  [:bookplate, :gov_doc_number, :isbn, :issn, :language, :oclc, :other_subjects, :publisher_number,
+  [:bookplate, :gov_doc_number, :isbn, :issn, :language, :oclc, :other_subjects,
+    :new_title_issn, :previous_title_issn, :publisher_number,
     :report_number].each do |uid|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do

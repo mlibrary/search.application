@@ -189,7 +189,9 @@ module Search
           end
 
           [
+            {uid: :new_title, field: "New Title"},
             {uid: :other_titles, field: "Other Titles"},
+            {uid: :previous_title, field: "Previous Title"},
             {uid: :related_title, field: "Related Title"}
           ].each do |f|
             define_method(f[:uid]) do
@@ -231,6 +233,7 @@ module Search
             {uid: :location_of_originals, field: "Location of Originals"},
             {uid: :manufactured, field: "Manufactured"},
             {uid: :map_scale, field: "Map Scale"},
+            {uid: :media_format, field: "Media Format"},
             {uid: :note, field: "Note"},
             {uid: :numbering, field: "Numbering"},
             {uid: :numbering_notes, field: "Numbering Note"},
@@ -290,6 +293,8 @@ module Search
             {uid: :isbn, field: "ISBN"},
             {uid: :issn, field: "ISSN"},
             {uid: :language, field: "Language"},
+            {uid: :new_title_issn, field: "New Title ISSN"},
+            {uid: :previous_title_issn, field: "Previous Title ISSN"},
             {uid: :oclc, field: "OCLC Number"},
             {uid: :other_subjects, field: "Subjects (Other)"}
           ].each do |f|
