@@ -32,10 +32,10 @@ module Factories
         "location_of_originals", "map_scale", "media_format", "note",
         "numbering", "numbering_notes", "original_version_note", "performers",
         "physical_description", "place", "playing_time", "preferred_citation",
-        "printer", "production_credits", "title", "published", "manufactured",
-        "edition", "series", "references", "related_items", "reproduction_note",
-        "source_of_acquisition", "source_of_description_note", "summary",
-        "terms_of_use",
+        "printer", "production_credits", "title", "published",
+        "publisher_number", "manufactured", "edition", "series", "references",
+        "related_items", "reproduction_note", "source_of_acquisition",
+        "source_of_description_note", "summary", "terms_of_use",
         "series_statement", "distributed"].map do |f|
         [f, paired_text_field]
       end
@@ -50,7 +50,7 @@ module Factories
     def text_fields
       ["bookplate", "call_number", "gov_doc_number", "isbn", "issn", "language",
         "lc_subjects", "oclc", "other_subjects", "new_title_issn",
-        "previous_title_issn", "publisher_number", "remediated_lc_subjects",
+        "previous_title_issn", "remediated_lc_subjects",
         "report_number"]
         .map do |f|
         [f, text_field]

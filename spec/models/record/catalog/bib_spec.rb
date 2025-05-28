@@ -37,7 +37,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     :location_of_originals, :manufactured, :map_scale, :media_format, :note,
     :numbering, :numbering_notes, :original_version_note, :performers,
     :physical_description, :place, :playing_time, :preferred_citation, :printer,
-    :production_credits, :published, :references, :related_items,
+    :production_credits, :published, :publisher_number, :references, :related_items,
     :reproduction_note, :series, :series_statement,
     :source_of_acquisition, :source_of_description_note, :summary, :terms_of_use].each do |field|
     context "##{field}" do
@@ -174,7 +174,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   end
 
   [:bookplate, :gov_doc_number, :isbn, :issn, :language, :oclc, :other_subjects,
-    :new_title_issn, :previous_title_issn, :publisher_number,
+    :new_title_issn, :previous_title_issn,
     :report_number].each do |uid|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do

@@ -38,6 +38,7 @@ describe Search::Presenters::Record::Catalog::Full do
     printer: "Printer",
     production_credits: "Production Credits",
     published: "Published/Created",
+    publisher_number: "Publisher Number",
     references: "References",
     related_items: "Related Items",
     reproduction_note: "Reproduction note",
@@ -57,7 +58,6 @@ describe Search::Presenters::Record::Catalog::Full do
   single_string_fields = {
     contents: "Contents",
     gov_doc_number: "Government Document Number",
-    publisher_number: "Publisher Number",
     report_number: "Report Number"
   }
   multiple_string_fields = {

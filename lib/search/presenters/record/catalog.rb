@@ -246,6 +246,7 @@ module Search
             {uid: :printer, field: "Printer"},
             {uid: :production_credits, field: "Production Credits"},
             {uid: :published, field: "Published/Created"},
+            {uid: :publisher_number, field: "Publisher Number"},
             {uid: :references, field: "References"},
             {uid: :related_items, field: "Related Items"},
             {uid: :reproduction_note, field: "Reproduction note"},
@@ -272,7 +273,6 @@ module Search
           [
             {uid: :contents, field: "Contents"},
             {uid: :gov_doc_number, field: "Government Document Number"},
-            {uid: :publisher_number, field: "Publisher Number"},
             {uid: :report_number, field: "Report Number"}
           ].each do |f|
             define_method(f[:uid]) do

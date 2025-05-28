@@ -16,7 +16,7 @@ class Search::Models::Record::Catalog::Bib
     :in_collection, :language_note, :location_of_originals, :manufactured,
     :map_scale, :media_format, :note, :numbering, :numbering_notes, :original_version_note,
     :performers, :physical_description, :place, :playing_time,
-    :preferred_citation, :printer, :production_credits, :published, :references,
+    :preferred_citation, :printer, :production_credits, :published, :publisher_number, :references,
     :related_items, :reproduction_note, :series, :series_statement,
     :source_of_acquisition, :source_of_description_note, :summary,
     :terms_of_use].each do |uid|
@@ -80,7 +80,7 @@ class Search::Models::Record::Catalog::Bib
   end
 
   [:bookplate, :language, :oclc, :isbn, :gov_doc_number, :new_title_issn,
-    :previous_title_issn, :publisher_number, :other_subjects, :report_number,
+    :previous_title_issn, :other_subjects, :report_number,
     :issn].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
