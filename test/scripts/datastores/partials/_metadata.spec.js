@@ -1,9 +1,7 @@
 import { expect } from 'chai';
-// Import sinon from 'sinon';
-import toggleMetadata from '../../../../../assets/scripts/datastores/partials/_metadata.js';
+import toggleMetadata from '../../../../assets/scripts/datastores/partials/_metadata.js';
 
 describe('toggleMetadata', function () {
-  let getHeader = null;
   let getList = null;
   let getListItems = null;
   let getButton = null;
@@ -17,7 +15,7 @@ describe('toggleMetadata', function () {
           <tr>
             <th>${fieldTitle}</th>
             <td>
-              <ul>
+              <ul id="metadata__toggle--partial">
                 <li>List item 1</li>
                 <li>List item 2</li>
                 <li>List item 3</li>
@@ -26,23 +24,21 @@ describe('toggleMetadata', function () {
                 <li>List item 6</li>
                 <li>List item 7</li>
               </ul>
-              <button class="metadata__toggle">Show all</button>
+              <button class="metadata__toggle" aria-expanded="true" aria-controls="metadata__toggle--partial">
+                Show fewer ${fieldTitle}
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     `;
 
-    getHeader = () => {
-      return document.querySelector('th');
-    };
-
     getList = () => {
       return document.querySelector('ul');
     };
 
     getListItems = () => {
-      return getList().querySelectorAll('li');
+      return getList().querySelectorAll('> li');
     };
 
     getButton = () => {
@@ -54,7 +50,6 @@ describe('toggleMetadata', function () {
   });
 
   afterEach(function () {
-    getHeader = null;
     getList = null;
     getListItems = null;
     getButton = null;
@@ -85,16 +80,7 @@ describe('toggleMetadata', function () {
     expect(getButton().style.display, 'the button should not be displaying').to.equal('none');
   });
 
-  it('should change the text if there is a header', function () {
-    // Check that the header exists and is not empty
-    expect(getHeader(), 'the header should exist').to.not.be.null;
-    expect(getHeader().textContent, 'the header should contain the field title').to.equal(fieldTitle);
-
-    // Check that the button text has changed
-    expect(getButton().textContent, `the button text should be "Show all ${getListItems().length} ${fieldTitle}"`).to.equal(`Show all ${getListItems().length} ${fieldTitle}`);
-  });
-
-  it('should only show the first three list items', function () {
+  it('should initially show the first three list items', function () {
     // Check that the first three list items are visible
     const visibleItems = Array.from(getListItems()).slice(0, 3);
     visibleItems.forEach((item) => {
@@ -109,24 +95,28 @@ describe('toggleMetadata', function () {
   });
 
   it('should toggle the remaining list items', function () {
-    /*
-    ARIA ATTRIBUTES
-    */
+    // Check that `aria-expanded` is set to false initially
+    expect(getButton().getAttribute('aria-expanded'), 'the button should have `aria-expanded` set to `false`').to.equal('false');
     // Click the button to show all items
     getButton().click();
 
+    // Check that `aria-expanded` is set to true after clicking
+    expect(getButton().getAttribute('aria-expanded'), 'the button should have `aria-expanded` set to `true` after clicking').to.equal('true');
+
     // Check that all items are visible
-    const allItems = getListItems();
-    allItems.forEach((item) => {
-      expect(item.style.display, 'the item should be visible after clicking the button').to.not.equal('none');
-    });
+    expect(Array.from(getListItems()).every((item) => {
+      return item.style.display !== 'none';
+    }), 'all list items should be visible after clicking the button').to.be.true;
   });
 
   it('should toggle button text', function () {
+    // Check that the button encourages you to show all items
+    expect(getButton().textContent, `the button text should be "Show all ${getListItems().length} ${fieldTitle}"`).to.equal(`Show all ${getListItems().length} ${fieldTitle}`);
+
     // Click the button to show all items
     getButton().click();
 
     // Check that the button text has changed
-    expect(getButton().textContent.startsWith('Show fewer'), 'the button text should start with "Show fewer" after clicking').to.be.true;
+    expect(getButton().textContent, `the button text should start with "Show fewer ${fieldTitle}" after clicking`).to.equal(`Show fewer ${fieldTitle}`);
   });
 });

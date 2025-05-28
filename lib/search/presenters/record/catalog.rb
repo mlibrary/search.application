@@ -14,7 +14,6 @@ module Search
           RECORD_INFO_METHODS = [
             :format, # 00-catalog mirlyn_format
             :main_author,
-            :contributors,
             # :uniform_title, 00-catalog ???
             :related_title,
             :other_titles,
