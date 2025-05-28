@@ -12,7 +12,7 @@
           <%= data.field %>
         </th>
         <td>
-          <ul class="list__no-style metadata__list--<%= data.partial.gsub('_', '-') %>" id="metadata__toggle--<%= data.uid %>">
+          <ul class="list__no-style metadata__list metadata__list--<%= data.partial.gsub('_', '-') %>" id="metadata__toggle--<%= data.uid %>">
             <% data.each do |value| %>
               <li>
                 <% if value.respond_to?(:transliterated) %>

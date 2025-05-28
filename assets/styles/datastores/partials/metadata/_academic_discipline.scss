@@ -17,7 +17,7 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: '.academic-discipline__list';
+$list: '.metadata__list--academic-discipline > li';
 $gap: 0 0.25rem;
 
 
@@ -28,12 +28,14 @@ $gap: 0 0.25rem;
 // *** 2. LIST *** //
 // *************** //
 
-#{$class} {
-  @include utilities.flex($align: start, $responsive: true, $wrap: true);
-  & {
-    gap: $gap;
+#{$list} {
+  & > ol {
+    @include utilities.flex($align: start, $responsive: true, $wrap: true);
+    & {
+      gap: $gap;
+    }
   }
-  & + & {
+  & + li {
     margin-top: 0.5rem;
   }
 }
@@ -44,7 +46,7 @@ $gap: 0 0.25rem;
 // * 2.1. LIST ITEM * //
 // *                * //
 
-#{$class} > li {
+#{$list} > ol > li {
   @include utilities.flex($align: start);
   & {
     gap: $gap;

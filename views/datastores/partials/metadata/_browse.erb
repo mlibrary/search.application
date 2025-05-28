@@ -3,6 +3,6 @@
 <% else %> 
   <span><%= value %></span>
 <% end %>
-<span class="browse-field__link">
-  <%= link_to(body: "Browse in #{value.kind} list", url: value.browse_url) %>
+<span class="metadata__list--browse-link">
+  <%= link_to(body: "Browse in #{value.kind.gsub('_', ' ')} list", url: value.browse_url) %>
 </span>

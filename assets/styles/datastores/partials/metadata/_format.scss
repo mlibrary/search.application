@@ -17,7 +17,7 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: "formats";
+$class: ".metadata__list--format";
 
 
 
@@ -27,7 +27,7 @@ $class: "formats";
 // *** 2. FORMATS *** //
 // ****************** //
 
-.#{$class} .#{$class}__item {
+#{$class} > li {
   @include utilities.flex($align: start);
   & {
     gap: 0.25rem;
@@ -40,7 +40,7 @@ $class: "formats";
 // * 2.1 ICON * //
 // *          * //
 
-.#{$class} .#{$class}__item--icon {
+#{$class} > li > .material-symbols-rounded {
   color: var(--color-neutral-300);
   font-size: 1.25rem;
   font-variation-settings: "FILL" 1;
