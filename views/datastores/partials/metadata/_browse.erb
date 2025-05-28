@@ -1,15 +1,8 @@
-<ul class="list__no-style">
-  <% values.each do |value| %>
-    <li class="metadata__information--original">
-      <% if value.url.present?%>
-        <%= link_to(body: value, url: value.url) %>
-      <% else %> 
-        <%= value %>
-      <% end %>
-
-      <span class="browse__link">
-        <%= link_to(body: "Browse in #{value.kind} list", url: value.browse_url) %>
-      </span>
-    </li>
-  <% end %>
-</ul>
+<% if value.url.present?%>
+  <%= link_to(body: value, url: value.url) %>
+<% else %> 
+  <span><%= value %></span>
+<% end %>
+<span class="metadata__list--browse-link">
+  <%= link_to(body: "Browse in #{value.kind.gsub('_', ' ')} list", url: value.browse_url) %>
+</span>

@@ -9,14 +9,14 @@ class Search::Models::Record::Catalog::Bib
   end
 
   [:access, :arrangement, :association, :audience, :awards, :bibliography,
-    :biography_history, :chronology, :content_advice, :copy_specific_note,
+    :biography_history, :chronology, :contents, :content_advice, :copy_specific_note,
     :copyright, :copyright_status_information, :created,
     :current_publication_frequency, :date_place_of_event, :distributed, :edition,
     :extended_summary, :former_publication_frequency, :funding_information,
     :in_collection, :language_note, :location_of_originals, :manufactured,
-    :map_scale, :note, :numbering, :numbering_notes, :original_version_note,
+    :map_scale, :media_format, :note, :numbering, :numbering_notes, :original_version_note,
     :performers, :physical_description, :place, :playing_time,
-    :preferred_citation, :printer, :production_credits, :published, :references,
+    :preferred_citation, :printer, :production_credits, :published, :publisher_number, :references,
     :related_items, :reproduction_note, :series, :series_statement,
     :source_of_acquisition, :source_of_description_note, :summary,
     :terms_of_use].each do |uid|
@@ -39,9 +39,11 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  def other_titles
-    _map_paired_field("other_titles") do |item|
-      LinkToItem.new(item)
+  [:new_title, :other_titles, :previous_title, :releated_title].each do |uid|
+    define_method(uid) do
+      _map_paired_field(uid.to_s) do |item|
+        LinkToItem.new(item)
+      end
     end
   end
 
@@ -63,9 +65,11 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  def lcsh_subjects
-    _map_field("lcsh_subjects") do |item|
-      SubjectBrowseItem.new(item)
+  [:lc_subjects, :remediated_lc_subjects].each do |uid|
+    define_method(uid) do
+      _map_field(uid.to_s) do |item|
+        SubjectBrowseItem.new(item)
+      end
     end
   end
 
@@ -75,8 +79,9 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  [:bookplate, :language, :oclc, :isbn, :gov_doc_no, :publisher_number,
-    :report_number, :issn].each do |uid|
+  [:bookplate, :language, :oclc, :isbn, :gov_doc_number, :new_title_issn,
+    :previous_title_issn, :other_subjects, :report_number,
+    :issn].each do |uid|
     define_method(uid) { _map_text_field(uid.to_s) }
   end
 

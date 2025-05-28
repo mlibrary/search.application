@@ -1,8 +1,8 @@
 @use './metadata/format';
-@use './metadata/parallel_browse';
+@use './metadata/browse';
+@use './metadata/academic_discipline';
 @use '../../utilities';
 @use '../../media';
-@use '../../typography';
 
 // --------------------------------------------------
 //
@@ -11,10 +11,10 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Container
-//   3. Information
-//     3.1. Field
-//     3.2. Data
+//   2. Tbody
+//   3. Lists
+//     3.1. Paired Fields
+//   4. Toggle
 //
 // --------------------------------------------------
 
@@ -28,10 +28,66 @@ $class: ".metadata";
 
 
 
-// ******************** //
-// *** 2. CONTAINER *** //
-// ******************** //
+// **************** //
+// *** 2. TBODY *** //
+// **************** //
 
-#{$class} {
-  
+#{$class} tbody tr {
+  @include utilities.flex($align: start, $responsive: true);
+  & {
+    gap: 0;
+    & + tr {
+      border-top: 0.5rem solid transparent; // Space between rows because we can't use margin or padding
+    }
+  }
+  @include media.breakpoint($breakpoint: xs) {
+    display: table-row;
+    th {
+      padding-right: 1rem;
+      width: 11rem;
+    }
+  }
+}
+
+
+
+
+
+// **************** //
+// *** 3. LISTS *** //
+// **************** //
+
+@media print {
+  #{$class} ul#{$class}__list > li {
+    display: list-item!important;
+  }
+}
+
+
+
+// *                   * //
+// * 3.1 PAIRED FIELDS * //
+// *                   * //
+
+#{$class} ul#{$class}__list:has(ul#{$class}__list--parallel) > li + li {
+  margin-top: 0.5rem;
+}
+
+
+
+
+
+// ***************** //
+// *** 4. TOGGLE *** //
+// ***************** //
+
+#{$class} #{$class}__toggle {
+  display: block;
+  margin-top: 0.5rem;
+  body.no-javascript & {
+    display: none;
+  }
+  @media print {
+    display: none;
+  }
 }

@@ -25,6 +25,7 @@ describe Search::Presenters::Record::Catalog::Full do
     location_of_originals: "Location of Originals",
     manufactured: "Manufactured",
     map_scale: "Map Scale",
+    media_format: "Media Format",
     note: "Note",
     numbering: "Numbering",
     numbering_notes: "Numbering Note",
@@ -37,6 +38,7 @@ describe Search::Presenters::Record::Catalog::Full do
     printer: "Printer",
     production_credits: "Production Credits",
     published: "Published/Created",
+    publisher_number: "Publisher Number",
     references: "References",
     related_items: "Related Items",
     reproduction_note: "Reproduction note",
@@ -48,24 +50,30 @@ describe Search::Presenters::Record::Catalog::Full do
     terms_of_use: "Terms of Use"
   }
   my_parallel_link_to_fields = {
+    new_title: "New Title",
     related_title: "Related Title",
+    previous_title: "Previous Title",
     other_titles: "Other Titles"
   }
   single_string_fields = {
-    gov_doc_no: "Government Document Number",
-    publisher_number: "Publisher Number",
+    contents: "Contents",
+    gov_doc_number: "Government Document Number",
     report_number: "Report Number"
   }
   multiple_string_fields = {
-    language: "Language",
-    oclc: "OCLC Number",
+    bookplate: "Donor Information",
     isbn: "ISBN",
     issn: "ISSN",
-    bookplate: "Donor Information"
+    language: "Language",
+    new_title_issn: "New Title ISSN",
+    previous_title_issn: "Previous Title ISSN",
+    oclc: "OCLC Number",
+    other_subjects: "Subjects (Other)"
   }
   browse_fields = {
     call_number: "Call Number",
-    lcsh_subjects: "Subjects (LCSH)"
+    lc_subjects: "Subjects (LCSH)",
+    remediated_lc_subjects: "Subjects (Local)"
   }
   author_browse_fields = {
     main_author: "Author/Creator",
@@ -176,14 +184,32 @@ describe Search::Presenters::Record::Catalog::Full do
     end
   end
 
+  context "#format" do
+    it "returns the appropriate uid" do
+      expect(subject.format.uid).to eq("format")
+    end
+    it "returns an appropriate field" do
+      expect(subject.format.field).to eq("Formats")
+    end
+    it "returns a 'format' partial" do
+      expect(subject.format.partial).to eq("format")
+    end
+    it "returns a format object for data" do
+      first_format = subject.format.values.first
+      expect(first_format).to eq(@bib_stub.format.first)
+    end
+  end
   context "Author Browse Fields" do
     author_browse_fields.each do |uid, name|
       context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
         it "returns an appropriate field" do
           expect(subject.public_send(uid).field).to eq(name)
         end
-        it "returns a 'parallel_browse' partial" do
-          expect(subject.public_send(uid).partial).to eq("parallel_browse")
+        it "returns a 'browse' partial" do
+          expect(subject.public_send(uid).partial).to eq("browse")
         end
         it "returns values that match model" do
           expect(subject.public_send(uid).values.first.original.text).to eq(@bib_stub.public_send(uid).first.original.text)
@@ -196,6 +222,9 @@ describe Search::Presenters::Record::Catalog::Full do
     end
   end
   context "#academic_discipline" do
+    it "returns the appropriate uid" do
+      expect(subject.academic_discipline.uid).to eq("academic_discipline")
+    end
     it "returns an appropriate field" do
       expect(subject.academic_discipline.field).to eq("Academic Discipline")
     end
@@ -208,22 +237,25 @@ describe Search::Presenters::Record::Catalog::Full do
     end
   end
   context "Array browse fields" do
-    browse_fields.each do |field, name|
-      context "##{field}" do
-        it "returns the appropriate field" do
-          expect(subject.public_send(field).field).to eq(name)
+    browse_fields.each do |uid, name|
+      context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
+        it "returns the appropriate field name" do
+          expect(subject.public_send(uid).field).to eq(name)
         end
         it "returns a 'browse' partial" do
-          expect(subject.public_send(field).partial).to eq("browse")
+          expect(subject.public_send(uid).partial).to eq("browse")
         end
 
         it "returns values that match model" do
-          expect(subject.public_send(field).values).to eq(@bib_stub.public_send(field))
+          expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
         end
 
-        it "returns nil if #{field} is nil" do
-          allow(@bib_stub).to receive(field).and_return([])
-          expect(subject.public_send(field)).to be_nil
+        it "returns nil if #{uid} is nil" do
+          allow(@bib_stub).to receive(uid).and_return([])
+          expect(subject.public_send(uid)).to be_nil
         end
       end
     end
@@ -231,11 +263,14 @@ describe Search::Presenters::Record::Catalog::Full do
   context "Parallel link_to fields" do
     my_parallel_link_to_fields.each do |uid, name|
       context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
         it "returns the appropriate field" do
           expect(subject.public_send(uid).field).to eq(name)
         end
-        it "returns a parallel_link_to partial" do
-          expect(subject.public_send(uid).partial).to eq("parallel_link_to")
+        it "returns a link_to partial" do
+          expect(subject.public_send(uid).partial).to eq("link_to")
         end
         it "returns the appropriate values" do
           expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
@@ -255,11 +290,14 @@ describe Search::Presenters::Record::Catalog::Full do
         create_parallel_plain_text(uid, @bib_stub)
       end
       context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
         it "returns the appropriate field" do
           expect(subject.public_send(uid).field).to eq(name)
         end
         it "returns the appropriate partial" do
-          expect(subject.public_send(uid).partial).to eq("parallel_plain_text")
+          expect(subject.public_send(uid).partial).to eq("plain_text")
         end
         it "returns the appropriate data" do
           expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
@@ -272,46 +310,52 @@ describe Search::Presenters::Record::Catalog::Full do
     end
   end
   context "Multiple String plain text fields" do
-    multiple_string_fields.each do |field, name|
-      context "##{field}" do
-        it "returns the appropriate field" do
-          expect(subject.public_send(field).field).to eq(name)
+    multiple_string_fields.each do |uid, name|
+      context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
+        it "returns the appropriate field name" do
+          expect(subject.public_send(uid).field).to eq(name)
         end
         it "returns a 'plain_text' partial" do
-          expect(subject.public_send(field).partial).to eq("plain_text")
+          expect(subject.public_send(uid).partial).to eq("plain_text")
         end
         it "returns a values from model" do
-          expect(subject.public_send(field).values).to eq(@bib_stub.public_send(field))
+          expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
         end
         it "can have more than one data entity" do
-          expect(subject.public_send(field).values.count).to eq(2)
+          expect(subject.public_send(uid).values.count).to eq(2)
         end
-        it "returns nil if #{field} is nil" do
-          allow(@bib_stub).to receive(field).and_return([])
-          expect(subject.public_send(field)).to be_nil
+        it "returns nil if #{uid} is nil" do
+          allow(@bib_stub).to receive(uid).and_return([])
+          expect(subject.public_send(uid)).to be_nil
         end
       end
     end
   end
 
   context "Single String plain text fields" do
-    single_string_fields.each do |field, name|
-      context "##{field}" do
-        it "returns the appropriate field" do
-          expect(subject.public_send(field).field).to eq(name)
+    single_string_fields.each do |uid, name|
+      context "##{uid}" do
+        it "returns the appropriate uid" do
+          expect(subject.public_send(uid).uid).to eq(uid)
+        end
+        it "returns the appropriate field name" do
+          expect(subject.public_send(uid).field).to eq(name)
         end
         it "returns the appropriate partial" do
-          expect(subject.public_send(field).partial).to eq("plain_text")
+          expect(subject.public_send(uid).partial).to eq("plain_text")
         end
         it "returns values from the model" do
-          expect(subject.public_send(field).values.first).to eq(@bib_stub.public_send(field).first)
+          expect(subject.public_send(uid).values.first).to eq(@bib_stub.public_send(uid).first)
         end
         it "can have more than one values entity" do
-          expect(subject.public_send(field).values.count).to eq(1)
+          expect(subject.public_send(uid).values.count).to eq(1)
         end
-        it "returns nil if #{field} is nil" do
-          allow(@bib_stub).to receive(field).and_return([])
-          expect(subject.public_send(field)).to be_nil
+        it "returns nil if #{uid} is nil" do
+          allow(@bib_stub).to receive(uid).and_return([])
+          expect(subject.public_send(uid)).to be_nil
         end
       end
     end

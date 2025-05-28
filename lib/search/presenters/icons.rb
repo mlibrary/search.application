@@ -4,7 +4,7 @@ module Search
       TEMPLATE_ICONS = YAML.load_file(File.join(S.config_path, "template_icons.yaml"))
 
       def initialize(icons = [])
-        @icons = icons
+        @icons = icons || []
       end
 
       def template_icons
@@ -12,7 +12,7 @@ module Search
       end
 
       def all
-        (template_icons + @icons).sort
+        (template_icons + @icons).uniq.sort
       end
 
       def to_s

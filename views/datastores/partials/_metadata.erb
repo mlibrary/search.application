@@ -12,7 +12,27 @@
           <%= data.field %>
         </th>
         <td>
-          <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { values: data } %>
+          <ul class="list__no-style metadata__list metadata__list--<%= data.partial.gsub('_', '-') %>" id="metadata__toggle--<%= data.uid %>">
+            <% data.each do |value| %>
+              <li>
+                <% if value.respond_to?(:transliterated) %>
+                  <ul class="list__no-style metadata__list--parallel">
+                    <li>
+                      <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { value: value.transliterated } %>
+                    </li>
+                    <li>
+                      <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { value: value.original } %>
+                    </li>
+                  </ul>
+                <% else %>
+                  <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { value: value.respond_to?(:original) ? value.original : value } %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+          <button class="button__ghost metadata__toggle" aria-expanded="true" aria-controls="metadata__toggle--<%= data.uid %>">
+            Show fewer <%= data.field %>
+          </button>
         </td>
       </tr>
     <% end %>
