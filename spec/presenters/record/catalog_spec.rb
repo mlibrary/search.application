@@ -200,8 +200,8 @@ describe Search::Presenters::Record::Catalog::Full do
         it "returns an appropriate field" do
           expect(subject.public_send(uid).field).to eq(name)
         end
-        it "returns a 'parallel_browse' partial" do
-          expect(subject.public_send(uid).partial).to eq("parallel_browse")
+        it "returns a 'browse' partial" do
+          expect(subject.public_send(uid).partial).to eq("browse")
         end
         it "returns values that match model" do
           expect(subject.public_send(uid).values.first.original.text).to eq(@bib_stub.public_send(uid).first.original.text)
@@ -261,8 +261,8 @@ describe Search::Presenters::Record::Catalog::Full do
         it "returns the appropriate field" do
           expect(subject.public_send(uid).field).to eq(name)
         end
-        it "returns a parallel_link_to partial" do
-          expect(subject.public_send(uid).partial).to eq("parallel_link_to")
+        it "returns a link_to partial" do
+          expect(subject.public_send(uid).partial).to eq("link_to")
         end
         it "returns the appropriate values" do
           expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))
@@ -284,7 +284,7 @@ describe Search::Presenters::Record::Catalog::Full do
           expect(subject.public_send(uid).field).to eq(name)
         end
         it "returns the appropriate partial" do
-          expect(subject.public_send(uid).partial).to eq("parallel_plain_text")
+          expect(subject.public_send(uid).partial).to eq("plain_text")
         end
         it "returns the appropriate data" do
           expect(subject.public_send(uid).values).to eq(@bib_stub.public_send(uid))

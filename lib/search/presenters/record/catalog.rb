@@ -165,7 +165,7 @@ module Search
                 Field.for(
                   uid: f[:uid],
                   field: f[:field],
-                  partial: "parallel_browse",
+                  partial: "browse",
                   values: @record.bib.public_send(f[:uid])
                 )
               end
@@ -197,7 +197,7 @@ module Search
                 Field.for(
                   uid: f[:uid],
                   field: f[:field],
-                  partial: "parallel_link_to",
+                  partial: "link_to",
                   values: @record.bib.public_send(f[:uid])
                 )
               end
@@ -258,7 +258,7 @@ module Search
                 Field.for(
                   uid: f[:uid],
                   field: f[:field],
-                  partial: "parallel_plain_text",
+                  partial: "plain_text",
                   values: @record.bib.public_send(f[:uid])
                 )
               end

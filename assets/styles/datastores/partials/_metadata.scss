@@ -95,6 +95,9 @@ $class: ".metadata";
 // * 2.3 TOGGLE * //
 // *            * //
 
-body.no-javascript #{$class} #{$class}__toggle {
-  display: none;
+#{$class} #{$class}__toggle {
+  display: block;
+  body.no-javascript & {
+    display: none;
+  }
 }

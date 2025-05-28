@@ -1,14 +1,8 @@
-<ul class="list__no-style browse-fields">
-  <% values.each do |value| %>
-    <li>
-      <% if value.url.present?%>
-        <%= link_to(body: value, url: value.url) %>
-      <% else %> 
-        <span><%= value %></span>
-      <% end %>
-      <span class="browse-field__link">
-        <%= link_to(body: "Browse in #{value.kind} list", url: value.browse_url) %>
-      </span>
-    </li>
-  <% end %>
-</ul>
+<% if value.url.present?%>
+  <%= link_to(body: value, url: value.url) %>
+<% else %> 
+  <span><%= value %></span>
+<% end %>
+<span class="browse-field__link">
+  <%= link_to(body: "Browse in #{value.kind} list", url: value.browse_url) %>
+</span>

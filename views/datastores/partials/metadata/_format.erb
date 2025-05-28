@@ -1,12 +1,6 @@
-<ul class="list__no-style formats">
-  <% values.each do |value| %>
-    <li class="formats__item">
-      <span class="material-symbols-rounded formats__item--icon" aria-hidden="true">
-        <%= value.icon %>
-      </span>
-      <span class="formats__item--text">
-        <%= value.text %>
-      </span>
-    </li>
-  <% end %>
-</ul>
+<span class="material-symbols-rounded format__icon" aria-hidden="true">
+  <%= value.icon %>
+</span>
+<span class="format__text">
+  <%= value.text %>
+</span>
