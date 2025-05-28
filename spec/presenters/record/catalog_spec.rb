@@ -140,9 +140,10 @@ describe Search::Presenters::Record::Catalog::Full do
     end.to_h
 
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
-      title: double("paired",
-        transliterated: double("text", text: Faker::Book.title),
-        original: double("text", text: Faker::Book.title)),
+      title: Search::Models::Record::Catalog::Bib::PairedItem.for({
+        "transliterated" => double("text", text: Faker::Book.title),
+        "original" => double("text", text: Faker::Book.title)
+      }),
       format: [
         OpenStruct.new(text: "format_text", icon: "icon_name")
       ],
@@ -169,16 +170,11 @@ describe Search::Presenters::Record::Catalog::Full do
       expect(title[1].css_class).to eq("title-secondary")
     end
     it "only returns original if that's all there is" do
-      allow(@bib_stub.title).to receive(:transliterated).and_return(nil)
+      allow(@bib_stub).to receive(:title).and_return(Search::Models::Record::Catalog::Bib::PairedItem.for({
+        "original" => double("text", text: Faker::Book.title, paired?: false)
+      }))
       title = subject.title
-      expect(title.first.text).to eq(@bib_stub.title.original.text)
-      expect(title.first.css_class).to eq("title-primary")
-      expect(title.count).to eq(1)
-    end
-    it "only returns transliterated if that's all there is; this should never happen" do
-      allow(@bib_stub.title).to receive(:original).and_return(nil)
-      title = subject.title
-      expect(title.first.text).to eq(@bib_stub.title.transliterated.text)
+      expect(title.first.text).to eq(@bib_stub.title.text)
       expect(title.first.css_class).to eq("title-primary")
       expect(title.count).to eq(1)
     end

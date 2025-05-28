@@ -47,8 +47,14 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       end
       it "only has original text if transliterated and original are the same" do
         @data[field.to_s].first["transliterated"]["text"] = @data[field.to_s].first["original"]["text"]
-        expect(subject.public_send(field).first.original.text).to eq(@data[field.to_s].first["original"]["text"])
-        expect(subject.public_send(field).first.transliterated).to be_nil
+        expect(subject.public_send(field).first.text).to eq(@data[field.to_s].first["original"]["text"])
+      end
+      it "has paired? true when there is transliterated" do
+        expect(subject.public_send(field).first.paired?).to eq(true)
+      end
+      it "has paired? false when there is no transliterated" do
+        @data[field.to_s].first["transliterated"] = nil
+        expect(subject.public_send(field).first.paired?).to eq(false)
       end
     end
   end
@@ -72,6 +78,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
         }
 
         my_subject = subject.public_send(field).first
+        expect(my_subject.paired?).to eq(true)
         expect(my_subject.transliterated.text).to eq(expected[:transliterated][:text])
         expect(my_subject.transliterated.url)
           .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:transliterated][:field]}:\"#{expected[:transliterated][:search_string]}\""}.to_query)
@@ -103,6 +110,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
         }
 
         my_subject = subject.public_send(field).first
+        expect(my_subject.paired?).to eq(true)
         expect(my_subject.transliterated.url)
           .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:transliterated][:field]}:\"#{expected[:transliterated][:search_string]}\""}.to_query)
         expect(my_subject.transliterated.text).to eq(expected[:transliterated][:text])
@@ -121,6 +129,11 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
         @data[field] = []
         expect(subject.public_send(field)).to eq([])
       end
+      it "has a false paired when there is no transliterated" do
+        @data[field.to_s][0]["transliterated"] = nil
+        my_subject = subject.public_send(field).first
+        expect(my_subject.paired?).to eq(false)
+      end
     end
   end
 
@@ -128,6 +141,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     it "is an array with objects of text, url, browse_url, and kind" do
       cn = @data["call_number"][0]["text"]
       s = subject.call_number.first
+      expect(s.paired?).to eq(false)
       expect(s.text).to eq(cn)
       expect(s.url).to be_nil
       expect(s.browse_url).to eq("#{S.base_url}/catalog/browse/callnumber?#{{query: cn}.to_query}")
@@ -141,6 +155,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       @data["lc_subjects"][0]["text"] = lc
       lc_norm = "Birds Japan Identification"
       s = subject.lc_subjects.first
+      expect(s.paired?).to eq(false)
       expect(s.text).to eq(lc)
       expect(CGI.unescape(s.url)).to eq("#{S.base_url}/catalog?query=subject:\"#{lc_norm}\"")
       expect(CGI.unescape(s.browse_url)).to eq("#{S.base_url}/catalog/browse/subject?query=#{lc_norm}")
@@ -152,6 +167,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       @data["remediated_lc_subjects"][0]["text"] = lc
       lc_norm = "Birds Japan Identification"
       s = subject.remediated_lc_subjects.first
+      expect(s.paired?).to eq(false)
       expect(s.text).to eq(lc)
       expect(CGI.unescape(s.url)).to eq("#{S.base_url}/catalog?query=subject:\"#{lc_norm}\"")
       expect(CGI.unescape(s.browse_url)).to eq("#{S.base_url}/catalog/browse/subject?query=#{lc_norm}")
@@ -160,6 +176,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   context "#format" do
     it "shows the icons for the formats in the marc" do
       format = subject.format.first
+      expect(format.paired?).to eq(false)
       expect(format.text).to eq("Book")
       expect(format.icon).to eq("book")
     end
@@ -170,6 +187,9 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       ad = subject.academic_discipline.first.disciplines.first
       expect(ad.text).to eq("Science")
       expect(ad.url).to eq("#{S.base_url}/catalog?" + {query: "academic_discipline:Science"}.to_query)
+    end
+    it "responds false to #paired?" do
+      expect(subject.academic_discipline.first.paired?).to eq(false)
     end
   end
 
@@ -184,6 +204,9 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       it "does not include duplicates entries" do
         @data[uid.to_s].push({"text" => @data[uid.to_s].first["text"]})
         expect(subject.public_send(uid).count).to eq(1)
+      end
+      it "has false #paired? response" do
+        expect(subject.public_send(uid)[0].paired?).to eq(false)
       end
     end
   end
