@@ -13,7 +13,7 @@ const toggleMetadata = () => {
 
   buttons.forEach((button) => {
     const list = document.getElementById(button.getAttribute('aria-controls'));
-    const listItems = list.querySelectorAll('li');
+    const listItems = list.querySelectorAll(':scope > li');
 
     // Hide the button if there are three or fewer list items
     if (listItems.length <= 3) {
@@ -22,19 +22,19 @@ const toggleMetadata = () => {
     }
 
     // Store the original text for toggling
-    const textHide = button.textContent;
-    const textShow = button.textContent.replace('fewer', `all ${listItems.length}`);
+    const textHideItems = button.textContent;
+    const textShowItems = button.textContent.replace('fewer', `all ${listItems.length}`);
 
     // Hide all list items except the first three
     hideListItems(listItems);
-    button.textContent = textShow;
+    button.textContent = textShowItems;
     button.setAttribute('aria-expanded', 'false');
 
     // Apply toggle logic
     button.addEventListener('click', () => {
       const isExpanded = button.getAttribute('aria-expanded') === 'true';
       button.setAttribute('aria-expanded', !isExpanded);
-      button.textContent = isExpanded ? textShow : textHide;
+      button.textContent = isExpanded ? textShowItems : textHideItems;
       if (isExpanded) {
         hideListItems(listItems);
       } else {
