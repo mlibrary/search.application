@@ -1,9 +1,10 @@
 @use '../partials/breadcrumbs';
 @use '../partials/actions';
 @use './partials/title';
+@use '../partials/metadata';
 @use './partials/shelf-browse';
 @use './partials/marc';
-@use '../../utilities';
+@use '../../forms';
 
 // --------------------------------------------------
 //
@@ -13,9 +14,8 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Record
-//   3. Formats
-//   4. Information
-//   5. Date Last Indexed
+//   3. Information
+//   4. Date Last Indexed
 //
 // --------------------------------------------------
 
@@ -41,34 +41,13 @@ $class: 'record';
 
 
 
-// ****************** //
-// *** 3. FORMATS *** //
-// ****************** //
-
-.#{$class} .#{$class}__formats {
-  @include utilities.flex($wrap: true);
-  & {
-    background: var(--search-color-blue-200);
-    color: var(--search-color-blue-500);
-    padding: 1rem;
-  }
-  li {
-    @include utilities.flex();
-    & {
-      gap: 0.25rem;
-    }
-  }
-}
-
-
-
-
-
 // ********************** //
-// *** 4. INFORMATION *** //
+// *** 3. INFORMATION *** //
 // ********************** //
 
 .#{$class} .#{$class}__information {
+  border-radius: forms.$radius forms.$radius 0 0;
+  border-top: 1rem solid var(--search-color-blue-200);
   padding: 1rem;
 }
 
@@ -77,7 +56,7 @@ $class: 'record';
 
 
 // **************************** //
-// *** 5. DATE LAST INDEXED *** //
+// *** 4. DATE LAST INDEXED *** //
 // **************************** //
 
 .#{$class} .#{$class}__indexing-date {

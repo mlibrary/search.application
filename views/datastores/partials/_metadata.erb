@@ -1,5 +1,20 @@
-<dl>
-  <% data.methods.each do |method| %>
-    <%= method %><%#= data[method] %>
-  <% end %>
-</dl>
+<table class="metadata">
+  <thead class="visually-hidden">
+    <tr>
+      <th scope="col">Field</th>
+      <th scope="col">Data</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% metadata.each do |data| %>
+      <tr>
+        <th scope="row">
+          <%= data.field %>
+        </th>
+        <td>
+          <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { values: data } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

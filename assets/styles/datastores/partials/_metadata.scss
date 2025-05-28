@@ -1,0 +1,37 @@
+@use './metadata/format';
+@use './metadata/parallel_browse';
+@use '../../utilities';
+@use '../../media';
+@use '../../typography';
+
+// --------------------------------------------------
+//
+// # Metadata
+//   Styles to apply directly to `views/datastores/partials/_metadata.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//   3. Information
+//     3.1. Field
+//     3.2. Data
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".metadata";
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} {
+  
+}
