@@ -14,7 +14,6 @@ module Search
           RECORD_INFO_METHODS = [
             :format, # 00-catalog mirlyn_format
             :main_author,
-            :contributors,
             # :uniform_title, 00-catalog ???
             :related_title,
             :other_titles,
@@ -71,18 +70,18 @@ module Search
             :issn, # 00-catalog marc_issn
             :call_number, # 00-catalog callnumber_browse
             :oclc,
-            :gov_doc_no,
+            :gov_doc_number,
             :publisher_number,
             :report_number,
             :chronology,
             :place,
             :printer,
             :association,
-            :lcsh_subjects, # 00-catalog lc_subject_display
-            :remediated_lcsh_subjects, # 00-catalog remediated_lc_subject_display
+            :lc_subjects,
+            :remediated_lc_subjects,
             :other_subjects,
             :academic_discipline,
-            :contents_listing, # 00-catalog contents_listing
+            :contents, # 00-catalog contents_listing
             :bookplate,
             :extended_summary
           ]
@@ -97,15 +96,13 @@ module Search
           end
 
           def title
-            if @record.bib.title.transliterated && @record.bib.title.original
+            if @record.bib.title.paired?
               [
                 OpenStruct.new(text: @record.bib.title.transliterated.text, css_class: "title-primary"),
                 OpenStruct.new(text: @record.bib.title.original.text, css_class: "title-secondary")
               ]
-            elsif @record.bib.title.transliterated
-              [OpenStruct.new(text: @record.bib.title.transliterated.text, css_class: "title-primary")]
             else
-              [OpenStruct.new(text: @record.bib.title.original.text, css_class: "title-primary")]
+              [OpenStruct.new(text: @record.bib.title.text, css_class: "title-primary")]
             end
           end
 
@@ -149,6 +146,7 @@ module Search
 
           def format
             Field.for(
+              uid: "format",
               field: "Formats",
               partial: "format",
               values: @record.bib.format
@@ -162,21 +160,7 @@ module Search
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
                 Field.for(
-                  field: f[:field],
-                  partial: "parallel_browse",
-                  values: @record.bib.public_send(f[:uid])
-                )
-              end
-            end
-          end
-
-          [
-            {uid: :call_number, field: "Call Number"},
-            {uid: :lcsh_subjects, field: "Subjects (LCSH)"}
-          ].each do |f|
-            define_method(f[:uid]) do
-              if @record.bib.public_send(f[:uid]).present?
-                Field.for(
+                  uid: f[:uid],
                   field: f[:field],
                   partial: "browse",
                   values: @record.bib.public_send(f[:uid])
@@ -186,14 +170,34 @@ module Search
           end
 
           [
+            {uid: :call_number, field: "Call Number"},
+            {uid: :lc_subjects, field: "Subjects (LCSH)"},
+            {uid: :remediated_lc_subjects, field: "Subjects (Local)"}
+          ].each do |f|
+            define_method(f[:uid]) do
+              if @record.bib.public_send(f[:uid]).present?
+                Field.for(
+                  uid: f[:uid],
+                  field: f[:field],
+                  partial: "browse",
+                  values: @record.bib.public_send(f[:uid])
+                )
+              end
+            end
+          end
+
+          [
+            {uid: :new_title, field: "New Title"},
             {uid: :other_titles, field: "Other Titles"},
+            {uid: :previous_title, field: "Previous Title"},
             {uid: :related_title, field: "Related Title"}
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
                 Field.for(
+                  uid: f[:uid],
                   field: f[:field],
-                  partial: "parallel_link_to",
+                  partial: "link_to",
                   values: @record.bib.public_send(f[:uid])
                 )
               end
@@ -227,6 +231,7 @@ module Search
             {uid: :location_of_originals, field: "Location of Originals"},
             {uid: :manufactured, field: "Manufactured"},
             {uid: :map_scale, field: "Map Scale"},
+            {uid: :media_format, field: "Media Format"},
             {uid: :note, field: "Note"},
             {uid: :numbering, field: "Numbering"},
             {uid: :numbering_notes, field: "Numbering Note"},
@@ -239,6 +244,7 @@ module Search
             {uid: :printer, field: "Printer"},
             {uid: :production_credits, field: "Production Credits"},
             {uid: :published, field: "Published/Created"},
+            {uid: :publisher_number, field: "Publisher Number"},
             {uid: :references, field: "References"},
             {uid: :related_items, field: "Related Items"},
             {uid: :reproduction_note, field: "Reproduction note"},
@@ -252,8 +258,9 @@ module Search
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
                 Field.for(
+                  uid: f[:uid],
                   field: f[:field],
-                  partial: "parallel_plain_text",
+                  partial: "plain_text",
                   values: @record.bib.public_send(f[:uid])
                 )
               end
@@ -262,13 +269,14 @@ module Search
 
           # Plain content, single field display
           [
-            {uid: :gov_doc_no, field: "Government Document Number"},
-            {uid: :publisher_number, field: "Publisher Number"},
+            {uid: :contents, field: "Contents"},
+            {uid: :gov_doc_number, field: "Government Document Number"},
             {uid: :report_number, field: "Report Number"}
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
                 Field.for(
+                  uid: f[:uid],
                   field: f[:field],
                   partial: "plain_text",
                   values: @record.bib.public_send(f[:uid]).slice(0, 1)
@@ -283,10 +291,14 @@ module Search
             {uid: :isbn, field: "ISBN"},
             {uid: :issn, field: "ISSN"},
             {uid: :language, field: "Language"},
-            {uid: :oclc, field: "OCLC Number"}
+            {uid: :new_title_issn, field: "New Title ISSN"},
+            {uid: :previous_title_issn, field: "Previous Title ISSN"},
+            {uid: :oclc, field: "OCLC Number"},
+            {uid: :other_subjects, field: "Subjects (Other)"}
           ].each do |f|
             define_method(f[:uid]) do
               Field.for(field: f[:field],
+                uid: f[:uid],
                 partial: "plain_text",
                 values: @record.bib.public_send(f[:uid]))
             end
@@ -294,6 +306,7 @@ module Search
 
           def academic_discipline
             Field.for(
+              uid: "academic_discipline",
               field: "Academic Discipline",
               partial: "academic_discipline",
               values: @record.bib.academic_discipline
@@ -302,14 +315,15 @@ module Search
         end
 
         class Field
-          def self.for(field:, partial:, values:)
-            new(field: field, partial: partial, values: values) if values.present?
+          def self.for(field:, partial:, values:, uid: nil)
+            new(uid: uid, field: field, partial: partial, values: values) if values.present?
           end
-          attr_reader :field, :partial, :values
-          def initialize(field:, partial:, values:)
+          attr_reader :uid, :field, :partial, :values
+          def initialize(field:, partial:, values:, uid: nil)
             @field = field
             @partial = partial
             @values = values
+            @uid = uid
           end
 
           include Enumerable

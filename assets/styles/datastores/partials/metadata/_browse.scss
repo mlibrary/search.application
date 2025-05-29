@@ -1,0 +1,50 @@
+@use '../../../media';
+@use '../../../typography';
+
+// --------------------------------------------------
+//
+// # Browse
+//   Styles to apply directly to `views/datastores/partials/metadata/_browse.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Browse Link
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.metadata__list--browse-link';
+
+
+
+
+
+// ********************** //
+// *** 2. BROWSE LINK *** //
+// ********************** //
+
+#{$class} {
+  display: block;
+  @include media.breakpoint($breakpoint: xs) {
+    display: initial;
+    padding-left: 0.25rem;
+  }
+  &,
+  & > * {
+    color: var(--search-color-grey-600);
+    font-size: typography.$size-small;
+  }
+  &:before {
+    border-left: 1px solid var(--color-neutral-300);
+    content: '';
+    display: inline-block;
+    height: 1em;
+    margin-right: 0.25rem;
+    position: relative;
+    top: 0.125rem;
+    width: 0;
+  }
+}
