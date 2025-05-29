@@ -39,7 +39,7 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  [:new_title, :other_titles, :previous_title, :releated_title].each do |uid|
+  [:new_title, :other_titles, :previous_title, :preferred_title, :releated_title].each do |uid|
     define_method(uid) do
       _map_paired_field(uid.to_s) do |item|
         LinkToItem.new(item)
