@@ -29,7 +29,7 @@ class Search::Models::Record::Catalog::Bib
 
   def format
     _map_field("format") do |f|
-      OpenStruct.new(text: f, icon: FORMAT_ICONS[f])
+      OpenStruct.new(text: f, icon: FORMAT_ICONS[f], paired?: false)
     end
   end
 
@@ -101,10 +101,27 @@ class Search::Models::Record::Catalog::Bib
           temp[key] = yield value
         end
       end
-      if temp["original"] == temp["transliterated"]
-        temp.delete("transliterated")
-      end
-      OpenStruct.new(**temp)
+      PairedItem.for(temp)
+    end
+  end
+
+  class PairedItem
+    def self.for(item)
+      paired_item = new(item)
+      paired_item.paired? ? paired_item : paired_item.original
+    end
+    attr_reader :original
+    def initialize(item)
+      @transliterated = item["transliterated"]
+      @original = item["original"]
+    end
+
+    def transliterated
+      @transliterated unless original == @transliterated
+    end
+
+    def paired?
+      transliterated.present?
     end
   end
 
@@ -147,6 +164,10 @@ class Search::Models::Record::Catalog::Bib
 
     def ==(other)
       self.class == other.class && text == other.text
+    end
+
+    def paired?
+      false
     end
   end
 
@@ -219,6 +240,10 @@ class Search::Models::Record::Catalog::Bib
   class AcademicDisciplineItem
     def initialize(data)
       @data = data
+    end
+
+    def paired?
+      false
     end
 
     # This is here _map_field can work

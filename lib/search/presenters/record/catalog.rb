@@ -96,15 +96,13 @@ module Search
           end
 
           def title
-            if @record.bib.title.transliterated && @record.bib.title.original
+            if @record.bib.title.paired?
               [
                 OpenStruct.new(text: @record.bib.title.transliterated.text, css_class: "title-primary"),
                 OpenStruct.new(text: @record.bib.title.original.text, css_class: "title-secondary")
               ]
-            elsif @record.bib.title.transliterated
-              [OpenStruct.new(text: @record.bib.title.transliterated.text, css_class: "title-primary")]
             else
-              [OpenStruct.new(text: @record.bib.title.original.text, css_class: "title-primary")]
+              [OpenStruct.new(text: @record.bib.title.text, css_class: "title-primary")]
             end
           end
 
