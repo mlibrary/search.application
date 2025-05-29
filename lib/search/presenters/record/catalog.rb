@@ -14,7 +14,7 @@ module Search
           RECORD_INFO_METHODS = [
             :format, # 00-catalog mirlyn_format
             :main_author,
-            # :uniform_title, 00-catalog ???
+            :preferred_title,
             :related_title,
             :other_titles,
             :new_title,
@@ -189,6 +189,7 @@ module Search
           [
             {uid: :new_title, field: "New Title"},
             {uid: :other_titles, field: "Other Titles"},
+            {uid: :preferred_title, field: "Preferred Title"},
             {uid: :previous_title, field: "Previous Title"},
             {uid: :related_title, field: "Related Title"}
           ].each do |f|

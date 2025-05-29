@@ -59,7 +59,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     end
   end
 
-  ["new_title", "other_titles", "previous_title", "related_title"].each do |field|
+  ["new_title", "other_titles", "preferred_title", "previous_title", "related_title"].each do |field|
     context "##{field}" do
       it "has text and search" do
         expected = {

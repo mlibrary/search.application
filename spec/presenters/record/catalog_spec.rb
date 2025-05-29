@@ -52,6 +52,7 @@ describe Search::Presenters::Record::Catalog::Full do
   my_parallel_link_to_fields = {
     new_title: "New Title",
     related_title: "Related Title",
+    preferred_title: "Preferred Title",
     previous_title: "Previous Title",
     other_titles: "Other Titles"
   }
