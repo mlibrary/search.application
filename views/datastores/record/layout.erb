@@ -10,7 +10,7 @@
       <%= yield %>
     </section>
     <h2 class="visually-hidden">Available at:</h2>
-    <p>Resource Access: Needs to be a partial for Results</p>
+    <%= erb :"datastores/partials/_resource_access", locals: { holdings: @record.holdings.list } %>
   </div>
   <p>Shelf browse</p>
   <% if @record.indexing_date %>

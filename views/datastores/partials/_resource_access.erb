@@ -1,0 +1,16 @@
+<% holdings.each do |holding| %>
+  <details class="holding" <%= "open" if holdings.count == 1%>>
+    <summary>
+      <span class="material-symbols-rounded" aria-hidden="true">
+        <%= holding.icon %> 
+      </span>
+      <span class="strong">
+        <span class="holding__heading"><%= holding.heading %> </span>
+        &bull; <%= holding.items.count %> Items
+      </span>
+    </summary>
+    <div class="holding__content">
+      <%= erb :"datastores/partials/resource_access/_#{holding.partial}", locals: { holding: holding } %>
+    </div>
+  </details>
+<% end %>

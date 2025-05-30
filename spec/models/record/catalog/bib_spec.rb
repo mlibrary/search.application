@@ -13,6 +13,13 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   subject do
     described_class.new(@data)
   end
+
+  context "#id" do
+    it "has an id" do
+      expect(subject.id).to eq(@data["id"])
+    end
+  end
+
   [:title].each do |field|
     context "##{field}" do
       it "has transliterated and original text" do
