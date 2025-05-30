@@ -1,0 +1,37 @@
+<%= link_to(body: "About location", url: holding.location_url) %>
+<% holding.holding_info.each do |info| %>
+  <p><%= info %></p>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Action</th>
+      <th scope="col">Description</th>
+      <th scope="col">Status</th>
+      <th scope="col">Call Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% holding.items.each do |item| %>
+      <tr>
+        <td>
+          <%= item.action.text %>
+          <%= item.action.partial %>
+        </td>
+        <td>
+          <%= item.description.methods %>
+          <%= item.description.partial %>
+        </td>
+        <td>
+          <%= item.status.methods %>
+          <%#= item.status.partial %>
+        </td>
+        <td>
+          <%= item.call_number.methods %>
+          <%= item.call_number.partial %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
