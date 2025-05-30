@@ -23,11 +23,15 @@ class Search::Presenters::Record::Catalog::Holdings
   def list
     [
       HathiTrust.new(@holdings.hathi_trust.items),
-      Online.new(@holdings)
+      Online.new(@holdings),
+      physical
     ].reject { |x| x.empty? }
   end
 
   def physical
+    @holdings.physical.list.map do |holding|
+      Physical.new(holding: holding, bib: @data)
+    end
   end
 
   class HathiTrust

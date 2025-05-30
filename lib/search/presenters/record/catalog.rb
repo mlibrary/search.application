@@ -137,6 +137,10 @@ module Search
             RECORD_INFO_METHODS.map { |field| public_send(field) }.compact
           end
 
+          def holdings
+            Holdings.new(@record)
+          end
+
           def marc_record
           end
 
