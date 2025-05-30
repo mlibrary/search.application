@@ -5,7 +5,7 @@ RSpec.describe Search::Models::Record::Catalog::Holdings do
         "electronic_items" => [
           {
             "url" => "some_url",
-            "status" => "available",
+            "is_available" => true,
             "note" => "some note"
           }
         ],
@@ -40,7 +40,7 @@ RSpec.describe Search::Models::Record::Catalog::Holdings do
     it "returns electronic items" do
       first_item = subject.electronic.items.first
       expect(first_item.url).to eq("some_url")
-      expect(first_item.status).to eq("available")
+      expect(first_item.available?).to eq(true)
       expect(first_item.note).to eq("some note")
     end
   end

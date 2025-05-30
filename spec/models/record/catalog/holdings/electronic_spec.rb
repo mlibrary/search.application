@@ -5,7 +5,7 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Electronic do
         "electronic_items" => [
           {
             "url" => Faker::Internet.url,
-            "status" => "available",
+            "is_available" => true,
             "note" => Faker::Lorem.sentence,
             "description" => Faker::Lorem.sentence
           }
@@ -23,7 +23,7 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Electronic do
       expected = @data["holdings"]["electronic_items"][0]
       first_item = subject.items.first
       expect(first_item.url).to eq(expected["url"])
-      expect(first_item.status).to eq(expected["status"])
+      expect(first_item.available?).to eq(true)
       expect(first_item.note).to eq(expected["note"])
       expect(first_item.description).to eq(expected["description"])
     end

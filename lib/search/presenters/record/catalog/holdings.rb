@@ -116,12 +116,8 @@ class Search::Presenters::Record::Catalog::Holdings
       end
     end
 
-    def item_available?(item)
-      item.status.downcase == "available"
-    end
-
     def availability_text(item)
-      if item_available?(item)
+      if item.available?
         "Available online"
       else
         "Coming Soon"
@@ -129,7 +125,7 @@ class Search::Presenters::Record::Catalog::Holdings
     end
 
     def description_text(item)
-      if item_available?(item)
+      if item.available?
         item.description
       else
         ["Link will update when access is available.", item.description || ""].join(" ").strip

@@ -140,11 +140,11 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
 
       context "link text" do
         it "is 'Available online' when the status is 'Availabe'" do
-          expect(electronic_item.status).to eq("Available")
+          expect(electronic_item.available?).to eq(true)
           expect(item.link.text).to eq("Available online")
         end
         it "is 'Coming Soon' when status is 'Not Available'" do
-          allow(electronic_item).to receive(:status).and_return("Not Available")
+          allow(electronic_item).to receive(:available?).and_return(false)
           expect(item.link.text).to eq("Coming Soon")
         end
       end
@@ -155,7 +155,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
           expect(item.description.text).to eq(electronic_item.description)
         end
         it "has coming-soon releated text when unavailable" do
-          allow(electronic_item).to receive(:status).and_return("Not Available")
+          allow(electronic_item).to receive(:available?).and_return(false)
           expect(item.description.text).to include("Link will update")
           expect(item.description.text).to include(electronic_item.description)
         end

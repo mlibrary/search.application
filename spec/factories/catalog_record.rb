@@ -47,7 +47,7 @@ module Factories::CatalogRecord
       double("Search::Models::Record::Catalog::Holdings::Electronic item",
         url: Faker::Internet.url,
         note: Faker::Lorem.sentence,
-        status: "Available",
+        available?: true,
         description: Faker::Lorem.sentence)
     end
 

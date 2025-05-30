@@ -21,9 +21,9 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
       expect(subject.location_url).to eq(physical_holding.physical_location.url)
     end
   end
-  context "#location_text" do
-    it "has the text to display for the location" do
-      expect(subject.location_text).to eq(physical_holding.physical_location.text)
+  context "#heading" do
+    it "has the text to display for the heading" do
+      expect(subject.heading).to eq(physical_holding.physical_location.text)
     end
   end
 

@@ -12,7 +12,7 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     @holding.physical_location.url
   end
 
-  def location_text
+  def heading
     @holding.physical_location.text
   end
 
