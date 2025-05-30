@@ -24,6 +24,10 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     ].flatten.reject(&:blank?)
   end
 
+  def empty?
+    false
+  end
+
   def items
     @holding.items.map { |x| Item.new(item: x, bib: @bib) }
   end

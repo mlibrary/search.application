@@ -24,7 +24,7 @@ class Search::Presenters::Record::Catalog::Holdings
     [
       HathiTrust.new(@holdings.hathi_trust.items),
       Online.new(@holdings),
-      physical
+      * physical
     ].reject { |x| x.empty? }
   end
 
