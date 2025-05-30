@@ -52,6 +52,10 @@ class Search::Presenters::Record::Catalog::Holdings
       "HathiTrust Digital Library"
     end
 
+    def icon
+      "devices"
+    end
+
     def partial
       "electronic_holding"
     end
@@ -75,6 +79,10 @@ class Search::Presenters::Record::Catalog::Holdings
 
     def heading
       "Online Resources"
+    end
+
+    def icon
+      "devices"
     end
 
     def partial

@@ -40,6 +40,12 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
     described_class.new(hathi_trust_holdings.items)
   end
 
+  context "#icon" do
+    it "is the online icon" do
+      expect(subject.icon).to eq("devices")
+    end
+  end
+
   context "#heading" do
     it "is the correct string" do
       expect(subject.heading).to eq("HathiTrust Digital Library")
@@ -94,6 +100,13 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
       expect(subject.heading).to eq("Online Resources")
     end
   end
+
+  context "#icon" do
+    it "is the online icon" do
+      expect(subject.icon).to eq("devices")
+    end
+  end
+
   context "#partial" do
     it "is an electronic_holding" do
       expect(subject.partial).to eq("electronic_holding")

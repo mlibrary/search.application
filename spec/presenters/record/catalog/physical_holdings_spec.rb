@@ -26,6 +26,11 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
       expect(subject.heading).to eq(physical_holding.physical_location.text)
     end
   end
+  context "#icon" do
+    it "has the map location icon" do
+      expect(subject.icon).to eq("location_on")
+    end
+  end
 
   context "#holding_info" do
     it "includes the public_note" do

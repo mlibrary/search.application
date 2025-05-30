@@ -12,6 +12,10 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     @holding.physical_location.url
   end
 
+  def icon
+    "location_on"
+  end
+
   def heading
     @holding.physical_location.text
   end
