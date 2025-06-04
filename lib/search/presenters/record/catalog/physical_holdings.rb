@@ -60,6 +60,7 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     end
 
     def status
+      OpenStruct.new(partial: "status", intent: "success", text: "Building use only")
     end
 
     private

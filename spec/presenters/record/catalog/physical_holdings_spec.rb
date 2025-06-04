@@ -71,15 +71,6 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
   subject do
     described_class.new(item: item, bib: record.bib)
   end
-  it "has a description" do
-    expect(subject.description.text).to eq(item.description)
-    expect(subject.description.partial).to eq("plain_text")
-  end
-
-  it "has a call number" do
-    expect(subject.call_number.text).to eq(item.call_number)
-    expect(subject.call_number.partial).to eq("plain_text")
-  end
 
   context "#action" do
     it "has text Get This by default" do
@@ -117,6 +108,19 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
     context "request_this"
   end
 
-  context "status" do
+  it "has a description" do
+    expect(subject.description.text).to eq(item.description)
+    expect(subject.description.partial).to eq("plain_text")
+  end
+
+  it "has a status" do
+    expect(subject.status.text).to eq("Building use only")
+    expect(subject.status.partial).to eq("status")
+    expect(subject.status.intent).to eq("success")
+  end
+
+  it "has a call number" do
+    expect(subject.call_number.text).to eq(item.call_number)
+    expect(subject.call_number.partial).to eq("plain_text")
   end
 end

@@ -1,9 +1,9 @@
-<%= link_to(body: "About location", url: holding.location_url) %>
+<p><%= link_to(body: "About location", url: holding.location_url) %></p>
 <% holding.holding_info.each do |info| %>
   <p><%= info %></p>
 <% end %>
 
-<table>
+<table class="holding__physical">
   <thead>
     <tr>
       <th scope="col">Action</th>
@@ -15,22 +15,11 @@
   <tbody>
     <% holding.items.each do |item| %>
       <tr>
-        <td>
-          <%= item.action.text %>
-          <%= item.action.partial %>
-        </td>
-        <td>
-          <%= item.description.methods %>
-          <%= item.description.partial %>
-        </td>
-        <td>
-          <%= item.status.methods %>
-          <%#= item.status.partial %>
-        </td>
-        <td>
-          <%= item.call_number.methods %>
-          <%= item.call_number.partial %>
-        </td>
+        <% [item.action, item.description, item.status, item.call_number].each do |data| %>
+          <td>
+            <%= erb :"datastores/partials/resource_access/_#{data.partial}", locals: {value: data} %>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

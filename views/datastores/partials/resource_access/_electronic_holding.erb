@@ -1,3 +1,20 @@
-<%= holding.methods %>
-
-<%= holding.items %>
+<table class="holding__electronic">
+  <thead>
+    <tr>
+      <th scope="col">Link</th>
+      <th scope="col">Description</th>
+      <th scope="col">Source</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% holding.items.each do |item| %>
+      <tr>
+        <% [item.link, item.description, item.source].each do |data| %>
+          <td>
+            <%= erb :"datastores/partials/resource_access/_#{data.partial}", locals: {value: data} %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

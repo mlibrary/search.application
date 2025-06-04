@@ -70,7 +70,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
   context "#items" do
     let(:item) { subject.items.first }
     it "has a link" do
-      expect(item.link.partial).to eq("link")
+      expect(item.link.partial).to eq("link_to")
       expect(item.link.text).to eq(ht_item.status)
       expect(item.link.url).to eq(ht_item.url)
     end
@@ -129,7 +129,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
       # Digital items come first
       let(:item) { subject.items.first }
       it "has a link" do
-        expect(item.link.partial).to eq("link")
+        expect(item.link.partial).to eq("link_to")
         expect(item.link.text).to eq("Available online")
         expect(item.link.url).to eq(alma_digital_item.url)
       end
@@ -147,7 +147,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
       # Electronic items come last
       let(:item) { subject.items.last }
       it "has a link" do
-        expect(item.link.partial).to eq("link")
+        expect(item.link.partial).to eq("link_to")
         expect(item.link.url).to eq(electronic_item.url)
       end
 
