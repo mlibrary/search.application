@@ -29,10 +29,22 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
   context "#table_headings" do
     it "has an array of table heading objects" do
       th = subject.table_headings
-      expect(th[0]).to eq("Action")
-      expect(th[1]).to eq("Description")
-      expect(th[2]).to eq("Status")
-      expect(th[3]).to eq("Call Number")
+      expect(th[0].to_s).to eq("Action")
+      expect(th[1].to_s).to eq("Description")
+      expect(th[2].to_s).to eq("Status")
+      expect(th[3].to_s).to eq("Call Number")
+    end
+    it "does not have description when description column would be empty" do
+      allow(physical_holding).to receive(:has_description?).and_return(false)
+      th = subject.table_headings
+      expect(th[0].to_s).to eq("Action")
+      expect(th[1].to_s).to eq("Status")
+      expect(th[2].to_s).to eq("Call Number")
+    end
+    it "has an appropriate css_class for the headings" do
+      th = subject.table_headings
+      expect(th[0].css_class).to eq("holding__table--heading-action")
+      expect(th[3].css_class).to eq("holding__table--heading-call-number")
     end
   end
   context "#icon" do

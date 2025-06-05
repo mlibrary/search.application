@@ -22,6 +22,10 @@ class Search::Models::Record::Catalog::Holdings::Physical
       PhysicalLocation.new(@holding["physical_location"])
     end
 
+    def has_description?
+      items.any? { |item| item.description }
+    end
+
     def items
       @holding.dig("items")&.map { |item| Item.new(item) }
     end

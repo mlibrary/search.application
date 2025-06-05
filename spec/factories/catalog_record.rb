@@ -62,6 +62,7 @@ module Factories::CatalogRecord
         public_note: Faker::Lorem.sentence,
         summary: [Faker::Lorem.sentence],
         physical_location: physical_location,
+        has_description?: true,
         items: [physical_item])
     end
 
