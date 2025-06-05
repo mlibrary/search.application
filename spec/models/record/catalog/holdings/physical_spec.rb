@@ -57,7 +57,8 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Physical::Holding do
        "items" => [
          {
            "item_id" => "22#{Faker::Number.number(digits: 12)}6381",
-           "barcode" => Faker::Number.number(digits: 8)
+           "barcode" => Faker::Number.number(digits: 8),
+           "description" => Faker::Lorem.sentence
          }
        ]}
   end
@@ -75,6 +76,18 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Physical::Holding do
   context "#items" do
     it "returns an array of Item objects" do
       expect(subject.items.first.barcode).to eq(@data["items"][0]["barcode"])
+    end
+  end
+
+  context "#has_description?" do
+    it "is true when at least one item has a description" do
+      # make the first item have an empty description
+      @data["items"].unshift({"description" => nil})
+      expect(subject.has_description?).to eq(true)
+    end
+    it "is false when none of the items has a description" do
+      @data["items"][0]["description"] = nil
+      expect(subject.has_description?).to eq(false)
     end
   end
 

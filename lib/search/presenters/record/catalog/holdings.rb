@@ -138,6 +138,21 @@ class Search::Presenters::Record::Catalog::Holdings
     end
   end
 
+  class TableHeading
+    attr_reader :text
+    def initialize(text)
+      @text = text
+    end
+
+    def css_class
+      "holding__table--heading-" + text.downcase.tr(" ", "-")
+    end
+
+    def to_s
+      text
+    end
+  end
+
   class ItemCell
     def text
       raise NotImplementedError

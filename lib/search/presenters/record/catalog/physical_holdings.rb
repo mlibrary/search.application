@@ -1,4 +1,5 @@
 class Search::Presenters::Record::Catalog::Holdings::Physical
+  TableHeading = Search::Presenters::Record::Catalog::Holdings::TableHeading
   def initialize(holding:, bib: nil)
     @holding = holding
     @bib = bib
@@ -29,7 +30,11 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
   end
 
   def table_headings
-    ["Action", "Description", "Status", "Call Number"]
+    result = ["Action"]
+    result.push("Description") if @holding.has_description?
+    result.push("Status")
+    result.push("Call Number")
+    result.map { |x| TableHeading.new(x) }
   end
 
   def empty?
