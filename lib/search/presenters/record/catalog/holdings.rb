@@ -1,7 +1,4 @@
 class Search::Presenters::Record::Catalog::Holdings
-end
-require_relative "physical_holdings"
-class Search::Presenters::Record::Catalog::Holdings
   def self.electronic_item(url:, availability_text:, description:, source:)
     OpenStruct.new(
       link: OpenStruct.new(partial: "link_to", text: availability_text, url: url),
@@ -140,4 +137,43 @@ class Search::Presenters::Record::Catalog::Holdings
       end
     end
   end
+
+  class ItemCell
+    def text
+      raise NotImplementedError
+    end
+
+    def partial
+      raise NotImplementedError
+    end
+
+    def to_s
+      text
+    end
+
+    class PlainText < ItemCell
+      attr_reader :text
+      def initialize(text)
+        @text = text
+      end
+
+      def partial
+        "plain_text"
+      end
+    end
+
+    class LinkTo < ItemCell
+      attr_reader :text, :url
+      def initialize(text:, url:)
+        @text = text
+        @url = url
+      end
+
+      def partial
+        "link_to"
+      end
+    end
+  end
 end
+
+require_relative "physical_holdings"

@@ -26,6 +26,15 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
       expect(subject.heading).to eq(physical_holding.physical_location.text)
     end
   end
+  context "#table_headings" do
+    it "has an array of table heading objects" do
+      th = subject.table_headings
+      expect(th[0]).to eq("Action")
+      expect(th[1]).to eq("Description")
+      expect(th[2]).to eq("Status")
+      expect(th[3]).to eq("Call Number")
+    end
+  end
   context "#icon" do
     it "has the map location icon" do
       expect(subject.icon).to eq("location_on")
@@ -59,10 +68,13 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
     end
   end
   it "has items" do
-    expect(subject.items.first.description.text).to eq(physical_item.description)
+    expect(subject.items.first.description.to_s).to eq(physical_item.description)
   end
 end
 
+# TODO: This needs to change. Should have an array of items. Need to pass
+# whether or not the item column has any descriptions. This should live in the
+# model.
 RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
   let(:record) do
     create(:catalog_record)
@@ -109,18 +121,18 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
   end
 
   it "has a description" do
-    expect(subject.description.text).to eq(item.description)
     expect(subject.description.partial).to eq("plain_text")
+    expect(subject.description.to_s).to eq(item.description)
   end
 
   it "has a status" do
-    expect(subject.status.text).to eq("Building use only")
+    expect(subject.status.to_s).to eq("Building use only")
     expect(subject.status.partial).to eq("status")
     expect(subject.status.intent).to eq("success")
   end
 
   it "has a call number" do
-    expect(subject.call_number.text).to eq(item.call_number)
     expect(subject.call_number.partial).to eq("plain_text")
+    expect(subject.call_number.to_s).to eq(item.call_number)
   end
 end

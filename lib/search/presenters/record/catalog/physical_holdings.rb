@@ -28,6 +28,10 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     ].flatten.reject(&:blank?)
   end
 
+  def table_headings
+    ["Action", "Description", "Status", "Call Number"]
+  end
+
   def empty?
     false
   end
@@ -37,30 +41,33 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
   end
 
   class Item
+    ItemCell = Search::Presenters::Record::Catalog::Holdings::ItemCell
+
     def initialize(item:, bib:, record: nil)
       @item = item
       @bib = bib
     end
 
     def description
-      OpenStruct.new(partial: "plain_text", text: @item.description)
+      ItemCell::PlainText.new(@item.description)
     end
 
     def call_number
-      OpenStruct.new(partial: "plain_text", text: @item.call_number)
+      ItemCell::PlainText.new(@item.call_number)
     end
 
     def action
       if no_action?
-        OpenStruct.new(partial: "plain_text", text: "N/A")
+        ItemCell::PlainText.new("N/A")
       else # Get This
-        OpenStruct.new(partial: "link_to", text: "Get This",
+        # TODO: id not showing!
+        ItemCell::LinkTo.new(text: "Get This",
           url: "#{S.base_url}/catalog/record/#{@bib.id}/get-this/#{@item.barcode}")
       end
     end
 
     def status
-      OpenStruct.new(partial: "status", intent: "success", text: "Building use only")
+      Status.new(intent: "success", text: "Building use only")
     end
 
     private
@@ -83,6 +90,18 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
       return true if in_library?("AAEL") && @item.item_policy == "05"
       return true if in_library?("FLINT") && @item.item_policy == "10"
       false
+    end
+
+    class Status < ItemCell
+      attr_reader :text, :intent
+      def initialize(intent:, text:)
+        @intent = intent
+        @text = text
+      end
+
+      def partial
+        "status"
+      end
     end
   end
 end
