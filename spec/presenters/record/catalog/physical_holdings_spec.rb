@@ -92,8 +92,11 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
     create(:catalog_record)
   end
   let(:item) { record.holdings.physical.list.first.items.first }
+  before(:each) do
+    @has_description = true
+  end
   subject do
-    described_class.new(item: item, bib: record.bib)
+    described_class.new(item: item, bib: record.bib, has_description: @has_description)
   end
 
   context "#action" do
@@ -154,5 +157,13 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
     expect(fields_array[1].to_s).to eq(item.description)
     expect(fields_array[2].to_s).to eq("Building use only")
     expect(fields_array[3].to_s).to eq(item.call_number)
+  end
+
+  it "does not include description in array if there is no description in the column" do
+    @has_description = false
+    fields_array = subject.to_a
+    expect(fields_array[0].to_s).to eq("Get This")
+    expect(fields_array[1].to_s).to eq("Building use only")
+    expect(fields_array[2].to_s).to eq(item.call_number)
   end
 end

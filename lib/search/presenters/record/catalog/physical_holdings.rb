@@ -42,21 +42,24 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
   end
 
   def items
-    @holding.items.map { |x| Item.new(item: x, bib: @bib) }
+    @holding.items.map { |x| Item.new(item: x, bib: @bib, has_description: @holding.has_description?) }
   end
 
   class Item
     ItemCell = Search::Presenters::Record::Catalog::Holdings::ItemCell
 
-    def initialize(item:, bib:, record: nil)
+    def initialize(item:, bib:, record: nil, has_description: "FIXME")
       @item = item
       @bib = bib
+      @has_description = has_description
     end
 
     def to_a
-      [
-        action, description, status, call_number
-      ]
+      result = [action]
+      result.push(description) if @has_description
+      result.push(status)
+      result.push(call_number)
+      result
     end
 
     def description
