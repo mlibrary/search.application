@@ -1,0 +1,106 @@
+@use './holdings/status';
+@use '../../colors';
+@use '../../utilities';
+@use '../../media';
+
+// --------------------------------------------------
+//
+// # Metadata
+//   Styles to apply directly to `views/datastores/partials/_holdings.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Summary
+//     2.1 Open
+//   3. Table
+//     3.1 Header
+//     3.2 Body
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".holding";
+$padding: 0.5rem;
+
+
+
+
+
+// ****************** //
+// *** 2. SUMMARY *** //
+// ****************** //
+
+#{$class} summary {
+  color: var(--color-neutral-300);
+  .strong {
+    flex-grow: 1;
+    #{$class}__heading {
+      color: colors.$color-text;
+    }
+  }
+}
+
+
+
+// *          * //
+// * 2.1 OPEN * //
+// *          * //
+
+#{$class}[open] summary {
+  background-color: var(--color-blue-100);
+}
+
+
+
+
+
+// **************** //
+// *** 3. TABLE *** //
+// **************** //
+
+// *            * //
+// * 3.1 HEADER * //
+// *            * //
+
+#{$class} table > thead {
+  display: none;
+  @include media.breakpoint($breakpoint: xs) {
+    display: table-header-group;
+  }
+}
+
+
+
+// *          * //
+// * 3.2 BODY * //
+// *          * //
+
+#{$class} table > tbody > tr {
+  @include utilities.flex($align: start, $responsive: true);
+  & {
+    gap: 0;
+    & + tr {
+      padding-top: $padding;
+    }
+    td:empty {
+      & {
+        display: none;
+      }
+      @include media.breakpoint($breakpoint: xs) {
+        display: table-cell;
+      }
+    }
+  }
+  @include media.breakpoint($breakpoint: xs) {
+    display: table-row;
+    & > td {
+      padding-top: $padding;
+      & + td {
+        padding-left: $padding;
+      }
+    }
+  }
+}

@@ -1,6 +1,10 @@
 <p><%= link_to(body: "About location", url: holding.location_url) %></p>
-<% holding.holding_info.each do |info| %>
-  <p><%= info %></p>
+<% if holding.holding_info %>
+  <ul>
+    <% holding.holding_info.each do |info| %>
+      <li><%= info %></li>
+    <% end %>
+  </ul>
 <% end %>
 
 <table class="holding__physical">
@@ -16,9 +20,7 @@
     <% holding.items.each do |item| %>
       <tr>
         <% [item.action, item.description, item.status, item.call_number].each do |data| %>
-          <td>
-            <%= erb :"datastores/partials/resource_access/_#{data.partial}", locals: {value: data} %>
-          </td>
+          <td><%= erb :"datastores/partials/holdings/_#{data.partial}", locals: {value: data} %></td>
         <% end %>
       </tr>
     <% end %>

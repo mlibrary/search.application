@@ -11,7 +11,7 @@
       <tr>
         <% [item.link, item.description, item.source].each do |data| %>
           <td>
-            <%= erb :"datastores/partials/resource_access/_#{data.partial}", locals: {value: data} %>
+            <%= erb :"datastores/partials/holdings/_#{data.partial}", locals: {value: data} %>
           </td>
         <% end %>
       </tr>

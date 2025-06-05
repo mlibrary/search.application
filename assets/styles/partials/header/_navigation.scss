@@ -82,7 +82,7 @@ $class: 'primary-navigation';
 
 .#{$class} a.#{$class}__everything {
   &:before {
-    @include icons.icon($fill: true, $icon: 'dashboard');
+    @include icons.icon($icon: 'dashboard');
     & {
       font-size: 1.25rem;
       line-height: 1;
