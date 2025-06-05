@@ -48,6 +48,12 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
       @bib = bib
     end
 
+    def to_a
+      [
+        action, description, status, call_number
+      ]
+    end
+
     def description
       ItemCell::PlainText.new(@item.description)
     end
@@ -67,7 +73,7 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     end
 
     def status
-      Status.new(intent: "success", text: "Building use only")
+      Status.new(intent: "success", text: "Building use only", icon: "check-circle")
     end
 
     private
@@ -93,10 +99,11 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     end
 
     class Status < ItemCell
-      attr_reader :text, :intent
-      def initialize(intent:, text:)
+      attr_reader :text, :intent, :icon
+      def initialize(intent:, text:, icon:)
         @intent = intent
         @text = text
+        @icon = icon
       end
 
       def partial

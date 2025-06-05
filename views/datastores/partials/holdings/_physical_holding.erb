@@ -10,17 +10,18 @@
 <table class="holding__physical">
   <thead>
     <tr>
-      <th scope="col">Action</th>
-      <th scope="col">Description</th>
-      <th scope="col">Status</th>
-      <th scope="col">Call Number</th>
+      <% holding.table_headings.each do |heading|%>
+      <th scope="col"><%=heading%></th>
+      <% end%>
     </tr>
   </thead>
   <tbody>
-    <% holding.items.each do |item| %>
+    <% holding.items.to_a.each do |row| %>
       <tr>
-        <% [item.action, item.description, item.status, item.call_number].each do |data| %>
-          <td><%= erb :"datastores/partials/holdings/_#{data.partial}", locals: {value: data} %></td>
+        <% row.to_a.each do |data| %>
+          <td>
+            <%= erb :"datastores/partials/holdings/_#{data.partial}", locals: {value: data} %>
+          </td>
         <% end %>
       </tr>
     <% end %>

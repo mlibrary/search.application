@@ -135,4 +135,12 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
     expect(subject.call_number.partial).to eq("plain_text")
     expect(subject.call_number.to_s).to eq(item.call_number)
   end
+
+  it "has an array of displayable fields" do
+    fields_array = subject.to_a
+    expect(fields_array[0].to_s).to eq("Get This")
+    expect(fields_array[1].to_s).to eq(item.description)
+    expect(fields_array[2].to_s).to eq("Building use only")
+    expect(fields_array[3].to_s).to eq(item.call_number)
+  end
 end
