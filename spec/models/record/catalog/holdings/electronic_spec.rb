@@ -28,15 +28,4 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Electronic do
       expect(first_item.description).to eq(expected["description"])
     end
   end
-  context "#has_description?" do
-    it "is true when at least one item has a description" do
-      # make the first item have an empty description
-      @data["holdings"]["electronic_items"].unshift({"description" => nil})
-      expect(subject.has_description?).to eq(true)
-    end
-    it "is false when none of the items has a description" do
-      @data["holdings"]["electronic_items"][0]["description"] = nil
-      expect(subject.has_description?).to eq(false)
-    end
-  end
 end

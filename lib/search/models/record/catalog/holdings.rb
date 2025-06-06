@@ -18,13 +18,6 @@ class Search::Models::Record::Catalog::Holdings
   def physical
     Physical.new(@data)
   end
-
-  # TODO: Need to move this out!
-  module HasDescription
-    def has_description?
-      items.any? { |item| item.description }
-    end
-  end
 end
 
 require_relative "holdings/electronic"

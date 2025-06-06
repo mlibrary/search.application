@@ -79,18 +79,6 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Physical::Holding do
     end
   end
 
-  context "#has_description?" do
-    it "is true when at least one item has a description" do
-      # make the first item have an empty description
-      @data["items"].unshift({"description" => nil})
-      expect(subject.has_description?).to eq(true)
-    end
-    it "is false when none of the items has a description" do
-      @data["items"][0]["description"] = nil
-      expect(subject.has_description?).to eq(false)
-    end
-  end
-
   context "#physical_location" do
     let(:physical_location) { @data["physical_location"] }
     [:url, :text, :floor].each do |method|

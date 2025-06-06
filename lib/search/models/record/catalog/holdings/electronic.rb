@@ -1,6 +1,4 @@
 class Search::Models::Record::Catalog::Holdings::Electronic
-  include Search::Models::Record::Catalog::Holdings::HasDescription
-
   def initialize(data)
     @electronic_items = data.dig("holdings", "electronic_items")
   end

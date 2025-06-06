@@ -8,7 +8,6 @@ class Search::Models::Record::Catalog::Holdings::Physical
   end
 
   class Holding
-    include Search::Models::Record::Catalog::Holdings::HasDescription
     def initialize(holding)
       @holding = holding
     end
