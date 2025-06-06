@@ -32,7 +32,7 @@
         </thead>
         <tbody>
           <% holding.rows.each do |row| %>
-            <tr>
+            <tr class="toggle__item">
               <% row.each do |cell| %>
                 <td>
                   <%= erb :"datastores/partials/holdings/_#{cell.partial}", locals: {value: cell} %>
@@ -42,7 +42,7 @@
           <% end %>
         </tbody>
       </table>
-      <button class="button__ghost holding__table--toggle" aria-expanded="true" aria-controls="holding__table--toggle-<%= holding.__id__ %>">
+      <button class="button__ghost holding__table--toggle" aria-expanded="true" aria-controls="holding__table--toggle-<%= holding.__id__ %>" data-toggle="10">
         Show fewer
       </button>
     </div>
