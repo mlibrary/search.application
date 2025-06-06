@@ -31,7 +31,7 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
 
   def table_headings
     result = ["Action"]
-    result.push("Description") if @holding.has_description?
+    result.push("Description") if has_description?
     result.push("Status")
     result.push("Call Number")
     result.map { |x| TableHeading.new(x) }
@@ -42,24 +42,29 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
   end
 
   def items
-    @holding.items.map { |x| Item.new(item: x, bib: @bib, has_description: @holding.has_description?) }
+    @holding.items.map { |x| Item.new(item: x, bib: @bib) }
+  end
+
+  def rows
+    items.map do |item|
+      result = [item.action]
+      result.push(item.description) if has_description?
+      result.push(item.status)
+      result.push(item.call_number)
+      result
+    end
+  end
+
+  def has_description?
+    items.any? { |item| item.description.text }
   end
 
   class Item
     ItemCell = Search::Presenters::Record::Catalog::Holdings::ItemCell
 
-    def initialize(item:, bib:, record: nil, has_description: "FIXME")
+    def initialize(item:, bib:, record: nil)
       @item = item
       @bib = bib
-      @has_description = has_description
-    end
-
-    def to_a
-      result = [action]
-      result.push(description) if @has_description
-      result.push(status)
-      result.push(call_number)
-      result
     end
 
     def description

@@ -31,9 +31,9 @@
           </tr>
         </thead>
         <tbody>
-          <% holding.items.each do |item| %>
+          <% holding.rows.each do |item| %>
             <tr>
-              <% item.to_a.each do |data| %>
+              <% item.each do |data| %>
                 <td>
                   <%= erb :"datastores/partials/holdings/_#{data.partial}", locals: {value: data} %>
                 </td>

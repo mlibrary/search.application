@@ -8,6 +8,7 @@ class Search::Models::Record::Catalog::Holdings::Physical
   end
 
   class Holding
+    include Search::Models::Record::Catalog::Holdings::HasDescription
     def initialize(holding)
       @holding = holding
     end
@@ -20,10 +21,6 @@ class Search::Models::Record::Catalog::Holdings::Physical
 
     def physical_location
       PhysicalLocation.new(@holding["physical_location"])
-    end
-
-    def has_description?
-      items.any? { |item| item.description }
     end
 
     def items

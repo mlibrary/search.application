@@ -35,7 +35,8 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
       expect(th[3].to_s).to eq("Call Number")
     end
     it "does not have description when description column would be empty" do
-      allow(physical_holding).to receive(:has_description?).and_return(false)
+      allow(physical_item).to receive(:description).and_return(nil)
+
       th = subject.table_headings
       expect(th[0].to_s).to eq("Action")
       expect(th[1].to_s).to eq("Status")
@@ -82,6 +83,22 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
   it "has items" do
     expect(subject.items.first.description.to_s).to eq(physical_item.description)
   end
+  context "#rows" do
+    it "has an array of displayable fields" do
+      item_cells = subject.rows.first
+      expect(item_cells[0].to_s).to eq("Get This")
+      expect(item_cells[1].to_s).to eq(physical_item.description)
+      expect(item_cells[2].to_s).to eq("Building use only")
+      expect(item_cells[3].to_s).to eq(physical_item.call_number)
+    end
+    it "does not include description in array if there is no description in the column" do
+      allow(physical_item).to receive(:description).and_return(nil)
+      item_cells = subject.rows.first
+      expect(item_cells[0].to_s).to eq("Get This")
+      expect(item_cells[1].to_s).to eq("Building use only")
+      expect(item_cells[2].to_s).to eq(physical_item.call_number)
+    end
+  end
 end
 
 # TODO: This needs to change. Should have an array of items. Need to pass
@@ -92,11 +109,8 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
     create(:catalog_record)
   end
   let(:item) { record.holdings.physical.list.first.items.first }
-  before(:each) do
-    @has_description = true
-  end
   subject do
-    described_class.new(item: item, bib: record.bib, has_description: @has_description)
+    described_class.new(item: item, bib: record.bib)
   end
 
   context "#action" do
@@ -149,21 +163,5 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
   it "has a call number" do
     expect(subject.call_number.partial).to eq("plain_text")
     expect(subject.call_number.to_s).to eq(item.call_number)
-  end
-
-  it "has an array of displayable fields" do
-    fields_array = subject.to_a
-    expect(fields_array[0].to_s).to eq("Get This")
-    expect(fields_array[1].to_s).to eq(item.description)
-    expect(fields_array[2].to_s).to eq("Building use only")
-    expect(fields_array[3].to_s).to eq(item.call_number)
-  end
-
-  it "does not include description in array if there is no description in the column" do
-    @has_description = false
-    fields_array = subject.to_a
-    expect(fields_array[0].to_s).to eq("Get This")
-    expect(fields_array[1].to_s).to eq("Building use only")
-    expect(fields_array[2].to_s).to eq(item.call_number)
   end
 end

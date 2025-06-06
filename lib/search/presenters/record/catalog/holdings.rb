@@ -50,7 +50,18 @@ class Search::Presenters::Record::Catalog::Holdings
     end
 
     def table_headings
-      ["Link", "Description", "Source"].map { |x| TableHeading.new(x) }
+      result = ["Link"]
+      result.push("Description") if has_description?
+      result.push("Source")
+      result.map { |x| TableHeading.new(x) }
+    end
+
+    def rows
+      items.map do |item|
+        result = [item.link]
+        result.push(item.description) if has_description?
+        result.push(item.source)
+      end
     end
 
     def items
@@ -58,6 +69,10 @@ class Search::Presenters::Record::Catalog::Holdings
         ElectronicItem.new(url: item.url, availability_text: item.status,
           description: item.description, source: item.source)
       end
+    end
+
+    def has_description?
+      items.any? { |item| item.description.text.present? }
     end
   end
 
@@ -83,7 +98,22 @@ class Search::Presenters::Record::Catalog::Holdings
     end
 
     def table_headings
-      ["Link", "Description", "Source"].map { |x| TableHeading.new(x) }
+      result = ["Link"]
+      result.push("Description") if has_description?
+      result.push("Source")
+      result.map { |x| TableHeading.new(x) }
+    end
+
+    def rows
+      items.map do |item|
+        result = [item.link]
+        result.push(item.description) if has_description?
+        result.push(item.source)
+      end
+    end
+
+    def has_description?
+      items.any? { |item| item.description.text.present? }
     end
 
     def items

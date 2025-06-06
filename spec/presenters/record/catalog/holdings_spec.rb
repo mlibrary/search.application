@@ -74,6 +74,12 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
       expect(th[1].to_s).to eq("Description")
       expect(th[2].to_s).to eq("Source")
     end
+    it "does not include description if there isn't one" do
+      allow(ht_item).to receive(:description).and_return("")
+      th = subject.table_headings
+      expect(th[0].to_s).to eq("Link")
+      expect(th[1].to_s).to eq("Source")
+    end
   end
 
   context "#items" do
@@ -98,6 +104,21 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
       expect(cells[0].to_s).to eq(ht_item.status)
       expect(cells[1].to_s).to eq(ht_item.description)
       expect(cells[2].to_s).to eq(ht_item.source)
+    end
+  end
+
+  context "#rows" do
+    it "has an array of cells" do
+      cells = subject.rows.first
+      expect(cells[0].to_s).to eq(ht_item.status)
+      expect(cells[1].to_s).to eq(ht_item.description)
+      expect(cells[2].to_s).to eq(ht_item.source)
+    end
+    it "does not include the description if there isn't one" do
+      allow(ht_item).to receive(:description).and_return("")
+      cells = subject.rows.first
+      expect(cells[0].to_s).to eq(ht_item.status)
+      expect(cells[1].to_s).to eq(ht_item.source)
     end
   end
 end
@@ -134,6 +155,13 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
       expect(th[0].to_s).to eq("Link")
       expect(th[1].to_s).to eq("Description")
       expect(th[2].to_s).to eq("Source")
+    end
+    it "does not include description if there isn't one" do
+      allow(electronic_item).to receive(:description).and_return(nil)
+      allow(alma_digital_item).to receive(:label).and_return(nil)
+      th = subject.table_headings
+      expect(th[0].to_s).to eq("Link")
+      expect(th[1].to_s).to eq("Source")
     end
   end
 
@@ -201,6 +229,21 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
         expect(item.source.partial).to eq("plain_text")
         expect(item.source.text).to eq(electronic_item.note)
       end
+    end
+  end
+  context "#rows" do
+    it "has an array of cells" do
+      cells = subject.rows.first
+      expect(cells[0].to_s).to eq("Available online")
+      expect(cells[1].to_s).to eq(alma_digital_item.label)
+      expect(cells[2].to_s).to eq(alma_digital_item.public_note)
+    end
+    it "does not include the description if there isn't one" do
+      allow(electronic_item).to receive(:description).and_return("")
+      allow(alma_digital_item).to receive(:label).and_return("")
+      cells = subject.rows.first
+      expect(cells[0].to_s).to eq("Available online")
+      expect(cells[1].to_s).to eq(alma_digital_item.public_note)
     end
   end
 end
