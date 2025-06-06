@@ -79,7 +79,6 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
       if no_action?
         ItemCell::PlainText.new("N/A")
       else # Get This
-        # TODO: id not showing!
         ItemCell::LinkTo.new(text: "Get This",
           url: "#{S.base_url}/catalog/record/#{@bib.id}/get-this/#{@item.barcode}")
       end

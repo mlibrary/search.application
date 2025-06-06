@@ -19,7 +19,7 @@ class Search::Presenters::Record::Catalog::Holdings
 
   def physical
     @holdings.physical.list.map do |holding|
-      Physical.new(holding: holding, bib: @data)
+      Physical.new(holding: holding, bib: @data.bib)
     end
   end
 
