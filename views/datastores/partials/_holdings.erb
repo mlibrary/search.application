@@ -10,7 +10,36 @@
       </span>
     </summary>
     <div class="holding__content">
-      <%= erb :"datastores/partials/holdings/_#{holding.partial}", locals: { holding: holding } %>
+      <% if holding.respond_to?(:location_url) %>
+        <p><%= link_to(body: "About location", url: holding.location_url) %></p>
+      <% end %>
+      <% if holding.respond_to?(:holding_info) %>
+        <ul>
+          <% holding.holding_info.each do |info| %>
+            <li><%= info %></li>
+          <% end %>
+        </ul>
+      <% end %>
+      <table class="holding__table">
+        <thead>
+          <tr>
+            <% holding.table_headings.each do |heading| %>
+              <th scope="col" class="<%= heading.css_class %>"><%= heading %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% holding.items.each do |item| %>
+            <tr>
+              <% item.to_a.each do |data| %>
+                <td>
+                  <%= erb :"datastores/partials/holdings/_#{data.partial}", locals: {value: data} %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   </details>
 <% end %>

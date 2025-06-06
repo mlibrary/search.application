@@ -10,10 +10,13 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Summary
-//     2.1 Open
+//   2. Details
+//     2.1 Summary
+//       2.1.1 Open
+//     2.2 Content
 //   3. Table
-//     3.1 Header
+//     3.1 Head
+//       3.1.1 Headers
 //     3.2 Body
 //
 // --------------------------------------------------
@@ -23,6 +26,10 @@
 // ******************** //
 
 $class: ".holding";
+$headers: (
+  action: 7rem,
+  call-number: 14rem
+);
 $padding: 0.5rem;
 
 
@@ -30,8 +37,12 @@ $padding: 0.5rem;
 
 
 // ****************** //
-// *** 2. SUMMARY *** //
+// *** 2. DETAILS *** //
 // ****************** //
+
+// *             * //
+// * 2.1 SUMMARY * //
+// *             * //
 
 #{$class} summary {
   color: var(--color-neutral-300);
@@ -44,13 +55,26 @@ $padding: 0.5rem;
 }
 
 
-
-// *          * //
-// * 2.1 OPEN * //
-// *          * //
+// * 2.1.1 OPEN * //
 
 #{$class}[open] summary {
   background-color: var(--color-blue-100);
+}
+
+
+
+// *             * //
+// * 2.2 CONTENT * //
+// *             * //
+
+#{$class} > #{$class}__content {
+  & > p a {
+    color: colors.$color-text;
+  }
+  & > ul {
+    color: var(--color-neutral-300);
+    padding-left: 1.5rem;
+  }
 }
 
 
@@ -61,14 +85,29 @@ $padding: 0.5rem;
 // *** 3. TABLE *** //
 // **************** //
 
-// *            * //
-// * 3.1 HEADER * //
-// *            * //
+// *          * //
+// * 3.1 HEAD * //
+// *          * //
 
-#{$class} table > thead {
+#{$class} #{$class}__table > thead {
   display: none;
   @include media.breakpoint($breakpoint: xs) {
     display: table-header-group;
+  }
+}
+
+// * 3.1.1 HEADERS * //
+
+@include media.breakpoint($breakpoint: xs) {
+  #{$class} #{$class}__table > thead th + th {
+    padding-left: $padding;
+  }
+}
+@include media.breakpoint($breakpoint: sm) {
+  @each $header, $width in $headers {
+    #{$class} #{$class}__table > thead #{$class}__table--heading-#{$header} {
+      width: $width;
+    }
   }
 }
 
@@ -83,6 +122,8 @@ $padding: 0.5rem;
   & {
     gap: 0;
     & + tr {
+      border-top: 1px solid var(--color-neutral-100);
+      margin-top: $padding;
       padding-top: $padding;
     }
     td:empty {
@@ -96,6 +137,9 @@ $padding: 0.5rem;
   }
   @include media.breakpoint($breakpoint: xs) {
     display: table-row;
+    & + tr {
+      border-top: none;
+    }
     & > td {
       padding-top: $padding;
       & + td {
