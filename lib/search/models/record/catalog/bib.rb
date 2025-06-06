@@ -4,6 +4,10 @@ class Search::Models::Record::Catalog::Bib
     @data = data
   end
 
+  def id
+    @data["id"]
+  end
+
   def title
     _map_paired_field("title") { |item| Item.new(item) }.first
   end

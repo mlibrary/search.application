@@ -143,7 +143,7 @@ $class: 'search-form';
   display: none;
   margin-bottom: 0;
   &:before {
-    @include icons.icon($icon: 'info');
+    @include icons.icon($icon: 'info', $fill: false);
     & {
       flex: none;
     }

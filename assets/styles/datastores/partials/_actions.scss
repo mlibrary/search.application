@@ -104,7 +104,7 @@ body.no-javascript .#{$class}__tablist {
   }
   @each $tab, $icon in $tabs {
     &##{$class}__#{$tab}:before {
-      @include icons.icon($icon: $icon, $fill: true);
+      @include icons.icon($icon: $icon);
       & {
         font-size: 1.25rem;
       }

@@ -1,0 +1,203 @@
+@use './holdings/status';
+@use '../../colors';
+@use '../../utilities';
+@use '../../media';
+@use 'sass:map';
+
+// --------------------------------------------------
+//
+// # Metadata
+//   Styles to apply directly to `views/datastores/partials/_holdings.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Details
+//     2.1 Open
+//     2.2 Summary
+//     2.3 Content
+//   3. Table
+//     3.1 Head
+//       3.1.1 Headers
+//     3.2 Body
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".holding";
+$headers: (
+  action: (
+    child: 1,
+    width: 4rem
+  ),
+  link: (
+    child: 1,
+    width: 4rem
+  ),
+  status: (
+    child: 3,
+    width: 11rem
+  )
+);
+$padding: 0.5rem;
+
+
+
+
+
+// ****************** //
+// *** 2. DETAILS *** //
+// ****************** //
+
+// *          * //
+// * 2.1 OPEN * //
+// *          * //
+
+@media print {
+  #{$class}:not([open]) {
+    display: none;
+  }
+}
+#{$class}[open] summary {
+  background-color: var(--color-blue-100);
+}
+
+
+
+// *             * //
+// * 2.2 SUMMARY * //
+// *             * //
+
+#{$class} summary {
+  color: var(--color-neutral-300);
+  .strong {
+    flex-grow: 1;
+    #{$class}__heading {
+      color: colors.$color-text;
+    }
+  }
+}
+
+
+
+// *             * //
+// * 2.3 CONTENT * //
+// *             * //
+
+#{$class} > #{$class}__content {
+  & > p a {
+    color: colors.$color-text;
+  }
+  & > ul {
+    color: var(--color-neutral-300);
+    padding-left: 1.5rem;
+  }
+}
+
+
+
+
+
+// **************** //
+// *** 3. TABLE *** //
+// **************** //
+
+@include media.breakpoint($breakpoint: xs) {
+  #{$class} #{$class}__table tr > * + * {
+    padding-left: $padding * 2;
+  }
+}
+
+// *          * //
+// * 3.1 HEAD * //
+// *          * //
+
+#{$class} #{$class}__table > thead {
+  display: none;
+  @include media.breakpoint($breakpoint: xs) {
+    display: table-header-group;
+  }
+}
+
+// * 3.1.1 HEADERS * //
+
+#{$class} #{$class}__table > thead {
+  & th {
+    white-space: nowrap;
+  }
+  @include media.breakpoint($breakpoint: sm) {
+    @each $header, $details in $headers {
+      & #{$class}__table--heading-#{$header}:nth-child(#{map.get($details, child)}) {
+        width: map.get($details, width);
+      }
+    }
+  }
+}
+
+
+
+// *          * //
+// * 3.2 BODY * //
+// *          * //
+
+#{$class} table > tbody > tr {
+  @include utilities.flex($align: start, $responsive: true);
+  & {
+    gap: 0;
+    & + tr {
+      border-top: 1px solid var(--color-neutral-100);
+      margin-top: $padding;
+      padding-top: $padding;
+    }
+    td:empty {
+      & {
+        display: none;
+      }
+      @include media.breakpoint($breakpoint: xs) {
+        display: table-cell;
+      }
+    }
+  }
+  @include media.breakpoint($breakpoint: xs) {
+    display: table-row;
+    & + tr {
+      border-top: none;
+    }
+    & > td {
+      padding-top: $padding;
+    }
+  }
+  @include media.breakpoint($breakpoint: sm) {
+    & > td:first-of-type:not(:only-of-type),
+    & > td:nth-of-type(4) {
+      white-space: nowrap;
+    }
+  }
+  @media print {
+    display: table-row!important;
+  }
+}
+#{$class}__table:has(> thead #{$class}__table--heading-call-number) > tbody > tr > td:last-child {
+  white-space: nowrap;
+  width: 8rem;
+}
+
+
+
+
+
+// ***************** //
+// *** 3. TOGGLE *** //
+// ***************** //
+
+#{$class}__table--toggle {
+  margin-top: $padding;
+  body.no-javascript & {
+    display: none;
+  }
+  @media print {
+    display: none;
+  }
+}
