@@ -67,6 +67,15 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
     end
   end
 
+  context "#table_headings" do
+    it "has an array of table headings" do
+      th = subject.table_headings
+      expect(th[0].to_s).to eq("Link")
+      expect(th[1].to_s).to eq("Description")
+      expect(th[2].to_s).to eq("Source")
+    end
+  end
+
   context "#items" do
     let(:item) { subject.items.first }
     it "has a link" do
@@ -83,6 +92,12 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
     it "has a source" do
       expect(item.source.partial).to eq("plain_text")
       expect(item.source.text).to eq(ht_item.source)
+    end
+    it "has an array of cells in the correct order" do
+      cells = item.to_a
+      expect(cells[0].to_s).to eq(ht_item.status)
+      expect(cells[1].to_s).to eq(ht_item.description)
+      expect(cells[2].to_s).to eq(ht_item.source)
     end
   end
 end
@@ -110,6 +125,15 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
   context "#partial" do
     it "is an electronic_holding" do
       expect(subject.partial).to eq("electronic_holding")
+    end
+  end
+
+  context "#table_headings" do
+    it "has an array of table headings" do
+      th = subject.table_headings
+      expect(th[0].to_s).to eq("Link")
+      expect(th[1].to_s).to eq("Description")
+      expect(th[2].to_s).to eq("Source")
     end
   end
 

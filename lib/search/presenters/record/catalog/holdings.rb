@@ -1,12 +1,4 @@
 class Search::Presenters::Record::Catalog::Holdings
-  def self.electronic_item(url:, availability_text:, description:, source:)
-    OpenStruct.new(
-      link: OpenStruct.new(partial: "link_to", text: availability_text, url: url),
-      description: OpenStruct.new(partial: "plain_text", text: description),
-      source: OpenStruct.new(partial: "plain_text", text: source)
-    )
-  end
-
   #
   # <Description>
   #
@@ -57,9 +49,13 @@ class Search::Presenters::Record::Catalog::Holdings
       "electronic_holding"
     end
 
+    def table_headings
+      ["Link", "Description", "Source"].map { |x| TableHeading.new(x) }
+    end
+
     def items
       @items.map do |item|
-        Search::Presenters::Record::Catalog::Holdings.electronic_item(url: item.url, availability_text: item.status,
+        ElectronicItem.new(url: item.url, availability_text: item.status,
           description: item.description, source: item.source)
       end
     end
@@ -86,6 +82,10 @@ class Search::Presenters::Record::Catalog::Holdings
       "electronic_holding"
     end
 
+    def table_headings
+      ["Link", "Description", "Source"].map { |x| TableHeading.new(x) }
+    end
+
     def items
       @items ||= AlmaDigital.new(@holdings.alma_digital.items).items
         .concat(Electronic.new(@holdings.electronic.items).items)
@@ -99,7 +99,7 @@ class Search::Presenters::Record::Catalog::Holdings
 
     def items
       @items.map do |item|
-        Search::Presenters::Record::Catalog::Holdings.electronic_item(
+        ElectronicItem.new(
           url: item.url, availability_text: "Available online",
           description: item.label, source: item.public_note
         )
@@ -114,7 +114,7 @@ class Search::Presenters::Record::Catalog::Holdings
 
     def items
       @items.map do |item|
-        Search::Presenters::Record::Catalog::Holdings.electronic_item(
+        ElectronicItem.new(
           url: item.url, availability_text: availability_text(item),
           description: description_text(item), source: item.note
         )
@@ -135,6 +135,31 @@ class Search::Presenters::Record::Catalog::Holdings
       else
         ["Link will update when access is available.", item.description || ""].join(" ").strip
       end
+    end
+  end
+
+  class ElectronicItem
+    def initialize(url:, availability_text:, description:, source:)
+      @url = url
+      @availability_text = availability_text
+      @description = description
+      @source = source
+    end
+
+    def link
+      ItemCell::LinkTo.new(text: @availability_text, url: @url)
+    end
+
+    def description
+      ItemCell::PlainText.new(@description)
+    end
+
+    def source
+      ItemCell::PlainText.new(@source)
+    end
+
+    def to_a
+      [link, description, source]
     end
   end
 
