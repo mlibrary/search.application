@@ -81,7 +81,7 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     end
 
     def status
-      Status.new(intent: "success", text: "Building use only", icon: "check-circle")
+      Status.new(intent: "success", text: "Building use only", icon: "check_circle")
     end
 
     private
