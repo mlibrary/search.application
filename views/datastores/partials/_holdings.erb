@@ -13,18 +13,20 @@
       <% if holding.respond_to?(:location_url) %>
         <p><%= link_to(body: "About location", url: holding.location_url) %></p>
       <% end %>
-      <% if holding.respond_to?(:holding_info) %>
+      <% if holding.respond_to?(:holding_info) && !holding.holding_info.empty? %>
         <ul>
           <% holding.holding_info.each do |info| %>
             <li><%= info %></li>
           <% end %>
         </ul>
       <% end %>
-      <table class="holding__table">
+      <table class="holding__table" id="holding__table--toggle-<%= holding.__id__ %>">
         <thead>
           <tr>
             <% holding.table_headings.each do |heading| %>
-              <th scope="col" class="<%= heading.css_class %>"><%= heading %></th>
+              <th scope="col" class="<%= heading.css_class %>">
+                <%= heading %>
+              </th>
             <% end %>
           </tr>
         </thead>
@@ -40,6 +42,9 @@
           <% end %>
         </tbody>
       </table>
+      <button class="button__ghost holding__table--toggle" aria-expanded="true" aria-controls="holding__table--toggle-<%= holding.__id__ %>">
+        Show all <%= holding.items.count %>
+      </button>
     </div>
   </details>
 <% end %>

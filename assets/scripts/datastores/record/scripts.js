@@ -3,6 +3,7 @@ import copyCitation from '../partials/actions/_citation.js';
 import copyLink from '../partials/actions/_link.js';
 import toggleMARCData from './partials/_marc.js';
 import toggleMetadata from '../partials/_metadata.js';
+import toggleHolding from '../partials/_holdings.js';
 import toggleTruncatedText from './partials/_title.js';
 
 // Actions panel
@@ -26,6 +27,9 @@ toggleTruncatedText();
 
 // Toggle Metadata
 toggleMetadata();
+
+// Toggle Holding
+toggleHolding();
 
 // View MARC Data
 toggleMARCData();
