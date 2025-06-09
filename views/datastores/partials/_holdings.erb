@@ -20,7 +20,7 @@
           <% end %>
         </ul>
       <% end %>
-      <table class="holding__table" id="holding__table--toggle-<%= holding.__id__ %>">
+      <table class="holding__table">
         <thead>
           <tr>
             <% holding.table_headings.each do |heading| %>
@@ -30,9 +30,9 @@
             <% end %>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="holding__table--toggle-<%= holding.__id__ %>">
           <% holding.rows.each do |row| %>
-            <tr class="toggle__item">
+            <tr>
               <% row.each do |cell| %>
                 <td>
                   <%= erb :"datastores/partials/holdings/_#{cell.partial}", locals: {value: cell} %>
@@ -42,9 +42,7 @@
           <% end %>
         </tbody>
       </table>
-      <button class="button__ghost holding__table--toggle" aria-expanded="true" aria-controls="holding__table--toggle-<%= holding.__id__ %>" data-toggle="10">
-        Show fewer
-      </button>
+      <%= erb :"datastores/partials/_toggle", locals: {classes: ["holding__table--toggle"], id: "holding__table--toggle-#{holding.__id__}", count: 10} %>
     </div>
   </details>
 <% end %>

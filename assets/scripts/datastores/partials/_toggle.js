@@ -13,18 +13,15 @@ const toggleItems = () => {
   const buttons = document.querySelectorAll(`button[${attribute}]`);
 
   buttons.forEach((button) => {
-    // Convert to a number
-    const count = Number(button.getAttribute(attribute));
+    // Convert to a number, or default to 5 if NaN
+    const count = Number(button.getAttribute(attribute)) || 5;
     // Get the element that will be toggled, along with the items
     const control = document.getElementById(button.getAttribute('aria-controls'));
-    const items = control.querySelectorAll(':scope .toggle__item');
+    // Get all direct child elements of the control
+    const items = control.querySelectorAll(':scope > *');
 
-    /*
-      Hide the button if:
-      - the value `data-toggle` is not a number
-      - there are not enough items
-    */
-    if (isNaN(count) || items.length <= count) {
+    // Hide the button if there are not enough items
+    if (items.length <= count) {
       button.style.display = 'none';
       return;
     }
