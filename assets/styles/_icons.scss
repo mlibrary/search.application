@@ -11,6 +11,7 @@
 //   1. Variables and Mixins
 //     1.1 Variables
 //     1.2 Mixins
+//   2. Material Symbols
 //
 // --------------------------------------------------
 
@@ -44,11 +45,9 @@ $icons: (
 // * 1.2 MIXINS * //
 // *            * //
 
-@mixin icon($fill: false, $icon) {
+@mixin icon($fill: true, $icon) {
   font-family: "Material Symbols Rounded";
-  @if $fill {
-    font-variation-settings: "FILL" 1;
-  }
+  font-variation-settings: "FILL" if($fill, 1, 0);
   @if $icon {
     @include messages.missing-key($icons, $icon);
     & {
@@ -57,4 +56,16 @@ $icons: (
       vertical-align: bottom;
     }
   }
+}
+
+
+
+
+
+// *************************** //
+// *** 2. MATERIAL SYMBOLS *** //
+// *************************** //
+
+.material-symbols-rounded {
+  font-variation-settings: "FILL" 1;
 }

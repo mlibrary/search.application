@@ -1,0 +1,49 @@
+// --------------------------------------------------
+//
+// # Metadata
+//   Styles to apply directly to `views/datastores/partials/holdings/_status.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Intent
+//   3. Icon
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: 'intent__';
+$colors: (
+  success: var(--search-color-green-300),
+  warning: var(--search-color-orange-300),
+  error: var(--search-color-red-300)
+);
+
+
+
+
+
+// ***************** //
+// *** 2. INTENT *** //
+// ***************** //
+
+@each $intent, $color in $colors {
+  .#{$class}#{$intent} {
+    color: $color;
+  }
+}
+
+
+
+
+
+// *************** //
+// *** 3. ICON *** //
+// *************** //
+
+[class^="#{$class}"] > .material-symbols-rounded {
+  font-size: 1.25rem;
+  vertical-align: top;
+}

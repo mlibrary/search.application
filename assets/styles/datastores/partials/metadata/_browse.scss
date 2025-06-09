@@ -27,11 +27,8 @@ $class: '.metadata__list--browse-link';
 // ********************** //
 
 #{$class} {
-  display: block;
-  @include media.breakpoint($breakpoint: xs) {
-    display: initial;
-    padding-left: 0.25rem;
-  }
+  display: inline-block;
+  padding-left: 0.25rem;
   &,
   & > * {
     color: var(--search-color-grey-600);

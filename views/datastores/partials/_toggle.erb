@@ -1,0 +1,13 @@
+<%
+  classes ||= []
+  classes.push("button__ghost")
+
+  body = "Show fewer"
+  postfix ||= ""
+  if !postfix.empty?
+    body += " #{postfix}"
+  end
+%>
+<button class="<%= classes.join(" ")%>" aria-expanded="true" aria-controls="<%= id %>" data-toggle="<%= count %>">
+  <%= body %>
+</button>
