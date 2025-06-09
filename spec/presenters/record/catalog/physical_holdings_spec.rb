@@ -101,14 +101,19 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
   end
 end
 
-# TODO: This needs to change. Should have an array of items. Need to pass
-# whether or not the item column has any descriptions. This should live in the
-# model.
 RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
   let(:record) do
     create(:catalog_record)
   end
   let(:item) { record.holdings.physical.list.first.items.first }
+
+  hour_loans = [
+    {value: "06", desc: "4-hour loan"},
+    {value: "07", desc: "2-hour loan"},
+    {value: "1 Day Loan", desc: "1-day loan"}
+  ]
+  hour_loans.freeze
+
   subject do
     described_class.new(item: item, bib: record.bib)
   end
@@ -154,14 +159,198 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
     expect(subject.description.to_s).to eq(item.description)
   end
 
-  it "has a status" do
-    expect(subject.status.to_s).to eq("Building use only")
-    expect(subject.status.partial).to eq("status")
-    expect(subject.status.intent).to eq("success")
-  end
-
   it "has a call number" do
     expect(subject.call_number.partial).to eq("plain_text")
     expect(subject.call_number.to_s).to eq(item.call_number)
+  end
+
+  context "#status" do
+    context "No Policy; No Process type" do
+      before(:each) do
+        allow(item).to receive(:item_policy).and_return(nil)
+        allow(item).to receive(:process_type).and_return(nil)
+      end
+      it "returns 'On shelf' success status" do
+        expect(subject.status.to_s).to eq("On shelf")
+        expect(subject.status.partial).to eq("status")
+        expect(subject.status.intent).to eq("success")
+        expect(subject.status.icon).to eq("check_circle")
+      end
+      context "reserves item" do
+        # SEARCH-1444 SEARCH-1461
+        ["CAR", "RESI", "RESP", "RESC"].each do |location|
+          it "returns reserves success status for #{location}" do
+            allow(item.physical_location.code).to receive(:location).and_return(location)
+            expect(subject.status.to_s).to include("On reserve at #{item.physical_location.text}")
+            expect(subject.status.intent).to eq("success")
+          end
+        end
+      end
+      context "temporarily located item" do
+        # SEARCH-1501
+        it "returns temporary location success status" do
+          allow(item.physical_location).to receive(:temporary?).and_return(true)
+          expect(subject.status.to_s).to include("Temporary location: #{item.physical_location.text}")
+          expect(subject.status.intent).to eq("success")
+        end
+        it "returns temporary location error status for FVL LRC physical_location" do
+          allow(item.physical_location).to receive(:temporary?).and_return(true)
+          allow(item.physical_location.code).to receive(:library).and_return("FVL")
+          allow(item.physical_location.code).to receive(:location).and_return("LRC")
+          expect(subject.status.to_s).to include("Unavailable")
+          expect(subject.status.intent).to eq("error")
+          expect(subject.status.icon).to eq("error")
+        end
+      end
+      context "games" do
+        it "returns games success status" do
+          allow(item.physical_location.code).to receive(:library).and_return("SHAP")
+          allow(item.physical_location.code).to receive(:location).and_return("GAME")
+          expect(subject.status.to_s).to eq("CVGA room use only; check out required")
+          expect(subject.status.intent).to eq("success")
+        end
+      end
+    end
+    context "Fulfillment unit Limited" do
+      before(:each) do
+        allow(item).to receive(:item_policy).and_return(nil)
+        allow(item).to receive(:process_type).and_return(nil)
+        allow(item).to receive(:fulfillment_unit).and_return("Limited")
+      end
+      context "Building use only" do
+        it "returns success status" do
+          expect(subject.status.to_s).to eq("Building use only")
+          expect(subject.status.intent).to eq("success")
+        end
+      end
+      context "Temporary location building use only" do
+        it "returns success status" do
+          allow(item.physical_location).to receive(:temporary?).and_return(true)
+          expect(subject.status.to_s).to include("Temporary location: #{item.physical_location.text}; Building use only")
+          expect(subject.status.intent).to eq("success")
+        end
+      end
+    end
+    context "Item Policy 08 (aka No Loan)" do
+      before(:each) do
+        allow(item).to receive(:item_policy).and_return("08")
+        allow(item).to receive(:process_type).and_return(nil)
+      end
+      context "Building use only" do
+        it "returns success status" do
+          expect(subject.status.to_s).to eq("Building use only")
+          expect(subject.status.intent).to eq("success")
+        end
+      end
+      context "Temporary location building use only" do
+        it "returns success status" do
+          allow(item.physical_location).to receive(:temporary?).and_return(true)
+          expect(subject.status.to_s).to include("Temporary location: #{item.physical_location.text}; Building use only")
+          expect(subject.status.intent).to eq("success")
+        end
+      end
+    end
+    context "Reading room library" do
+      before(:each) do
+        allow(item).to receive(:item_policy).and_return(nil)
+        allow(item).to receive(:process_type).and_return(nil)
+      end
+      ["CLEM", "BENT", "SPEC"].each do |library|
+        context library do
+          it "returns success status" do
+            allow(item.physical_location.code).to receive(:library).and_return(library)
+            expect(subject.status.to_s).to eq("Reading Room use only")
+            expect(subject.status.intent).to eq("success")
+          end
+        end
+      end
+    end
+    context "On shelf Hour loans" do
+      before(:each) do
+        allow(item).to receive(:process_type).and_return(nil)
+      end
+      hour_loans.each do |policy|
+        context "Policy: #{policy[:desc]}" do
+          it "returns On shelf and length of time" do
+            allow(item).to receive(:item_policy).and_return(policy[:value])
+            expect(subject.status.to_s).to eq("On shelf (#{policy[:desc]})")
+            expect(subject.status.intent).to eq("success")
+          end
+        end
+      end
+    end
+    context "process_type: LOAN" do
+      before(:each) do
+        allow(item).to receive(:process_type).and_return("LOAN")
+      end
+      context "Basic loan" do
+        it "returns Checkout out warning" do
+          expect(subject.status.to_s).to eq("Checked out")
+          expect(subject.status.intent).to eq("warning")
+          expect(subject.status.icon).to eq("warning")
+        end
+      end
+      context "reserves item" do
+        # SEARCH-1444
+        ["CAR", "RESI", "RESP", "RESC"].each do |location|
+          it "returns reserves success status for #{location}" do
+            allow(item.physical_location.code).to receive(:location).and_return(location)
+            expect(subject.status.to_s).to include("Checked out: On reserve at #{item.physical_location.text}")
+            expect(subject.status.intent).to eq("warning")
+          end
+        end
+      end
+      hour_loans.each do |policy|
+        context "Policy: #{policy[:desc]}" do
+          it "returns On shelf and length of time" do
+            allow(item).to receive(:item_policy).and_return(policy[:value])
+            expect(subject.status.to_s).to eq("Checked out: (#{policy[:desc]})")
+            expect(subject.status.intent).to eq("warning")
+          end
+        end
+      end
+    end
+    [
+      {code: "ACQ", text: "On order: Use Get This to place a request"},
+      {code: "CLAIM_RETURNED_LOAN", text: "Item unavailable: Last user claims it was returned"},
+      {code: "HOLDSHELF", text: "On hold shelf"},
+      {code: "LOST_ILL", text: "Item unavailable: Lost"},
+      {code: "LOST_LOAN", text: "Item unavailable: Lost"},
+      {code: "LOST_LOAN_AND_PAID", text: "Item unavailable: Lost"},
+      {code: "TECHNICAL", text: "Item unavailable: In process"},
+      {code: "TRANSIT", text: "Item in transit between U-M libraries"},
+      {code: "TRANSIT_TO_REMOTE_STORAGE", text: "Item in transit between U-M libraries"},
+      {code: "WORK_ORDER_DEPARTMENT", text: "In Process: Use Get This to request a copy"}
+    ].each do |process_type|
+      context "Process type: #{process_type[:code]}" do
+        it "returns expected text with warning" do
+          allow(item).to receive(:process_type).and_return(process_type[:code])
+          expect(subject.status.to_s).to eq(process_type[:text])
+          expect(subject.status.intent).to eq("warning")
+        end
+      end
+    end
+    [
+      {code: "ILL", text: "Checked out: Use Get This to request I.L.L."},
+      {code: "MISSING", text: "Item unavailable: Missing"}
+    ].each do |process_type|
+      context "Process type: #{process_type[:code]}" do
+        it "returns expected text with error" do
+          allow(item).to receive(:process_type).and_return(process_type[:code])
+          expect(subject.status.to_s).to eq(process_type[:text])
+          expect(subject.status.intent).to eq("error")
+        end
+      end
+    end
+    context "CVGA in a WORK_ORDER_DEPARTMENT" do
+      # From LIBSEARCH-883
+      it "returns error Unavailable status" do
+        allow(item).to receive(:process_type).and_return("WORK_ORDER_DEPARTMENT")
+        allow(item.physical_location.code).to receive(:library).and_return("SHAP")
+        allow(item.physical_location.code).to receive(:location).and_return("GAME")
+        expect(subject.status.to_s).to eq("Unavailable")
+        expect(subject.status.intent).to eq("error")
+      end
+    end
   end
 end
