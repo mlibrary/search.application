@@ -42,7 +42,7 @@ module Factories
     end
 
     def title_link_fields
-      ["new_title", "other_titles", "previous_title", "related_title"].map do |f|
+      ["new_title", "other_titles", "preferred_title", "previous_title", "related_title"].map do |f|
         [f, link_field("title")]
       end
     end
