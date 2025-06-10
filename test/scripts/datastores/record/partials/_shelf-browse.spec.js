@@ -25,7 +25,9 @@ describe.only('shelfBrowse', function () {
           <li></li>
           <li></li>
           <li></li>
+          <li></li>
           <li class="current-record"></li>
+          <li></li>
           <li></li>
           <li></li>
           <li></li>
@@ -146,26 +148,6 @@ describe.only('shelfBrowse', function () {
       expect(lastPage, 'the `data-page` value of the last item should be more than the value of the current record').to.be.greaterThan(Number(getCurrentRecord().getAttribute('data-page')));
     });
 
-    it('should change `data-page` attributes on resize', function () {
-      // Call the function
-      shelfBrowse();
-
-      // Check the current window width
-      expect(window.innerWidth, 'window.innerWidth should be `1024` by default').to.equal(1024);
-
-      // Check the `data-page` value of the first item
-      const firstPage = getItems()[0].getAttribute('data-page');
-      expect(firstPage, 'first item should have `data-page` set').to.equal('-1');
-
-      // Change the window width to less than `640`
-      const width = 500;
-      sinon.stub(window, 'innerWidth').value(width);
-      expect(window.innerWidth, `window.innerWidth should be resized to ${width}`).to.equal(width);
-
-      // Check the `data-page` value of the first item again
-      expect(getItems()[0].getAttribute('data-page'), 'first item should have `data-page` set').to.equal(firstPage);
-    });
-
     it('should hide all list items that are not on page 0', function () {
       // Call the function
       shelfBrowse();
@@ -193,7 +175,7 @@ describe.only('shelfBrowse', function () {
       expect(getList().hasAttribute('data-first-page-difference'), '`data-first-page-difference` should be set').to.be.true;
 
       // Check that the `data-first-page-difference` attribute is set to `2`
-      expect(getList().getAttribute('data-first-page-difference'), '`data-first-page-difference` should be set to `2`').to.equal('2');
+      expect(getList().getAttribute('data-first-page-difference'), '`data-first-page-difference` should be set to `1`').to.equal('1');
     });
   });
 
@@ -295,6 +277,8 @@ describe.only('shelfBrowse', function () {
       expect(getPreviousButton().hasAttribute('disabled'), 'previous button should be disabled on the first page').to.be.true;
     });
   });
+
+  // PREVIOUS/NEXT BUTTON TEXT???
 
   describe('next records', function () {
     beforeEach(function () {
@@ -427,17 +411,121 @@ describe.only('shelfBrowse', function () {
     });
   });
 
-  describe.skip('Resizing', function () {
+  describe('Resizing', function () {
+    let screenSizes = null;
+    let visibleItems = null;
+
+    beforeEach(function () {
+      screenSizes = {
+        medium: 820,
+        small: 640
+      };
+
+      visibleItems = () => {
+        return Array.from(getItems()).filter((item) => {
+          return !item.hasAttribute('style');
+        }).length;
+      };
+    });
+
+    afterEach(function () {
+      screenSizes = null;
+      visibleItems = null;
+    });
+
+    it('should change the `data-first-page-difference` attribute on resize', function () {
+      // Call the function
+      shelfBrowse();
+
+      // Get the `data-first-page-difference` value
+      const getFirstPageDifference = () => {
+        return getList().getAttribute('data-first-page-difference');
+      };
+
+      // Get initial `data-first-page-difference` value
+      const priorFirstPageDifference = getFirstPageDifference();
+
+      // Check the initial `data-first-page-difference` value
+      expect(getFirstPageDifference(), '`data-first-page-difference` should be set to `1` by default').to.equal(priorFirstPageDifference);
+
+      // Change the window width to less than `640`
+      sinon.stub(window, 'innerWidth').value(screenSizes.small - 1);
+
+      // Call the function again
+      shelfBrowse();
+
+      // Check that the `data-first-page-difference` attribute is different than the initial value
+      expect(getFirstPageDifference(), '`data-first-page-difference` should be different than the prior value').to.not.equal(priorFirstPageDifference);
+    });
+
+    it('should change `data-page` attributes on resize', function () {
+      // Call the function
+      shelfBrowse();
+
+      // Get the `data-page` value of the first item
+      const getFirstItemPage = () => {
+        return getItems()[0].getAttribute('data-page');
+      };
+
+      // Check the `data-page` value of the first item before resizing
+      const firstPagePrior = getFirstItemPage();
+
+      // Check the `data-page` value of the first item
+      expect(getFirstItemPage(), 'first item should have `data-page` set to `-1`').to.equal(firstPagePrior);
+
+      // Change the window width to less than `640`
+      sinon.stub(window, 'innerWidth').value(screenSizes.small);
+
+      // Call the function again
+      shelfBrowse();
+
+      // Check that the `data-page` value of the first item no longer matches the prior value
+      expect(getFirstItemPage(), 'first item should no longer have `data-page` set to prior value').to.not.equal(firstPagePrior);
+    });
+
     it('should show five records', function () {
-      //
+      // Call the function
+      shelfBrowse();
+
+      // Check the current window width
+      expect(window.innerWidth, 'window.innerWidth should be greater than or equal to `820`').to.be.greaterThanOrEqual(screenSizes.medium);
+
+      // Check that only five records are visible by default
+      expect(visibleItems(), 'should only have five visible items when window width is greater than or equal to `820`').to.equal(5);
     });
 
     it('should show three records', function () {
-      //
+      // Change the window width to less than `820`, but greater than or equal to `640`
+      sinon.stub(window, 'innerWidth').value(screenSizes.medium - 1);
+
+      // Check the current window width
+      expect(window.innerWidth, 'window.innerWidth should be less than `820`, and greater than or equal to `640`').to.be.greaterThanOrEqual(screenSizes.small).and.lessThan(screenSizes.medium);
+
+      // Call the function
+      shelfBrowse();
+
+      // Fast forward time
+      fastForwardTime();
+
+      // Check that only three records are visible
+      expect(visibleItems(), 'should only have three visible items when window width is less than `820`').to.equal(3);
     });
 
     it('should show one record', function () {
-      //
+      // Change the window width to less than `640`
+      sinon.stub(window, 'innerWidth').value(screenSizes.small - 1);
+
+      // Check the current window width
+      expect(window.innerWidth, 'window.innerWidth should be less than `640`').to.be.lessThan(screenSizes.small);
+
+      // Call the function
+      shelfBrowse();
+
+      // Fast forward time
+      fastForwardTime();
+
+      // Check that only one record is visible
+      expect(visibleItems(), 'should only have one visible item when window width is less than `640`').to.equal(1);
     });
   });
 });
