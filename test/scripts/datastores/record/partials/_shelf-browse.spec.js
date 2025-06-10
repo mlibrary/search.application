@@ -3,9 +3,6 @@ import shelfBrowse from '../../../../../assets/scripts/datastores/record/partial
 import sinon from 'sinon';
 
 describe.only('shelfBrowse', function () {
-  /* Uncomment
-  let getCurrentRecordButton = null;
-  */
   let getPreviousButton = null;
   let getList = null;
   let getDataCurrentPage = null;
@@ -13,6 +10,7 @@ describe.only('shelfBrowse', function () {
   let getNextButton = null;
   let getCurrentRecord = null;
   let fastForwardTime = null;
+  let getCurrentRecordButton = null;
 
   beforeEach(function () {
     // Apply HTML to the body
@@ -43,11 +41,6 @@ describe.only('shelfBrowse', function () {
       </div>
     `;
 
-    /* Uncomment
-    getCurrentRecordButton = () => {
-      return document.querySelector('button.shelf-browse__return');
-    };
-    */
     getPreviousButton = () => {
       return document.querySelector('button.shelf-browse__carousel--button-previous');
     };
@@ -77,12 +70,13 @@ describe.only('shelfBrowse', function () {
     fastForwardTime = (time = 250) => {
       return clock.tick(time);
     };
+
+    getCurrentRecordButton = () => {
+      return document.querySelector('button.shelf-browse__return');
+    };
   });
 
   afterEach(function () {
-    /* Uncomment
-    getCurrentRecordButton = null;
-    */
     getPreviousButton = null;
     getList = null;
     getDataCurrentPage = null;
@@ -90,6 +84,7 @@ describe.only('shelfBrowse', function () {
     getNextButton = null;
     getCurrentRecord = null;
     fastForwardTime = null;
+    getCurrentRecordButton = null;
   });
 
   describe('setPageNumbers()', function () {
@@ -215,8 +210,11 @@ describe.only('shelfBrowse', function () {
       // Click the previous button
       getPreviousButton().click();
 
+      // Get expected page number
+      const expectedPage = priorDataCurrentPage - 1;
+
       // Check that the carousel has `data-current-page` set to `-1`
-      expect(getDataCurrentPage(true), `\`data-current-page\` should be set to \`${priorDataCurrentPage - 1}\``).to.equal(priorDataCurrentPage - 1);
+      expect(getDataCurrentPage(true), `\`data-current-page\` should be set to \`${expectedPage}\``).to.equal(expectedPage);
     });
 
     it('should set animation classes', function () {
@@ -248,56 +246,184 @@ describe.only('shelfBrowse', function () {
     });
 
     it('should change visibility of records', function () {
-      //
+      // Get page items
+      const getPageItems = () => {
+        return Array.from(getItems()).filter((item) => {
+          return item.getAttribute('data-page') === getDataCurrentPage();
+        });
+      };
+
+      // Get the prior items
+      const priorItems = getPageItems();
+
+      // Click the previous button
+      getPreviousButton().click();
+
+      // Check that the prior items are visible
+      expect(priorItems.every((item) => {
+        return !item.hasAttribute('style');
+      }), 'prior items should still be visible').to.be.true;
+
+      // Fast forward time
+      fastForwardTime();
+
+      // Check that the prior items are hidden
+      expect(priorItems.every((item) => {
+        return item.getAttribute('style') === 'display: none;';
+      }), 'prior items should all be hidden').to.be.true;
+
+      // Check that the current items are visible
+      expect(getPageItems().every((item) => {
+        return !item.hasAttribute('style');
+      }), 'current items should all be visible').to.be.true;
     });
 
     it('should be disabled on the first page', function () {
-      // Check if first item is visible, and get its `data-page` value
+      // Check that the previous button is enabled
+      expect(getPreviousButton().hasAttribute('disabled'), 'previous button should not be disabled on the first page').to.be.false;
+
       // Click the previous button
       getPreviousButton().click();
+
+      // Get first page
+      const firstPage = getItems()[0].getAttribute('data-page');
+
+      // Check that `data-current-page` is set to the first page
+      expect(getDataCurrentPage(), `\`data-current-page\` should be set to \`${firstPage}\``).to.equal(firstPage);
 
       // Check that the previous button is disabled
       expect(getPreviousButton().hasAttribute('disabled'), 'previous button should be disabled on the first page').to.be.true;
     });
   });
 
-  describe.skip('next records', function () {
+  describe('next records', function () {
     beforeEach(function () {
       // Call the function
       shelfBrowse();
+    });
+
+    it('should update the `data-current-page` attribute to be one more than the prior value', function () {
+      // Get the `data-current-page` value before clicking the next button
+      const priorDataCurrentPage = getDataCurrentPage(true);
 
       // Click the next button
       getNextButton().click();
+
+      // Get expected page number
+      const expectedPage = priorDataCurrentPage + 1;
+
+      // Check that the carousel has `data-current-page` set to `1`
+      expect(getDataCurrentPage(true), `\`data-current-page\` should be set to \`${expectedPage}\``).to.equal(expectedPage);
     });
 
-    it('should set an animation class', function () {
-      // Get the current items
-      const currentItems = Array.from(getItems()).filter((item) => {
-        return !item.hasAttribute('style');
-      });
+    it('should set animation classes', function () {
+      // Get page items
+      const getPageItems = () => {
+        return Array.from(getItems()).filter((item) => {
+          return item.getAttribute('data-page') === getDataCurrentPage();
+        });
+      };
+
+      // Get the prior items
+      const priorItems = getPageItems();
+
+      // Click the next button
+      getNextButton().click();
+
+      // Check that the prior items have an animation class
+      expect(priorItems.every((item) => {
+        return item.classList.contains('animation-out-next');
+      }), 'prior items should all have the `animation-out-next` class').to.be.true;
+
+      // Fast forward time
+      fastForwardTime();
 
       // Check that the current items have an animation class
-      currentItems.forEach((item) => {
-        expect(item.classList.contains('animation-out-next')).to.be.true;
-      });
+      expect(getPageItems().every((item) => {
+        return item.classList.contains('animation-in-next');
+      }), 'current items should all have the `animation-in-next` class').to.be.true;
     });
 
-    it('should show the next set of records', function () {
-      //
+    it('should change visibility of records', function () {
+      // Get page items
+      const getPageItems = () => {
+        return Array.from(getItems()).filter((item) => {
+          return item.getAttribute('data-page') === getDataCurrentPage();
+        });
+      };
+
+      // Get the prior items
+      const priorItems = getPageItems();
+
+      // Click the next button
+      getNextButton().click();
+
+      // Check that the prior items are visible
+      expect(priorItems.every((item) => {
+        return !item.hasAttribute('style');
+      }), 'prior items should still be visible').to.be.true;
+
+      // Fast forward time
+      fastForwardTime();
+
+      // Check that the prior items are hidden
+      expect(priorItems.every((item) => {
+        return item.getAttribute('style') === 'display: none;';
+      }), 'prior items should all be hidden').to.be.true;
+
+      // Check that the current items are visible
+      expect(getPageItems().every((item) => {
+        return !item.hasAttribute('style');
+      }), 'current items should all be visible').to.be.true;
     });
 
     it('should be disabled on the last page', function () {
-      expect(getNextButton().hasAttribute('disabled'), 'next button should be disabled on the last page').to.be.true;
+      // Check that the previous button is enabled
+      expect(getNextButton().hasAttribute('disabled'), 'previous button should not be disabled on the last page').to.be.false;
+
+      // Click the previous button
+      getNextButton().click();
+
+      // Get last page
+      const lastPage = getItems()[getItems().length - 1].getAttribute('data-page');
+
+      // Check that `data-current-page` is set to the last page
+      expect(getDataCurrentPage(), `\`data-current-page\` should be set to \`${lastPage}\``).to.equal(lastPage);
+
+      // Check that the previous button is disabled
+      expect(getNextButton().hasAttribute('disabled'), 'previous button should be disabled on the last page').to.be.true;
     });
   });
 
-  describe.skip('Return to current record', function () {
-    it('should remove the `disabled` attribute when not viewing current record', function () {
-      //
+  describe('Return to current record', function () {
+    beforeEach(function () {
+      // Call the function
+      shelfBrowse();
     });
 
-    it('should show the current record', function () {
-      //
+    it ('should be disabled when on starting page', function () {
+      // Check that the current record button is disabled
+      expect(getCurrentRecordButton().hasAttribute('disabled'), 'current record button should be disabled').to.be.true;
+
+      // Click the next button
+      getNextButton().click();
+
+      // Check that the current record button is enabled
+      expect(getCurrentRecordButton().hasAttribute('disabled'), 'current record button should not be disabled').to.be.false;
+    });
+
+    it('should return to current record', function () {
+      // Click the next button to enable the current record button
+      getNextButton().click();
+
+      // Check that the current record is not on page 0
+      expect(getDataCurrentPage(), '`data-current-page` should not be `0`').to.not.equal('0');
+
+      // Click the return to current record button
+      getCurrentRecordButton().click();
+
+      // Check that the current record is on page 0
+      expect(getDataCurrentPage(), '`data-current-page` should be `0`').to.equal('0');
     });
   });
 
