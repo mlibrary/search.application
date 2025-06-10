@@ -126,9 +126,6 @@ module Search
             RECORD_INFO_METHODS.map { |field| public_send(field) }.compact
           end
 
-          def marc_record
-          end
-
           def citations
             OpenStruct.new(
               mla: "<i>Birds</i>. v. 1-Jan./Feb. 1966-, 1966-2013.",
@@ -140,8 +137,15 @@ module Search
             )
           end
 
+          def shelf_browse_call_number
+            @record.bib.call_number&.first&.text
+          end
+
           def indexing_date
             "20250217"
+          end
+
+          def marc_record
           end
 
           def format
