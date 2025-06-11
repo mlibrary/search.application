@@ -2,19 +2,8 @@ import { expect } from 'chai';
 import shelfBrowse from '../../../../../assets/scripts/datastores/record/partials/_shelf-browse.js';
 import sinon from 'sinon';
 
-describe.only('shelfBrowse', function () {
-  let getPreviousButton = null;
-  let getList = null;
-  let getDataCurrentPage = null;
-  let getItems = null;
-  let getNextButton = null;
-  let getCurrentRecord = null;
-  let fastForwardTime = null;
-  let getCurrentRecordButton = null;
-
-  beforeEach(function () {
-    // Apply HTML to the body
-    document.body.innerHTML = `
+describe('shelfBrowse', function () {
+  const innerHTML = `
       <div class="shelf-browse">
         <button class="shelf-browse__carousel--button-previous">
           <span class="visually-hidden">Previous 5 records</span>
@@ -42,6 +31,18 @@ describe.only('shelfBrowse', function () {
         </button>
       </div>
     `;
+  let getPreviousButton = null;
+  let getList = null;
+  let getDataCurrentPage = null;
+  let getItems = null;
+  let getNextButton = null;
+  let getCurrentRecord = null;
+  let fastForwardTime = null;
+  let getCurrentRecordButton = null;
+
+  beforeEach(function () {
+    // Apply HTML to the body
+    document.body.innerHTML = innerHTML;
 
     getPreviousButton = () => {
       return document.querySelector('button.shelf-browse__carousel--button-previous');
@@ -276,9 +277,29 @@ describe.only('shelfBrowse', function () {
       // Check that the previous button is disabled
       expect(getPreviousButton().hasAttribute('disabled'), 'previous button should be disabled on the first page').to.be.true;
     });
-  });
 
-  // PREVIOUS/NEXT BUTTON TEXT???
+    it('should update the previous button text', function () {
+      // Reapply the HTML to the body
+      document.body.innerHTML = innerHTML;
+
+      // Get the original text of the previous button
+      const originalPreviousText = getPreviousButton().querySelector('.visually-hidden').textContent;
+
+      // Check that the previous button has the correct text
+      expect(originalPreviousText, 'previous button should have correct text').to.equal('Previous 5 records');
+
+      // Call the function
+      shelfBrowse();
+
+      // Get the number of items on the previous page
+      const previousPageItems = Array.from(getItems()).filter((item) => {
+        return item.getAttribute('data-page') === String(Number(getDataCurrentPage()) - 1);
+      }).length;
+
+      // Check that the previous button has the correct text
+      expect(getPreviousButton().querySelector('.visually-hidden').textContent, 'previous button should have updated text').to.equal(`Previous ${previousPageItems} record${previousPageItems === 1 ? '' : 's'}`);
+    });
+  });
 
   describe('next records', function () {
     beforeEach(function () {
@@ -362,10 +383,10 @@ describe.only('shelfBrowse', function () {
     });
 
     it('should be disabled on the last page', function () {
-      // Check that the previous button is enabled
-      expect(getNextButton().hasAttribute('disabled'), 'previous button should not be disabled on the last page').to.be.false;
+      // Check that the next button is enabled
+      expect(getNextButton().hasAttribute('disabled'), 'next button should not be disabled on the last page').to.be.false;
 
-      // Click the previous button
+      // Click the next button
       getNextButton().click();
 
       // Get last page
@@ -374,8 +395,30 @@ describe.only('shelfBrowse', function () {
       // Check that `data-current-page` is set to the last page
       expect(getDataCurrentPage(), `\`data-current-page\` should be set to \`${lastPage}\``).to.equal(lastPage);
 
-      // Check that the previous button is disabled
-      expect(getNextButton().hasAttribute('disabled'), 'previous button should be disabled on the last page').to.be.true;
+      // Check that the next button is disabled
+      expect(getNextButton().hasAttribute('disabled'), 'next button should be disabled on the last page').to.be.true;
+    });
+
+    it('should update the next button text', function () {
+      // Reapply the HTML to the body
+      document.body.innerHTML = innerHTML;
+
+      // Get the original text of the next button
+      const originalNextText = getNextButton().querySelector('.visually-hidden').textContent;
+
+      // Check that the next button has the correct text
+      expect(originalNextText, 'next button should have correct text').to.equal('Next 5 records');
+
+      // Call the function
+      shelfBrowse();
+
+      // Get the number of items on the next page
+      const nextPageItems = Array.from(getItems()).filter((item) => {
+        return item.getAttribute('data-page') === String(Number(getDataCurrentPage()) + 1);
+      }).length;
+
+      // Check that the next button has the correct text
+      expect(getNextButton().querySelector('.visually-hidden').textContent, 'next button should have updated text').to.equal(`Next ${nextPageItems} record${nextPageItems === 1 ? '' : 's'}`);
     });
   });
 
