@@ -11,10 +11,10 @@ response = Net::HTTP.get(uri)
 items = JSON.parse(response)
 %>
 <div class="container__rounded shelf-browse">
-  <header class="shelf-browse__header">
+  <div class="shelf-browse__header">
     <h2 class="h4">Shelf browse</h2>
     <%= link_to(body: "Browse in call number list", url: uri.to_s.sub("carousel", "callnumber"), classes: ["shelf-browse__header--link"]) %>
-  </header>
+  </div>
   <div class="shelf-browse__carousel">
     <button class="shelf-browse__carousel--button shelf-browse__carousel--button-previous" title="Previous page" disabled>
       <span class="material-symbols-rounded" aria-hidden="true">arrow_back_ios</span>
@@ -23,64 +23,75 @@ items = JSON.parse(response)
     <ul class="shelf-browse__carousel--items list__no-style" data-current-page="0" aria-live="polite">
       <% items.each_with_index do | item, index | %>
         <%
+          classes = ["shelf-browse__carousel--item"]
+          label = item["title"]
+          caption = "Current record"
+          rows = []
           is_current_record = item["call_number"] == call_number
+          if is_current_record
+            classes << "current-record"
+          end
           is_end_and_not_current = (index == 0 || index == (items.length - 1)) && !is_current_record
+          if is_end_and_not_current
+            classes << "end-record"
+            browse_text = "Continue browsing in call number list"
+            label = "#{browse_text} for #{item["title"]}"
+            caption = "<span class=\"material-symbols-rounded\" aria-hidden=\"true\">list</span>"
+            rows << { header: "Navigate", data: browse_text, uid: "navigate" }
+          end
+          if !is_end_and_not_current
+            rows << { header: "Book cover", data: "<img src=\"#{item["book_cover_url"]}\" onerror=\"this.src='/images/placeholders/placeholder-#{index % 15}.svg'\" alt=\"Book cover for #{item["title"]}\">", uid: "book_cover_url" }
+            rows << { header: "Title", uid: "title" }
+            rows << { header: "Author", uid: "author" }
+            rows << { header: "Date", uid: "date" }
+          end
+          is_highlighted_record = is_current_record || is_end_and_not_current
+          if is_highlighted_record
+            classes << "highlighted-record"
+          end
+          attributes = [
+            "class=\"#{classes.join(" ")}\""
+          ]
+          if is_current_record
+            attributes << "data-page=\"0\""
+          end
+          rows << { header: "Call number", uid: "call_number" }
         %>
-        <% if is_current_record %>
-          <li class="highlighted-record current-record" data-page="0">
-        <% elsif is_end_and_not_current%>
-          <li class="highlighted-record end-record">
-        <% else %>
-          <li>
-        <% end %>
-          <a href="<%= item["url"] %>" class="container__rounded">
-            <% if is_current_record %>
-              <p class="current-record__badge strong">Current Record</p>
-            <% elsif is_end_and_not_current%>
-              <span class="material-symbols-rounded" aria-hidden="true">list</span>
+        <li <%= attributes.join(" ") %>>
+          <% if !is_current_record %>
+            <a href="<%= item["url"] %>">
+          <% end %>
+          <table class="container__rounded" aria-label="<%= label %>">
+            <% if is_highlighted_record %>
+              <caption><%= caption %></caption>
             <% end %>
-            <dl>
-              <% if is_end_and_not_current %>
-                <dt class="visually-hidden">
-                  Navigate
-                </dt>
-                <dd class="shelf-browse__carousel--title strong">
-                  Continue browsing in call number list
-                </dd>
-              <% else %>
-                <dt class="visually-hidden">
-                  Book Cover
-                </dt>
-                <dd class="shelf-browse__carousel--book_cover">
-                  <img src="<%= item["book_cover_url"] %>" onerror="this.src='/images/placeholders/placeholder-<%= index % 15 %>.svg'" alt="Book cover for <%= item["title"] %>">
-                </dd>
-                <dt class="visually-hidden">
-                  Title
-                </dt>
-                <dd class="shelf-browse__carousel--title strong">
-                  <%= item["title"] %>
-                </dd>
-                <dt class="visually-hidden">
-                  Author
-                </dt>
-                <dd class="shelf-browse__carousel--author">
-                  <%= item["author"] %>
-                </dd>
-                <dt class="visually-hidden">
-                  Date
-                </dt>
-                <dd class="shelf-browse__carousel--date">
-                  <%= item["date"] %>
-                </dd>
+            <thead class="visually-hidden">
+              <tr>
+                <th scope="col">Field</th>
+                <th scope="col">Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% rows.each do |row| %>
+                <% 
+                  value = row[:data] || item[row[:uid]]
+                  if value
+                %>
+                  <tr>
+                    <th class="visually-hidden" scope="row">
+                      <%= row[:header] %>
+                    </th>
+                    <td class="shelf-browse__carousel--<%= row[:uid] %>">
+                      <%= value %>
+                    </td>
+                  </tr>
+                <% end %>
               <% end %>
-              <dt class="visually-hidden">
-                Call Number
-              </dt>
-              <dd class="shelf-browse__carousel--call_number">
-                <%= item["call_number"] %>
-              </dd>
-            </dl>
-          </a>
+            </tbody>
+          </table>
+          <% if !is_current_record %>
+            </a>
+          <% end %>
         </li>
       <% end %>
     </ul>
