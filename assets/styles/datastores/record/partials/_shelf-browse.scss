@@ -3,6 +3,7 @@
 @use '../../../icons';
 @use '../../../media';
 @use '../../../utilities';
+@use '../../../typography';
 
 // --------------------------------------------------
 //
@@ -16,8 +17,12 @@
 //   2. Container
 //   3. Header
 //   4. Carousel
-//     4.2.1 Current Record
-//     4.2.2 Animations
+//     4.1 Buttons
+//     4.2 Items
+//       4.2.1 Animations
+//       4.2.2 Table
+//       4.2.3 Highlighted Record
+//       4.2.4 Current Record
 //   5. Return to Current Record
 //
 // --------------------------------------------------
@@ -31,6 +36,7 @@
 // *               * //
 
 $class: 'shelf-browse';
+$directions: previous, next;
 
 
 
@@ -113,7 +119,7 @@ $class: 'shelf-browse';
   display: grid;
   gap: 1rem;
   grid-area: carousel;
-  grid-template-areas: "prev list next";
+  grid-template-areas: "previous list next";
   grid-template-columns: auto 1fr auto;
   grid-template-rows: auto;
 }
@@ -129,11 +135,10 @@ $class: 'shelf-browse';
   & {
     color: colors.$color-anchor;
   }
-  &.shelf-browse__carousel--button-previous {
-    grid-area: prev;
-  }
-  &.shelf-browse__carousel--button-next {
-    grid-area: next;
+  @each $direction in $directions {
+    &.shelf-browse__carousel--button-#{$direction} {
+      grid-area: $direction;
+    }
   }
   .material-symbols-rounded {
     font-size: 2rem;
@@ -189,89 +194,44 @@ $class: 'shelf-browse';
     }
     & > li {
       flex: 1 1 0;
+      &:not(.highlighted-record) {
+        padding-top: 2rem;
+      }
       & > a {
         color: inherit;
         display: block;
         height: 100%;
         text-decoration: none;
-        &:hover .strong {
-          text-decoration: underline;
+        &:hover table td.shelf-browse__carousel--title,
+        &:hover table td.shelf-browse__carousel--navigate {
           text-decoration-thickness: 0.125rem;
         }
-        .material-symbols-rounded {
-          color: colors.$color-anchor;
-        }
-      }
-      &.highlighted-record table {
-        border-color: var(--search-color-blue-500);
-      }
-      &:not(.highlighted-record) {
-        padding-top: 2rem;
-      }
-      & table {
-        border: 4px solid transparent;
-        display: block;
-        height: 100%;
-        padding: 0.25rem 0;
-        tbody td {
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          overflow-wrap: anywhere;
-          padding: 0 0.25rem;
-        }
-        tbody tr {
-          border: 0.25rem solid transparent;
-        }
-      }
-      &.current-record table caption {
-        background: var(--search-color-blue-500);
-        -webkit-clip-path: polygon(0 0, 100% 0, calc(100% - .75rem) 50%, 100% 100%, 0 100%);
-        clip-path: polygon(0 0, 100% 0, calc(100% - .75rem) 50%, 100% 100%, 0 100%);
-        color: #fff;
-        display: block;
-        font-size: .5rem;
-        letter-spacing: 1px;
-        margin: 0.25rem 0.5rem 0.25rem -1px;
-        padding: .5rem 1.25rem .5rem .5rem;
-        text-transform: uppercase;
-      }
-      &.animation-out-next {
-        @include carouselAnimation;
-      }
-      &.animation-out-previous {
-        @include carouselAnimation($direction: Right);
-      }
-      &.animation-in-next {
-        @include carouselAnimation($fade: In, $direction: Right);
-      }
-      &.animation-in-previous {
-        @include carouselAnimation($fade: In);
-      }
-      @media (prefers-reduced-motion) {
-        &[class*="animation-"] {
-          animation: none;
-        }
       }
     }
   }
 }
 
-// * 4.2.1 CURRENT RECORD * //
+// * 4.2.1 ANIMATIONS * //
 
-body.no-javascript .#{$class} > .#{$class}__carousel > .#{$class}__carousel--items {
-  & > li.current-record {
-    img {
-      display: none;
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--items > li {
+  &.animation-out-next {
+    @include carouselAnimation;
+  }
+  &.animation-out-previous {
+    @include carouselAnimation($direction: Right);
+  }
+  &.animation-in-next {
+    @include carouselAnimation($fade: In, $direction: Right);
+  }
+  &.animation-in-previous {
+    @include carouselAnimation($fade: In);
+  }
+  @media (prefers-reduced-motion) {
+    &[class*="animation-"] {
+      animation: none;
     }
   }
-  & > li:not(.current-record) {
-    display: none;
-  }
 }
-
-// * 4.2.2 ANIMATIONS * //
 
 @keyframes slideInFromLeft {
   from {
@@ -326,6 +286,70 @@ body.no-javascript .#{$class} > .#{$class}__carousel > .#{$class}__carousel--ite
     opacity: 0;
   }
 }
+
+// * 4.2.2 TABLE * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--items > li table {
+  border: 4px solid transparent;
+  display: block;
+  height: 100%;
+  padding: 0.25rem 0;
+  tbody tr {
+    border: 0.25rem solid transparent;
+    td {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      overflow-wrap: anywhere;
+      padding: 0 0.25rem;
+      img {
+        width: 100%;
+      }
+      &.shelf-browse__carousel--title,
+      &.shelf-browse__carousel--navigate {
+        color: colors.$color-anchor;
+        font-weight: typography.$weight-bold;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// * 4.2.3 HIGHLIGHTED RECORD * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--items > li.highlighted-record table {
+  border-color: var(--search-color-blue-500);
+  caption {
+    margin: 0;
+    padding: 0.25rem 0.5rem 0 0.5rem;
+    .material-symbols-rounded {
+      color: colors.$color-anchor;
+    }
+  }
+}
+
+// * 4.2.4 CURRENT RECORD * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--items > li {
+  &.current-record table caption {
+    background: var(--search-color-blue-500);
+    -webkit-clip-path: polygon(0 0, 100% 0, calc(100% - .75rem) 50%, 100% 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, calc(100% - .75rem) 50%, 100% 100%, 0 100%);
+    color: #fff;
+    display: block;
+    font-size: .5rem;
+    letter-spacing: 1px;
+    margin: 0.25rem 0.5rem 0.25rem -1px;
+    padding: .5rem 1.25rem .5rem .5rem;
+    text-transform: uppercase;
+  }
+  body.no-javascript &.current-record img,
+  body.no-javascript &:not(.current-record) {
+    display: none;
+  }
+}
+
 
 
 
