@@ -275,6 +275,11 @@ describe Search::Presenters::Record::Catalog::Full do
       end
     end
   end
+  context "#shelf_browse_call_number" do
+    it "returns the first call number" do
+      expect(subject.shelf_browse_call_number).to eq("call_number_text")
+    end
+  end
 
   context "Parallel plain text fields" do
     my_parallel_plain_text_fields.each do |uid, name|

@@ -1,0 +1,365 @@
+@use '../../../colors';
+@use '../../../forms';
+@use '../../../icons';
+@use '../../../media';
+@use '../../../utilities';
+@use '../../../typography';
+
+// --------------------------------------------------
+//
+// # Record
+//   Styles to apply directly to `views/datastores/record/partials/_shelf-browse.erb`.
+//
+// ## Table of Contents
+//   1. Variables and Mixins
+//     1.1. Variables
+//     1.2. Mixins
+//   2. Container
+//   3. Header
+//   4. Carousel
+//     4.1 Buttons
+//     4.2 Items
+//       4.2.1 Animations
+//       4.2.2 Table
+//       4.2.3 Highlighted Record
+//       4.2.4 Current Record
+//   5. Return to Current Record
+//
+// --------------------------------------------------
+
+// ******************************* //
+// *** 1. VARIABLES AND MIXINS *** //
+// ******************************* //
+
+// *               * //
+// * 1.1 VARIABLES * //
+// *               * //
+
+$class: 'shelf-browse';
+$directions: previous, next;
+
+
+
+// *            * //
+// * 1.2 MIXINS * //
+// *            * //
+
+@mixin carouselAnimation($fade: Out, $direction: Left) {
+  animation:
+    0.25s ease-in-out fade#{$fade} forwards,
+    0.25s ease-in-out slide#{$fade}From#{$direction} forwards;
+}
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+.#{$class} {
+  display: grid;
+  gap: 1rem;
+  grid-template-areas:
+    "header"
+    "carousel"
+    "return";
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  padding: 1rem;
+  @include media.breakpoint('xs') {
+    grid-template-areas:
+      "header return"
+      "carousel carousel";
+    grid-template-columns: 1fr auto;
+  }
+  @media print {
+    display: none;
+  }
+}
+
+
+
+
+
+// ***************** //
+// *** 3. HEADER *** //
+// ***************** //
+
+.#{$class} > .#{$class}__header {
+  @include utilities.flex($wrap: true);
+  & {
+    grid-area: header;
+  }
+  h2 {
+    margin: 0;
+  }
+  a.#{$class}__header--link {
+    &:before {
+      @include icons.icon($icon: "list");
+      & {
+        font-size: 1.25rem;
+        line-height: 1;
+        margin-right: 0.25rem;
+      }
+    }
+  }
+}
+
+
+
+
+
+// ******************* //
+// *** 4. CAROUSEL *** //
+// ******************* //
+
+.#{$class} > .#{$class}__carousel {
+  display: grid;
+  gap: 1rem;
+  grid-area: carousel;
+  grid-template-areas: "previous list next";
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto;
+}
+
+
+
+// *             * //
+// * 4.1 BUTTONS * //
+// *             * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--button {
+  @include forms.button;
+  & {
+    color: colors.$color-anchor;
+  }
+  @each $direction in $directions {
+    &.shelf-browse__carousel--button-#{$direction} {
+      grid-area: $direction;
+    }
+  }
+  .material-symbols-rounded {
+    font-size: 2rem;
+  }
+}
+
+
+
+// *           * //
+// * 4.2 ITEMS * //
+// *           * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--items {
+  @include utilities.flex($align: stretch);
+  & {
+    font-size: 0.75rem;
+    font-variation-settings: "wdth" 87.5;
+    grid-area: list;
+    justify-content: left;
+    &[data-first-page-difference="1"] {
+      & > li:first-child {
+        @include media.breakpoint('xs') {
+          margin-left: 33.33%;
+        }
+        @include media.breakpoint('sm') {
+          margin-left: 20%;
+        }
+      }
+    }
+    &[data-first-page-difference="2"] {
+      & > li:first-child {
+        @include media.breakpoint('xs') {
+          margin-left: 66.66%;
+        }
+        @include media.breakpoint('sm') {
+          margin-left: 40%;
+        }
+      }
+    }
+    &[data-first-page-difference="3"] {
+      & > li:first-child {
+        @include media.breakpoint('sm') {
+          margin-left: 60%;
+        }
+      }
+    }
+    &[data-first-page-difference="4"] {
+      & > li:first-child {
+        @include media.breakpoint('sm') {
+          margin-left: 80%;
+        }
+      }
+    }
+    & > li {
+      flex: 1 1 0;
+      &:not(.highlighted-record) {
+        padding-top: 2rem;
+      }
+      & > a {
+        color: inherit;
+        display: block;
+        height: 100%;
+        text-decoration: none;
+        &:hover table td.shelf-browse__carousel--title,
+        &:hover table td.shelf-browse__carousel--navigate {
+          text-decoration-thickness: 0.125rem;
+        }
+      }
+    }
+  }
+}
+
+// * 4.2.1 ANIMATIONS * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--items > li {
+  &.animation-out-next {
+    @include carouselAnimation;
+  }
+  &.animation-out-previous {
+    @include carouselAnimation($direction: Right);
+  }
+  &.animation-in-next {
+    @include carouselAnimation($fade: In, $direction: Right);
+  }
+  &.animation-in-previous {
+    @include carouselAnimation($fade: In);
+  }
+  @media (prefers-reduced-motion) {
+    &[class*="animation-"] {
+      animation: none;
+    }
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-1rem);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(1rem);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutFromLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-1rem);
+  }
+}
+
+@keyframes slideOutFromRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(1rem);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+// * 4.2.2 TABLE * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--items > li table {
+  border: 4px solid transparent;
+  display: block;
+  height: 100%;
+  padding: 0.25rem 0;
+  tbody tr {
+    border: 0.25rem solid transparent;
+    td {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      overflow-wrap: anywhere;
+      padding: 0 0.25rem;
+      img {
+        width: 100%;
+      }
+      &.shelf-browse__carousel--title,
+      &.shelf-browse__carousel--navigate {
+        color: colors.$color-anchor;
+        font-weight: typography.$weight-bold;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// * 4.2.3 HIGHLIGHTED RECORD * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--items > li.highlighted-record table {
+  border-color: var(--search-color-blue-500);
+  caption {
+    margin: 0;
+    padding: 0.25rem 0.5rem 0 0.5rem;
+    .material-symbols-rounded {
+      color: colors.$color-anchor;
+    }
+  }
+}
+
+// * 4.2.4 CURRENT RECORD * //
+
+.#{$class} > .#{$class}__carousel > .#{$class}__carousel--items > li {
+  &.current-record table caption {
+    background: var(--search-color-blue-500);
+    -webkit-clip-path: polygon(0 0, 100% 0, calc(100% - .75rem) 50%, 100% 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, calc(100% - .75rem) 50%, 100% 100%, 0 100%);
+    color: #fff;
+    display: block;
+    font-size: .5rem;
+    letter-spacing: 1px;
+    margin: 0.25rem 0.5rem 0.25rem -1px;
+    padding: .5rem 1.25rem .5rem .5rem;
+    text-transform: uppercase;
+  }
+  body.no-javascript &.current-record img,
+  body.no-javascript &:not(.current-record) {
+    display: none;
+  }
+}
+
+
+
+
+
+// *********************************** //
+// *** 5. RETURN TO CURRENT RECORD *** //
+// *********************************** //
+
+.#{$class} > .#{$class}__return {
+  align-self: center;
+  grid-area: return;
+  justify-self: center;
+}
