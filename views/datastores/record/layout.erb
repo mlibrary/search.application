@@ -13,7 +13,7 @@
     <p>Resource Access: Needs to be a partial for Results</p>
   </div>
   <% if @record.shelf_browse_call_number %>
-    <%= erb :'datastores/record/partials/_shelf-browse', locals: { call_number: @record.shelf_browse_call_number } %>
+    <%= erb :'datastores/record/partials/_shelf-browse', locals: { records: @record.shelf_browse_records } %>
   <% end %>
   <% if @record.indexing_date %>
     <p class="record__indexing-date">

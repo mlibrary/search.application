@@ -1,19 +1,7 @@
-
-<% 
-require 'net/http'
-require 'json'
-require 'uri'
-
-uri = URI("https://search.lib.umich.edu/catalog/browse/carousel?query=#{call_number}")
-
-# Make the HTTP request and parse the JSON response
-response = Net::HTTP.get(uri)
-items = JSON.parse(response)
-%>
 <div class="container__rounded shelf-browse">
   <div class="shelf-browse__header">
     <h2 class="h4">Shelf browse</h2>
-    <%= link_to(body: "Browse in call number list", url: uri.to_s.sub("carousel", "callnumber"), classes: ["shelf-browse__header--link"]) %>
+    <%= link_to(body: "Browse in call number list", url: records.browse_url, classes: ["shelf-browse__header--link"]) %>
   </div>
   <div class="shelf-browse__carousel">
     <button class="shelf-browse__carousel--button shelf-browse__carousel--button-previous" title="Previous page" disabled>
@@ -21,49 +9,15 @@ items = JSON.parse(response)
       <span class="visually-hidden">Previous 5 records</span>
     </button>
     <ul class="shelf-browse__carousel--items list__no-style" data-current-page="0" aria-live="polite">
-      <% items.each_with_index do | item, index | %>
-        <%
-          classes = ["shelf-browse__carousel--item"]
-          label = item["title"]
-          caption = "Current record"
-          rows = []
-          is_current_record = item["call_number"] == call_number
-          if is_current_record
-            classes << "current-record"
-          end
-          is_end_and_not_current = (index == 0 || index == (items.length - 1)) && !is_current_record
-          if is_end_and_not_current
-            classes << "end-record"
-            browse_text = "Continue browsing in call number list"
-            label = "#{browse_text} for #{item["title"]}"
-            caption = "<span class=\"material-symbols-rounded\" aria-hidden=\"true\">list</span>"
-            rows << { header: "Navigate", data: browse_text, uid: "navigate" }
-          end
-          if !is_end_and_not_current
-            rows << { header: "Book cover", data: "<img src=\"#{item["book_cover_url"]}\" onerror=\"this.src='/images/placeholders/placeholder-#{index % 15}.svg'\" alt=\"Book cover for #{item["title"]}\">", uid: "book_cover_url" }
-            rows << { header: "Title", uid: "title" }
-            rows << { header: "Author", uid: "author" }
-            rows << { header: "Date", uid: "date" }
-          end
-          is_highlighted_record = is_current_record || is_end_and_not_current
-          if is_highlighted_record
-            classes << "highlighted-record"
-          end
-          attributes = [
-            "class=\"#{classes.join(" ")}\""
-          ]
-          if is_current_record
-            attributes << "data-page=\"0\""
-          end
-          rows << { header: "Call number", uid: "call_number" }
-        %>
-        <li <%= attributes.join(" ") %>>
-          <% if !is_current_record %>
-            <a href="<%= item["url"] %>">
+      <% records.each do |record| %>
+        <li <%= record.attributes %>>
+          <%#= record.methods %>
+          <% if record.has_url?%>
+            <a href="<%= record.url %>">
           <% end %>
-          <table class="container__rounded" aria-label="<%= label %>">
-            <% if is_highlighted_record %>
-              <caption><%= caption %></caption>
+          <table class="container__rounded" aria-label="<%= record.table_label %>">
+            <% if record.has_caption? %>
+              <caption><%= record.caption %></caption>
             <% end %>
             <thead class="visually-hidden">
               <tr>
@@ -72,24 +26,19 @@ items = JSON.parse(response)
               </tr>
             </thead>
             <tbody>
-              <% rows.each do |row| %>
-                <% 
-                  value = row[:data] || item[row[:uid]]
-                  if value
-                %>
-                  <tr>
-                    <th class="visually-hidden" scope="row">
-                      <%= row[:header] %>
-                    </th>
-                    <td class="shelf-browse__carousel--<%= row[:uid] %>">
-                      <%= value %>
-                    </td>
-                  </tr>
-                <% end %>
+              <% record.rows.each do | row | %>
+                <tr>
+                  <th class="visually-hidden" scope="row">
+                    <%= row.header %>
+                  </th>
+                  <td class="shelf-browse__carousel--<%= row.uid %>">
+                    <%= row.value %>
+                  </td>
+                </tr>
               <% end %>
             </tbody>
           </table>
-          <% if !is_current_record %>
+          <% if record.has_url? %>
             </a>
           <% end %>
         </li>

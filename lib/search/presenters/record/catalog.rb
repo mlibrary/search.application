@@ -141,6 +141,12 @@ module Search
             @record.bib.call_number&.first&.text
           end
 
+          def shelf_browse_records
+            if shelf_browse_call_number.present?
+              Search::Presenters::ShelfBrowse.new(call_number: shelf_browse_call_number)
+            end
+          end
+
           def indexing_date
             "20250217"
           end

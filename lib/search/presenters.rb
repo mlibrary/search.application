@@ -5,6 +5,7 @@ end
 require "search/presenters/affiliations"
 require "search/presenters/icons"
 require "search/presenters/search_options"
+require "search/presenters/shelf_browse"
 require "search/presenters/record"
 
 module Search::Presenters
