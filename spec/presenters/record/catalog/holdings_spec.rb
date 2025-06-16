@@ -31,11 +31,6 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings do
       expect(subject.list[1]&.heading).not_to eq("Online Resources")
     end
   end
-  context "#physical" do
-    it "returns an array of physical holdings with a url that includes the bib id for get this" do
-      expect(subject.list.last.items.first.action.url).to include(record.bib.id)
-    end
-  end
 end
 RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
   let(:hathi_trust_holdings) { create(:hathi_trust_holdings) }

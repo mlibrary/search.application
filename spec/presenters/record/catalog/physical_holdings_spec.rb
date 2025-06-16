@@ -88,24 +88,21 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
       item_cells = subject.rows.first
       expect(item_cells[0].to_s).to eq("Get This")
       expect(item_cells[1].to_s).to eq(physical_item.description)
-      expect(item_cells[2].to_s).to eq("Building use only")
+      expect(item_cells[2].to_s).to eq("On shelf")
       expect(item_cells[3].to_s).to eq(physical_item.call_number)
     end
     it "does not include description in array if there is no description in the column" do
       allow(physical_item).to receive(:description).and_return(nil)
       item_cells = subject.rows.first
       expect(item_cells[0].to_s).to eq("Get This")
-      expect(item_cells[1].to_s).to eq("Building use only")
+      expect(item_cells[1].to_s).to eq("On shelf")
       expect(item_cells[2].to_s).to eq(physical_item.call_number)
     end
   end
 end
 
 RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
-  let(:record) do
-    create(:catalog_record)
-  end
-  let(:item) { record.holdings.physical.list.first.items.first }
+  let(:item) { create(:physical_item) }
 
   hour_loans = [
     {value: "06", desc: "4-hour loan"},
@@ -115,14 +112,14 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
   hour_loans.freeze
 
   subject do
-    described_class.new(item: item, bib: record.bib)
+    described_class.new(item: item)
   end
 
   context "#action" do
     it "has text Get This by default" do
       expect(subject.action.partial).to eq("link_to")
       expect(subject.action.text).to eq("Get This")
-      expect(subject.action.url).to eq("#{S.base_url}/catalog/record/#{record.bib.id}/get-this/#{item.barcode}")
+      expect(subject.action.url).to eq(item.url)
     end
     context "no action" do
       let(:expect_no_action) do
@@ -131,6 +128,10 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
       end
       it "when barcode is nil" do
         allow(item).to receive(:barcode).and_return(nil)
+        expect_no_action
+      end
+      it "when url is nil" do
+        allow(item).to receive(:url).and_return(nil)
         expect_no_action
       end
       it "when in SHAP GAME" do
@@ -151,7 +152,19 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
       end
     end
     context "finding aid"
-    context "request_this"
+
+    context "request_this" do
+      ["SPEC", "BENT", "CLEM"].each do |library|
+        context library do
+          it "has a Request this url" do
+            allow(item.physical_location.code).to receive(:library).and_return(library)
+            expect(subject.action.partial).to eq("link_to")
+            expect(subject.action.text).to eq("Request This")
+            expect(subject.action.url).to eq(item.url)
+          end
+        end
+      end
+    end
   end
 
   it "has a description" do

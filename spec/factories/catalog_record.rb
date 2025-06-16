@@ -72,12 +72,13 @@ module Factories::CatalogRecord
         fulfillment_unit: Faker::Lorem.word,
         call_number: Faker::Lorem.sentence,
         public_note: Faker::Lorem.sentence,
-        process_type: Faker::Lorem.word,
-        item_policy: Faker::Lorem.word,
+        process_type: nil,
+        item_policy: nil,
         description: Faker::Lorem.sentence,
         inventory_number: Faker::Lorem.sentence,
         material_type: Faker::Lorem.word,
-        physical_location: physical_location)
+        physical_location: physical_location,
+        url: Faker::Internet.url)
     end
 
     def physical_location

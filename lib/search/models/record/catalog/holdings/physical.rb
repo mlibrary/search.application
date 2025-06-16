@@ -34,7 +34,7 @@ class Search::Models::Record::Catalog::Holdings::Physical
 
     [:item_id, :barcode, :fulfillment_unit, :call_number, :public_note,
       :process_type, :item_policy, :description, :inventory_number,
-      :material_type].each do |method|
+      :material_type, :url].each do |method|
       define_method(method) do
         @item.dig(method.to_s)
       end

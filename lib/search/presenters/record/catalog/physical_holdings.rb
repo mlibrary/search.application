@@ -42,7 +42,7 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
   end
 
   def items
-    @holding.items.map { |x| Item.new(item: x, bib: @bib) }
+    @holding.items.map { |x| Item.new(item: x) }
   end
 
   def rows
@@ -62,9 +62,8 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
   class Item
     ItemCell = Search::Presenters::Record::Catalog::Holdings::ItemCell
 
-    def initialize(item:, bib:, record: nil)
+    def initialize(item:)
       @item = item
-      @bib = bib
     end
 
     def description
@@ -78,9 +77,11 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     def action
       if no_action?
         ItemCell::PlainText.new("N/A")
+      elsif in_reading_room_library?
+        ItemCell::LinkTo.new(text: "Request This", url: @item.url)
       else # Get This
         ItemCell::LinkTo.new(text: "Get This",
-          url: "#{S.base_url}/catalog/record/#{@bib.id}/get-this/#{@item.barcode}")
+          url: @item.url)
       end
     end
 
@@ -217,7 +218,7 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     end
 
     def no_action?
-      return true if @item.barcode.nil?
+      return true if @item.barcode.nil? || @item.url.nil?
       return true if in_game? && @item.process_type == "WORK_ORDER_DEPARTMENT"
       return true if in_library?("AAEL") && @item.item_policy == "05"
       return true if in_library?("FLINT") && @item.item_policy == "10"

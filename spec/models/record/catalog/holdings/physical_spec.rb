@@ -122,14 +122,15 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Physical::Item do
       "item_policy" => Faker::Lorem.word,
       "description" => Faker::Lorem.word,
       "inventory_number" => Faker::Lorem.word,
-      "material_type" => Faker::Lorem.word
+      "material_type" => Faker::Lorem.word,
+      "url" => Faker::Internet.url
     }
   end
   subject do
     described_class.new(@data)
   end
   [:item_id, :barcode, :fulfillment_unit, :call_number, :public_note,
-    :process_type, :description, :inventory_number, :material_type].each do |method|
+    :process_type, :description, :inventory_number, :material_type, :url].each do |method|
     context "##{method}" do
       it "returns a string" do
         expect(subject.public_send(method)).to eq(@data[method.to_s])
