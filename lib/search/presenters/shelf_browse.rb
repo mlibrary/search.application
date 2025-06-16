@@ -59,24 +59,24 @@ module Search
         "class=\"shelf-browse__carousel--item\""
       end
 
-      def has_url?
-        !url.nil?
-      end
-
       def url
         @item["url"]
+      end
+
+      def has_url?
+        !url.nil?
       end
 
       def table_label
         "Catalog browse record information for #{@item["title"]}"
       end
 
-      def has_caption?
-        !caption.nil?
-      end
-
       def caption
         nil
+      end
+
+      def has_caption?
+        !caption.nil?
       end
 
       def call_number
