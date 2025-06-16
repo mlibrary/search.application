@@ -1,3 +1,46 @@
+RSpec.describe Search::Presenters::ShelfBrowseCurrentItem do
+  before(:each) do
+    @item = {
+      "call_number" => "UM1"
+    }
+    @index = 23
+  end
+
+  subject do
+    described_class.new(@item, @index)
+  end
+
+  context "#attributes" do
+    it "has attributes" do
+      expect(subject.attributes).to eq("class=\"shelf-browse__carousel--item highlighted-record current-record\" data-page=\"0\"")
+    end
+  end
+
+  context "#caption" do
+    it "has a caption" do
+      expect(subject.caption).to eq("Current Record")
+    end
+  end
+
+  context "#has_caption?" do
+    it "is true" do
+      expect(subject.has_caption?).to be true
+    end
+  end
+
+  context "#url" do
+    it "is nil" do
+      expect(subject.url).to be_nil
+    end
+  end
+
+  context "#has_url?" do
+    it "is false" do
+      expect(subject.has_url?).to be false
+    end
+  end
+end
+
 RSpec.describe Search::Presenters::ShelfBrowseItemEnd do
   before(:each) do
     @item = {
