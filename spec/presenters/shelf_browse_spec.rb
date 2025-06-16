@@ -1,3 +1,71 @@
+RSpec.describe Search::Presenters::ShelfBrowseItemEnd do
+  before(:each) do
+    @item = {
+      "call_number" => "UM1"
+    }
+  end
+
+  subject do
+    described_class.new(@item)
+  end
+
+  context "#attributes" do
+    it "has attributes" do
+      expect(subject.attributes).to eq("class=\"shelf-browse__carousel--item highlighted-record\"")
+    end
+  end
+
+  context "#caption" do
+    it "has a caption" do
+      expect(subject.caption).to eq("<span class=\"material-symbols-rounded\" aria-hidden=\"true\">list</span>")
+    end
+  end
+
+  context "#has_caption?" do
+    it "is true" do
+      expect(subject.has_caption?).to be true
+    end
+  end
+
+  context "#navigate" do
+    it "returns a row" do
+      expect(subject.navigate).to be_a(Search::Presenters::ShelfBrowseItemRow)
+    end
+    it "has a header" do
+      expect(subject.navigate.header).to eq("Navigate")
+    end
+    it "has a uid" do
+      expect(subject.navigate.uid).to eq("navigate")
+    end
+    it "has a value" do
+      expect(subject.navigate.value).to eq("Continue browsing in call number list")
+    end
+  end
+
+  context "#rows" do
+    it "sets an array of rows that are only :navigate and :call_number" do
+      allow(subject).to receive(:call_number).and_return("Call Number row")
+      allow(subject).to receive(:caption).and_return("Caption row")
+      allow(subject).to receive(:navigate).and_return("Navigate row")
+
+      expect(subject.rows).to eq(["Navigate row", "Call Number row"])
+    end
+
+    it "excludes nil rows" do
+      allow(subject).to receive(:navigate).and_return(nil)
+      allow(subject).to receive(:call_number).and_return("Call Number row")
+
+      expect(subject.rows).to eq(["Call Number row"])
+    end
+  end
+
+  context "#url" do
+    it "has a url" do
+      expect(subject.url).to eq("https://search.lib.umich.edu/catalog/browse/callnumber?query=#{@item["call_number"]}")
+    end
+  end
+end
+
 RSpec.describe Search::Presenters::ShelfBrowseItemBase do
   before(:each) do
     @item = {
