@@ -89,14 +89,6 @@ module Search
     end
 
     class ShelfBrowseItem < ShelfBrowseItemBase
-      SHELF_BROWSE_ITEM_ROWS = [
-        :book_cover,
-        :title,
-        :author,
-        :date,
-        :call_number
-      ]
-
       attr_reader :item, :index
 
       def initialize(item, index)
@@ -127,7 +119,13 @@ module Search
       end
 
       def rows
-        SHELF_BROWSE_ITEM_ROWS.map { |row| public_send(row) }.compact
+        [
+          :book_cover,
+          :title,
+          :author,
+          :date,
+          :call_number
+        ].map { |row| public_send(row) }.compact
       end
     end
 

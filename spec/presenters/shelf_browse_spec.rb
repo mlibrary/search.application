@@ -1,3 +1,84 @@
+RSpec.describe Search::Presenters::ShelfBrowseItem do
+  before(:each) do
+    @item = {
+      "author" => "Author",
+      "book_cover_url" => "https://search.lib.umich.edu/favicon.svg",
+      "date" => "2025",
+      "title" => "Title"
+    }
+    @index = 2
+  end
+
+  subject do
+    described_class.new(@item, @index)
+  end
+  
+  context "inherits" do
+    it "inherits from ShelfBrowseItemBase" do
+      expect(Search::Presenters::ShelfBrowseItem.superclass).to eq(Search::Presenters::ShelfBrowseItemBase)
+    end
+  end
+
+  context "#book_cover" do
+    it "returns a row" do
+      expect(subject.book_cover).to be_a(Search::Presenters::ShelfBrowseItemRow)
+    end
+    it "has a header" do
+      expect(subject.book_cover.header).to eq("Book Cover")
+    end
+    it "has a uid" do
+      expect(subject.book_cover.uid).to eq("book_cover")
+    end
+    it "has a value" do
+      expect(subject.book_cover.value).to eq("<img src=\"#{@item["book_cover_url"]}\" onerror=\"this.src='/images/placeholders/placeholder-#{@index % 15}.svg'\" alt=\"Book cover for #{@item["title"]}\">")
+    end
+  end
+
+  [
+    {uid: :title, header: "Title"},
+    {uid: :author, header: "Author"},
+    {uid: :date, header: "Date"}
+  ].each do |f|
+    context "##{f[:uid]}" do
+      it "returns a row" do
+        expect(subject.public_send(f[:uid])).to be_a(Search::Presenters::ShelfBrowseItemRow)
+      end
+      it "has a header" do
+        expect(subject.public_send(f[:uid]).header).to eq(f[:header])
+      end
+      it "has a uid" do
+        expect(subject.public_send(f[:uid]).uid).to eq(f[:uid])
+      end
+      it "has a value" do
+        expect(subject.public_send(f[:uid]).value).to eq(@item[f[:uid].to_s])
+      end
+    end
+  end
+
+  context "#rows" do
+    it "sets an array of rows that are only :book_cover, :title, :author, :date and :call_number" do
+      allow(subject).to receive(:attributes).and_return("Attributes row")
+      allow(subject).to receive(:author).and_return("Author row")
+      allow(subject).to receive(:book_cover).and_return("Book cover row")
+      allow(subject).to receive(:call_number).and_return("Call Number row")
+      allow(subject).to receive(:date).and_return("Date row")
+      allow(subject).to receive(:title).and_return("Title row")
+
+      expect(subject.rows).to eq(["Book cover row", "Title row", "Author row", "Date row", "Call Number row"])
+    end
+
+    it "excludes nil rows" do
+      allow(subject).to receive(:author).and_return(nil)
+      allow(subject).to receive(:book_cover).and_return("Book cover row")
+      allow(subject).to receive(:call_number).and_return("Call Number row")
+      allow(subject).to receive(:date).and_return("Date row")
+      allow(subject).to receive(:title).and_return("Title row")
+
+      expect(subject.rows).to eq(["Book cover row", "Title row", "Date row", "Call Number row"])
+    end
+  end
+end
+
 RSpec.describe Search::Presenters::ShelfBrowseCurrentItem do
   before(:each) do
     @item = {
@@ -8,6 +89,12 @@ RSpec.describe Search::Presenters::ShelfBrowseCurrentItem do
 
   subject do
     described_class.new(@item, @index)
+  end
+  
+  context "inherits" do
+    it "inherits from ShelfBrowseItem" do
+      expect(Search::Presenters::ShelfBrowseCurrentItem.superclass).to eq(Search::Presenters::ShelfBrowseItem)
+    end
   end
 
   context "#attributes" do
@@ -50,6 +137,12 @@ RSpec.describe Search::Presenters::ShelfBrowseItemEnd do
 
   subject do
     described_class.new(@item)
+  end
+  
+  context "inherits" do
+    it "inherits from ShelfBrowseItemBase" do
+      expect(Search::Presenters::ShelfBrowseItemEnd.superclass).to eq(Search::Presenters::ShelfBrowseItemBase)
+    end
   end
 
   context "#attributes" do
