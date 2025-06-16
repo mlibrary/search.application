@@ -2,6 +2,17 @@ module Search
   module Presenters
     module Record
       module Catalog
+      end
+    end
+  end
+end
+
+require_relative "catalog/holdings"
+
+module Search
+  module Presenters
+    module Record
+      module Catalog
         class Base
           [:title, :icons, :record_info].each do |m|
             define_method m do
@@ -124,6 +135,10 @@ module Search
 
           def record_info
             RECORD_INFO_METHODS.map { |field| public_send(field) }.compact
+          end
+
+          def holdings
+            Holdings.new(@record)
           end
 
           def marc_record

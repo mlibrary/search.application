@@ -30,9 +30,7 @@
               </li>
             <% end %>
           </ul>
-          <button class="button__ghost metadata__toggle" aria-expanded="true" aria-controls="metadata__toggle--<%= data.uid %>">
-            Show fewer <%= data.field %>
-          </button>
+          <%= erb :"datastores/partials/_toggle", locals: {classes: ["metadata__toggle"], id: "metadata__toggle--#{data.uid}", count: 3, postfix: data.field} %>
         </td>
       </tr>
     <% end %>

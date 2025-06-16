@@ -1,0 +1,48 @@
+<% holdings.each do |holding| %>
+  <details class="holding" <%= "open" if holdings.count == 1%>>
+    <summary>
+      <span class="material-symbols-rounded" aria-hidden="true">
+        <%= holding.icon %> 
+      </span>
+      <span class="strong">
+        <span class="holding__heading"><%= holding.heading %> </span>
+        &bull; <%= holding.items.count %> Items
+      </span>
+    </summary>
+    <div class="holding__content">
+      <% if holding.respond_to?(:location_url) %>
+        <p><%= link_to(body: "About location", url: holding.location_url) %></p>
+      <% end %>
+      <% if holding.respond_to?(:holding_info) && !holding.holding_info.empty? %>
+        <ul>
+          <% holding.holding_info.each do |info| %>
+            <li><%= info %></li>
+          <% end %>
+        </ul>
+      <% end %>
+      <table class="holding__table">
+        <thead>
+          <tr>
+            <% holding.table_headings.each do |heading| %>
+              <th scope="col" class="<%= heading.css_class %>">
+                <%= heading %>
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody id="holding__table--toggle-<%= holding.__id__ %>">
+          <% holding.rows.each do |row| %>
+            <tr>
+              <% row.each do |cell| %>
+                <td>
+                  <%= erb :"datastores/partials/holdings/_#{cell.partial}", locals: {value: cell} %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= erb :"datastores/partials/_toggle", locals: {classes: ["holding__table--toggle"], id: "holding__table--toggle-#{holding.__id__}", count: 10} %>
+    </div>
+  </details>
+<% end %>
