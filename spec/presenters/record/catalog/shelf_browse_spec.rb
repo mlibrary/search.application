@@ -12,7 +12,7 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem
   subject do
     described_class.new(@item, @index)
   end
-  
+
   context "inherits" do
     it "inherits from ShelfBrowseItemBase" do
       expect(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem.superclass).to eq(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemBase)
@@ -90,7 +90,7 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseCurr
   subject do
     described_class.new(@item, @index)
   end
-  
+
   context "inherits" do
     it "inherits from ShelfBrowseItem" do
       expect(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseCurrentItem.superclass).to eq(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem)
@@ -138,7 +138,7 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem
   subject do
     described_class.new(@item)
   end
-  
+
   context "inherits" do
     it "inherits from ShelfBrowseItemBase" do
       expect(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemEnd.superclass).to eq(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemBase)
