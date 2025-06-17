@@ -275,9 +275,10 @@ describe Search::Presenters::Record::Catalog::Full do
       end
     end
   end
-  context "#shelf_browse_call_number" do
-    it "returns the first call number" do
-      expect(subject.shelf_browse_call_number).to eq("call_number_text")
+  context "#shelf_browse" do
+    it "calls ShelfBrowse with the provided call number" do
+      expect(Search::Presenters::Record::Catalog::ShelfBrowse).to receive(:for).with(call_number: "call_number_text")
+      subject.shelf_browse
     end
   end
 

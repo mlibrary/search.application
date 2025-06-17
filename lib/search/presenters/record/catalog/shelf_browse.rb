@@ -1,4 +1,8 @@
 class Search::Presenters::Record::Catalog::ShelfBrowse
+  def self.for(call_number:)
+    new(call_number: call_number) if call_number.present?
+  end
+
   def initialize(call_number:)
     @call_number = call_number
     @conn = Faraday.new(

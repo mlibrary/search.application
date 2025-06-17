@@ -11,7 +11,6 @@
     <ul class="shelf-browse__carousel--items list__no-style" data-current-page="0" aria-live="polite">
       <% records.each do |record| %>
         <li <%= record.attributes %>>
-          <%#= record.methods %>
           <% if record.has_url?%>
             <a href="<%= record.url %>">
           <% end %>

@@ -153,14 +153,8 @@ module Search
             )
           end
 
-          def shelf_browse_call_number
-            @record.bib.call_number&.first&.text
-          end
-
-          def shelf_browse_records
-            if shelf_browse_call_number.present?
-              ShelfBrowse.new(call_number: shelf_browse_call_number)
-            end
+          def shelf_browse
+            ShelfBrowse.for(call_number: @record.bib.call_number&.first&.text)
           end
 
           def indexing_date
