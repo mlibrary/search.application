@@ -2,7 +2,7 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse do
   before(:each) do
     @call_number = "UM1"
     @data = []
-    3.times{@data.push(create(:shelf_browse_item))}
+    3.times { @data.push(create(:shelf_browse_item)) }
     stub_request(:get, "#{S.catalog_browse_url}/carousel?query=#{@call_number}")
       .to_return(status: 200, body: @data, headers: {})
   end
@@ -37,7 +37,7 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse do
         record_call_numbers << record.call_number
       end
 
-      expect(record_call_numbers).to eq(@data.map { |d| d["call_number"] } )
+      expect(record_call_numbers).to eq(@data.map { |d| d["call_number"] })
     end
   end
 
