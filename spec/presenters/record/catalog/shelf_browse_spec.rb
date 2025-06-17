@@ -1,14 +1,44 @@
 RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse do
   before(:each) do
-    @call_number = "PN1995.9.F67 D432 2000"
+    @call_number = "UM1"
+    @data = []
+    3.times{@data.push(create(:shelf_browse_item))}
+    stub_request(:get, "#{S.catalog_browse_url}/carousel?query=#{@call_number}")
+      .to_return(status: 200, body: @data, headers: {})
   end
 
   subject do
     described_class.for(call_number: @call_number)
   end
 
-  def browse_url
-    "https://search.lib.umich.edu/catalog/browse/callnumber?query=#{@call_number}"
+  context "#items" do
+    it "returns ShelfBrowseItemEnd" do
+      expect(subject.items[1]).to be_a(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem)
+    end
+    it "returns ShelfBrowseItemEnd" do
+      expect(subject.items[0]).to be_a(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemEnd)
+    end
+    it "returns ShelfBrowseItemCurrent" do
+      @data[0]["call_number"] = @call_number
+      expect(subject.items[0]).to be_a(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemCurrent)
+    end
+  end
+
+  context "#browse_url" do
+    it "has a browse url" do
+      expect(subject.browse_url).to eq("https://search.lib.umich.edu/catalog/browse/callnumber?query=#{@call_number}")
+    end
+  end
+
+  context "#each" do
+    it "iterates over the records with call numbers" do
+      record_call_numbers = []
+      subject.each do |record|
+        record_call_numbers << record.call_number
+      end
+
+      expect(record_call_numbers).to eq(@data.map { |d| d["call_number"] } )
+    end
   end
 
   context "when call_number is nil" do
@@ -157,7 +187,7 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem
   end
 end
 
-RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseCurrentItem do
+RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemCurrent do
   before(:each) do
     @item = {
       "call_number" => "UM1"

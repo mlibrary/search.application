@@ -26,7 +26,7 @@ class Search::Presenters::Record::Catalog::ShelfBrowse
   def items
     @data.map.with_index do |item, index|
       if @call_number == item["call_number"]
-        ShelfBrowseCurrentItem.new(item, index)
+        ShelfBrowseItemCurrent.new(item, index)
       elsif index == @data.length - 1 || index == 0
         ShelfBrowseItemEnd.new(item)
       else
@@ -128,7 +128,7 @@ class Search::Presenters::Record::Catalog::ShelfBrowse
     end
   end
 
-  class ShelfBrowseCurrentItem < ShelfBrowseItem
+  class ShelfBrowseItemCurrent < ShelfBrowseItem
     attr_reader :item, :index
 
     def initialize(item, index)
