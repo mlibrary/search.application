@@ -4,6 +4,7 @@ module Factories
 end
 require_relative "factories/catalog_api_record"
 require_relative "factories/catalog_record"
+require_relative "factories/shelf_browse"
 module Factories
   def create(factory)
     case factory
@@ -17,6 +18,8 @@ module Factories
       CatalogRecord.hathi_trust_holdings
     when :physical_item
       CatalogRecord.physical_item
+    when :shelf_browse_item
+      ShelfBrowse.item
     end
   end
 end

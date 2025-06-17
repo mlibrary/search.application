@@ -28,6 +28,8 @@ S.register(:base_url) { ENV["BASE_URL"] || "http://localhost:4567" }
 
 S.register(:catalog_api_url) { ENV["CATALOG_API_URL"] || "http://catalog-api:8000" }
 
+S.register(:catalog_browse_url) { ENV["CATALOG_BROWSE_URL"] || "https://search.lib.umich.edu/catalog/browse" }
+
 S.register(:log_stream) do
   $stdout.sync = true
   $stdout

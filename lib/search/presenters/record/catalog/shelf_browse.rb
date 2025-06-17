@@ -1,29 +1,33 @@
 class Search::Presenters::Record::Catalog::ShelfBrowse
   def self.for(call_number:)
-    new(call_number: call_number) if call_number.present?
-  end
-
-  def initialize(call_number:)
-    @call_number = call_number
-    @conn = Faraday.new(
-      url: "https://search.lib.umich.edu/catalog/browse/carousel",
-      params: {query: call_number}
-    ) do |f|
-      f.request :json
-      f.response :raise_error
-      f.response :json
+    if call_number.present?
+      @conn = Faraday.new(
+        url: "#{S.catalog_browse_url}/carousel",
+        params: {query: call_number}
+      ) do |f|
+        f.request :json
+        f.response :raise_error
+        f.response :json
+      end
+      response = @conn.get
+      if response.status == 200
+        new(call_number: call_number, data: response.body)
+      else
+        S.logger.error(response.status + " Couldn't contact Catalog Browse.")
+      end
     end
   end
 
-  def data
-    @conn.get.body
+  def initialize(call_number:, data:)
+    @call_number = call_number
+    @data = data
   end
 
   def items
-    data.map.with_index do |item, index|
+    @data.map.with_index do |item, index|
       if @call_number == item["call_number"]
         ShelfBrowseCurrentItem.new(item, index)
-      elsif index == data.length - 1 || index == 0
+      elsif index == @data.length - 1 || index == 0
         ShelfBrowseItemEnd.new(item)
       else
         ShelfBrowseItem.new(item, index)
@@ -32,7 +36,7 @@ class Search::Presenters::Record::Catalog::ShelfBrowse
   end
 
   def browse_url
-    "https://search.lib.umich.edu/catalog/browse/callnumber?query=#{@call_number}"
+    "#{S.catalog_browse_url}/callnumber?query=#{@call_number}"
   end
 
   include Enumerable
@@ -173,7 +177,7 @@ class Search::Presenters::Record::Catalog::ShelfBrowse
     end
 
     def url
-      "https://search.lib.umich.edu/catalog/browse/callnumber?query=#{@item["call_number"]}"
+      "#{S.catalog_browse_url}/callnumber?query=#{@item["call_number"]}"
     end
   end
 
