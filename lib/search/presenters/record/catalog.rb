@@ -8,6 +8,7 @@ module Search
 end
 
 require_relative "catalog/holdings"
+require_relative "catalog/shelf_browse"
 
 module Search
   module Presenters
@@ -158,7 +159,7 @@ module Search
 
           def shelf_browse_records
             if shelf_browse_call_number.present?
-              Search::Presenters::ShelfBrowse.new(call_number: shelf_browse_call_number)
+              ShelfBrowse.new(call_number: shelf_browse_call_number)
             end
           end
 

@@ -1,4 +1,4 @@
-RSpec.describe Search::Presenters::ShelfBrowseItem do
+RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem do
   before(:each) do
     @item = {
       "author" => "Author",
@@ -15,13 +15,13 @@ RSpec.describe Search::Presenters::ShelfBrowseItem do
   
   context "inherits" do
     it "inherits from ShelfBrowseItemBase" do
-      expect(Search::Presenters::ShelfBrowseItem.superclass).to eq(Search::Presenters::ShelfBrowseItemBase)
+      expect(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem.superclass).to eq(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemBase)
     end
   end
 
   context "#book_cover" do
     it "returns a row" do
-      expect(subject.book_cover).to be_a(Search::Presenters::ShelfBrowseItemRow)
+      expect(subject.book_cover).to be_a(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemRow)
     end
     it "has a header" do
       expect(subject.book_cover.header).to eq("Book Cover")
@@ -41,7 +41,7 @@ RSpec.describe Search::Presenters::ShelfBrowseItem do
   ].each do |f|
     context "##{f[:uid]}" do
       it "returns a row" do
-        expect(subject.public_send(f[:uid])).to be_a(Search::Presenters::ShelfBrowseItemRow)
+        expect(subject.public_send(f[:uid])).to be_a(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemRow)
       end
       it "has a header" do
         expect(subject.public_send(f[:uid]).header).to eq(f[:header])
@@ -79,7 +79,7 @@ RSpec.describe Search::Presenters::ShelfBrowseItem do
   end
 end
 
-RSpec.describe Search::Presenters::ShelfBrowseCurrentItem do
+RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseCurrentItem do
   before(:each) do
     @item = {
       "call_number" => "UM1"
@@ -93,7 +93,7 @@ RSpec.describe Search::Presenters::ShelfBrowseCurrentItem do
   
   context "inherits" do
     it "inherits from ShelfBrowseItem" do
-      expect(Search::Presenters::ShelfBrowseCurrentItem.superclass).to eq(Search::Presenters::ShelfBrowseItem)
+      expect(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseCurrentItem.superclass).to eq(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem)
     end
   end
 
@@ -128,7 +128,7 @@ RSpec.describe Search::Presenters::ShelfBrowseCurrentItem do
   end
 end
 
-RSpec.describe Search::Presenters::ShelfBrowseItemEnd do
+RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemEnd do
   before(:each) do
     @item = {
       "call_number" => "UM1"
@@ -141,7 +141,7 @@ RSpec.describe Search::Presenters::ShelfBrowseItemEnd do
   
   context "inherits" do
     it "inherits from ShelfBrowseItemBase" do
-      expect(Search::Presenters::ShelfBrowseItemEnd.superclass).to eq(Search::Presenters::ShelfBrowseItemBase)
+      expect(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemEnd.superclass).to eq(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemBase)
     end
   end
 
@@ -165,7 +165,7 @@ RSpec.describe Search::Presenters::ShelfBrowseItemEnd do
 
   context "#navigate" do
     it "returns a row" do
-      expect(subject.navigate).to be_a(Search::Presenters::ShelfBrowseItemRow)
+      expect(subject.navigate).to be_a(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemRow)
     end
     it "has a header" do
       expect(subject.navigate.header).to eq("Navigate")
@@ -202,7 +202,7 @@ RSpec.describe Search::Presenters::ShelfBrowseItemEnd do
   end
 end
 
-RSpec.describe Search::Presenters::ShelfBrowseItemBase do
+RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemBase do
   before(:each) do
     @item = {
       "call_number" => "UM1",
@@ -263,7 +263,7 @@ RSpec.describe Search::Presenters::ShelfBrowseItemBase do
 
   context "#call_number" do
     it "returns a row" do
-      expect(subject.call_number).to be_a(Search::Presenters::ShelfBrowseItemRow)
+      expect(subject.call_number).to be_a(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemRow)
     end
     it "has a header" do
       expect(subject.call_number.header).to eq("Call Number")
@@ -277,7 +277,7 @@ RSpec.describe Search::Presenters::ShelfBrowseItemBase do
   end
 end
 
-RSpec.describe Search::Presenters::ShelfBrowseItemRow do
+RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItemRow do
   before(:each) do
     @item = {
       "header" => "Shelf Browse Item",
