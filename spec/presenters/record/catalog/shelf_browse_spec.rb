@@ -12,9 +12,8 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse do
   end
 
   context "when call_number is nil" do
-    before { @call_number = nil }
-
     it "returns nil" do
+      @call_number = nil
       expect(subject).to be_nil
     end
   end
@@ -53,9 +52,8 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem
     end
 
     context "when URL is nil" do
-      before { @item["url"] = nil }
-
       it "is false" do
+        @item["url"] = nil
         expect(subject.has_url?).to be false
       end
     end
@@ -101,7 +99,8 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem
       "author" => "Author",
       "book_cover_url" => "https://search.lib.umich.edu/favicon.svg",
       "date" => "2025",
-      "title" => "Title"
+      "title" => "Title",
+      "call_number" => "UM1"
     }
     @index = 2
   end
@@ -147,25 +146,13 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem
   end
 
   context "#rows" do
-    it "sets an array of rows that are only :book_cover, :title, :author, :date and :call_number" do
-      allow(subject).to receive(:attributes).and_return("Attributes row")
-      allow(subject).to receive(:author).and_return("Author row")
-      allow(subject).to receive(:book_cover).and_return("Book cover row")
-      allow(subject).to receive(:call_number).and_return("Call Number row")
-      allow(subject).to receive(:date).and_return("Date row")
-      allow(subject).to receive(:title).and_return("Title row")
-
-      expect(subject.rows).to eq(["Book cover row", "Title row", "Author row", "Date row", "Call Number row"])
+    it "sets an array of rows that only contain #book_cover, #title, #author, #date and #call_number" do
+      expect(subject.rows.map { |row| row.value }).to eq([:book_cover, :title, :author, :date, :call_number].map { |method_name| subject.public_send(method_name).value })
     end
 
     it "excludes nil rows" do
-      allow(subject).to receive(:author).and_return(nil)
-      allow(subject).to receive(:book_cover).and_return("Book cover row")
-      allow(subject).to receive(:call_number).and_return("Call Number row")
-      allow(subject).to receive(:date).and_return("Date row")
-      allow(subject).to receive(:title).and_return("Title row")
-
-      expect(subject.rows).to eq(["Book cover row", "Title row", "Date row", "Call Number row"])
+      @item["author"] = nil
+      expect(subject.rows.map { |row| row.value }).to eq([:book_cover, :title, :date, :call_number].map { |method_name| subject.public_send(method_name).value })
     end
   end
 end
@@ -259,18 +246,12 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem
 
   context "#rows" do
     it "sets an array of rows that are only :navigate and :call_number" do
-      allow(subject).to receive(:call_number).and_return("Call Number row")
-      allow(subject).to receive(:caption).and_return("Caption row")
-      allow(subject).to receive(:navigate).and_return("Navigate row")
-
-      expect(subject.rows).to eq(["Navigate row", "Call Number row"])
+      expect(subject.rows.map { |row| row.value }).to eq([subject.navigate.value, subject.call_number.value])
     end
 
     it "excludes nil rows" do
-      allow(subject).to receive(:navigate).and_return(nil)
-      allow(subject).to receive(:call_number).and_return("Call Number row")
-
-      expect(subject.rows).to eq(["Call Number row"])
+      @item["call_number"] = nil
+      expect(subject.rows.map { |row| row.value }).to eq([subject.navigate.value])
     end
   end
 
@@ -309,9 +290,8 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem
   end
 
   context "when value is nil" do
-    before { @item["value"] = nil }
-
     it "returns nil" do
+      @item["value"] = nil
       expect(subject).to be_nil
     end
   end
