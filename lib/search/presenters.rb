@@ -47,7 +47,7 @@ module Search::Presenters
     record = Record.for_datastore(datastore: slug, id: record_id)
 
     OpenStruct.new(
-      title: datastore.title,
+      title: "#{record.title} - Record - #{datastore.title}",
       current_datastore: slug,
       description: datastore.description,
       icons: Icons.new(record.icons + ["mail", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error", "list", "arrow_back_ios", "arrow_forward_ios"]),
