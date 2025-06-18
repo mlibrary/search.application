@@ -5,6 +5,7 @@ module Factories
         ["id", "99#{Faker::Number.number(digits: 12)}6381"],
         ["format", ["Book"]],
         ["indexing_date", Faker::Date.between(from: "2020-01-01", to: "2025-12-31").strftime("%Y-%m-%d")],
+        ["marc", {}],
         ["academic_discipline", [{
           "list" => [
             "Science",

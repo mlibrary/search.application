@@ -26,4 +26,8 @@ class Search::Models::Record::Catalog
   def indexing_date
     Date.parse(@data["indexing_date"])
   end
+
+  def marc
+    @data["marc"]
+  end
 end
