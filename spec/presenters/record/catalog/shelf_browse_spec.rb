@@ -12,7 +12,7 @@ RSpec.describe Search::Presenters::Record::Catalog::ShelfBrowse do
   end
 
   context "#items" do
-    it "returns ShelfBrowseItemEnd" do
+    it "returns ShelfBrowseItem" do
       expect(subject.items[1]).to be_a(Search::Presenters::Record::Catalog::ShelfBrowse::ShelfBrowseItem)
     end
     it "returns ShelfBrowseItemEnd" do
