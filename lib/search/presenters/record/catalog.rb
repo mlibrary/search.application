@@ -158,7 +158,7 @@ module Search
           end
 
           def indexing_date
-            "20250217"
+            @record.indexing_date.strftime("%B %-d, %Y")
           end
 
           def marc_record

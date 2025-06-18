@@ -4,6 +4,7 @@ module Factories
       ([
         ["id", "99#{Faker::Number.number(digits: 12)}6381"],
         ["format", ["Book"]],
+        ["indexing_date", Faker::Date.between(from: "2020-01-01", to: "2025-12-31").strftime("%Y-%m-%d")],
         ["academic_discipline", [{
           "list" => [
             "Science",
@@ -17,7 +18,13 @@ module Factories
               "Biology",
               "Ecology and Evolutionary Biology"
             ]
-          }]]
+          }]],
+        ["holdings", {
+          hathi_trust_items: [],
+          alma_digital_items: [],
+          electronic_items: [],
+          physical: []
+        }]
       ] + paired_text_fields + title_link_fields + text_fields + author_browse_fields).to_h
     end
 

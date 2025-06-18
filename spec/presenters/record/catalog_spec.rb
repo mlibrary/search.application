@@ -90,6 +90,8 @@ describe Search::Presenters::Record::Catalog::Full do
     )
   end
 
+  let(:indexing_date) { Date.parse("2025-01-01") }
+
   before(:each) do
     plain_text_fields = (single_string_fields.keys + multiple_string_fields.keys).map do |f|
       [f, [OpenStruct.new(text: f.to_s), OpenStruct.new(text: "something_else")]]
@@ -160,7 +162,7 @@ describe Search::Presenters::Record::Catalog::Full do
       **browse_bib_fields)
   end
   subject do
-    described_class.new(OpenStruct.new(bib: @bib_stub))
+    described_class.new(OpenStruct.new(bib: @bib_stub, indexing_date: indexing_date))
   end
   context "#title" do
     it "returns a title array for both title and v title when v title is present" do
@@ -279,6 +281,12 @@ describe Search::Presenters::Record::Catalog::Full do
     it "calls ShelfBrowse with the provided call number" do
       expect(Search::Presenters::Record::Catalog::ShelfBrowse).to receive(:for).with(call_number: "call_number_text")
       subject.shelf_browse
+    end
+  end
+
+  context "#indexing_date" do
+    it "returns the correct date with the appropriate formatting" do
+      expect(subject.indexing_date).to eq("January 1, 2025")
     end
   end
 
