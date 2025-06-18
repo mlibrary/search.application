@@ -8,6 +8,7 @@ module Search
 end
 
 require_relative "catalog/holdings"
+require_relative "catalog/shelf_browse"
 
 module Search
   module Presenters
@@ -141,9 +142,6 @@ module Search
             Holdings.new(@record)
           end
 
-          def marc_record
-          end
-
           def citations
             OpenStruct.new(
               mla: "<i>Birds</i>. v. 1-Jan./Feb. 1966-, 1966-2013.",
@@ -155,8 +153,15 @@ module Search
             )
           end
 
+          def shelf_browse
+            ShelfBrowse.for(call_number: @record.bib.call_number&.first&.text)
+          end
+
           def indexing_date
             "20250217"
+          end
+
+          def marc_record
           end
 
           def format

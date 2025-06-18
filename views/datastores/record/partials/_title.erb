@@ -2,7 +2,7 @@
   body:
     titles.map do |title|
       <<-HTML
-      <span class="#{title.css_class}" data-truncate>
+      <span class="record__#{title.css_class}" data-truncate="300">
         #{title.text}
       </span>
       HTML

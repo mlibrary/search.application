@@ -1,9 +1,10 @@
 @use '../partials/breadcrumbs';
 @use '../partials/actions';
+@use './partials/title';
 @use '../partials/metadata';
 @use '../partials/holdings';
+@use './partials/shelf-browse';
 @use './partials/marc';
-@use './partials/title';
 @use '../../forms';
 
 // --------------------------------------------------

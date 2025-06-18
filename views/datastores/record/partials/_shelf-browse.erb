@@ -1,0 +1,54 @@
+<div class="container__rounded shelf-browse">
+  <div class="shelf-browse__header">
+    <h2 class="h4">Shelf browse</h2>
+    <%= link_to(body: "Browse in call number list", url: records.browse_url, classes: ["shelf-browse__header--link"]) %>
+  </div>
+  <div class="shelf-browse__carousel">
+    <button class="shelf-browse__carousel--button shelf-browse__carousel--button-previous" title="Previous page" disabled>
+      <span class="material-symbols-rounded" aria-hidden="true">arrow_back_ios</span>
+      <span class="visually-hidden">Previous 5 records</span>
+    </button>
+    <ul class="shelf-browse__carousel--items list__no-style" data-current-page="0" aria-live="polite">
+      <% records.each do |record| %>
+        <li <%= record.attributes %>>
+          <% if record.has_url?%>
+            <a href="<%= record.url %>">
+          <% end %>
+          <table class="container__rounded" aria-label="<%= record.table_label %>">
+            <% if record.has_caption? %>
+              <caption><%= record.caption %></caption>
+            <% end %>
+            <thead class="visually-hidden">
+              <tr>
+                <th scope="col">Field</th>
+                <th scope="col">Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% record.rows.each do | row | %>
+                <tr>
+                  <th class="visually-hidden" scope="row">
+                    <%= row.header %>
+                  </th>
+                  <td class="shelf-browse__carousel--<%= row.uid %>">
+                    <%= row.value %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <% if record.has_url? %>
+            </a>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <button class="shelf-browse__carousel--button shelf-browse__carousel--button-next" title="Next page" disabled>
+      <span class="material-symbols-rounded" aria-hidden="true">arrow_forward_ios</span>
+      <span class="visually-hidden">Next 5 records</span>
+    </button>
+  </div>
+  <button class="shelf-browse__return button__ghost" disabled>
+    Return to current record
+  </button>
+</div>
