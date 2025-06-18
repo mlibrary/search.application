@@ -154,4 +154,19 @@ RSpec.describe "requests" do
       end
     end
   end
+  context "/catalog/record/:bib_id" do
+    it "shows the catalog record page" do
+      bib_id = "9912345"
+      # data = JSON.parse(fixture("record/catalog/land_birds.json"))
+      data = create(:catalog_api_record)
+      call_number = data["call_number"][0]["text"]
+      stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
+        .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
+      stub_request(:get, "#{S.catalog_browse_url}/carousel?query=#{call_number}")
+        .to_return(status: 200, body: [], headers: {})
+      get "/catalog/record/#{bib_id}"
+      expect(last_response.status).to eq(200)
+      expect(last_response.body).to include(data["title"][0]["original"]["text"])
+    end
+  end
 end
