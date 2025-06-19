@@ -2,7 +2,7 @@ module Factories::CatalogRecord
   class << self
     include RSpec::Mocks::ExampleMethods
     def record
-      double("Search::Models::Record::Catalog#for", bib: bib, holdings: holdings)
+      instance_double(Search::Models::Record::Catalog, bib: bib, holdings: holdings)
     end
 
     def bib
