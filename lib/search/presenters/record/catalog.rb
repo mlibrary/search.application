@@ -162,6 +162,7 @@ module Search
           end
 
           def marc_record
+            @record.marc.with_indifferent_access
           end
 
           def format
