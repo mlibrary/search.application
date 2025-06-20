@@ -43,7 +43,7 @@ RSpec.describe Search::Presenters::Breadcrumbs do
 
   context "#query_string" do
     it "returns the query string from the url" do
-      expect(subject.send(:query_string)).to eq("#{@query_string}")
+      expect(subject.send(:query_string)).to eq(@query_string)
     end
   end
 
