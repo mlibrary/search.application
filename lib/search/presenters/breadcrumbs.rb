@@ -46,6 +46,7 @@ module Search
           # Add each subdirectory to the path
           path += "/#{subdirectory}"
           url = path + query_string
+          # Check if the subdirectory contains numerals (e.g. full record uids or barcodes for Get This)
           if subdirectory.match(/^\d+$/) && latest_index > 0
             crumbs[latest_index - 1].url = url
           else
