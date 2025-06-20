@@ -3,9 +3,10 @@ module Search
   end
 end
 require "search/presenters/affiliations"
+require "search/presenters/breadcrumbs"
 require "search/presenters/icons"
-require "search/presenters/search_options"
 require "search/presenters/record"
+require "search/presenters/search_options"
 
 module Search::Presenters
   def self.static_pages
@@ -57,6 +58,7 @@ module Search::Presenters
       search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
       affiliations: Affiliations.new(current_affiliation: patron.affiliation),
       flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
+      breadcrumbs: Breadcrumbs.new(current_page: "Record", uri: uri),
       record: record
     )
   end
