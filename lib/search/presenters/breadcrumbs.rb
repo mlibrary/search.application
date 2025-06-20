@@ -15,9 +15,7 @@ module Search
         @breadcrumbs.any?
       end
 
-      def current_page
-        @current_page
-      end
+      attr_reader :current_page
 
       include Enumerable
 
@@ -33,11 +31,11 @@ module Search
 
       def subdirectories
         # Split the uri path and remove empty strings
-        @uri.path.split('/').reject { |subdirectory| subdirectory.empty? }
+        @uri.path.split("/").reject { |subdirectory| subdirectory.empty? }
       end
 
       def breadcrumb_title(breadcrumb)
-        breadcrumb.split('-').map(&:capitalize).join(' ')
+        breadcrumb.split("-").map(&:capitalize).join(" ")
       end
 
       def breadcrumbs
