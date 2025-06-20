@@ -139,11 +139,7 @@ module Search
           end
 
           def holdings
-            result = nil
-            Yabeda.holdings_duration_seconds.measure do
-              result = Holdings.new(@record)
-            end
-            result
+            Holdings.new(@record)
           end
 
           def citations

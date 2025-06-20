@@ -24,12 +24,6 @@ module Metrics::Yabeda
         unit :seconds
         buckets [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 15, 20, 30]
       end
-      histogram :holdings_duration_seconds do
-        comment "The length of time to process holdings"
-        tags []
-        unit :seconds
-        buckets [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 15, 20, 30]
-      end
       histogram :catalog_api_full_record_duration_seconds do
         comment "The length of time to get a full record form the catalog api"
         tags []
