@@ -4,9 +4,9 @@ require "ostruct"
 require_relative "lib/services"
 require_relative "lib/search"
 require_relative "lib/metrics"
-require "debug" if S.app_env == "development"
 require_relative "lib/sinatra_helpers"
-
+require "debug" if S.app_env == "development"
+require "ruby-prof" if S.profile?
 Metrics::Yabeda.configure!
 
 class Search::Application < Sinatra::Base
@@ -18,6 +18,7 @@ class Search::Application < Sinatra::Base
 
   S.logger.info("App Environment: #{settings.environment}")
   S.logger.info("Log level: #{S.log_level}")
+  S.logger.info("Profiler on") if S.profile?
 
   before do
     subdirectory = request.path_info.split("/")[1]
@@ -97,12 +98,20 @@ class Search::Application < Sinatra::Base
     end
     if datastore.slug == "catalog"
       get "/#{datastore.slug}/record/:id" do
+        # profile = RubyProf::Profile.new
+        # profile.start
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "full_record"
         @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, record_id: params["id"])
         @record = @presenter.record
         erb :"datastores/record/layout", layout: :layout do
           erb :"datastores/record/#{datastore.slug}"
         end
+        # result = profile.stop
+        # printer = RubyProf::GraphHtmlPrinter.new(result)
+        # # printer.print(f)
+        # # File.open("profile.html", "w") do |f|
+        # #   printer.print(f)
+        # # end
       rescue Faraday::ResourceNotFound => error
         S.logger.error(error.message, error_response: error.response)
         redirect not_found

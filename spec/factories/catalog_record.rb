@@ -16,7 +16,9 @@ module Factories::CatalogRecord
     end
 
     def hathi_trust_holdings
-      instance_double(Search::Models::Record::Catalog::Holdings::HathiTrust, items: [hathi_trust_item])
+      instance_double(Search::Models::Record::Catalog::Holdings::HathiTrust,
+        items: [hathi_trust_item], count: 1,
+        has_description?: true)
     end
 
     def hathi_trust_item
@@ -28,7 +30,9 @@ module Factories::CatalogRecord
     end
 
     def alma_digital_holdings
-      instance_double(Search::Models::Record::Catalog::Holdings::AlmaDigital, items: [alma_digital_item])
+      instance_double(Search::Models::Record::Catalog::Holdings::AlmaDigital,
+        items: [alma_digital_item],
+        count: 1, has_description?: true)
     end
 
     def alma_digital_item
@@ -40,7 +44,7 @@ module Factories::CatalogRecord
     end
 
     def electronic_holdings
-      instance_double(Search::Models::Record::Catalog::Holdings::Electronic, items: [electronic_item])
+      instance_double(Search::Models::Record::Catalog::Holdings::Electronic, items: [electronic_item], count: 1, has_description?: true)
     end
 
     def electronic_item
@@ -62,6 +66,8 @@ module Factories::CatalogRecord
         public_note: Faker::Lorem.sentence,
         summary: [Faker::Lorem.sentence],
         physical_location: physical_location,
+        has_description?: true,
+        count: 1,
         items: [physical_item])
     end
 

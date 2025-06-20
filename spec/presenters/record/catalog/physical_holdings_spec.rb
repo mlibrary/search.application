@@ -35,7 +35,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
       expect(th[3].to_s).to eq("Call Number")
     end
     it "does not have description when description column would be empty" do
-      allow(physical_item).to receive(:description).and_return(nil)
+      allow(physical_holding).to receive(:has_description?).and_return(false)
 
       th = subject.table_headings
       expect(th[0].to_s).to eq("Action")
@@ -92,7 +92,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
       expect(item_cells[3].to_s).to eq(physical_item.call_number)
     end
     it "does not include description in array if there is no description in the column" do
-      allow(physical_item).to receive(:description).and_return(nil)
+      allow(physical_holding).to receive(:has_description?).and_return(false)
       item_cells = subject.rows.first
       expect(item_cells[0].to_s).to eq("Get This")
       expect(item_cells[1].to_s).to eq("On shelf")
