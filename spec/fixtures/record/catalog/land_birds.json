@@ -2,121 +2,226 @@
   "id": "990008019700106381",
   "title": [
     {
-      "text": "Sanʼya no tori = Concise field guide to land birds / kaisetsu Saeki Akimitsu ; e Taniguchi Takashi.",
-      "script": "default"
-    },
-    {
-      "text": "山野の鳥 = Concise field guide to land birds / 解說佐伯彰光 ; 絵谷口高司.",
-      "script": "vernacular"
+      "transliterated": {
+        "text": "Sanʼya no tori = Concise field guide to land birds / kaisetsu Saeki Akimitsu ; e Taniguchi Takashi.",
+        "tag": null
+      },
+      "original": {
+        "text": "山野の鳥 = Concise field guide to land birds / 解說佐伯彰光 ; 絵谷口高司.",
+        "tag": null
+      }
     }
   ],
   "format": [
     "Book"
   ],
+  "availability": [
+    "physical"
+  ],
   "main_author": [
     {
-      "text": "Saeki, Akimitsu.",
-      "script": "default",
-      "search": "Saeki, Akimitsu.",
-      "browse": "Saeki, Akimitsu."
-    },
-    {
-      "text": "佐伯彰光.",
-      "script": "vernacular",
-      "search": "佐伯彰光.",
-      "browse": "佐伯彰光."
+      "transliterated": {
+        "text": "Saeki, Akimitsu.",
+        "tag": null,
+        "search": [
+          {
+            "field": "author",
+            "value": "Saeki, Akimitsu."
+          }
+        ],
+        "browse": "Saeki, Akimitsu."
+      },
+      "original": {
+        "text": "佐伯彰光.",
+        "tag": null,
+        "search": [
+          {
+            "field": "author",
+            "value": "佐伯彰光."
+          }
+        ],
+        "browse": "佐伯彰光."
+      }
     }
   ],
+  "preferred_title": [],
+  "related_title": [],
   "other_titles": [
     {
-      "text": "Concise field guide to land birds.",
-      "search": "Concise field guid to land birds."
+      "transliterated": null,
+      "original": {
+        "text": "Concise field guide to land birds.",
+        "tag": "740",
+        "search": [
+          {
+            "field": "title",
+            "value": "Concise field guide to land birds."
+          }
+        ]
+      }
     }
   ],
+  "new_title": [],
+  "new_title_issn": [],
+  "previous_title": [],
+  "previous_title_issn": [],
   "contributors": [
     {
-      "text": "Taniguchi, Takashi.",
-      "script": "default",
-      "search": "Taniguchi, Takashi.",
-      "browse": "Taniguchi, Takashi."
-    },
-    {
-      "text": "谷口高司",
-      "script": "vernacular",
-      "search": "谷口高司",
-      "browse": "谷口高司"
+      "transliterated": {
+        "text": "Taniguchi, Takashi.",
+        "tag": "700",
+        "search": [
+          {
+            "field": "author",
+            "value": "Taniguchi, Takashi."
+          }
+        ],
+        "browse": "Taniguchi, Takashi."
+      },
+      "original": {
+        "text": "谷口高司.",
+        "tag": "880",
+        "search": [
+          {
+            "field": "author",
+            "value": "谷口高司."
+          }
+        ],
+        "browse": "谷口高司."
+      }
     }
   ],
   "published": [
     {
-      "script": "default",
-      "text": "Tōkyō : Nihon Yachō no Kai, 1983"
-    },
-    {
-      "script": "vernacular",
-      "text": "東京 : 日本野鳥の会, 1983"
+      "transliterated": {
+        "text": "Tōkyō : Nihon Yachō no Kai, 1983",
+        "tag": null
+      },
+      "original": {
+        "text": "東京 : 日本野鳥の会, 1983",
+        "tag": null
+      }
     }
   ],
+  "created": [],
+  "distributed": [],
   "manufactured": [
     {
-      "script": "default",
-      "text": "(1984 printing)"
-    },
-    {
-      "script": "vernacular",
-      "text": "(1984 printing)"
+      "transliterated": {
+        "text": "(1984 printing)",
+        "tag": "260"
+      },
+      "original": {
+        "text": "(1984 printing)",
+        "tag": "880"
+      }
     }
   ],
   "edition": [
     {
-      "text": "3-teiban.",
-      "script": "default"
-    },
-    {
-      "text": "3訂版.",
-      "script": "vernacular"
+      "transliterated": {
+        "text": "3-teiban.",
+        "tag": null
+      },
+      "original": {
+        "text": "3訂版.",
+        "tag": null
+      }
     }
   ],
   "series": [
     {
-      "text": "Yagai kansatsu handobukku ; 1",
-      "script": "default"
-    },
-    {
-      "text": "野外観察ハンドブック ; 1",
-      "script": "vernacular"
+      "transliterated": {
+        "text": "Yagai kansatsu handobukku ; 1",
+        "tag": "490"
+      },
+      "original": {
+        "text": "野外観察ハンドブック ; 1",
+        "tag": "880"
+      }
     }
   ],
   "series_statement": [
     {
-      "text": "Yagai kansatsu handobukku ; 1.",
-      "script": "default"
-    },
-    {
-      "text": "野外観察ハンドブック ; 1.",
-      "script": "vernacular"
+      "transliterated": {
+        "text": "Yagai kansatsu handobukku ; 1.",
+        "tag": "830"
+      },
+      "original": {
+        "text": "野外観察ハンドブック ; 1.",
+        "tag": "880"
+      }
     }
   ],
+  "biography_history": [],
+  "summary": [],
+  "in_collection": [],
+  "access": [],
+  "finding_aids": [],
+  "terms_of_use": [],
   "language": [
     {
       "text": "Japanese"
     }
   ],
+  "language_note": [],
+  "performers": [],
+  "date_place_of_event": [],
+  "preferred_citation": [],
+  "location_of_originals": [],
+  "funding_information": [],
+  "source_of_acquisition": [],
+  "related_items": [],
+  "numbering": [],
+  "current_publication_frequency": [],
+  "former_publication_frequency": [],
+  "numbering_notes": [],
+  "source_of_description_note": [],
+  "copy_specific_note": [],
+  "references": [],
+  "copyright_status_information": [],
   "note": [
     {
-      "text": "Includes index."
+      "transliterated": null,
+      "original": {
+        "text": "Includes index.",
+        "tag": "500"
+      }
     }
   ],
+  "arrangement": [],
+  "copyright": [],
   "physical_description": [
     {
-      "text": "64 p. : ill. ; 18 cm."
+      "transliterated": null,
+      "original": {
+        "text": "64 p. : ill. ; 18 cm.",
+        "tag": "300"
+      }
     }
   ],
+  "map_scale": [],
+  "reproduction_note": [],
+  "original_version_note": [],
+  "playing_time": [],
+  "media_format": [],
+  "audience": [],
+  "content_advice": [],
+  "awards": [],
+  "production_credits": [],
+  "bibliography": [],
   "isbn": [
+    {
+      "text": "9784931150010"
+    },
+    {
+      "text": "4931150012"
+    },
     {
       "text": "4931150012 :"
     }
   ],
+  "issn": [],
   "call_number": [
     {
       "text": "QL 691 .J3 S25 1983"
@@ -127,11 +232,16 @@
       "text": "23343161"
     }
   ],
-  "lcsh_subjects": [
+  "gov_doc_number": [],
+  "publisher_number": [],
+  "report_number": [],
+  "lc_subjects": [
     {
       "text": "Birds -- Japan -- Identification"
     }
   ],
+  "remediated_lc_subjects": [],
+  "other_subjects": [],
   "academic_discipline": [
     {
       "list": [
@@ -147,5 +257,54 @@
         "Ecology and Evolutionary Biology"
       ]
     }
-  ]
+  ],
+  "contents": [],
+  "bookplate": [],
+  "indexing_date": "2025-06-05",
+  "holdings": {
+    "hathi_trust_items": [],
+    "alma_digital_items": [],
+    "electronic_items": [],
+    "physical": [
+      {
+        "holding_id": "22857812530006381",
+        "call_number": "QL 691 .J3 S25 1983",
+        "summary": null,
+        "physical_location": {
+          "url": "http://lib.umich.edu/locations-and-hours/museums-library",
+          "text": "Research Museums Center Birds Division",
+          "floor": "",
+          "code": {
+            "library": "MUSM",
+            "location": "BIR"
+          },
+          "temporary": false
+        },
+        "items": [
+          {
+            "item_id": "23857812520006381",
+            "barcode": "39015052384248",
+            "fulfillment_unit": "General",
+            "call_number": "QL 691 .J3 S25 1983",
+            "process_type": null,
+            "item_policy": null,
+            "description": null,
+            "inventory_number": null,
+            "material_type": "BOOK",
+            "reservable": false,
+            "physical_location": {
+              "url": "http://lib.umich.edu/locations-and-hours/museums-library",
+              "text": "Research Museums Center Birds Division",
+              "floor": null,
+              "code": {
+                "library": "MUSM",
+                "location": "BIR"
+              },
+              "temporary": false
+            }
+          }
+        ]
+      }
+    ]
+  }
 }

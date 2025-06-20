@@ -11,7 +11,8 @@ class Search::Presenters::Record::Catalog::Holdings
 
   def list
     [
-      HathiTrust.new(@holdings.hathi_trust.items),
+      # send the holding not the items
+      HathiTrust.new(@holdings.hathi_trust),
       Online.new(@holdings),
       * physical
     ].reject { |x| x.empty? }
@@ -26,15 +27,20 @@ class Search::Presenters::Record::Catalog::Holdings
   class HathiTrust
     #
     # <Description>
-    #
+    # This will just be ::Holdings::HathiTrust
     # @param items [Array<Search::Models::Record::Catalog::Holdings::HathiTrust::Item>] the HathiTrust items
     #
-    def initialize(items)
-      @items = items
+    def initialize(holding)
+      @holding = holding
+      @items = holding.items
+    end
+
+    def count
+      @holding.count
     end
 
     def empty?
-      @items.empty?
+      @holding.count == 0
     end
 
     def heading
@@ -47,6 +53,10 @@ class Search::Presenters::Record::Catalog::Holdings
 
     def partial
       "electronic_holding"
+    end
+
+    def has_description?
+      @holding.has_description?
     end
 
     def table_headings
@@ -70,10 +80,6 @@ class Search::Presenters::Record::Catalog::Holdings
           description: item.description, source: item.source)
       end
     end
-
-    def has_description?
-      items.any? { |item| item.description.text.present? }
-    end
   end
 
   class Online
@@ -82,7 +88,15 @@ class Search::Presenters::Record::Catalog::Holdings
     end
 
     def empty?
-      items.empty?
+      count == 0
+    end
+
+    def count
+      @holdings.alma_digital.count + @holdings.electronic.count
+    end
+
+    def has_description?
+      @holdings.alma_digital.has_description? || @holdings.electronic.has_description?
     end
 
     def heading
@@ -112,9 +126,9 @@ class Search::Presenters::Record::Catalog::Holdings
       end
     end
 
-    def has_description?
-      items.any? { |item| item.description.text.present? }
-    end
+    # def has_description?
+    #   items.any? { |item| item.description.text.present? }
+    # end
 
     def items
       @items ||= AlmaDigital.new(@holdings.alma_digital.items).items
@@ -125,6 +139,9 @@ class Search::Presenters::Record::Catalog::Holdings
   class AlmaDigital
     def initialize(items)
       @items = items
+    end
+
+    def has_description?
     end
 
     def items

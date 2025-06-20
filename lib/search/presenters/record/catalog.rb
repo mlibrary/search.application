@@ -154,14 +154,21 @@ module Search
           end
 
           def shelf_browse
-            ShelfBrowse.for(call_number: @record.bib.call_number&.first&.text)
+            @shelf_browse ||= begin
+              result = nil
+              Yabeda.shelf_browse_api_duration_seconds.measure do
+                result = ShelfBrowse.for(call_number: @record.bib.call_number&.first&.text)
+              end
+              result
+            end
           end
 
           def indexing_date
-            "20250217"
+            @record.indexing_date.strftime("%B %-d, %Y")
           end
 
           def marc_record
+            @record.marc
           end
 
           def format

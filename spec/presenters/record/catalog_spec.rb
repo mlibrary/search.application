@@ -90,6 +90,8 @@ describe Search::Presenters::Record::Catalog::Full do
     )
   end
 
+  let(:indexing_date) { Date.parse("2025-01-01") }
+
   before(:each) do
     plain_text_fields = (single_string_fields.keys + multiple_string_fields.keys).map do |f|
       [f, [OpenStruct.new(text: f.to_s), OpenStruct.new(text: "something_else")]]
@@ -139,7 +141,7 @@ describe Search::Presenters::Record::Catalog::Full do
         )]
       ]
     end.to_h
-
+    @marc = {}
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
       title: Search::Models::Record::Catalog::Bib::PairedItem.for({
         "transliterated" => double("text", text: Faker::Book.title),
@@ -159,8 +161,12 @@ describe Search::Presenters::Record::Catalog::Full do
       **plain_text_fields,
       **browse_bib_fields)
   end
+  let(:record) { create(:catalog_record) }
   subject do
-    described_class.new(OpenStruct.new(bib: @bib_stub))
+    allow(record).to receive(:bib).and_return(@bib_stub)
+    allow(record).to receive(:indexing_date).and_return(indexing_date)
+    allow(record).to receive(:marc).and_return(@marc)
+    described_class.new(record)
   end
   context "#title" do
     it "returns a title array for both title and v title when v title is present" do
@@ -279,6 +285,18 @@ describe Search::Presenters::Record::Catalog::Full do
     it "calls ShelfBrowse with the provided call number" do
       expect(Search::Presenters::Record::Catalog::ShelfBrowse).to receive(:for).with(call_number: "call_number_text")
       subject.shelf_browse
+    end
+  end
+
+  context "#indexing_date" do
+    it "returns the correct date with the appropriate formatting" do
+      expect(subject.indexing_date).to eq("January 1, 2025")
+    end
+  end
+  context "#marc_record" do
+    it "returns marc json" do
+      @marc = {"some_example" => "whatever"}
+      expect(subject.marc_record).to eq(@marc)
     end
   end
 

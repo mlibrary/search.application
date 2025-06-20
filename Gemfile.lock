@@ -214,6 +214,8 @@ GEM
       rbs (>= 3, < 4)
       sorbet-runtime (>= 0.5.10782)
     ruby-next-core (1.1.1)
+    ruby-prof (1.7.2)
+      base64
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     securerandom (0.4.1)
@@ -303,6 +305,7 @@ DEPENDENCIES
   rackup
   rspec
   ruby-lsp
+  ruby-prof
   semantic_logger
   simplecov
   simplecov-lcov
