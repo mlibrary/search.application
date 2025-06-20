@@ -51,7 +51,7 @@ module Search::Presenters
     current_page = "Record"
 
     OpenStruct.new(
-      title: Title.new([record.title.last.text, current_page, datastore.title]),
+      title: Title.new([record.title.first.text, current_page, datastore.title]),
       current_datastore: slug,
       description: datastore.description,
       icons: Icons.new(record.icons + ["mail", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error", "list", "arrow_back_ios", "arrow_forward_ios"]),
