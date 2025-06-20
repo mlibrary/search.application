@@ -7,9 +7,14 @@ require "search/presenters/breadcrumbs"
 require "search/presenters/icons"
 require "search/presenters/record"
 require "search/presenters/search_options"
-require "search/presenters/title"
 
 module Search::Presenters
+  def self.title(titles = [])
+    @titles = titles
+    @titles.push("Library Search")
+    @titles.join(" - ")
+  end
+
   def self.static_pages
     [
       {
@@ -30,7 +35,7 @@ module Search::Presenters
     params = URI.decode_www_form(uri.query.to_s)&.to_h
 
     OpenStruct.new(
-      title: Title.new([datastore.title]),
+      title: title([datastore.title]),
       current_datastore: slug,
       description: datastore.description,
       icons: Icons.new,
@@ -51,7 +56,7 @@ module Search::Presenters
     current_page = "Record"
 
     OpenStruct.new(
-      title: Title.new([record.title.first.text, current_page, datastore.title]),
+      title: title([record.title.first.text, current_page, datastore.title]),
       current_datastore: slug,
       description: datastore.description,
       icons: Icons.new(record.icons + ["mail", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error", "list", "arrow_back_ios", "arrow_forward_ios"]),
@@ -70,7 +75,7 @@ module Search::Presenters
     page = static_pages.find { |x| x[:slug] == slug }
 
     OpenStruct.new(
-      title: Title.new([page[:title]]),
+      title: title([page[:title]]),
       current_datastore: "everything",
       description: page[:description],
       icons: Icons.new,
@@ -84,7 +89,7 @@ module Search::Presenters
 
   def self.for_404_page(uri:, patron:)
     OpenStruct.new(
-      title: Title.new(["404", "Page not found"]),
+      title: title(["404", "Page not found"]),
       description: "Page not found (404) at University of Michigan Library. Return to the homepage, search by title/keyword, browse all Databases or Online Journals, or ask a librarian for assistance in locating resources.",
       icons: Icons.new,
       styles: ["styles.css", "pages/styles.css"],
