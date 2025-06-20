@@ -165,9 +165,9 @@ describe Search::Presenters::Record::Catalog::Full do
   context "#title" do
     it "returns a title array for both title and v title when v title is present" do
       title = subject.title
-      expect(title.first.text).to eq(@bib_stub.title.transliterated.text)
+      expect(title.first.text).to eq(@bib_stub.title.original.text)
       expect(title.first.css_class).to eq("title-primary")
-      expect(title[1].text).to eq(@bib_stub.title.original.text)
+      expect(title[1].text).to eq(@bib_stub.title.transliterated.text)
       expect(title[1].css_class).to eq("title-secondary")
     end
     it "only returns original if that's all there is" do

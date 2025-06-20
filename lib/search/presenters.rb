@@ -3,11 +3,18 @@ module Search
   end
 end
 require "search/presenters/affiliations"
+require "search/presenters/breadcrumbs"
 require "search/presenters/icons"
-require "search/presenters/search_options"
 require "search/presenters/record"
+require "search/presenters/search_options"
 
 module Search::Presenters
+  def self.title(titles = [])
+    @titles = titles
+    @titles.push("Library Search")
+    @titles.join(" - ")
+  end
+
   def self.static_pages
     [
       {
@@ -28,7 +35,7 @@ module Search::Presenters
     params = URI.decode_www_form(uri.query.to_s)&.to_h
 
     OpenStruct.new(
-      title: datastore.title,
+      title: title([datastore.title]),
       current_datastore: slug,
       description: datastore.description,
       icons: Icons.new,
@@ -37,7 +44,8 @@ module Search::Presenters
       scripts: ["scripts.js", "partials/scripts.js"],
       search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
       affiliations: Affiliations.new(current_affiliation: patron.affiliation),
-      flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"])
+      flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
+      page_title: datastore.title
     )
   end
 
@@ -45,9 +53,10 @@ module Search::Presenters
     datastore = Search::Datastores.find(slug)
     params = URI.decode_www_form(uri.query.to_s)&.to_h
     record = Record.for_datastore(datastore: slug, id: record_id)
+    current_page = "Record"
 
     OpenStruct.new(
-      title: datastore.title,
+      title: title([record.title.first.text, current_page, datastore.title]),
       current_datastore: slug,
       description: datastore.description,
       icons: Icons.new(record.icons + ["mail", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error", "list", "arrow_back_ios", "arrow_forward_ios"]),
@@ -57,6 +66,7 @@ module Search::Presenters
       search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
       affiliations: Affiliations.new(current_affiliation: patron.affiliation),
       flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
+      breadcrumbs: Breadcrumbs.new(current_page: current_page, uri: uri),
       record: record
     )
   end
@@ -65,7 +75,7 @@ module Search::Presenters
     page = static_pages.find { |x| x[:slug] == slug }
 
     OpenStruct.new(
-      title: page[:title],
+      title: title([page[:title]]),
       current_datastore: "everything",
       description: page[:description],
       icons: Icons.new,
@@ -79,7 +89,7 @@ module Search::Presenters
 
   def self.for_404_page(uri:, patron:)
     OpenStruct.new(
-      title: "404 - Page not found",
+      title: title(["404", "Page not found"]),
       description: "Page not found (404) at University of Michigan Library. Return to the homepage, search by title/keyword, browse all Databases or Online Journals, or ask a librarian for assistance in locating resources.",
       icons: Icons.new,
       styles: ["styles.css", "pages/styles.css"],
