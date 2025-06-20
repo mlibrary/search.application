@@ -6,8 +6,11 @@ require "search/models/record/catalog/holdings"
 
 class Search::Models::Record::Catalog
   def self.for(id)
-    # get data from the api with the client
-    data = Search::Clients::CatalogAPI.new.get_record(id)
+    data = nil
+    Yabeda.catalog_api_full_record_duration_seconds.measure do
+      # get data from the api with the client
+      data = Search::Clients::CatalogAPI.new.get_record(id)
+    end
     new(data)
   end
 

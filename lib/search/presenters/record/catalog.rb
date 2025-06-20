@@ -139,7 +139,11 @@ module Search
           end
 
           def holdings
-            Holdings.new(@record)
+            result = nil
+            Yabeda.holdings_duration_seconds.measure do
+              result = Holdings.new(@record)
+            end
+            result
           end
 
           def citations
@@ -154,7 +158,13 @@ module Search
           end
 
           def shelf_browse
-            ShelfBrowse.for(call_number: @record.bib.call_number&.first&.text)
+            @shelf_browse ||= begin
+              result = nil
+              Yabeda.shelf_browse_api_duration_seconds.measure do
+                result = ShelfBrowse.for(call_number: @record.bib.call_number&.first&.text)
+              end
+              result
+            end
           end
 
           def indexing_date
