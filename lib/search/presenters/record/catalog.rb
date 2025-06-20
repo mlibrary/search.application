@@ -172,7 +172,7 @@ module Search
           end
 
           def marc_record
-            @record.marc.with_indifferent_access
+            @record.marc
           end
 
           def format
