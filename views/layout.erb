@@ -71,7 +71,7 @@
   <%= erb :'partials/_header' %>
   <main>
     <div class="container">
-      <% if @presenter.breadcrumbs %>
+      <% if @presenter.breadcrumbs&.any? %>
         <%= erb :'partials/_breadcrumbs', locals: { breadcrumbs: @presenter.breadcrumbs } %>
       <% end %>
       <%= yield %>

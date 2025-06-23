@@ -14,13 +14,13 @@ RSpec.describe Search::Presenters::Breadcrumbs do
     described_class.new(current_page: @current_page, uri: URI.parse(@url))
   end
 
-  context "#has_breadcrumbs?" do
+  context "#any?" do
     it "is true" do
-      expect(subject.has_breadcrumbs?).to be true
+      expect(subject.any?).to be true
     end
     it "is false" do
       @url = "#{@url_start}#{@query_string}"
-      expect(subject.has_breadcrumbs?).to be false
+      expect(subject.any?).to be false
     end
   end
 

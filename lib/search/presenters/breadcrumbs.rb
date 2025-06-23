@@ -11,7 +11,7 @@ module Search
         @breadcrumbs = breadcrumbs
       end
 
-      def has_breadcrumbs?
+      def any?
         @breadcrumbs.any?
       end
 
