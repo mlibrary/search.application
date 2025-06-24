@@ -1,3 +1,4 @@
+<%= @record.methods %>
 <div class="record">
   <%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
   <div class="container__rounded">
@@ -5,7 +6,7 @@
       <p>Add to list: Needs to be a partial for Results</p>
       <%= erb :'datastores/record/partials/_title', locals: { titles: @record.title } %>
       <h2 class="visually-hidden">Record info:</h2>
-      <%= erb :'datastores/partials/_metadata', locals: { metadata: @record.record_info } %>
+      <%= erb :'datastores/partials/_metadata', locals: { metadata: @record.record_info, record_id: @record.record_id } %>
       <%= yield %>
     </section>
     <h2 class="visually-hidden">Available at:</h2>

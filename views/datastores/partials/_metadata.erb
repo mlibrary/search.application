@@ -12,7 +12,7 @@
           <%= data.field %>
         </th>
         <td>
-          <ul class="list__no-style metadata__list metadata__list--<%= data.partial.gsub('_', '-') %>" id="metadata__toggle--<%= data.uid %>">
+          <ul class="list__no-style metadata__list metadata__list--<%= data.partial.gsub('_', '-') %>" id="metadata__toggle--<%= record_id %>_<%= data.uid %>">
             <% data.each do |value| %>
               <li>
                 <% if value.paired? %>
@@ -30,7 +30,7 @@
               </li>
             <% end %>
           </ul>
-          <%= erb :"datastores/partials/_toggle", locals: {classes: ["metadata__toggle"], id: "metadata__toggle--#{data.uid}", count: 3, postfix: data.field} %>
+          <%= erb :"datastores/partials/_toggle", locals: {classes: ["metadata__toggle"], id: "metadata__toggle--#{record_id}_#{data.uid}", count: 3, postfix: data.field} %>
         </td>
       </tr>
     <% end %>

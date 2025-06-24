@@ -1,0 +1,32 @@
+<div class="list">
+  <div class="list__header">
+    <%= h1(body: @presenter.breadcrumbs.current_page) %>
+    <div class="list__header--utilities">
+      <% if @presenter.records&.any? %>
+        <button class="button__link">Remove all</button>
+      <% end %>
+      <%= erb :'datastores/list/partials/_in-list', locals: { count: @presenter.records.count } %>
+    </div>
+  </div>
+  <p>Items in this list are stored temporarily (within a single session).</p>
+  <% if @presenter.records&.any? %>
+    <%#= erb :'datastores/partials/_actions', locals: { patron: @patron } %>
+    <% @presenter.records.each do |record| %>
+      <div class="container__rounded">
+        <section class="record__information">
+          <h3 class="visually-hidden">Record info:</h3>
+          <%= erb :'datastores/partials/_metadata', locals: { metadata: record.record_info, record_id: record.record_id } %>
+        </section>
+        <h3 class="visually-hidden">Available at:</h3>
+        <%= erb :"datastores/partials/_holdings", locals: { holdings: record.holdings.list } %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="container__rounded list__empty">
+      <p>
+        <span class="strong">This list is empty.</span>
+        <%= link_to(body: "Go back to #{@presenter.breadcrumbs.first.body}", url: @presenter.breadcrumbs.first.url) %> to add to this list.
+      </p>
+    </div>
+  <% end %>
+</div>

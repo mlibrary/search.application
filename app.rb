@@ -95,6 +95,13 @@ class Search::Application < Sinatra::Base
         erb :"datastores/#{datastore.slug}"
       end
     end
+    get "/#{datastore.slug}/list" do
+      record_ids = params["ids"] || ""
+      @presenter = Search::Presenters.for_datastore_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, record_ids: record_ids.split(','))
+      erb :"datastores/list/layout", layout: :layout do
+        erb :"datastores/list/#{datastore.slug}"
+      end
+    end
     if datastore.slug == "catalog"
       get "/#{datastore.slug}/record/:id" do
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "full_record"

@@ -158,9 +158,11 @@ describe Search::Presenters::Record::Catalog::Full do
       # **parallel_plain_text_fields,
       **plain_text_fields,
       **browse_bib_fields)
+    
+    @record_id = "99#{Faker::Number.number(digits: 12)}6381"
   end
   subject do
-    described_class.new(OpenStruct.new(bib: @bib_stub))
+    described_class.new(record: OpenStruct.new(bib: @bib_stub), id: @record_id)
   end
   context "#title" do
     it "returns a title array for both title and v title when v title is present" do
@@ -178,6 +180,11 @@ describe Search::Presenters::Record::Catalog::Full do
       expect(title.first.text).to eq(@bib_stub.title.text)
       expect(title.first.css_class).to eq("title-primary")
       expect(title.count).to eq(1)
+    end
+  end
+  context "#record_id" do
+    it "has a record ID" do
+      expect(subject.record_id).to eq(@record_id)
     end
   end
 

@@ -71,6 +71,32 @@ module Search::Presenters
     )
   end
 
+  def self.for_datastore_list(slug:, uri:, patron:, record_ids:)
+    datastore = Search::Datastores.find(slug)
+    # Remove duplicate IDs before mapping
+    records = record_ids.uniq.map do |record_id|
+      Record.for_datastore(datastore: slug, id: record_id)
+    end
+    icons = records.map do |record|
+      record.icons
+    end
+    current_page = "My Temporary #{datastore.title} List"
+
+    OpenStruct.new(
+      title: title([current_page, datastore.title]),
+      current_datastore: slug,
+      description: datastore.description,
+      icons: Icons.new(icons.flatten + ["mail", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error"]),
+      slug: datastore.slug,
+      styles: ["styles.css", "datastores/styles.css", "datastores/list/styles.css"],
+      scripts: ["scripts.js", "partials/scripts.js", "datastores/list/scripts.js"],
+      search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
+      affiliations: Affiliations.new(current_affiliation: patron.affiliation),
+      breadcrumbs: Breadcrumbs.new(current_page: current_page, uri: uri),
+      records: records
+    )
+  end
+
   def self.for_static_page(slug:, uri:, patron:)
     page = static_pages.find { |x| x[:slug] == slug }
 

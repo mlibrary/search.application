@@ -1,0 +1,19 @@
+// --------------------------------------------------
+//
+// # In List
+//   Styles to apply directly to `views/datastores/list/partials/_in-list.erb`.
+//
+// ## Table of Contents
+//   1. In List
+//
+// --------------------------------------------------
+
+// ****************** //
+// *** 1. IN LIST *** //
+// ****************** //
+
+.list__in-list {
+  background-color: var(--search-color-blue-500);
+  color: white;
+  padding: 0 0.25rem;
+}

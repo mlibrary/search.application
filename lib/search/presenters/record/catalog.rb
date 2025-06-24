@@ -100,11 +100,12 @@ module Search
 
           def self.for(id)
             record = Search::Models::Record::Catalog.for(id)
-            new(record)
+            new(record: record, id: id)
           end
 
-          def initialize(record)
+          def initialize(record:, id:)
             @record = record
+            @id = id
           end
 
           def title
@@ -132,6 +133,10 @@ module Search
             super unless respond_to_missing?(method)
             S.logger.debug("#{method} not defined in Presenters::Record::Catalog::Full")
             nil
+          end
+
+          def record_id
+            @id
           end
 
           def record_info
