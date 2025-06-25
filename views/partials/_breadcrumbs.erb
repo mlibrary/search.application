@@ -1,0 +1,8 @@
+<nav aria-label="Breadcrumbs">
+  <ol class="breadcrumbs">
+    <% breadcrumbs.each do |breadcrumb| %>
+      <li><%= link_to(body: breadcrumb.body, url: breadcrumb.url) %></li>
+    <% end %>
+    <li aria-current="page"><%= breadcrumbs.current_page %></li>
+  </ol>
+</nav>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= @presenter.title %> - Library Search</title>
+  <title><%= @presenter.title %></title>
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/favicon-180x180.png">
@@ -71,6 +71,9 @@
   <%= erb :'partials/_header' %>
   <main>
     <div class="container">
+      <% if @presenter.breadcrumbs&.any? %>
+        <%= erb :'partials/_breadcrumbs', locals: { breadcrumbs: @presenter.breadcrumbs } %>
+      <% end %>
       <%= yield %>
       <% if S.dev_login? %>
         <%= erb :'partials/_development_users' %>
