@@ -23,3 +23,5 @@ vendor/
 public/styles/
 public/scripts/
 
+tmp/*
+!tmp/.keep

@@ -12,6 +12,14 @@ class Search::Models::Record::Catalog::Holdings::Physical
       @holding = holding
     end
 
+    def count
+      @count ||= @holding["items"].count
+    end
+
+    def has_description?
+      @holding["items"]&.any? { |x| x["description"].present? }
+    end
+
     [:holding_id, :call_number, :public_note, :summary].each do |method|
       define_method(method) do
         @holding.dig(method.to_s)

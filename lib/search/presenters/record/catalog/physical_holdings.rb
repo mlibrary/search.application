@@ -21,6 +21,10 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     @holding.physical_location.text
   end
 
+  def count
+    @holding.count
+  end
+
   def holding_info
     [
       @holding.public_note,
@@ -45,6 +49,10 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     @holding.items.map { |x| Item.new(item: x) }
   end
 
+  def has_description?
+    @holding.has_description?
+  end
+
   def rows
     items.map do |item|
       result = [item.action]
@@ -53,10 +61,6 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
       result.push(item.call_number)
       result
     end
-  end
-
-  def has_description?
-    items.any? { |item| item.description.text }
   end
 
   class Item

@@ -19,15 +19,15 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings do
       expect(subject.list.first.heading).to eq("HathiTrust Digital Library")
     end
     it "does not include HathiTrust when it does not have items" do
-      allow(ht_holdings).to receive(:items).and_return([])
+      allow(ht_holdings).to receive(:count).and_return(0)
       expect(subject.list.first&.heading).not_to eq("HathiTrust Digital Library")
     end
     it "includes Online when there are online items" do
       expect(subject.list[1]&.heading).to eq("Online Resources")
     end
     it "does not include Online when there are none" do
-      allow(alma_digital_holdings).to receive(:items).and_return([])
-      allow(electronic_holdings).to receive(:items).and_return([])
+      allow(alma_digital_holdings).to receive(:count).and_return(0)
+      allow(electronic_holdings).to receive(:count).and_return(0)
       expect(subject.list[1]&.heading).not_to eq("Online Resources")
     end
   end
@@ -37,7 +37,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
   let(:ht_item) { hathi_trust_holdings.items.first }
 
   subject do
-    described_class.new(hathi_trust_holdings.items)
+    described_class.new(hathi_trust_holdings)
   end
 
   context "#icon" do
@@ -59,8 +59,8 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
 
   context "#empty?" do
     it "is true when there are no items" do
-      s = described_class.new([])
-      expect(s.empty?).to eq(true)
+      allow(hathi_trust_holdings).to receive(:count).and_return(0)
+      expect(subject.empty?).to eq(true)
     end
     it "is false when there are items" do
       expect(subject.empty?).to eq(false)
@@ -75,7 +75,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
       expect(th[2].to_s).to eq("Source")
     end
     it "does not include description if there isn't one" do
-      allow(ht_item).to receive(:description).and_return("")
+      allow(hathi_trust_holdings).to receive(:has_description?).and_return(false)
       th = subject.table_headings
       expect(th[0].to_s).to eq("Link")
       expect(th[1].to_s).to eq("Source")
@@ -115,7 +115,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
       expect(cells[2].to_s).to eq(ht_item.source)
     end
     it "does not include the description if there isn't one" do
-      allow(ht_item).to receive(:description).and_return("")
+      allow(hathi_trust_holdings).to receive(:has_description?).and_return(false)
       cells = subject.rows.first
       expect(cells[0].to_s).to eq(ht_item.status)
       expect(cells[1].to_s).to eq(ht_item.source)
@@ -157,8 +157,8 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
       expect(th[2].to_s).to eq("Source")
     end
     it "does not include description if there isn't one" do
-      allow(electronic_item).to receive(:description).and_return(nil)
-      allow(alma_digital_item).to receive(:label).and_return(nil)
+      allow(holdings.electronic).to receive(:has_description?).and_return(false)
+      allow(holdings.alma_digital).to receive(:has_description?).and_return(false)
       th = subject.table_headings
       expect(th[0].to_s).to eq("Link")
       expect(th[1].to_s).to eq("Source")
@@ -167,8 +167,8 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
 
   context "#empty?" do
     it "is true when there are no items" do
-      allow(holdings.alma_digital).to receive(:items).and_return([])
-      allow(holdings.electronic).to receive(:items).and_return([])
+      allow(holdings.alma_digital).to receive(:count).and_return(0)
+      allow(holdings.electronic).to receive(:count).and_return(0)
       expect(subject.empty?).to eq(true)
     end
     it "is false when there are items" do
@@ -239,8 +239,8 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
       expect(cells[2].to_s).to eq(alma_digital_item.public_note)
     end
     it "does not include the description if there isn't one" do
-      allow(electronic_item).to receive(:description).and_return("")
-      allow(alma_digital_item).to receive(:label).and_return("")
+      allow(holdings.electronic).to receive(:has_description?).and_return(false)
+      allow(holdings.alma_digital).to receive(:has_description?).and_return(false)
       cells = subject.rows.first
       expect(cells[0].to_s).to eq("Available online")
       expect(cells[1].to_s).to eq(alma_digital_item.public_note)

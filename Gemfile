@@ -22,6 +22,7 @@ end
 group :development, :test do
   gem "debug"
   gem "faker"
+  gem "ruby-prof"
 end
 
 group :test do

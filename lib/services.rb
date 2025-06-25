@@ -49,6 +49,11 @@ S.register(:app_env) do
   ENV["APP_ENV"] || "development"
 end
 
+# Should we run the profiler?
+S.register(:profile?) do
+  !!ENV["PROFILE_ON"]
+end
+
 S.register(:dev_login?) do
   S.app_env == "development" && ENV["DEV_LOGIN"]
 end
