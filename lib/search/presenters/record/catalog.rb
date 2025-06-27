@@ -340,6 +340,749 @@ module Search
               values: @record.bib.academic_discipline
             )
           end
+
+          def ris_tags
+            # https://www.zotero.org/support/dev/exposing_metadata
+            # https://webmasters.stackexchange.com/a/139313
+            # https://div.div1.com.au/div-thoughts/div-commentaries/66-div-commentary-metadata
+            # https://en.wikipedia.org/wiki/RIS_(file_format)#cite_ref-:3_14-49
+            [
+              {
+                "RIS" => "A1",
+                "Meta" => ["citation_author**"],
+                "Note(s)" => "Synonym of AU.",
+                "Done" => true
+              },
+              {
+                "RIS" => "A2",
+                "Meta" => ["citation_author", "citation_author_institution", "citation_editor", "citation_technical_report_institution", "citation_dissertation_institution"],
+                "Note(s)" => "The tag must be repeated for each person. Synonym of ED.",
+                "Done" => true
+              },
+              {
+                "RIS" => "A3",
+                "Meta" => ["citation_author", "citation_editor", "citation_publisher"],
+                "Note(s)" => "The tag must be repeated for each person.",
+                "Done" => true
+              },
+              {
+                "RIS" => "A4",
+                "Meta" => ["citation_author", "citation_editor"],
+                "Note(s)" => "The tag must be repeated for each person.",
+                "Done" => true
+              },
+              {
+                "RIS" => "A5",
+                "Meta" => ["citation_author", "citation_editor"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "A6",
+                "Meta" => ["citation_author", "citation_editor"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "AB",
+                "Meta" => ["citation_abstract**"],
+                "Note(s)" => "Synonym of N2.",
+                "Done" => true
+              },
+              {
+                "RIS" => "AD",
+                "Meta" => ["citation_author_email", "citation_author_institution", "citation_dissertation_institution", "citation_technical_report_institution"],
+                "Note(s)" => "(Author/editor/inventor) address, e.g. ... email address, ... Institution.",
+                "Done" => true
+              },
+              {
+                "RIS" => "AN",
+                "Meta" => ["citation_collection_id", "citation_id"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "AU",
+                "Meta" => ["citation_author", "citation_author_institution", "citation_editor", "citation_technical_report_institution", "citation_dissertation_institution"],
+                "Note(s)" => "Synonym of A1, but A1 doesn't include editor?",
+                "Done" => true
+              },
+              {
+                "RIS" => "AV",
+                "Meta" => ["citation_fulltext_world_readable"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "BT",
+                "Meta" => ["citation_title", "citation_book_title", "citation_inbook_title"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "C1",
+                "Meta" => ["citation_section", "citation_year"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "C2",
+                "Meta" => ["citation_year", "citation_technical_report_number"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "C3",
+                "Meta" => ["citation_year"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "C4",
+                "Meta" => ["citation_fulltext_world_readable"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "C5",
+                "Meta" => ["citation_publisher"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "C6",
+                "Meta" => ["citation_volume"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "C7",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "C8",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "CA",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "CL",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "CN",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "CP",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "CR",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "CT",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "CY",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "DA",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "DB",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "DI",
+                "Meta" => ["citation_doi"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "DO",
+                "Meta" => ["citation_doi"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "DOI",
+                "Meta" => ["citation_doi"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "DP",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "DS",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "ED",
+                "Meta" => ["citation_editor**", "citation_author"],
+                "Note(s)" => "Synonym of A2.",
+                "Done" => true
+              },
+              {
+                "RIS" => "EP",
+                "Meta" => ["citation_firstpage", "citation_lastpage**"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "ER",
+                "Meta" => ["citation_reference"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "ET",
+                "Meta" => ["citation_patent_number", "citation_patent_country"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "FD",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "H1",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "H2",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "ID",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "IP",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "IS",
+                "Meta" => ["citation_issue**", "citation_volume"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "J1",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "J2",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "JA",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "JF",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "JO",
+                "Meta" => ["citation_journal_abbrev"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "K1",
+                "Meta" => ["citation_keywords"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "KW",
+                "Meta" => ["citation_keywords"],
+                "Note(s)" => "Separated by a semicolon.",
+                "Done" => true
+              },
+              {
+                "RIS" => "L1",
+                "Meta" => ["citation_pdf_url**"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "L2",
+                "Meta" => ["citation_fulltext_html_url**"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "L3",
+                "Meta" => ["citation_doi"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "L4",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "LA",
+                "Meta" => ["citation_language**"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "LB",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "LK",
+                "Meta" => ["citation_abstract_html_url", "citation_abstract_pdf_url", "citation_fulltext_html_url", "citation_pdf_url", "citation_public_url"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "LL",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "M1",
+                "Meta" => ["citation_firstpage", "citation_volume**"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "M2",
+                "Meta" => ["citation_firstpage**"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "M3",
+                "Meta" => ["citation_patent_number"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "N1",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "N2",
+                "Meta" => ["citation_abstract"],
+                "Note(s)" => "Synonym of AB.",
+                "Done" => true
+              },
+              {
+                "RIS" => "NO",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "NV",
+                "Meta" => ["citation_volume", "citation_patent_number"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "OL",
+                "Meta" => ["citation_language"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "OP",
+                "Meta" => ["citation_firstpage"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "PA",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "PB",
+                "Meta" => ["citation_publisher**"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "PMCID",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "PMID",
+                "Meta" => ["citation_pmid"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "PP",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "PY",
+                "Meta" => ["citation_year"],
+                "Note(s)" => "Synonym of Y1.",
+                "Done" => nil
+              },
+              {
+                "RIS" => "RD",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "RI",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "RN",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "RP",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "RT",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "SE",
+                "Meta" => ["citation_firstpage", "citation_patent_number"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "SF",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "SL",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "SN",
+                "Meta" => ["citation_issn**", "citation_isbn", "citation_technical_report_number", "citation_patent_number"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "SP",
+                "Meta" => ["citation_firstpage**"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "SR",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "ST",
+                "Meta" => ["citation_journal_abbrev"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "SV",
+                "Meta" => ["citation_volume"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "T1",
+                "Meta" => ["citation_title"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "T2",
+                "Meta" => ["citation_series_title"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "T3",
+                "Meta" => ["citation_volume", "citation_series_title"],
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "TA",
+                "Meta" => ["citation_author", "citation_editor"],
+                "Note(s)" => "If transliterated takes priority over original",
+                "Done" => nil
+              },
+              {
+                "RIS" => "TI",
+                "Meta" => ["citation_title"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "TT",
+                "Meta" => ["citation_title"],
+                "Note(s)" => "If transliterated takes priority over original",
+                "Done" => true
+              },
+              {
+                "RIS" => "TY",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U1",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U2",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U3",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U4",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U5",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U6",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U7",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U8",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U9",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U10",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U11",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U12",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U13",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U13",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U14",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "U15",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => nil
+              },
+              {
+                "RIS" => "UR",
+                "Meta" => ["citation_public_url**", "citation_fulltext_html_url", "citation_pdf_url", "citation_abstract_html_url", "citation_abstract_pdf_url"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "VL",
+                "Meta" => ["citation_volume**", "citation_year", "citation_patent_number"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "VO",
+                "Meta" => ["citation_volume**"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "WP",
+                "Meta" => ["citation_publication_date**", "citation_online_date", "citation_date"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "WT",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "WV",
+                "Meta" => nil,
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "Y1",
+                "Meta" => ["citation_date**", "citation_year"],
+                "Note(s)" => "Synonym of PY.",
+                "Done" => true
+              },
+              {
+                "RIS" => "Y2",
+                "Meta" => ["citation_date", "citation_online_date", "citation_publication_date"],
+                "Note(s)" => nil,
+                "Done" => true
+              },
+              {
+                "RIS" => "YR",
+                "Meta" => ["citation_year**"],
+                "Note(s)" => nil,
+                "Done" => true
+              }
+            ]
+          end
+
+          def meta_tags
+            # https://www.zotero.org/support/dev/exposing_metadata#using_an_open_standard_for_exposing_metadata
+            # https://div.div1.com.au/div-thoughts/div-commentaries/66-div-commentary-metadata
+            # https://en.wikipedia.org/wiki/RIS_(file_format)
+            [
+              {
+                "name" => "title",
+                "content" => ":title.original"
+              },
+              {
+                "name" => "author",
+                "content" => ":main_author.original"
+              },
+              {
+                "name" => "author",
+                "content" => ":contributors.original"
+              }
+            ]
+          end
         end
 
         class Field
