@@ -3,6 +3,14 @@ class Search::Models::Record::Catalog::Holdings::Electronic
     @electronic_items = data.dig("holdings", "electronic_items")
   end
 
+  def count
+    @electronic_items.count
+  end
+
+  def has_description?
+    @electronic_items.any? { |x| x["description"].present? }
+  end
+
   def items
     @electronic_items.map do |item|
       Item.new(url: item["url"], is_available: item["is_available"], note: item["note"],
