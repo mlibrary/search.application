@@ -1,0 +1,10 @@
+<% if @presenter.records.count > 0 %>
+  <section class="go-to container__rounded" aria-live="polite">
+    <p class="go-to__content">
+      Go to 
+      <%= link_to(body: "My Temporary #{datastore.title} List", url: "/#{datastore.slug}/list#{"?" + request.query_string if request.query_string}") %>
+      to email, text, and export citations.
+    </p>
+    <%= erb :'datastores/list/partials/_in-list', locals: { count: @presenter.records.count } %>
+  </section>
+<% end %>

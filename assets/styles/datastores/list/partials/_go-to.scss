@@ -1,0 +1,48 @@
+@use './in-list';
+@use '../../../utilities';
+
+// --------------------------------------------------
+//
+// # Go To
+//   Styles to apply directly to `views/datastores/list/partials/_go-to.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Go To
+//     2.1. Content
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.go-to';
+
+
+
+
+
+// **************** //
+// *** 2. GO TO *** //
+// **************** //
+
+#{$class} {
+  @include utilities.flex($wrap: true);
+  & {
+    background-color: var(--search-color-blue-100);
+    border: 2px solid var(--search-color-blue-300);
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+  }
+}
+
+
+
+// *             * //
+// * 2.1 CONTENT * //
+// *             * //
+
+#{$class} #{$class}__content {
+  margin: 0;
+}

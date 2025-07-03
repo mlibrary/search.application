@@ -98,17 +98,18 @@ class Search::Application < Sinatra::Base
     end
     get "/#{datastore.slug}/list" do
       record_ids = params["ids"] || ""
-      @presenter = Search::Presenters.for_datastore_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, record_ids: record_ids.split(','))
+      @presenter = Search::Presenters.for_datastore_list(datastore: datastore, uri: URI.parse(request.fullpath), patron: @patron, record_ids: record_ids.split(','))
       erb :"datastores/list/layout", layout: :layout do
         erb :"datastores/list/#{datastore.slug}"
       end
     end
     if datastore.slug == "catalog"
       get "/#{datastore.slug}/record/:id" do
+        record_ids = params["ids"] || ""
         # profile = RubyProf::Profile.new
         # profile.start
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "full_record"
-        @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, record_id: params["id"])
+        @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, record_id: params["id"], record_ids: record_ids.split(','))
         @record = @presenter.record
         erb :"datastores/record/layout", layout: :layout do
           erb :"datastores/record/#{datastore.slug}"

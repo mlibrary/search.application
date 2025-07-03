@@ -1,5 +1,5 @@
-<%= @record.methods %>
 <div class="record">
+  <%= erb :'datastores/list/partials/_go-to', locals: { datastore: @presenter.datastore } %>
   <%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
   <div class="container__rounded">
     <section class="record__information">

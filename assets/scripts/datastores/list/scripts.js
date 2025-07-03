@@ -1,5 +1,7 @@
+/* Uncomment
 import { shareForm, tabControl } from '../partials/_actions.js';
 import copyCitation from '../partials/actions/_citation.js';
+*/
 import toggleItems from '../partials/_toggle.js';
 
 /*
