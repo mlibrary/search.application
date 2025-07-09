@@ -1,13 +1,15 @@
-<% temporary_list = session[:record_ids] && session[:record_ids][datastore.slug] || [] %>
-<form action="/<%= datastore.slug %>/list/toggle" method="post">
-  <input type="hidden" name="checked" value="off">
-  <input 
-    type="checkbox"
-    name="checked"
-    value="on"
-    onchange="this.form.submit()"
-    <%= "checked" if temporary_list.include?(record_id) %>
-  >
-  <input type="hidden" name="value" value="<%= record_id %>">
-  <span class="visually-hidden">Add <%= title.first.text %> to your temporary <%= datastore.title %> list</span>
+<% temporary_list = session[:record_ids]&.[](datastore.slug) || [] %>
+<form action="/<%= datastore.slug %>/list/<%= record_id %>" method="post">
+  <label>
+    <input
+      type="checkbox"
+      name="checked"
+      value="on"
+      onchange="this.form.submit()"
+      <%= "checked" if temporary_list.include?(record_id) %>
+    >
+    <span class="visually-hidden">
+      Add <%= title.first.text %> to your temporary <%= datastore.title %> list
+    </span>
+  </label>
 </form>

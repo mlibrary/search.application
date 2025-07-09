@@ -160,7 +160,7 @@ describe Search::Presenters::Record::Catalog::Full do
       # **parallel_plain_text_fields,
       **plain_text_fields,
       **browse_bib_fields)
-    
+
     @record_id = "99#{Faker::Number.number(digits: 12)}6381"
   end
   let(:record) { create(:catalog_record) }

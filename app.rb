@@ -98,7 +98,7 @@ class Search::Application < Sinatra::Base
     end
     get "/#{datastore.slug}/list" do
       record_ids = params["ids"] || ""
-      @presenter = Search::Presenters.for_datastore_list(datastore: datastore, uri: URI.parse(request.fullpath), patron: @patron, record_ids: record_ids.split(','))
+      @presenter = Search::Presenters.for_datastore_list(datastore: datastore, uri: URI.parse(request.fullpath), patron: @patron, record_ids: record_ids.split(","))
       erb :"datastores/list/layout", layout: :layout do
         erb :"datastores/list/#{datastore.slug}"
       end
@@ -109,7 +109,7 @@ class Search::Application < Sinatra::Base
         # profile = RubyProf::Profile.new
         # profile.start
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "full_record"
-        @presenter = Search::Presenters.for_datastore_record(datastore: datastore, uri: URI.parse(request.fullpath), patron: @patron, record_id: params["id"], record_ids: record_ids.split(','))
+        @presenter = Search::Presenters.for_datastore_record(datastore: datastore, uri: URI.parse(request.fullpath), patron: @patron, record_id: params["id"], record_ids: record_ids.split(","))
         @record = @presenter.record
         erb :"datastores/record/layout", layout: :layout do
           erb :"datastores/record/#{datastore.slug}"
@@ -125,13 +125,14 @@ class Search::Application < Sinatra::Base
         redirect not_found
       end
     end
-    post "/#{datastore.slug}/list/toggle" do      
-      session[:record_ids] ||= {}
-      session[:record_ids][datastore.slug] ||= []
-
-      record_id = params["value"]
+    post "/:slug/list/:record_id" do
+      slug = params[:slug]
+      record_id = params[:record_id]
       checked = params["checked"] == "on"
-      records = session[:record_ids][datastore.slug]
+
+      session[:record_ids] ||= {}
+      session[:record_ids][slug] ||= []
+      records = session[:record_ids][slug]
 
       if checked
         records << record_id unless records.include?(record_id)
