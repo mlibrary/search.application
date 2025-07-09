@@ -109,7 +109,7 @@ class Search::Application < Sinatra::Base
         # profile = RubyProf::Profile.new
         # profile.start
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "full_record"
-        @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, record_id: params["id"], record_ids: record_ids.split(','))
+        @presenter = Search::Presenters.for_datastore_record(datastore: datastore, uri: URI.parse(request.fullpath), patron: @patron, record_id: params["id"], record_ids: record_ids.split(','))
         @record = @presenter.record
         erb :"datastores/record/layout", layout: :layout do
           erb :"datastores/record/#{datastore.slug}"
@@ -124,6 +124,22 @@ class Search::Application < Sinatra::Base
         S.logger.error(error.message, error_response: error.response)
         redirect not_found
       end
+    end
+    post "/#{datastore.slug}/list/toggle" do      
+      session[:record_ids] ||= {}
+      session[:record_ids][datastore.slug] ||= []
+
+      record_id = params["value"]
+      checked = params["checked"] == "on"
+      records = session[:record_ids][datastore.slug]
+
+      if checked
+        records << record_id unless records.include?(record_id)
+      else
+        records.delete(record_id)
+      end
+
+      redirect back
     end
   end
 

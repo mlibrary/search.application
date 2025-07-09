@@ -49,25 +49,24 @@ module Search::Presenters
     )
   end
 
-  def self.for_datastore_record(slug:, uri:, patron:, record_id:, record_ids:)
-    datastore = Search::Datastores.find(slug)
+  def self.for_datastore_record(datastore:, uri:, patron:, record_id:, record_ids:)
     params = URI.decode_www_form(uri.query.to_s)&.to_h
-    record = Record.for_datastore(datastore: slug, id: record_id)
+    record = Record.for_datastore(datastore: datastore.slug, id: record_id)
     # Remove duplicate IDs before mapping
     records = record_ids.uniq.map do |record_id|
-      Record.for_datastore(datastore: slug, id: record_id)
+      Record.for_datastore(datastore: datastore.slug, id: record_id)
     end
     current_page = "Record"
 
     OpenStruct.new(
       title: title([record.title.first.text, current_page, datastore.title]),
-      current_datastore: slug,
+      current_datastore: datastore.slug,
       description: datastore.description,
       icons: Icons.new(record.icons + ["mail", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error", "list", "arrow_back_ios", "arrow_forward_ios"]),
       slug: datastore.slug,
       styles: ["styles.css", "datastores/styles.css", "datastores/record/styles.css"],
       scripts: ["scripts.js", "partials/scripts.js", "datastores/record/scripts.js"],
-      search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
+      search_options: SearchOptions.new(datastore_slug: datastore.slug, uri: uri),
       affiliations: Affiliations.new(current_affiliation: patron.affiliation),
       flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
       breadcrumbs: Breadcrumbs.new(current_page: current_page, uri: uri),

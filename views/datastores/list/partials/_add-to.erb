@@ -1,0 +1,21 @@
+<form action="/<%= datastore_slug %>/list/toggle" method="post">
+  <label>
+    <input type="checkbox" name="my_checkbox" value="<%= record_id %>">
+    <span class="visually-hidden">Add <%= record_title %> to your temporary <%= datastore_title %> list</span>
+  </label>
+  <button type="submit">Submit</button>
+</form>
+
+<% temporary_list = session[:record_ids] && session[:record_ids][@presenter.datastore.slug] || [] %>
+<form action="/<%= @presenter.datastore.slug %>/list/toggle" method="post">
+  <input type="hidden" name="checked" value="off">
+  <input 
+    type="checkbox"
+    name="checked"
+    value="on"
+    onchange="this.form.submit()"
+    <%= "checked" if temporary_list.include?(@record.record_id) %>
+  >
+  <input type="hidden" name="value" value="<%= @record.record_id %>">
+  <%= @record.record_id.capitalize %>
+</form>
