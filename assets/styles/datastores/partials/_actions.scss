@@ -75,7 +75,6 @@ $tabs: (
 .#{$class}__tablist {
   @include utilities.flex($align: start, $responsive: true);
   & {
-    justify-content: space-between;
     padding-top: 0.5rem;
   }
 }
@@ -93,14 +92,17 @@ body.no-javascript .#{$class}__tablist {
 .#{$class}__tablist > button[role="tab"] {
   @include utilities.flex();
   & {
-    flex: 0 1 auto;
+    flex: 0 1 0;
     font-size: 1rem;
     gap: 0.5rem;
-    text-align: center;
   }
   @include media.breakpoint('xs') {
     flex-direction: column;
     gap: 0rem;
+    text-align: center;
+  }
+  @include media.breakpoint('sm') {
+    flex-basis: auto;
   }
   @each $tab, $icon in $tabs {
     &##{$class}__#{$tab}:before {
