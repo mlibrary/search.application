@@ -1,24 +1,9 @@
-<% temporary_list = session[:record_ids] && session[:record_ids][@presenter.datastore.slug] || [] %>
-<form action="/<%= @presenter.datastore.slug %>/list/toggle" method="post">
-  <input type="hidden" name="checked" value="off">
-  <input 
-    type="checkbox"
-    name="checked"
-    value="on"
-    onchange="this.form.submit()"
-    <%= "checked" if temporary_list.include?(@record.record_id) %>
-  >
-  <input type="hidden" name="value" value="<%= @record.record_id %>">
-  <%= @record.record_id.capitalize %>
-</form>
-<%= session[:record_ids] %>
-<%= @record.record_id %>
 <div class="record">
   <%= erb :'datastores/list/partials/_go-to', locals: { datastore: @presenter.datastore } %>
   <%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
   <div class="container__rounded">
     <section class="record__information">
-      <p>Add to list: Needs to be a partial for Results</p>
+      <%= erb :'datastores/list/partials/_add-to', locals: { record_id: @record.record_id, datastore: @presenter.datastore, title: @record.title } %>
       <%= erb :'datastores/record/partials/_title', locals: { titles: @record.title } %>
       <h2 class="visually-hidden">Record info:</h2>
       <%= erb :'datastores/partials/_metadata', locals: { metadata: @record.record_info, record_id: @record.record_id } %>
