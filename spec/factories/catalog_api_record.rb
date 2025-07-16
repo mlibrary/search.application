@@ -25,7 +25,8 @@ module Factories
           alma_digital_items: [],
           electronic_items: [],
           physical: []
-        }]
+        }],
+        ["citations", {tagged: [], citeproc: {}}]
       ] + paired_text_fields + title_link_fields + text_fields + author_browse_fields).to_h
     end
 
