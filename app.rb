@@ -37,6 +37,7 @@ class Search::Application < Sinatra::Base
     S.logger.debug("here's the session", session.to_h)
     @datastores = Search::Datastores.all
     @libraries = Search::Libraries
+    @site_url = "#{request.scheme}://#{request.host_with_port}"
   end
 
   if S.dev_login?

@@ -67,7 +67,8 @@ module Search::Presenters
       affiliations: Affiliations.new(current_affiliation: patron.affiliation),
       flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
       breadcrumbs: Breadcrumbs.new(current_page: current_page, uri: uri),
-      record: record
+      record: record,
+      meta_tags: record.meta_tags
     )
   end
 

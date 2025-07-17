@@ -340,6 +340,10 @@ module Search
               values: @record.bib.academic_discipline
             )
           end
+
+          def meta_tags
+            @record.citation.meta_tags
+          end
         end
 
         class Field

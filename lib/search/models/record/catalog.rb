@@ -3,6 +3,7 @@ end
 
 require "search/models/record/catalog/bib"
 require "search/models/record/catalog/holdings"
+require "search/models/record/catalog/citation"
 
 class Search::Models::Record::Catalog
   def self.for(id)
@@ -28,6 +29,10 @@ class Search::Models::Record::Catalog
 
   def indexing_date
     Date.parse(@data["indexing_date"])
+  end
+
+  def citation
+    Citation.new(@data)
   end
 
   def marc

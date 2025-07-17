@@ -157,7 +157,6 @@ RSpec.describe "requests" do
   context "/catalog/record/:bib_id" do
     it "shows the catalog record page" do
       bib_id = "9912345"
-      # data = JSON.parse(fixture("record/catalog/land_birds.json"))
       data = create(:catalog_api_record)
       call_number = data["call_number"][0]["text"]
       stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
