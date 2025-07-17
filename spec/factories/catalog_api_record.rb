@@ -26,7 +26,7 @@ module Factories
           electronic_items: [],
           physical: []
         }],
-        ["citations", {tagged: [], citeproc: {}}]
+        ["citation", {tagged: [], citeproc: {}}]
       ] + paired_text_fields + title_link_fields + text_fields + author_browse_fields).to_h
     end
 
