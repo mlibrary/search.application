@@ -18,6 +18,7 @@ describe Search::Presenters::Record::Catalog::Full do
     distributed: "Distributed",
     edition: "Edition",
     extended_summary: "Expanded Summary",
+    finding_aids: "Indexes/Finding Aids",
     former_publication_frequency: "Former Publication Frequency",
     funding_information: "Funding Information",
     in_collection: "In Collection",

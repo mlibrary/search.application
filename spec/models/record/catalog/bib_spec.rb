@@ -39,7 +39,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     :biography_history, :chronology, :contents, :content_advice,
     :copy_specific_note, :copyright, :copyright_status_information, :created,
     :current_publication_frequency, :date_place_of_event, :distributed,
-    :edition, :extended_summary, :former_publication_frequency,
+    :edition, :extended_summary, :finding_aids, :former_publication_frequency,
     :funding_information, :in_collection, :language_note,
     :location_of_originals, :manufactured, :map_scale, :media_format, :note,
     :numbering, :numbering_notes, :original_version_note, :performers,

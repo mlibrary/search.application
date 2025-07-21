@@ -13,14 +13,15 @@ class Search::Models::Record::Catalog::Bib
   end
 
   [:access, :arrangement, :association, :audience, :awards, :bibliography,
-    :biography_history, :chronology, :contents, :content_advice, :copy_specific_note,
-    :copyright, :copyright_status_information, :created,
-    :current_publication_frequency, :date_place_of_event, :distributed, :edition,
-    :extended_summary, :former_publication_frequency, :funding_information,
-    :in_collection, :language_note, :location_of_originals, :manufactured,
-    :map_scale, :media_format, :note, :numbering, :numbering_notes, :original_version_note,
-    :performers, :physical_description, :place, :playing_time,
-    :preferred_citation, :printer, :production_credits, :published, :publisher_number, :references,
+    :biography_history, :chronology, :contents, :content_advice,
+    :copy_specific_note, :copyright, :copyright_status_information, :created,
+    :current_publication_frequency, :date_place_of_event, :distributed,
+    :edition, :extended_summary, :finding_aids, :former_publication_frequency,
+    :funding_information, :in_collection, :language_note,
+    :location_of_originals, :manufactured, :map_scale, :media_format, :note,
+    :numbering, :numbering_notes, :original_version_note, :performers,
+    :physical_description, :place, :playing_time, :preferred_citation, :printer,
+    :production_credits, :published, :publisher_number, :references,
     :related_items, :reproduction_note, :series, :series_statement,
     :source_of_acquisition, :source_of_description_note, :summary,
     :terms_of_use].each do |uid|
