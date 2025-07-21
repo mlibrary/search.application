@@ -59,7 +59,7 @@ module Search::Presenters
       title: title([record.title.first.text, current_page, datastore.title]),
       current_datastore: slug,
       description: datastore.description,
-      icons: Icons.new(record.icons + ["mail", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error", "list", "arrow_back_ios", "arrow_forward_ios"]),
+      icons: Icons.new(record.icons + ["add", "mail", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error", "list", "arrow_back_ios", "arrow_forward_ios"]),
       slug: datastore.slug,
       styles: ["styles.css", "datastores/styles.css", "datastores/record/styles.css"],
       scripts: ["scripts.js", "partials/scripts.js", "datastores/record/scripts.js"],
@@ -67,7 +67,8 @@ module Search::Presenters
       affiliations: Affiliations.new(current_affiliation: patron.affiliation),
       flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
       breadcrumbs: Breadcrumbs.new(current_page: current_page, uri: uri),
-      record: record
+      record: record,
+      record_id: record_id
     )
   end
 

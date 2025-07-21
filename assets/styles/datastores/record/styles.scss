@@ -1,10 +1,10 @@
 @use '../partials/breadcrumbs';
 @use '../partials/actions';
-@use './partials/title';
 @use '../partials/metadata';
 @use '../partials/holdings';
 @use './partials/shelf-browse';
 @use './partials/marc';
+@use '../../utilities';
 @use '../../forms';
 
 // --------------------------------------------------
@@ -16,6 +16,7 @@
 //   1. Variables
 //   2. Record
 //   3. Information
+//     3.1. Header
 //   4. Date Last Indexed
 //
 // --------------------------------------------------
@@ -50,6 +51,40 @@ $class: 'record';
   border-radius: forms.$radius forms.$radius 0 0;
   border-top: 1rem solid var(--search-color-blue-200);
   padding: 1rem;
+}
+
+
+
+// *             * //
+// * 3.1. HEADER * //
+// *             * //
+
+.#{$class} .#{$class}__information--header {
+  @include utilities.flex($align: start);
+  & > * {
+    margin-top: 0;
+  }
+}
+
+// * 3.1.1. TITLE * //
+
+.#{$class} .#{$class}__information--header > .#{$class}__title {
+  font-size: 1.75rem;
+  font-weight: normal;
+  & > span {
+    display: block;
+    .truncate__text {
+      margin-right: 0.5rem;
+    }
+    .truncate__button {
+      bottom: 0.25rem;
+      display: inline-block;
+      position: relative;
+    }
+  }
+  & > .record__title-secondary {
+    color: var(--search-color-grey-500);
+  }
 }
 
 
