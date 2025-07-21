@@ -143,6 +143,7 @@ describe Search::Presenters::Record::Catalog::Full do
     end.to_h
     @marc = {}
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
+      id: Faker::Number.number(digits: 10).to_s,
       title: Search::Models::Record::Catalog::Bib::PairedItem.for({
         "transliterated" => double("text", text: Faker::Book.title),
         "original" => double("text", text: Faker::Book.title)
@@ -167,6 +168,11 @@ describe Search::Presenters::Record::Catalog::Full do
     allow(record).to receive(:indexing_date).and_return(indexing_date)
     allow(record).to receive(:marc).and_return(@marc)
     described_class.new(record)
+  end
+  context "#id" do
+    it "returns the mms_id for the record" do
+      expect(subject.id).to eq(@bib_stub.id)
+    end
   end
   context "#title" do
     it "returns a title array for both title and v title when v title is present" do

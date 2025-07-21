@@ -15,7 +15,7 @@ module Search
     module Record
       module Catalog
         class Base
-          [:title, :icons, :record_info].each do |m|
+          [:id, :title, :icons, :record_info].each do |m|
             define_method m do
               raise NotImplementedError
             end
@@ -105,6 +105,10 @@ module Search
 
           def initialize(record)
             @record = record
+          end
+
+          def id
+            @record.bib.id
           end
 
           def title
