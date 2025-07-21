@@ -71,6 +71,27 @@ module Search::Presenters
     )
   end
 
+  def self.for_datastore_list(slug:, uri:, patron: nil)
+    datastore = Search::Datastores.find(slug)
+    params = URI.decode_www_form(uri.query.to_s)&.to_h
+    current_page = "My Temporary List"
+
+    OpenStruct.new(
+      title: title([datastore.title]),
+      current_datastore: slug,
+      description: datastore.description,
+      icons: Icons.new,
+      slug: datastore.slug,
+      styles: ["styles.css", "datastores/styles.css", "datastores/list/styles.css"],
+      scripts: ["scripts.js", "partials/scripts.js", "datastores/list/scripts.js"],
+      search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
+      affiliations: Affiliations.new(current_affiliation: patron.affiliation),
+      flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
+      breadcrumbs: Breadcrumbs.new(current_page: current_page, uri: uri),
+      page_title: current_page
+    )
+  end
+
   def self.for_static_page(slug:, uri:, patron:)
     page = static_pages.find { |x| x[:slug] == slug }
 

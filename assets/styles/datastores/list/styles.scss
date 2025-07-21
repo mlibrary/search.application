@@ -1,0 +1,68 @@
+@use '../partials/breadcrumbs';
+@use '../../utilities';
+
+// --------------------------------------------------
+//
+// # List
+//   Styles to apply directly to `views/datastores/list/layout.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Header
+//   3. List
+//     3.1 Information
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: 'list';
+
+
+
+
+
+
+// ***************** //
+// *** 2. HEADER *** //
+// ***************** //
+
+.#{$class} .#{$class}__header {
+  &,
+  & > * {
+    @include utilities.flex($responsive: true, $wrap: true);
+  }
+  & {
+    justify-content: space-between;
+  }
+}
+
+
+
+
+
+// *************** //
+// *** 3. LIST *** //
+// *************** //
+
+.#{$class} > * + * {
+  margin-top: 1rem;
+}
+
+
+
+// *           * //
+// * 3.1 EMPTY * //
+// *           * //
+
+.#{$class} .#{$class}__empty {
+  padding: 1rem;
+  & > *:first-child {
+    margin-top: 0;
+  }
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+}
