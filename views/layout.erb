@@ -13,11 +13,16 @@
   <meta property="og:description" content="<%= @presenter.description %>">
   <meta property="og:site_name" content="Library Search">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://search.lib.umich.edu/images/og-image.png">
+  <meta property="og:image" content="<%= @site_url %>/images/og-image.png">
   <meta property="og:image:alt" content="University of Michigan Library logo">
-  <meta property="og:url" content="https://search.lib.umich.edu<%= request.path %>">
+  <meta property="og:url" content="<%= @site_url %><%= request.path %>">
   <meta property="twitter:site" content="@umichlibrary">
   <meta name="version" content="<%=S.version%>">
+  <% if @presenter.meta_tags %>
+    <% @presenter.meta_tags.each do |tag| %>
+      <meta name="citation_<%= tag["name"] %>" content="<%= tag["content"] %>">
+    <% end %>
+  <% end %>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/@umich-lib/design-system/dist/umich-lib.min.css" as="style" />

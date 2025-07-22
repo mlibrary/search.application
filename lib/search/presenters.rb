@@ -68,7 +68,8 @@ module Search::Presenters
       flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
       breadcrumbs: Breadcrumbs.new(current_page: current_page, uri: uri),
       record: record,
-      record_id: record_id
+      record_id: record_id,
+      meta_tags: record.meta_tags
     )
   end
 
