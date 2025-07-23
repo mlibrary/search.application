@@ -51,9 +51,9 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
       expect(subject.heading).to eq("HathiTrust Digital Library")
     end
   end
-  context "#partial" do
+  context "#kind" do
     it "is an electronic_holding" do
-      expect(subject.partial).to eq("electronic_holding")
+      expect(subject.kind).to eq("electronic_holding")
     end
   end
 
@@ -143,9 +143,9 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
     end
   end
 
-  context "#partial" do
-    it "is an electronic_holding" do
-      expect(subject.partial).to eq("electronic_holding")
+  context "#kind" do
+    it "is online" do
+      expect(subject.kind).to eq("online")
     end
   end
 

@@ -12,8 +12,8 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
     described_class.new(holding: physical_holding, bib: record.bib)
   end
 
-  it "has a physical_holding partial" do
-    expect(subject.partial).to eq("physical_holding")
+  it "is kind physical_holding" do
+    expect(subject.kind).to eq("physical_holding")
   end
 
   context "#location_url" do

@@ -51,7 +51,7 @@ class Search::Presenters::Record::Catalog::Holdings
       "devices"
     end
 
-    def partial
+    def kind
       "electronic_holding"
     end
 
@@ -107,8 +107,8 @@ class Search::Presenters::Record::Catalog::Holdings
       "devices"
     end
 
-    def partial
-      "electronic_holding"
+    def kind
+      "online"
     end
 
     def table_headings

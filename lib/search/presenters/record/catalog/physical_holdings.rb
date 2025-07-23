@@ -1,20 +1,20 @@
-class Search::Presenters::Record::Catalog::Holdings::Physical
+class Search::Presenters::Record::Catalog::Holdings::PhysicalBase
   TableHeading = Search::Presenters::Record::Catalog::Holdings::TableHeading
-  def initialize(holding:, bib: nil)
+  def initialize(holding)
     @holding = holding
-    @bib = bib
   end
 
-  def partial
-    "physical_holding"
+  [:kind].each do |m|
+    define_method m do
+      raise NotImplementedError
+    end
+  end
+  def icon
+    "location_on"
   end
 
   def location_url
     @holding.physical_location.url
-  end
-
-  def icon
-    "location_on"
   end
 
   def heading
@@ -25,12 +25,12 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     @holding.count
   end
 
-  def holding_info
-    [
-      @holding.public_note,
-      @holding.summary,
-      @holding.physical_location.floor
-    ].flatten.reject(&:blank?)
+  def empty?
+    false
+  end
+
+  def has_description?
+    @holding.has_description?
   end
 
   def table_headings
@@ -39,18 +39,6 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     result.push("Status")
     result.push("Call Number")
     result.map { |x| TableHeading.new(x) }
-  end
-
-  def empty?
-    false
-  end
-
-  def items
-    @holding.items.map { |x| Item.new(item: x) }
-  end
-
-  def has_description?
-    @holding.has_description?
   end
 
   def rows
@@ -62,22 +50,52 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
       result
     end
   end
+end
 
-  class Item
-    ItemCell = Search::Presenters::Record::Catalog::Holdings::ItemCell
+class Search::Presenters::Record::Catalog::Holdings::ItemBase
+  ItemCell = Search::Presenters::Record::Catalog::Holdings::ItemCell
+  def initialize(item:)
+    @item = item
+  end
 
-    def initialize(item:)
-      @item = item
+  def description
+    ItemCell::PlainText.new(@item.description)
+  end
+
+  def call_number
+    ItemCell::PlainText.new(@item.call_number)
+  end
+  [:action, :status].each do |m|
+    define_method m do
+      raise NotImplementedError
     end
+  end
+end
 
-    def description
-      ItemCell::PlainText.new(@item.description)
-    end
+class Search::Presenters::Record::Catalog::Holdings::Physical <
+  Search::Presenters::Record::Catalog::Holdings::PhysicalBase
+  def initialize(holding:, bib: nil)
+    @holding = holding
+    @bib = bib
+  end
 
-    def call_number
-      ItemCell::PlainText.new(@item.call_number)
-    end
+  def kind
+    "physical_holding"
+  end
 
+  def holding_info
+    [
+      @holding.public_note,
+      @holding.summary,
+      @holding.physical_location.floor
+    ].flatten.reject(&:blank?)
+  end
+
+  def items
+    @holding.items.map { |x| Item.new(item: x) }
+  end
+
+  class Item < Search::Presenters::Record::Catalog::Holdings::ItemBase
     def action
       if no_action?
         ItemCell::PlainText.new("N/A")
