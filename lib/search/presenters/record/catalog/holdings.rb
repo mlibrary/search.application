@@ -264,3 +264,4 @@ class Search::Presenters::Record::Catalog::Holdings
 end
 
 require_relative "physical_holdings"
+require_relative "finding_aids_holding"

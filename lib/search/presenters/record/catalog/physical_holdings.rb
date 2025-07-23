@@ -4,7 +4,7 @@ class Search::Presenters::Record::Catalog::Holdings::PhysicalBase
     @holding = holding
   end
 
-  [:kind].each do |m|
+  [:kind, :items].each do |m|
     define_method m do
       raise NotImplementedError
     end
@@ -68,6 +68,60 @@ class Search::Presenters::Record::Catalog::Holdings::ItemBase
   [:action, :status].each do |m|
     define_method m do
       raise NotImplementedError
+    end
+  end
+  class Status < ItemCell
+    attr_reader :text, :intent, :icon
+    def initialize(intent:, text:, icon:)
+      @intent = intent
+      @text = text
+      @icon = icon
+    end
+
+    def partial
+      "status"
+    end
+
+    class Success < self
+      def initialize(text)
+        @text = text
+      end
+
+      def intent
+        "success"
+      end
+
+      def icon
+        "check_circle"
+      end
+    end
+
+    class Warning < self
+      def initialize(text)
+        @text = text
+      end
+
+      def intent
+        "warning"
+      end
+
+      def icon
+        "warning"
+      end
+    end
+
+    class Error < self
+      def initialize(text)
+        @text = text
+      end
+
+      def intent
+        "error"
+      end
+
+      def icon
+        "error"
+      end
     end
   end
 end
@@ -245,61 +299,6 @@ class Search::Presenters::Record::Catalog::Holdings::Physical <
       return true if in_library?("AAEL") && @item.item_policy == "05"
       return true if in_library?("FLINT") && @item.item_policy == "10"
       false
-    end
-
-    class Status < ItemCell
-      attr_reader :text, :intent, :icon
-      def initialize(intent:, text:, icon:)
-        @intent = intent
-        @text = text
-        @icon = icon
-      end
-
-      def partial
-        "status"
-      end
-
-      class Success < self
-        def initialize(text)
-          @text = text
-        end
-
-        def intent
-          "success"
-        end
-
-        def icon
-          "check_circle"
-        end
-      end
-
-      class Warning < self
-        def initialize(text)
-          @text = text
-        end
-
-        def intent
-          "warning"
-        end
-
-        def icon
-          "warning"
-        end
-      end
-
-      class Error < self
-        def initialize(text)
-          @text = text
-        end
-
-        def intent
-          "error"
-        end
-
-        def icon
-          "error"
-        end
-      end
     end
   end
 end

@@ -20,6 +20,8 @@ module Factories
       CatalogRecord.physical_item
     when :shelf_browse_item
       ShelfBrowse.item
+    when :finding_aid_holding
+      CatalogRecord.finding_aid_holding
     end
   end
 end

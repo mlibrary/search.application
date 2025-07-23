@@ -87,6 +87,21 @@ module Factories::CatalogRecord
         url: Faker::Internet.url)
     end
 
+    def finding_aid_holding
+      instance_double(Search::Models::Record::Catalog::Holdings::FindingAids,
+        physical_location: physical_location,
+        has_description?: true,
+        count: 1,
+        items: [finding_aid_item])
+    end
+
+    def finding_aid_item
+      instance_double(Search::Models::Record::Catalog::Holdings::FindingAids::Item,
+        url: Faker::Internet.url,
+        call_number: Faker::Lorem.sentence,
+        description: Faker::Lorem.sentence)
+    end
+
     def physical_location
       instance_double(Search::Models::Record::Catalog::Holdings::Physical::PhysicalLocation,
         url: Faker::Internet.url,
