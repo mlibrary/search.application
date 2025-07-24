@@ -46,6 +46,7 @@ const addToList = () => {
       } else {
         // If the record is not in the list, add it
         list[recordId] = { holdings: [], metadata: [] };
+        // TO DO: Fetch the action URL to get the record metadata
       }
       // Update the session storage with the modified list
       sessionStorage.setItem('temporaryList', JSON.stringify(list));

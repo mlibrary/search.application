@@ -129,6 +129,66 @@ describe('add to', function () {
   });
 
   describe('addToList()', function () {
-    //
+    let getButton = null;
+
+    beforeEach(function () {
+      recordIds.forEach((recordId) => {
+        // Apply HTML to the body
+        document.body.innerHTML += `
+          <div class="record__container" data-record-id="${recordId}">
+            <form class="list__add-to" action="/everything/list/${recordId}" method="post">
+              <button type="submit" title="Add to My Temporary List">
+                <span class="icon">add</span>
+                <span class="text">Add this record to My Temporary List</span>
+              </button>
+            </form>
+          </div>
+        `;
+      });
+
+      getButton = (recordId) => {
+        return document.querySelector(`[data-record-id="${recordId}"] button`);
+      };
+
+      // Call the function to add event listeners
+      addToList();
+    });
+
+    afterEach(function () {
+      getButton = null;
+
+      // Clear session storage after each test
+      global.sessionStorage.clear();
+    });
+
+    it('should add the record metadata to the temporary list on submit', function () {
+      // Define the record ID to test
+      const [recordId] = recordIds;
+
+      // Check that the temporary list is empty before submission
+      expect(getTemporaryList(), '`temporaryList` should return an empty object before submission').to.be.an('object').that.is.empty;
+
+      // Click the button to submit the form
+      getButton(recordId).click();
+
+      // Check that the temporary list now contains the record metadata
+      expect(getTemporaryList(), '`temporaryList` should contain the record metadata after submission').to.deep.equal({ [recordId]: recordMetadata[recordId] });
+    });
+
+    it('should remove the record metadata to the temporary list on submit', function () {
+      // Submit all record IDs to the temporary list first
+      recordIds.forEach((recordId) => {
+        getButton(recordId).click();
+      });
+
+      // Check that the temporary list contains all record metadata after submission
+      expect(getTemporaryList(), '`temporaryList` should contain all record metadata after submission').to.deep.equal(recordMetadata);
+
+      // Click the button to remove the first record
+      getButton(recordIds[0]).click();
+
+      // Check that the temporary list no longer contains the first record
+      expect(getTemporaryList(), '`temporaryList` should not contain the first record after removal').to.deep.equal({ [recordIds[1]]: recordMetadata[recordIds[1]] });
+    });
   });
 });
