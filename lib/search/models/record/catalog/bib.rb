@@ -17,7 +17,7 @@ class Search::Models::Record::Catalog::Bib
     :copy_specific_note, :copyright, :copyright_status_information, :created,
     :current_publication_frequency, :date_place_of_event, :distributed,
     :edition, :extended_summary, :finding_aids, :former_publication_frequency,
-    :funding_information, :in_collection, :language_note,
+    :funding_information, :language_note,
     :location_of_originals, :manufactured, :map_scale, :media_format, :note,
     :numbering, :numbering_notes, :original_version_note, :performers,
     :physical_description, :place, :playing_time, :preferred_citation, :printer,
@@ -44,7 +44,7 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  [:new_title, :other_titles, :previous_title, :preferred_title, :releated_title].each do |uid|
+  [:new_title, :other_titles, :previous_title, :preferred_title, :releated_title, :in_collection].each do |uid|
     define_method(uid) do
       _map_paired_field(uid.to_s) do |item|
         LinkToItem.new(item)

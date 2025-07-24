@@ -218,7 +218,8 @@ module Search
             {uid: :other_titles, field: "Other Titles"},
             {uid: :preferred_title, field: "Preferred Title"},
             {uid: :previous_title, field: "Previous Title"},
-            {uid: :related_title, field: "Related Title"}
+            {uid: :related_title, field: "Related Title"},
+            {uid: :in_collection, field: "In Collection"}
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
@@ -255,7 +256,6 @@ module Search
             {uid: :finding_aids, field: "Indexes/Finding Aids"},
             {uid: :former_publication_frequency, field: "Former Publication Frequency"},
             {uid: :funding_information, field: "Funding Information"},
-            {uid: :in_collection, field: "In Collection"},
             {uid: :language_note, field: "Language note"},
             {uid: :location_of_originals, field: "Location of Originals"},
             {uid: :manufactured, field: "Manufactured"},
