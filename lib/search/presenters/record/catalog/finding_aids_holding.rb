@@ -8,6 +8,10 @@ class Search::Presenters::Record::Catalog::Holdings::FindingAids <
     @holding.items.map { |x| Item.new(item: x) }
   end
 
+  def empty?
+    @holding.count == 0
+  end
+
   class Item < Search::Presenters::Record::Catalog::Holdings::ItemBase
     def action
       ItemCell::LinkTo.new(text: "Request from finding aid", url: @item.url)

@@ -11,7 +11,7 @@ module Factories::CatalogRecord
 
     def holdings
       instance_double(Search::Models::Record::Catalog::Holdings, hathi_trust: hathi_trust_holdings,
-        alma_digital: alma_digital_holdings, electronic: electronic_holdings,
+        alma_digital: alma_digital_holdings, electronic: electronic_holdings, finding_aids: finding_aid_holding,
         physical: physical_holdings)
     end
 

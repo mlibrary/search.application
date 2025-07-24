@@ -4,7 +4,7 @@ class Search::Models::Record::Catalog::Holdings::FindingAids
   end
 
   def count
-    items.count
+    items&.count.to_i
   end
 
   def has_description?

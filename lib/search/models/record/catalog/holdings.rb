@@ -15,6 +15,10 @@ class Search::Models::Record::Catalog::Holdings
     AlmaDigital.new(@data)
   end
 
+  def finding_aids
+    FindingAids.new(@data)
+  end
+
   def physical
     Physical.new(@data)
   end

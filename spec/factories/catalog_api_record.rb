@@ -24,6 +24,7 @@ module Factories
           hathi_trust_items: [],
           alma_digital_items: [],
           electronic_items: [],
+          finding_aids: {},
           physical: []
         }],
         ["citation", {tagged: [], citeproc: {}}]

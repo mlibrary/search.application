@@ -4,7 +4,7 @@ class Search::Presenters::Record::Catalog::Holdings::PhysicalBase
     @holding = holding
   end
 
-  [:kind, :items].each do |m|
+  [:kind, :items, :empty?].each do |m|
     define_method m do
       raise NotImplementedError
     end
@@ -23,10 +23,6 @@ class Search::Presenters::Record::Catalog::Holdings::PhysicalBase
 
   def count
     @holding.count
-  end
-
-  def empty?
-    false
   end
 
   def has_description?
@@ -131,6 +127,10 @@ class Search::Presenters::Record::Catalog::Holdings::Physical <
   def initialize(holding:, bib: nil)
     @holding = holding
     @bib = bib
+  end
+
+  def empty?
+    false
   end
 
   def kind
