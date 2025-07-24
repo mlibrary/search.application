@@ -109,11 +109,11 @@ class Search::Application < Sinatra::Base
         end
         # result = profile.stop
         # printer = RubyProf::GraphHtmlPrinter.new(result)
-        # # printer.print(f)
-        # # File.open("profile.html", "w") do |f|
-        # #   printer.print(f)
-        # # end
-      rescue Faraday::ResourceNotFound => error
+        # printer.print(f)
+        # File.open("profile.html", "w") do |f|
+        #   printer.print(f)
+        # end
+        rescue Faraday::ResourceNotFound => error
         S.logger.error(error.message, error_response: error.response)
         redirect not_found
       end

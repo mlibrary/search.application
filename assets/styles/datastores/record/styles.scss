@@ -1,5 +1,6 @@
 @use '../partials/breadcrumbs';
 @use '../partials/actions';
+@use '../list/partials/add-to';
 @use '../partials/metadata';
 @use '../partials/holdings';
 @use './partials/shelf-browse';
@@ -15,8 +16,10 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Record
+//     2.1. Container
 //   3. Information
 //     3.1. Header
+//       3.1.1. Title
 //   4. Date Last Indexed
 //
 // --------------------------------------------------
@@ -37,6 +40,16 @@ $class: 'record';
 
 .#{$class} > * + * {
   margin-top: 1rem;
+}
+
+
+
+// *                * //
+// * 2.1. CONTAINER * //
+// *                * //
+
+.#{$class}__container--active {
+  outline: 2px solid var(--search-color-blue-300);
 }
 
 

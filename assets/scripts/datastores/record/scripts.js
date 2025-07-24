@@ -1,4 +1,5 @@
 import { shareForm, tabControl } from '../partials/_actions.js';
+import { addToList } from '../list/partials/_add-to.js';
 import copyCitation from '../partials/actions/_citation.js';
 import copyLink from '../partials/actions/_link.js';
 import shelfBrowse from './partials/_shelf-browse.js';
@@ -21,6 +22,9 @@ copyCitation();
 
 // Copy link
 copyLink();
+
+// Add to My Temporary List
+addToList();
 
 // Record Title
 toggleTruncatedText();
