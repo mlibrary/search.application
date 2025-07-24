@@ -16,7 +16,7 @@ class Search::Models::Record::Catalog::Holdings::FindingAids
   end
 
   def items
-    @items ||= @finding_aids["items"]&.map do |item|
+    (@finding_aids&.dig("items") || []).map do |item|
       Item.new(item)
     end
   end
