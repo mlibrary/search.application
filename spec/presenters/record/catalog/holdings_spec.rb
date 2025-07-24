@@ -11,6 +11,12 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings do
   let(:electronic_holdings) do
     record.holdings.electronic
   end
+  let(:finding_aids_holding) do
+    record.holdings.finding_aids
+  end
+  let(:physical) do
+    record.holdings.physical
+  end
   subject do
     described_class.new(record)
   end
@@ -29,6 +35,14 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings do
       allow(alma_digital_holdings).to receive(:count).and_return(0)
       allow(electronic_holdings).to receive(:count).and_return(0)
       expect(subject.list[1]&.heading).not_to eq("Online Resources")
+    end
+    it "includes physical items when there are no finding aids" do
+      allow(finding_aids_holding).to receive(:count).and_return(0)
+      expect(subject.list[2].kind).to eq("physical_holding")
+    end
+    it "does not include physical when there are finding aids" do
+      expect(subject.list[2].kind).to eq("finding_aid")
+      expect(subject.list.count).to eq(3)
     end
   end
 end
@@ -51,9 +65,9 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
       expect(subject.heading).to eq("HathiTrust Digital Library")
     end
   end
-  context "#partial" do
+  context "#kind" do
     it "is an electronic_holding" do
-      expect(subject.partial).to eq("electronic_holding")
+      expect(subject.kind).to eq("electronic_holding")
     end
   end
 
@@ -143,9 +157,9 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Online do
     end
   end
 
-  context "#partial" do
-    it "is an electronic_holding" do
-      expect(subject.partial).to eq("electronic_holding")
+  context "#kind" do
+    it "is online" do
+      expect(subject.kind).to eq("online")
     end
   end
 

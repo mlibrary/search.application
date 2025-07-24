@@ -20,6 +20,15 @@
           <% end %>
         </ul>
       <% end %>
+      <% if holding.kind == "finding_aid" %>
+        <p>
+          A finding aid describes what's in an archival collection and how the
+          items in the collection are related. Click on the “request from
+          finding aid” link to learn more about this collection and select
+          sources to request. Some items may be available online and some may
+          only be available in person.
+        </p>
+      <% end %>
       <table class="holding__table">
         <thead>
           <tr>

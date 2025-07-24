@@ -45,7 +45,7 @@ module Search
             :summary, # 00-catalog mirlyn summary
             :in_collection,
             :access, # 00-catalog marc_access
-            # :indexes, 00-catalog ???
+            :finding_aids,
             :terms_of_use,
             :language,
             :language_note,
@@ -252,6 +252,7 @@ module Search
             {uid: :date_place_of_event, field: "Date/Place of Event"},
             {uid: :distributed, field: "Distributed"},
             {uid: :extended_summary, field: "Expanded Summary"},
+            {uid: :finding_aids, field: "Indexes/Finding Aids"},
             {uid: :former_publication_frequency, field: "Former Publication Frequency"},
             {uid: :funding_information, field: "Funding Information"},
             {uid: :in_collection, field: "In Collection"},

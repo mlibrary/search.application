@@ -14,14 +14,23 @@ class Search::Presenters::Record::Catalog::Holdings
       # send the holding not the items
       HathiTrust.new(@holdings.hathi_trust),
       Online.new(@holdings),
+      finding_aids,
       * physical
     ].reject { |x| x.empty? }
   end
 
   def physical
-    @holdings.physical.list.map do |holding|
-      Physical.new(holding: holding, bib: @data.bib)
+    if finding_aids.empty?
+      @holdings.physical.list.map do |holding|
+        Physical.new(holding: holding, bib: @data.bib)
+      end
+    else
+      []
     end
+  end
+
+  def finding_aids
+    @finding_aids ||= FindingAids.new(@holdings.finding_aids)
   end
 
   class HathiTrust
@@ -51,7 +60,7 @@ class Search::Presenters::Record::Catalog::Holdings
       "devices"
     end
 
-    def partial
+    def kind
       "electronic_holding"
     end
 
@@ -107,8 +116,8 @@ class Search::Presenters::Record::Catalog::Holdings
       "devices"
     end
 
-    def partial
-      "electronic_holding"
+    def kind
+      "online"
     end
 
     def table_headings
@@ -264,3 +273,4 @@ class Search::Presenters::Record::Catalog::Holdings
 end
 
 require_relative "physical_holdings"
+require_relative "finding_aids_holding"

@@ -11,7 +11,7 @@ module Factories::CatalogRecord
 
     def holdings
       instance_double(Search::Models::Record::Catalog::Holdings, hathi_trust: hathi_trust_holdings,
-        alma_digital: alma_digital_holdings, electronic: electronic_holdings,
+        alma_digital: alma_digital_holdings, electronic: electronic_holdings, finding_aids: finding_aid_holding,
         physical: physical_holdings)
     end
 
@@ -85,6 +85,21 @@ module Factories::CatalogRecord
         material_type: Faker::Lorem.word,
         physical_location: physical_location,
         url: Faker::Internet.url)
+    end
+
+    def finding_aid_holding
+      instance_double(Search::Models::Record::Catalog::Holdings::FindingAids,
+        physical_location: physical_location,
+        has_description?: true,
+        count: 1,
+        items: [finding_aid_item])
+    end
+
+    def finding_aid_item
+      instance_double(Search::Models::Record::Catalog::Holdings::FindingAids::Item,
+        url: Faker::Internet.url,
+        call_number: Faker::Lorem.sentence,
+        description: Faker::Lorem.sentence)
     end
 
     def physical_location

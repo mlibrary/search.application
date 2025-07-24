@@ -1,20 +1,20 @@
-class Search::Presenters::Record::Catalog::Holdings::Physical
+class Search::Presenters::Record::Catalog::Holdings::PhysicalBase
   TableHeading = Search::Presenters::Record::Catalog::Holdings::TableHeading
-  def initialize(holding:, bib: nil)
+  def initialize(holding)
     @holding = holding
-    @bib = bib
   end
 
-  def partial
-    "physical_holding"
+  [:kind, :items, :empty?].each do |m|
+    define_method m do
+      raise NotImplementedError
+    end
+  end
+  def icon
+    "location_on"
   end
 
   def location_url
     @holding.physical_location.url
-  end
-
-  def icon
-    "location_on"
   end
 
   def heading
@@ -25,12 +25,8 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     @holding.count
   end
 
-  def holding_info
-    [
-      @holding.public_note,
-      @holding.summary,
-      @holding.physical_location.floor
-    ].flatten.reject(&:blank?)
+  def has_description?
+    @holding.has_description?
   end
 
   def table_headings
@@ -39,18 +35,6 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
     result.push("Status")
     result.push("Call Number")
     result.map { |x| TableHeading.new(x) }
-  end
-
-  def empty?
-    false
-  end
-
-  def items
-    @holding.items.map { |x| Item.new(item: x) }
-  end
-
-  def has_description?
-    @holding.has_description?
   end
 
   def rows
@@ -62,22 +46,110 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
       result
     end
   end
+end
 
-  class Item
-    ItemCell = Search::Presenters::Record::Catalog::Holdings::ItemCell
+class Search::Presenters::Record::Catalog::Holdings::ItemBase
+  ItemCell = Search::Presenters::Record::Catalog::Holdings::ItemCell
+  def initialize(item:)
+    @item = item
+  end
 
-    def initialize(item:)
-      @item = item
+  def description
+    ItemCell::PlainText.new(@item.description)
+  end
+
+  def call_number
+    ItemCell::PlainText.new(@item.call_number)
+  end
+  [:action, :status].each do |m|
+    define_method m do
+      raise NotImplementedError
+    end
+  end
+  class Status < ItemCell
+    attr_reader :text, :intent, :icon
+    def initialize(intent:, text:, icon:)
+      @intent = intent
+      @text = text
+      @icon = icon
     end
 
-    def description
-      ItemCell::PlainText.new(@item.description)
+    def partial
+      "status"
     end
 
-    def call_number
-      ItemCell::PlainText.new(@item.call_number)
+    class Success < self
+      def initialize(text)
+        @text = text
+      end
+
+      def intent
+        "success"
+      end
+
+      def icon
+        "check_circle"
+      end
     end
 
+    class Warning < self
+      def initialize(text)
+        @text = text
+      end
+
+      def intent
+        "warning"
+      end
+
+      def icon
+        "warning"
+      end
+    end
+
+    class Error < self
+      def initialize(text)
+        @text = text
+      end
+
+      def intent
+        "error"
+      end
+
+      def icon
+        "error"
+      end
+    end
+  end
+end
+
+class Search::Presenters::Record::Catalog::Holdings::Physical <
+  Search::Presenters::Record::Catalog::Holdings::PhysicalBase
+  def initialize(holding:, bib: nil)
+    @holding = holding
+    @bib = bib
+  end
+
+  def empty?
+    false
+  end
+
+  def kind
+    "physical_holding"
+  end
+
+  def holding_info
+    [
+      @holding.public_note,
+      @holding.summary,
+      @holding.physical_location.floor
+    ].flatten.reject(&:blank?)
+  end
+
+  def items
+    @holding.items.map { |x| Item.new(item: x) }
+  end
+
+  class Item < Search::Presenters::Record::Catalog::Holdings::ItemBase
     def action
       if no_action?
         ItemCell::PlainText.new("N/A")
@@ -227,61 +299,6 @@ class Search::Presenters::Record::Catalog::Holdings::Physical
       return true if in_library?("AAEL") && @item.item_policy == "05"
       return true if in_library?("FLINT") && @item.item_policy == "10"
       false
-    end
-
-    class Status < ItemCell
-      attr_reader :text, :intent, :icon
-      def initialize(intent:, text:, icon:)
-        @intent = intent
-        @text = text
-        @icon = icon
-      end
-
-      def partial
-        "status"
-      end
-
-      class Success < self
-        def initialize(text)
-          @text = text
-        end
-
-        def intent
-          "success"
-        end
-
-        def icon
-          "check_circle"
-        end
-      end
-
-      class Warning < self
-        def initialize(text)
-          @text = text
-        end
-
-        def intent
-          "warning"
-        end
-
-        def icon
-          "warning"
-        end
-      end
-
-      class Error < self
-        def initialize(text)
-          @text = text
-        end
-
-        def intent
-          "error"
-        end
-
-        def icon
-          "error"
-        end
-      end
     end
   end
 end
