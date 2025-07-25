@@ -1,4 +1,5 @@
 @use '../partials/breadcrumbs';
+@use './partials/in-list';
 @use '../../utilities';
 
 // --------------------------------------------------
@@ -36,6 +37,14 @@ $class: 'list';
   }
   & {
     justify-content: space-between;
+  }
+  body.no-javascript & button {
+    display: none;
+  }
+  @media print {
+    & button {
+      display: none;
+    }
   }
 }
 

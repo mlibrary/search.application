@@ -3,7 +3,7 @@
     <%= h1(body: @presenter.page_title) %>
     <div class="list__header--utilities">
       <button class="button__link">Remove all</button>
-      <%#= erb :'datastores/list/partials/_in-list', locals: { count: @presenter.records.count } %>
+      <%= erb :'datastores/list/partials/_in-list' %>
     </div>
   </div>
   <p>Items in this list are stored temporarily (within a single session).</p>
