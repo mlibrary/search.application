@@ -40,7 +40,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     :copy_specific_note, :copyright, :copyright_status_information, :created,
     :current_publication_frequency, :date_place_of_event, :distributed,
     :edition, :extended_summary, :finding_aids, :former_publication_frequency,
-    :funding_information, :in_collection, :language_note,
+    :funding_information, :language_note,
     :location_of_originals, :manufactured, :map_scale, :media_format, :note,
     :numbering, :numbering_notes, :original_version_note, :performers,
     :physical_description, :place, :playing_time, :preferred_citation, :printer,
@@ -66,7 +66,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     end
   end
 
-  ["new_title", "other_titles", "preferred_title", "previous_title", "related_title"].each do |field|
+  ["new_title", "other_titles", "preferred_title", "previous_title", "related_title", "in_collection"].each do |field|
     context "##{field}" do
       it "has text and search" do
         expected = {
