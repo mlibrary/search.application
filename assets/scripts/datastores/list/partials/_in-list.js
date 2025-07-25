@@ -1,11 +1,9 @@
-import { getTemporaryList } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
-
-const changeCount = () => {
+const changeCount = (count) => {
   // Get the count element
   const countElement = document.querySelector('.list__in-list span.strong');
 
-  // Update the count based on the length of the temporary list
-  countElement.textContent = Object.keys(getTemporaryList()).length;
+  // Apply the count to the element or set it to 0 if the count is not a number
+  countElement.textContent = Number.isFinite(count) ? count : 0;
 };
 
 export default changeCount;
