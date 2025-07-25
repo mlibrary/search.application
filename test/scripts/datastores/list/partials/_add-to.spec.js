@@ -6,6 +6,28 @@ const recordMetadata = {};
 recordIds.forEach((id) => {
   recordMetadata[id] = { holdings: [], metadata: [] };
 });
+const listItems = (records) => {
+  let list = `
+    <div class="list__go-to list__go-to--empty">
+      <div class="list__in-list">
+        <span class="strong"></span>
+      </div>
+    </div>
+  `;
+  records.forEach((record) => {
+    list += `
+      <div class="record__container" data-record-id="${record}">
+        <form class="list__add-to" action="/everything/list/${record}" method="post">
+          <button type="submit" title="Add to My Temporary List">
+            <span class="icon">add</span>
+            <span class="text">Add this record to My Temporary List</span>
+          </button>
+        </form>
+      </div>
+    `;
+  });
+  return list;
+};
 
 describe('add to', function () {
   const temporaryList = recordMetadata;
@@ -46,14 +68,7 @@ describe('add to', function () {
 
     beforeEach(function () {
       // Apply HTML to the body
-      document.body.innerHTML = `
-        <div class="record__container" data-record-id="${recordId}">
-          <button class="button__ghost" title="Add to My Temporary List">
-            <span class="icon">add</span>
-            <span class="text">Add this record to My Temporary List</span>
-          </button>
-        </div>
-      `;
+      document.body.innerHTML = listItems([recordId]);
 
       getContainer = () => {
         return document.querySelector('.record__container');
@@ -132,19 +147,8 @@ describe('add to', function () {
     let getButton = null;
 
     beforeEach(function () {
-      recordIds.forEach((recordId) => {
-        // Apply HTML to the body
-        document.body.innerHTML += `
-          <div class="record__container" data-record-id="${recordId}">
-            <form class="list__add-to" action="/everything/list/${recordId}" method="post">
-              <button type="submit" title="Add to My Temporary List">
-                <span class="icon">add</span>
-                <span class="text">Add this record to My Temporary List</span>
-              </button>
-            </form>
-          </div>
-        `;
-      });
+      // Apply HTML to the body
+      document.body.innerHTML = listItems(recordIds);
 
       getButton = (recordId) => {
         return document.querySelector(`[data-record-id="${recordId}"] button`);

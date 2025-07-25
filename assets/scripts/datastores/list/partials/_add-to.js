@@ -1,3 +1,5 @@
+import toggleBanner from './_go-to.js';
+
 const getTemporaryList = () => {
   // Retrieve the temporary list from session storage, or return an empty object if it doesn't exist
   return JSON.parse(sessionStorage.getItem('temporaryList')) || {};
@@ -21,6 +23,8 @@ const updateResultUI = ({ button, recordId }) => {
   buttonText.textContent = buttonText.textContent
     .replace(/Add|Remove/u, isAdded ? 'Remove' : 'Add')
     .replace(/to My Temporary List|from My Temporary List/u, isAdded ? 'from My Temporary List' : 'to My Temporary List');
+  // Toggle the banner
+  toggleBanner(Object.keys(list).length);
 };
 
 const addToList = () => {
