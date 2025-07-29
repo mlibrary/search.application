@@ -28,7 +28,7 @@ module Factories
           physical: []
         }],
         ["citation", {tagged: [], citeproc: {}}]
-      ] + paired_text_fields + title_link_fields + text_fields + author_browse_fields).to_h
+      ] + paired_text_fields + title_link_fields + text_fields + author_browse_fields + in_collection).to_h
     end
 
     def paired_text_fields
@@ -38,7 +38,7 @@ module Factories
         "copyright_status_information", "created",
         "current_publication_frequency", "date_place_of_event",
         "extended_summary", "finding_aids", "former_publication_frequency",
-        "funding_information", "in_collection", "language_note",
+        "funding_information", "language_note",
         "location_of_originals", "map_scale", "media_format", "note",
         "numbering", "numbering_notes", "original_version_note", "performers",
         "physical_description", "place", "playing_time", "preferred_citation",
@@ -55,6 +55,10 @@ module Factories
       ["new_title", "other_titles", "preferred_title", "previous_title", "related_title"].map do |f|
         [f, link_field("title")]
       end
+    end
+
+    def in_collection
+      [["in_collection", link_field("isn")]]
     end
 
     def text_fields
