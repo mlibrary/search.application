@@ -161,6 +161,11 @@ const returnToCurrentRecord = () => {
 };
 
 const shelfBrowse = () => {
+  // Return if Shelf Browse does not exist
+  if (!document.querySelector('.shelf-browse')) {
+    return;
+  }
+
   // Get elements
   const { directions, nextButton, previousButton, returnButton } = getElements();
 
