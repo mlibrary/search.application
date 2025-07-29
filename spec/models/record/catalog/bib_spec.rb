@@ -66,7 +66,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     end
   end
 
-  ["new_title", "other_titles", "preferred_title", "previous_title", "related_title", "in_collection"].each do |field|
+  ["new_title", "other_titles", "preferred_title", "previous_title", "related_title"].each do |field|
     context "##{field}" do
       it "has text and search" do
         expected = {
@@ -94,6 +94,54 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
         expect(my_subject.original.url)
           .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:original][:field]}:\"#{expected[:original][:search_string]}\""}.to_query)
       end
+    end
+  end
+  context "#in_collection" do
+    it "has text and link to full record page" do
+      # mrio: I don't think this would ever be paired, but we'll handle it anyway
+      bib_id_transliterated = Faker::Number.number(digits: 10).to_s
+      bib_id_original = Faker::Number.number(digits: 10).to_s
+      @data["in_collection"].first["transliterated"]["search"].first["value"] = bib_id_transliterated
+      @data["in_collection"].first["original"]["search"].first["value"] = bib_id_original
+      expected = {
+        transliterated:
+        {
+          text: @data["in_collection"].first["transliterated"]["text"]
+        },
+        original:
+        {
+          text: @data["in_collection"].first["original"]["text"]
+        }
+      }
+
+      my_subject = subject.in_collection.first
+      expect(my_subject.paired?).to eq(true)
+      expect(my_subject.transliterated.text).to eq(expected[:transliterated][:text])
+      expect(my_subject.transliterated.url)
+        .to eq("#{S.base_url}/catalog/record/#{bib_id_transliterated}")
+
+      expect(my_subject.original.text).to eq(expected[:original][:text])
+      expect(my_subject.original.url)
+        .to eq("#{S.base_url}/catalog/record/#{bib_id_original}")
+    end
+    it "has special text when it's just the record id" do
+      # mrio: I don't think this would ever be paired, but we'll handle it anyway
+      bib_id_transliterated = Faker::Number.number(digits: 10).to_s
+      bib_id_original = Faker::Number.number(digits: 10).to_s
+      @data["in_collection"].first["transliterated"]["text"] = bib_id_transliterated
+      @data["in_collection"].first["transliterated"]["search"].first["value"] = bib_id_transliterated
+      @data["in_collection"].first["original"]["search"].first["value"] = bib_id_original
+      @data["in_collection"].first["original"]["text"] = bib_id_original
+
+      my_subject = subject.in_collection.first
+      expect(my_subject.paired?).to eq(true)
+      expect(my_subject.transliterated.text).to eq("Record ID #{bib_id_transliterated}")
+      expect(my_subject.transliterated.url)
+        .to eq("#{S.base_url}/catalog/record/#{bib_id_transliterated}")
+
+      expect(my_subject.original.text).to eq("Record ID #{bib_id_original}")
+      expect(my_subject.original.url)
+        .to eq("#{S.base_url}/catalog/record/#{bib_id_original}")
     end
   end
   ["main_author", "contributors"].each do |field|

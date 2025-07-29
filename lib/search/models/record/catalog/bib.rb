@@ -44,11 +44,17 @@ class Search::Models::Record::Catalog::Bib
     end
   end
 
-  [:new_title, :other_titles, :previous_title, :preferred_title, :releated_title, :in_collection].each do |uid|
+  [:new_title, :other_titles, :previous_title, :preferred_title, :releated_title].each do |uid|
     define_method(uid) do
       _map_paired_field(uid.to_s) do |item|
         LinkToItem.new(item)
       end
+    end
+  end
+
+  def in_collection
+    _map_paired_field("in_collection") do |item|
+      InCollectionItem.new(item)
     end
   end
 
@@ -173,6 +179,18 @@ class Search::Models::Record::Catalog::Bib
 
     def paired?
       false
+    end
+  end
+
+  class InCollectionItem < Item
+    def text
+      base_text = super
+      base_text.match?(/^[0-9]+$/) ? "Record ID #{base_text}" : base_text
+    end
+
+    def url
+      doc_id = @data["search"].first["value"]
+      "#{S.base_url}/catalog/record/#{doc_id}"
     end
   end
 
