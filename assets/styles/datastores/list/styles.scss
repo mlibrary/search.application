@@ -1,4 +1,7 @@
 @use '../partials/breadcrumbs';
+@use './partials/select-all';
+@use './partials/deselect-all';
+@use './partials/remove-selected';
 @use './partials/in-list';
 @use '../../utilities';
 

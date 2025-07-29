@@ -1,0 +1,34 @@
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/list/_deselect-all.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Button
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.list__button--deselect-all';
+
+
+
+
+
+
+// ***************** //
+// *** 2. BUTTON *** //
+// ***************** //
+
+#{$class} {
+  body.no-javascript & {
+    display: none;
+  }
+  @media print {
+    display: none;
+  }
+}
