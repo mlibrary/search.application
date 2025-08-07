@@ -49,7 +49,37 @@ const addToList = () => {
         delete list[recordId];
       } else {
         // If the record is not in the list, add it
-        list[recordId] = { holdings: [], metadata: [] };
+        list[recordId] = {
+          datastore: 'catalog',
+          metadata: [
+            {
+              data: {
+                original: '',
+                transliterated: null
+              },
+              field: 'Main Author'
+            },
+            {
+              data: {
+                original: '',
+                transliterated: null
+              },
+              field: 'Published/Created'
+            },
+            {
+              data: {
+                original: '',
+                transliterated: null
+              },
+              field: 'Series'
+            }
+          ],
+          title: {
+            original: '',
+            transliterated: null
+          },
+          url: null
+        };
         // TO DO: Fetch the action URL to get the record metadata
       }
       // Update the session storage with the modified list

@@ -1,0 +1,57 @@
+@use '../../partials/metadata';
+@use '../../../utilities';
+
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/list/_list-item.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. List Item
+//     2.1. Clone
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.list__item';
+
+
+
+
+
+
+// ******************** //
+// *** 2. LIST ITEM *** //
+// ******************** //
+
+#{$class} {
+  padding: 1rem;
+  & + &,
+  & > * + * {
+    margin-top: 1rem;
+  }
+  #{$class}--header {
+    @include utilities.flex($align: baseline);
+    #{$class}--title {
+      margin: 0;
+      #{$class}--title-secondary {
+        color: var(--search-color-grey-500);
+        display: block;
+      }
+    }
+  }
+}
+
+
+
+// *            * //
+// * 2.1. CLONE * //
+// *            * //
+
+#{$class}--clone {
+  display: none;
+}

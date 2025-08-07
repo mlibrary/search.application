@@ -3,6 +3,7 @@
 @use './partials/deselect-all';
 @use './partials/remove-selected';
 @use './partials/in-list';
+@use './partials/list-item';
 @use '../../utilities';
 
 // --------------------------------------------------
@@ -12,9 +13,9 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Header
-//   3. List
-//     3.1 Information
+//   2. Container
+//   3. Header
+//   4. Empty
 //
 // --------------------------------------------------
 
@@ -22,7 +23,19 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: 'list';
+$class: '.list';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} > * {
+  margin-top: 1rem;
+}
 
 
 
@@ -30,10 +43,10 @@ $class: 'list';
 
 
 // ***************** //
-// *** 2. HEADER *** //
+// *** 3. HEADER *** //
 // ***************** //
 
-.#{$class} .#{$class}__header {
+#{$class} #{$class}__header {
   &,
   & > * {
     @include utilities.flex($responsive: true, $wrap: true);
@@ -41,35 +54,17 @@ $class: 'list';
   & {
     justify-content: space-between;
   }
-  body.no-javascript & button {
-    display: none;
-  }
-  @media print {
-    & button {
-      display: none;
-    }
-  }
 }
 
 
 
 
 
-// *************** //
-// *** 3. LIST *** //
-// *************** //
+// **************** //
+// *** 4. EMPTY *** //
+// **************** //
 
-.#{$class} > * + * {
-  margin-top: 1rem;
-}
-
-
-
-// *           * //
-// * 3.1 EMPTY * //
-// *           * //
-
-.#{$class} .#{$class}__empty {
+#{$class} #{$class}__empty {
   padding: 1rem;
   & > *:first-child {
     margin-top: 0;

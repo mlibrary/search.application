@@ -24,7 +24,7 @@ $class: '.list__button--deselect-all';
 // *** 2. BUTTON *** //
 // ***************** //
 
-#{$class} {
+button#{$class} {
   body.no-javascript & {
     display: none;
   }
