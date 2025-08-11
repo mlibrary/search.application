@@ -383,3 +383,74 @@ describe Search::Presenters::Record::Catalog::Full do
     end
   end
 end
+describe Search::Presenters::Record::Catalog::Brief do
+  let(:record) { create(:catalog_record) }
+  before(:each) do
+    @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
+      id: Faker::Number.number(digits: 10).to_s,
+      title: Search::Models::Record::Catalog::Bib::PairedItem.for({
+        "transliterated" => double("text", text: Faker::Book.title),
+        "original" => double("text", text: Faker::Book.title)
+      }),
+      main_author: [double("paired",
+        transliterated: double("author_browse",
+          text: Faker::Lorem.sentence,
+          url: Faker::Internet.url,
+          browse_url: Faker::Internet.url,
+          kind: "author"),
+        original: double("author_browse",
+          text: Faker::Lorem.sentence,
+          url: Faker::Internet.url,
+          browse_url: Faker::Internet.url,
+          kind: "author"))],
+      published: [double("paired_text",
+        transliterated: double("text", text: Faker::Lorem.sentence),
+        original: double("text", text: Faker::Lorem.sentence))],
+      series: [double("paired_text",
+        transliterated: double("text", text: Faker::Lorem.sentence),
+        original: double("text", text: Faker::Lorem.sentence))])
+  end
+  subject do
+    allow(record).to receive(:bib).and_return(@bib_stub)
+    described_class.new(record)
+  end
+  context "#record_info" do
+    it "has record_info" do
+      main_author = subject.record_info[0]
+      published = subject.record_info[1]
+      series = subject.record_info[2]
+      expect(main_author.field).to eq("Author/Creator")
+      expect(published.field).to eq("Published/Created")
+      expect(series.field).to eq("Series (transcribed)")
+    end
+  end
+  context "#to_h" do
+    it "returns the expected hash" do
+      expected = {
+        title: {
+          original: @bib_stub.title.original.text,
+          transliterated: @bib_stub.title.transliterated.text
+        },
+        metadata: [
+          {
+            field: "Author/Creator",
+            original: @bib_stub.main_author.first.original.text,
+            transliterated: @bib_stub.main_author.first.transliterated.text
+          },
+          {
+            field: "Published/Created",
+            original: @bib_stub.published.first.original.text,
+            transliterated: @bib_stub.published.first.transliterated.text
+          },
+          {
+            field: "Series (transcribed)",
+            original: @bib_stub.series.first.original.text,
+            transliterated: @bib_stub.series.first.transliterated.text
+          }
+        ],
+        url: "#{S.base_url}/catalog/record/#{@bib_stub.id}"
+      }
+      expect(subject.to_h).to eq(expected)
+    end
+  end
+end

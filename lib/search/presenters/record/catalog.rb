@@ -350,6 +350,34 @@ module Search
           end
         end
 
+        class Brief < Full
+          RECORD_INFO_METHODS = [
+            :main_author,
+            :published,
+            :series
+          ]
+          def record_info
+            RECORD_INFO_METHODS.map { |field| public_send(field) }.compact
+          end
+
+          def to_h
+            {
+              title: {
+                original: @record.bib.title.original.text,
+                transliterated: @record.bib.title.transliterated&.text
+              },
+              metadata: record_info.map do |f|
+                {
+                  field: f.field,
+                  original: f.values&.first&.original&.text,
+                  transliterated: f.values&.first&.transliterated&.text
+                }
+              end,
+              url: "#{S.base_url}/catalog/record/#{id}"
+            }
+          end
+        end
+
         class Field
           def self.for(field:, partial:, values:, uid: nil)
             new(uid: uid, field: field, partial: partial, values: values) if values.present?
