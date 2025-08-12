@@ -1,8 +1,14 @@
 import toggleBanner from './_go-to.js';
 
+const listName = 'temporaryList';
+
 const getTemporaryList = () => {
   // Retrieve the temporary list from session storage, or return an empty object if it doesn't exist
-  return JSON.parse(sessionStorage.getItem('temporaryList')) || {};
+  return JSON.parse(sessionStorage.getItem(listName) || {});
+};
+
+const setTemporaryList = (list) => {
+  sessionStorage.setItem(listName, JSON.stringify(list));
 };
 
 const updateResultUI = ({ button, recordId }) => {
@@ -27,66 +33,47 @@ const updateResultUI = ({ button, recordId }) => {
   toggleBanner(Object.keys(list).length);
 };
 
-const addToList = () => {
-  // Get the temporary list from session storage
+const handleFormSubmit = async (event) => {
+  if (!event.target.matches('.list__add-to')) {
+    return;
+  }
+
+  event.preventDefault();
+
+  const form = event.target;
+  const recordId = form.getAttribute('data-record-id');
+  const button = form.querySelector('button');
   const list = getTemporaryList();
-  // Select all forms with the class 'list__add-to'
+
+  if (recordId in list) {
+    delete list[recordId];
+  } else {
+    try {
+      const response = await fetch(form.action);
+      if (!response.ok) {
+        throw new Error(`Fetching record failed: ${response.status}`);
+      }
+      const data = await response.json();
+      list[recordId] = data;
+    } catch (err) {
+      // If the fetch fails, we do not add the record to the list
+      return;
+    }
+  }
+
+  setTemporaryList(list);
+  updateResultUI({ button, recordId });
+};
+
+const addToList = () => {
+  document.body.addEventListener('submit', handleFormSubmit);
+
+  // Initial UI update for all buttons
   const forms = document.querySelectorAll('.list__add-to');
   forms.forEach((form) => {
-    // Get the action URL
-    const fetchUrl = form.action;
-    // Extract the record ID from the URL
-    const recordId = fetchUrl.split('/').pop();
-    // Get the button within the form
+    const recordId = form.getAttribute('data-record-id');
     const button = form.querySelector('button');
-    // Update the button UI on load
     updateResultUI({ button, recordId });
-    form.addEventListener('submit', (event) => {
-      // Prevent the default form submission
-      event.preventDefault();
-      if (recordId in list) {
-        // If the record is already in the list, remove it
-        delete list[recordId];
-      } else {
-        // If the record is not in the list, add it
-        list[recordId] = {
-          datastore: 'catalog',
-          metadata: [
-            {
-              data: {
-                original: '',
-                transliterated: null
-              },
-              field: 'Main Author'
-            },
-            {
-              data: {
-                original: '',
-                transliterated: null
-              },
-              field: 'Published/Created'
-            },
-            {
-              data: {
-                original: '',
-                transliterated: null
-              },
-              field: 'Series'
-            }
-          ],
-          title: {
-            original: '',
-            transliterated: null
-          },
-          url: null
-        };
-        // TO DO: Fetch the action URL to get the record metadata
-      }
-      // Update the session storage with the modified list
-      sessionStorage.setItem('temporaryList', JSON.stringify(list));
-      // Update the button UI again
-      updateResultUI({ button, recordId });
-    });
   });
 };
 
