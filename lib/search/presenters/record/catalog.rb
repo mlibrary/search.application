@@ -356,6 +356,7 @@ module Search
             :published,
             :series
           ]
+
           def record_info
             RECORD_INFO_METHODS.map { |field| public_send(field) }.compact
           end
@@ -375,6 +376,10 @@ module Search
               end,
               url: "#{S.base_url}/catalog/record/#{id}"
             }
+          end
+
+          def to_json
+            to_h.to_json
           end
         end
 

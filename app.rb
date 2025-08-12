@@ -113,9 +113,13 @@ class Search::Application < Sinatra::Base
         # File.open("profile.html", "w") do |f|
         #   printer.print(f)
         # end
-        rescue Faraday::ResourceNotFound => error
+      rescue Faraday::ResourceNotFound => error
         S.logger.error(error.message, error_response: error.response)
         redirect not_found
+      end
+      get "/#{datastore.slug}/record/:id/brief" do
+        content_type :json
+        Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").to_json
       end
     end
     if datastore.slug == "everything"
