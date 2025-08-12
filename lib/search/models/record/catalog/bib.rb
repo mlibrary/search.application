@@ -111,8 +111,7 @@ class Search::Models::Record::Catalog::Bib
 
   class PairedItem
     def self.for(item)
-      paired_item = new(item)
-      paired_item.paired? ? paired_item : paired_item.original
+      new(item)
     end
     attr_reader :original
     def initialize(item)

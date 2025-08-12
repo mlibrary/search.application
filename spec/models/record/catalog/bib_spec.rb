@@ -54,7 +54,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       end
       it "only has original text if transliterated and original are the same" do
         @data[field.to_s].first["transliterated"]["text"] = @data[field.to_s].first["original"]["text"]
-        expect(subject.public_send(field).first.text).to eq(@data[field.to_s].first["original"]["text"])
+        expect(subject.public_send(field).first.original.text).to eq(@data[field.to_s].first["original"]["text"])
+        expect(subject.public_send(field).first.transliterated).to be_nil
       end
       it "has paired? true when there is transliterated" do
         expect(subject.public_send(field).first.paired?).to eq(true)

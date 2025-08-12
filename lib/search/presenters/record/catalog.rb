@@ -112,14 +112,13 @@ module Search
           end
 
           def title
+            result = [
+              OpenStruct.new(text: @record.bib.title.original.text, css_class: "title-primary")
+            ]
             if @record.bib.title.paired?
-              [
-                OpenStruct.new(text: @record.bib.title.original.text, css_class: "title-primary"),
-                OpenStruct.new(text: @record.bib.title.transliterated.text, css_class: "title-secondary")
-              ]
-            else
-              [OpenStruct.new(text: @record.bib.title.text, css_class: "title-primary")]
+              result.push OpenStruct.new(text: @record.bib.title.transliterated.text, css_class: "title-secondary")
             end
+            result
           end
 
           def icons
@@ -368,15 +367,11 @@ module Search
                 transliterated: @record.bib.title.transliterated&.text
               },
               metadata: record_info.map do |f|
-                result = {field: f.field, original: nil, transliterated: nil}
-                value = f.values&.first
-                result[:original] = if value.respond_to?(:original)
-                  [value.original.text,
-                    result[:transliterated] = value.transliterated.text]
-                else
-                  value.text
-                end
-                result
+                {
+                  field: f.field,
+                  original: f.values&.first&.original&.text,
+                  transliterated: f.values&.first&.transliterated&.text
+                }
               end,
               url: "#{S.base_url}/catalog/record/#{id}"
             }

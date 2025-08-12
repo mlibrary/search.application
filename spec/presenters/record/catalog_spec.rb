@@ -187,7 +187,7 @@ describe Search::Presenters::Record::Catalog::Full do
         "original" => double("text", text: Faker::Book.title, paired?: false)
       }))
       title = subject.title
-      expect(title.first.text).to eq(@bib_stub.title.text)
+      expect(title.first.text).to eq(@bib_stub.title.original.text)
       expect(title.first.css_class).to eq("title-primary")
       expect(title.count).to eq(1)
     end
