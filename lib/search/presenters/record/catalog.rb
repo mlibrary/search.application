@@ -368,11 +368,15 @@ module Search
                 transliterated: @record.bib.title.transliterated&.text
               },
               metadata: record_info.map do |f|
-                {
-                  field: f.field,
-                  original: f.values&.first&.original&.text,
-                  transliterated: f.values&.first&.transliterated&.text
-                }
+                result = {field: f.field, original: nil, transliterated: nil}
+                value = f.values&.first
+                result[:original] = if value.respond_to?(:original)
+                  [value.original.text,
+                    result[:transliterated] = value.transliterated.text]
+                else
+                  value.text
+                end
+                result
               end,
               url: "#{S.base_url}/catalog/record/#{id}"
             }
