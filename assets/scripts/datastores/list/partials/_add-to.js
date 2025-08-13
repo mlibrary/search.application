@@ -4,7 +4,7 @@ const listName = 'temporaryList';
 
 const getTemporaryList = () => {
   // Retrieve the temporary list from session storage, or return an empty object if it doesn't exist
-  return JSON.parse(sessionStorage.getItem(listName) || {});
+  return JSON.parse(sessionStorage.getItem(listName)) || {};
 };
 
 const setTemporaryList = (list) => {
@@ -55,7 +55,7 @@ const handleFormSubmit = async (event) => {
       }
       const data = await response.json();
       list[recordId] = data;
-    } catch (err) {
+    } catch {
       // If the fetch fails, we do not add the record to the list
       return;
     }
@@ -77,4 +77,4 @@ const addToList = () => {
   });
 };
 
-export { addToList, getTemporaryList, updateResultUI };
+export { addToList, getTemporaryList, setTemporaryList, updateResultUI };
