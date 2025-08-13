@@ -414,11 +414,11 @@ describe Search::Presenters::Record::Catalog::Brief do
     allow(record).to receive(:bib).and_return(@bib_stub)
     described_class.new(record)
   end
-  context "#record_info" do
-    it "has record_info" do
-      main_author = subject.record_info[0]
-      published = subject.record_info[1]
-      series = subject.record_info[2]
+  context "#metadata" do
+    it "has metadata" do
+      main_author = subject.metadata[0]
+      published = subject.metadata[1]
+      series = subject.metadata[2]
       expect(main_author.field).to eq("Author/Creator")
       expect(published.field).to eq("Published/Created")
       expect(series.field).to eq("Series (transcribed)")

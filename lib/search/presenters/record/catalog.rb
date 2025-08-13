@@ -15,7 +15,7 @@ module Search
     module Record
       module Catalog
         class Base
-          [:id, :title, :icons, :record_info].each do |m|
+          [:id, :title, :icons, :metadata].each do |m|
             define_method m do
               raise NotImplementedError
             end
@@ -23,7 +23,7 @@ module Search
         end
 
         class Full < Base
-          RECORD_INFO_METHODS = [
+          METADATA_METHODS = [
             :format, # 00-catalog mirlyn_format
             :main_author,
             :preferred_title,
@@ -128,7 +128,7 @@ module Search
           end
 
           def respond_to_missing?(method, *args, **kwargs, &block)
-            RECORD_INFO_METHODS.any?(method)
+            self.class::METADATA_METHODS.any?(method)
           end
 
           def method_missing(method, *args, **kwargs, &block)
@@ -137,8 +137,8 @@ module Search
             nil
           end
 
-          def record_info
-            RECORD_INFO_METHODS.map { |field| public_send(field) }.compact
+          def metadata
+            self.class::METADATA_METHODS.map { |field| public_send(field) }.compact
           end
 
           def holdings
@@ -350,15 +350,11 @@ module Search
         end
 
         class Brief < Full
-          RECORD_INFO_METHODS = [
+          METADATA_METHODS = [
             :main_author,
             :published,
             :series
           ]
-
-          def record_info
-            RECORD_INFO_METHODS.map { |field| public_send(field) }.compact
-          end
 
           def to_h
             {
@@ -366,7 +362,7 @@ module Search
                 original: @record.bib.title.original.text,
                 transliterated: @record.bib.title.transliterated&.text
               },
-              metadata: record_info.map do |f|
+              metadata: metadata.map do |f|
                 {
                   field: f.field,
                   original: f.values&.first&.original&.text,
