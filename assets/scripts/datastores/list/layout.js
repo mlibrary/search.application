@@ -5,10 +5,10 @@ import { getTemporaryList } from './partials/_add-to.js';
 import listItem from './partials/_list-item.js';
 
 const className = 'list__items';
-const checkbox = 'input[type="checkbox"].list__item--checkbox';
+const checkboxSelector = 'input[type="checkbox"].list__item--checkbox';
 
 const getCheckboxes = () => {
-  return document.querySelectorAll(`ol.${className} ${checkbox}`);
+  return document.querySelectorAll(`ol.${className} ${checkboxSelector}`);
 };
 
 const someCheckboxesChecked = (checked = false) => {
@@ -47,7 +47,7 @@ const temporaryList = () => {
 
   // Watch for changes to the list and update accordingly
   listContainer.addEventListener('change', (event) => {
-    if (event.target.matches(checkbox)) {
+    if (event.target.matches(checkboxSelector)) {
       disableDeselectAllButton();
       disableSelectAllButton();
     }

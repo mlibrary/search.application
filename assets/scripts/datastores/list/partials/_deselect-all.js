@@ -20,4 +20,4 @@ const deselectAll = () => {
   });
 };
 
-export { deselectAll, disableDeselectAllButton };
+export { deselectAll, deselectAllButton, disableDeselectAllButton };

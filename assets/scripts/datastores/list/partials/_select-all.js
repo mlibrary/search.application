@@ -20,4 +20,4 @@ const selectAll = () => {
   });
 };
 
-export { disableSelectAllButton, selectAll };
+export { disableSelectAllButton, selectAll, selectAllButton };

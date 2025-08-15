@@ -1,63 +1,83 @@
+import { disableSelectAllButton, selectAll, selectAllButton } from '../../../../../assets/scripts/datastores/list/partials/_select-all.js';
 import { expect } from 'chai';
-import selectAll from '../../../../../assets/scripts/datastores/list/partials/_select-all.js';
 
-describe('selectAll', function () {
-  let getButton = null;
-  let allCheckboxesChecked = null;
+describe('select all', function () {
+  let getCheckboxes = null;
 
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
       <button class="list__button--select-all">Select all</button>
-      <input type="checkbox" class="list__item--checkbox" value="Item 1" checked>
-      <input type="checkbox" class="list__item--checkbox" value="Item 2">
-      <input type="checkbox" class="list__item--checkbox" value="Item 3">
+      <button class="list__button--deselect-all">Deselect all</button>
+      <ol class="list__items">
+        <li><input type="checkbox" class="list__item--checkbox" value="Item 1" checked></li>
+        <li><input type="checkbox" class="list__item--checkbox" value="Item 2"></li>
+        <li><input type="checkbox" class="list__item--checkbox" value="Item 3"></li>
+      </ol>
     `;
 
-    getButton = () => {
-      return document.querySelector('button');
+    getCheckboxes = () => {
+      return document.querySelectorAll('input[type="checkbox"]');
     };
-
-    allCheckboxesChecked = () => {
-      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-      return [...checkboxes].every((checkbox) => {
-        return checkbox.checked;
-      });
-    };
-
-    // Call the function
-    selectAll();
   });
 
   afterEach(function () {
-    getButton = null;
-    allCheckboxesChecked = null;
+    getCheckboxes = null;
   });
 
-  it('should show the button if not all checkboxes are checked', function () {
-    // Check to make sure not all checkboxes are checked
-    expect(allCheckboxesChecked(), 'all checkboxes should not be checked').to.be.false;
-
-    // Check that the button is visible
-    expect(getButton().hasAttribute('style'), 'the `Select all` button should be visible when not all checkboxes are checked').to.be.false;
+  describe('selectAllButton()', function () {
+    it('should return the `Select all` button element', function () {
+      expect(selectAllButton(), 'the `Select all` button should be returned').to.deep.equal(document.querySelector('button.list__button--select-all'));
+    });
   });
 
-  it('should select all the checkboxes', function () {
-    // Click the button
-    getButton().click();
+  describe('disableSelectAllButton()', function () {
+    it('should enable the `Select all` button if not all checkboxes are checked', function () {
+      // Check that at least one checkbox is unchecked
+      const someUnchecked = [...getCheckboxes()].some((checkbox) => {
+        return checkbox.checked === false;
+      });
+      expect(someUnchecked, 'at least one checkbox should be unchecked before testing').to.be.true;
 
-    // Check to make sure not all checkboxes are checked
-    expect(allCheckboxesChecked(), 'all checkboxes should be checked').to.be.true;
+      // Call the function
+      disableSelectAllButton();
+
+      // Check that the button is enabled
+      expect(selectAllButton().hasAttribute('disabled'), 'the `Select all` button should be enabled when not all checkboxes are checked').to.be.false;
+    });
+
+    it('should disable the `Select all` button if all checkboxes are checked', function () {
+      // Check all the checkboxes
+      getCheckboxes().forEach((checkbox) => {
+        checkbox.checked = true;
+      });
+
+      // Call the function
+      disableSelectAllButton();
+
+      // Check that the button is disabled
+      expect(selectAllButton().hasAttribute('disabled'), 'the `Select all` button should be disabled when all checkboxes are checked').to.be.true;
+    });
   });
 
-  it('should hide the button if all checkboxes are checked', function () {
-    // Click the button
-    getButton().click();
+  describe('selectAll()', function () {
+    it('should select all checkboxes on click', function () {
+      // Call the function
+      selectAll();
 
-    // Call the function again
-    selectAll();
+      // Click the button
+      selectAllButton().click();
 
-    // Check that the button is not visible
-    expect(getButton().style.display, 'the `Select all` button should not be visible when all checkboxes are checked').to.equal('none');
+      // Check to make sure all checkboxes are checked
+      const allChecked = [...getCheckboxes()].every((checkbox) => {
+        return checkbox.checked;
+      });
+      expect(allChecked, 'all checkboxes should be checked after clicking the `Select all` button').to.be.true;
+    });
+
+    it('should call `disableDeselectAllButton`', function () {
+      // Check that the code calls the disableDeselectAllButton function
+      expect(selectAll.toString(), '`selectAll` should call `disableDeselectAllButton`').to.include('disableDeselectAllButton();');
+    });
   });
 });
