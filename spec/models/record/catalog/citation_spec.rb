@@ -39,4 +39,14 @@ RSpec.describe Search::Models::Record::Catalog::Citation do
       ])
     end
   end
+  context "#ris" do
+    it "returns a block of text with RIS format" do
+      expected = <<~HEREDOC
+        TY  - MUSIC
+        AU  - Some Author Name
+        ER  - 
+      HEREDOC
+      expect(subject.ris).to eq expected.strip
+    end
+  end
 end

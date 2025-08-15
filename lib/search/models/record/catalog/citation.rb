@@ -13,6 +13,11 @@ class Search::Models::Record::Catalog::Citation
   end
 
   def ris
+    @data["tagged"].map do |entity|
+      entity["ris"].map do |tag|
+        "#{tag}  - #{entity["content"]}"
+      end
+    end.flatten.compact.join("\n").strip
   end
 
   def citeproc
