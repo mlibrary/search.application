@@ -369,7 +369,10 @@ module Search
                   transliterated: f.values&.first&.transliterated&.text
                 }
               end,
-              url: "#{S.base_url}/catalog/record/#{id}"
+              url: "#{S.base_url}/catalog/record/#{id}",
+              citation: {
+                ris: @record.citation.ris
+              }
             }
           end
 

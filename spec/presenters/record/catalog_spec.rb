@@ -386,6 +386,7 @@ end
 describe Search::Presenters::Record::Catalog::Brief do
   let(:record) { create(:catalog_record) }
   before(:each) do
+    @citation_stub = instance_double(Search::Models::Record::Catalog::Citation, ris: Faker::Lorem.paragraph)
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
       id: Faker::Number.number(digits: 10).to_s,
       title: Search::Models::Record::Catalog::Bib::PairedItem.for({
@@ -412,6 +413,7 @@ describe Search::Presenters::Record::Catalog::Brief do
   end
   subject do
     allow(record).to receive(:bib).and_return(@bib_stub)
+    allow(record).to receive(:citation).and_return(@citation_stub)
     described_class.new(record)
   end
   context "#metadata" do
@@ -448,7 +450,10 @@ describe Search::Presenters::Record::Catalog::Brief do
             transliterated: @bib_stub.series.first.transliterated.text
           }
         ],
-        url: "#{S.base_url}/catalog/record/#{@bib_stub.id}"
+        url: "#{S.base_url}/catalog/record/#{@bib_stub.id}",
+        citation: {
+          ris: @citation_stub.ris
+        }
       }
       expect(subject.to_h).to eq(expected)
     end
