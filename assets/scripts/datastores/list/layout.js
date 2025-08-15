@@ -1,5 +1,6 @@
 import changeCount from './partials/_in-list.js';
 import { disableDeselectAllButton } from './partials/_deselect-all.js';
+import { disableRemoveSelectedButton } from './partials/_remove-selected.js';
 import { disableSelectAllButton } from './partials/_select-all.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import listItem from './partials/_list-item.js';
@@ -48,8 +49,9 @@ const temporaryList = () => {
   // Watch for changes to the list and update accordingly
   listContainer.addEventListener('change', (event) => {
     if (event.target.matches(checkboxSelector)) {
-      disableDeselectAllButton();
       disableSelectAllButton();
+      disableDeselectAllButton();
+      disableRemoveSelectedButton();
     }
   });
 };

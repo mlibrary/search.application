@@ -1,4 +1,5 @@
 import { getCheckboxes, someCheckboxesChecked } from '../layout.js';
+import { disableRemoveSelectedButton } from './_remove-selected.js';
 import { disableSelectAllButton } from './_select-all.js';
 
 const deselectAllButton = () => {
@@ -15,8 +16,9 @@ const deselectAll = () => {
     getCheckboxes().forEach((checkbox) => {
       checkbox.checked = false;
     });
-    disableDeselectAllButton();
     disableSelectAllButton();
+    disableDeselectAllButton();
+    disableRemoveSelectedButton();
   });
 };
 
