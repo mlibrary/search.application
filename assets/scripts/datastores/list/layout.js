@@ -1,6 +1,22 @@
 import changeCount from './partials/_in-list.js';
+import { disableDeselectAllButton } from './partials/_deselect-all.js';
+import { disableSelectAllButton } from './partials/_select-all.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import listItem from './partials/_list-item.js';
+
+const className = 'list__items';
+const checkbox = 'input[type="checkbox"].list__item--checkbox';
+
+const getCheckboxes = () => {
+  return document.querySelectorAll(`ol.${className} ${checkbox}`);
+};
+
+const someCheckboxesChecked = (checked = false) => {
+  const checkboxes = getCheckboxes();
+  return [...checkboxes].some((checkbox) => {
+    return checkbox.checked === checked;
+  });
+};
 
 const temporaryList = () => {
   const list = getTemporaryList();
@@ -20,7 +36,7 @@ const temporaryList = () => {
 
   // Create temporary list
   const listItems = document.createElement('ol');
-  listItems.className = 'list__items list__no-style';
+  listItems.classList.add(className, 'list__no-style');
   const listContainer = document.querySelector('.list');
   listContainer.appendChild(listItems);
 
@@ -28,6 +44,14 @@ const temporaryList = () => {
   recordIds.forEach((recordId, index) => {
     listItems.appendChild(listItem({ index, record: list[recordId], recordId }));
   });
+
+  // Watch for changes to the list and update accordingly
+  listContainer.addEventListener('change', (event) => {
+    if (event.target.matches(checkbox)) {
+      disableDeselectAllButton();
+      disableSelectAllButton();
+    }
+  });
 };
 
-export default temporaryList;
+export { getCheckboxes, someCheckboxesChecked, temporaryList };

@@ -1,23 +1,23 @@
+import { getCheckboxes, someCheckboxesChecked } from '../layout.js';
+import { disableSelectAllButton } from './_select-all.js';
+
+const deselectAllButton = () => {
+  return document.querySelector('button.list__button--deselect-all');
+};
+
+const disableDeselectAllButton = () => {
+  deselectAllButton().toggleAttribute('disabled', !someCheckboxesChecked(true));
+};
+
 const deselectAll = () => {
-  const button = document.querySelector('button.list__button--deselect-all');
-  const checkboxes = document.querySelectorAll('input[type="checkbox"].list__item--checkbox');
-  const someAreChecked = [...checkboxes].some((checkbox) => {
-    return checkbox.checked;
-  });
-
-  // Toggle button display if some checkboxes are checked
-  if (someAreChecked) {
-    button.removeAttribute('style');
-  } else {
-    button.style.display = 'none';
-  }
-
-  // Uncheck all checkboxes on click
-  button.addEventListener('click', () => {
-    checkboxes.forEach((checkbox) => {
-      checkbox.removeAttribute('checked');
+  disableDeselectAllButton();
+  deselectAllButton().addEventListener('click', () => {
+    getCheckboxes().forEach((checkbox) => {
+      checkbox.checked = false;
     });
+    disableDeselectAllButton();
+    disableSelectAllButton();
   });
 };
 
-export default deselectAll;
+export { deselectAll, disableDeselectAllButton };
