@@ -371,7 +371,10 @@ module Search
               end,
               url: "#{S.base_url}/catalog/record/#{id}",
               citation: {
-                ris: @record.citation.ris
+                ris: @record.citation.ris,
+                styles: @record.citation.styles.map do |c|
+                  [c.name.to_sym, c.html]
+                end.to_h
               }
             }
           end

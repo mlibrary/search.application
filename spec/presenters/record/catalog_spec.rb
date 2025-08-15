@@ -386,7 +386,16 @@ end
 describe Search::Presenters::Record::Catalog::Brief do
   let(:record) { create(:catalog_record) }
   before(:each) do
-    @citation_stub = instance_double(Search::Models::Record::Catalog::Citation, ris: Faker::Lorem.paragraph)
+    @citation_stub = instance_double(Search::Models::Record::Catalog::Citation, ris: Faker::Lorem.paragraph,
+      styles: [
+        OpenStruct.new(name: "mla", html: "<i>Birds</i>. v. 1-Jan./Feb. 1966-, 1966-2013."),
+        OpenStruct.new(name: "apa", html: "<i>Birds</i> (No. v. 1-Jan./Feb. 1966-). (1966-2013)."),
+        OpenStruct.new(name: "chicago", html: "\"Birds,\" 1966-2013."),
+        OpenStruct.new(name: "ieee", html: "\"Birds,\" Art. no. v. 1-Jan./Feb. 1966-, 1966-2013."),
+        OpenStruct.new(name: "nlm", html: "Birds. Sandy, Bedfordshire, Eng.: Royal Society for the Protection of Birds; 1966-2013;"),
+        OpenStruct.new(name: "bibtex", html: "@article{Birds_1966-2013, address={Sandy, Bedfordshire, Eng.}, callNumber={QL671 .B678}, number={v. 1-Jan./Feb. 1966-}, publisher={Royal Society for the Protection of Birds}, year={1966-2013} }")
+      ])
+
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
       id: Faker::Number.number(digits: 10).to_s,
       title: Search::Models::Record::Catalog::Bib::PairedItem.for({
@@ -452,7 +461,15 @@ describe Search::Presenters::Record::Catalog::Brief do
         ],
         url: "#{S.base_url}/catalog/record/#{@bib_stub.id}",
         citation: {
-          ris: @citation_stub.ris
+          ris: @citation_stub.ris,
+          styles: {
+            mla: "<i>Birds</i>. v. 1-Jan./Feb. 1966-, 1966-2013.",
+            apa: "<i>Birds</i> (No. v. 1-Jan./Feb. 1966-). (1966-2013).",
+            chicago: "\"Birds,\" 1966-2013.",
+            ieee: "\"Birds,\" Art. no. v. 1-Jan./Feb. 1966-, 1966-2013.",
+            nlm: "Birds. Sandy, Bedfordshire, Eng.: Royal Society for the Protection of Birds; 1966-2013;",
+            bibtex: "@article{Birds_1966-2013, address={Sandy, Bedfordshire, Eng.}, callNumber={QL671 .B678}, number={v. 1-Jan./Feb. 1966-}, publisher={Royal Society for the Protection of Birds}, year={1966-2013} }"
+          }
         }
       }
       expect(subject.to_h).to eq(expected)
