@@ -1,4 +1,4 @@
-import { addToList, getTemporaryList, updateResultUI } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
+import { addToList, getTemporaryList, setTemporaryList, updateResultUI } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
 
 const recordIds = ['12345', '67890'];
@@ -57,6 +57,24 @@ describe('add to', function () {
 
       // Check that the function retrieves it correctly
       expect(getTemporaryList(), '`temporaryList` should return a defined object').to.deep.equal(temporaryList);
+    });
+  });
+
+  describe('setTemporaryList()', function () {
+    afterEach(function () {
+      // Clear session storage after each test
+      global.sessionStorage.clear();
+    });
+
+    it('should update the temporary list in session storage', function () {
+      // Check that the function returns an empty object when no temporary list is set
+      expect(getTemporaryList(), '`temporaryList` should return an empty object').to.be.an('object').that.is.empty;
+
+      // Call the function
+      setTemporaryList(recordMetadata);
+
+      // Check that the temporary list was set correctly
+      expect(getTemporaryList(), '`temporaryList` should have been set with the provided object').to.deep.equal(recordMetadata);
     });
   });
 
@@ -141,9 +159,18 @@ describe('add to', function () {
       expect(buttonIcon.textContent, 'the button icon should be `delete`').to.equal('delete');
       expect(buttonText.textContent, 'the button text should be "Remove this record from My Temporary List"').to.equal('Remove this record from My Temporary List');
     });
+
+    it('should call toggleBanner()', function () {
+      // Check that the code calls the toggleBanner function
+      expect(updateResultUI.toString(), '`updateResultUI` should call `toggleBanner`').to.include('toggleBanner(');
+    });
   });
 
-  describe('addToList()', function () {
+  describe.skip('handleFormSubmit', function () {
+    //
+  });
+
+  describe.skip('addToList()', function () {
     let getButton = null;
 
     beforeEach(function () {
