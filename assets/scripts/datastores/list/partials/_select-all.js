@@ -11,11 +11,15 @@ const disableSelectAllButton = () => {
 };
 
 const selectAll = () => {
+  // Initialize button state
   disableSelectAllButton();
+  // Add event listener
   selectAllButton().addEventListener('click', () => {
+    // Select all checkboxes
     getCheckboxes().forEach((checkbox) => {
       checkbox.checked = true;
     });
+    // Update button states
     disableSelectAllButton();
     disableDeselectAllButton();
     disableRemoveSelectedButton();

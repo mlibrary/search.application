@@ -1,68 +1,96 @@
+import { disableRemoveSelectedButton, removeSelected, removeSelectedButton } from '../../../../../assets/scripts/datastores/list/partials/_remove-selected.js';
 import { expect } from 'chai';
+import fs from 'fs';
+import { getCheckboxes } from '../../../../../assets/scripts/datastores/list/layout.js';
 import { getTemporaryList } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
-import removeSelected from '../../../../../assets/scripts/datastores/list/partials/_remove-selected.js';
+import sinon from 'sinon';
+
+const temporaryList = JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8'));
+const recordIds = Object.keys(temporaryList);
+const temporaryListHTML = recordIds.map((recordId, index) => {
+  return `<li><input type="checkbox" class="list__item--checkbox" value="${recordId}" ${index === 0 ? 'checked' : ''}></li>`;
+}).join('');
 
 describe('removeSelected', function () {
-  let getButton = null;
-  let someCheckboxesChecked = null;
-
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
       <button class="list__button--remove-selected">Remove selected</button>
-      <input type="checkbox" class="list__item--checkbox" value="Item 1" checked>
-      <input type="checkbox" class="list__item--checkbox" value="Item 2">
-      <input type="checkbox" class="list__item--checkbox" value="Item 3">
+      <ol class="list__items">
+        ${temporaryListHTML}
+      </ol>
     `;
+  });
 
-    getButton = () => {
-      return document.querySelector('button');
-    };
+  describe('removeSelectedButton()', function () {
+    it('should return the `Remove selected` button element', function () {
+      expect(removeSelectedButton(), 'the `Remove selected` button should be returned').to.deep.equal(document.querySelector('button.list__button--remove-selected'));
+    });
+  });
 
-    someCheckboxesChecked = () => {
-      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-      return [...checkboxes].some((checkbox) => {
+  describe('disableRemoveSelectedButton()', function () {
+    it('should enable the `disableRemoveSelectedButton` button if not all checkboxes are unchecked', function () {
+      // Check that at least one checkbox is checked
+      const someChecked = [...getCheckboxes()].some((checkbox) => {
         return checkbox.checked;
       });
-    };
+      expect(someChecked, 'at least one checkbox should be checked before testing').to.be.true;
 
-    global.sessionStorage = window.sessionStorage;
+      // Call the function
+      disableRemoveSelectedButton();
 
-    // Call the function
-    removeSelected();
+      // Check that the button is enabled
+      expect(removeSelectedButton().hasAttribute('disabled'), 'the `disableRemoveSelectedButton` button should be enabled when not all checkboxes are unchecked').to.be.false;
+    });
+
+    it('should disable the `disableRemoveSelectedButton` button if all checkboxes are unchecked', function () {
+      // Uncheck all the checkboxes
+      getCheckboxes().forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+
+      // Call the function
+      disableRemoveSelectedButton();
+
+      // Check that the button is disabled
+      expect(removeSelectedButton().hasAttribute('disabled'), 'the `disableRemoveSelectedButton` button should be disabled when all checkboxes are checked').to.be.true;
+    });
   });
 
-  afterEach(function () {
-    getButton = null;
-    someCheckboxesChecked = null;
+  describe('removeSelected()', function () {
+    beforeEach(function () {
+      global.sessionStorage = window.sessionStorage;
+    });
 
-    delete global.sessionStorage;
-  });
+    afterEach(function () {
+      delete global.sessionStorage;
+    });
 
-  it('should show the button if some checkboxes are checked', function () {
-    // Check to make sure not all checkboxes are checked
-    expect(someCheckboxesChecked(), 'some checkboxes should be checked').to.be.true;
+    it('should delete the selected record(s) from session storage and reload the page', function () {
+      // Set a temporary list in session storage
+      global.sessionStorage.setItem('temporaryList', JSON.stringify(temporaryList));
 
-    // Check that the button is visible
-    expect(getButton().hasAttribute('style'), 'the `Remove selected` button should be displaying when some checkboxes are checked').to.be.false;
-  });
+      // Map the currently checked record IDs
+      const checkedRecordIds = [...getCheckboxes()]
+        .filter((checkbox) => {
+          return checkbox.checked;
+        }).map((checkbox) => {
+          return checkbox.value;
+        });
+      expect(Object.keys(getTemporaryList()).includes(checkedRecordIds[0]), 'the `temporaryList` in session storage should contain the record IDs that are checked').to.be.true;
 
-  it.skip('should remove the checked items from `sessionStorage`', function () {
-    // Get the current list
-    const currentList = getTemporaryList();
+      // Call the function with a stubbed reload function
+      const reloadStub = sinon.stub();
+      removeSelected(reloadStub);
 
-    // Click the button
-    getButton().click();
+      // Click the button
+      removeSelectedButton().click();
 
-    // Check that the list has updated
-    expect(currentList, 'the checked items should have been removed from the temporary list').to.not.deep.equal(getTemporaryList());
-  });
+      // Check that the temporary list no longer contains the removed record(s)
+      expect(Object.keys(getTemporaryList()).includes(checkedRecordIds[0]), 'the `temporaryList` in session storage should no longer contain the record IDs that are checked').to.be.false;
 
-  it('should hide the button if all checkboxes are checked', function () {
-    // Click the button
-    getButton().click();
-
-    // Check that the button is not visible
-    expect(getButton().style.display, 'the `Remove selected` button should not be displaying when no checkboxes are checked').to.equal('none');
+      // Check that the page was reloaded
+      expect(reloadStub.calledOnce, '`removeSelected` should call the argument').to.be.true;
+    });
   });
 });

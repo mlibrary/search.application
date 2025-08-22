@@ -1,28 +1,20 @@
 import { disableSelectAllButton, selectAll, selectAllButton } from '../../../../../assets/scripts/datastores/list/partials/_select-all.js';
 import { expect } from 'chai';
+import { getCheckboxes } from '../../../../../assets/scripts/datastores/list/layout.js';
 
 describe('select all', function () {
-  let getCheckboxes = null;
-
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
       <button class="list__button--select-all">Select all</button>
       <button class="list__button--deselect-all">Deselect all</button>
+      <button class="list__button--remove-selected">Remove selected</button>
       <ol class="list__items">
         <li><input type="checkbox" class="list__item--checkbox" value="Item 1" checked></li>
         <li><input type="checkbox" class="list__item--checkbox" value="Item 2"></li>
         <li><input type="checkbox" class="list__item--checkbox" value="Item 3"></li>
       </ol>
     `;
-
-    getCheckboxes = () => {
-      return document.querySelectorAll('input[type="checkbox"]');
-    };
-  });
-
-  afterEach(function () {
-    getCheckboxes = null;
   });
 
   describe('selectAllButton()', function () {
@@ -78,6 +70,11 @@ describe('select all', function () {
     it('should call `disableDeselectAllButton`', function () {
       // Check that the code calls the disableDeselectAllButton function
       expect(selectAll.toString(), '`selectAll` should call `disableDeselectAllButton`').to.include('disableDeselectAllButton();');
+    });
+
+    it('should call `disableRemoveSelectedButton`', function () {
+      // Check that the code calls the disableRemoveSelectedButton function
+      expect(selectAll.toString(), '`selectAll` should call `disableRemoveSelectedButton`').to.include('disableRemoveSelectedButton();');
     });
   });
 });
