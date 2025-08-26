@@ -46,21 +46,20 @@ const handleFormSubmit = async (event) => {
   const list = getTemporaryList();
 
   if (recordId in list) {
+    // If the record is already in the list, remove it
     delete list[recordId];
   } else {
     try {
-      const action = form.getAttribute('action');
-      if (!action) {
-        throw new Error('Form action attribute is missing');
-      }
-      const response = await fetch(action);
+      const response = await fetch(form.getAttribute('action'));
       if (!response.ok) {
-        throw new Error(`Fetching record failed: ${response.status}`);
+        // Do not add to the list if the fetch fails
+        return;
       }
+      // Add the record information to the list
       const data = await response.json();
       list[recordId] = data;
     } catch {
-      // If the fetch fails, we do not add the record to the list
+      // Silent failure, so no action is needed
       return;
     }
   }

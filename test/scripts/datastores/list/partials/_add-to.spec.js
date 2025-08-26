@@ -227,6 +227,25 @@ describe('add to', function () {
       expect(Object.keys(getTemporaryList()), '`temporaryList` should not contain the record after submission').to.not.include(JSON.parse(recordId));
     });
 
+    it('returns early if the response is not ok', async function () {
+      // Check that the temporary list is empty before submission
+      expect(getTemporaryList(), '`temporaryList` should return an empty object before submission').to.be.an('object').that.is.empty;
+
+      // Change the fetch stub to return a non-ok response
+      fetchStub.resolves({
+        ok: false
+      });
+
+      // Call the function
+      await handleFormSubmit(event);
+
+      // Check that fetch was called
+      expect(fetchStub.calledOnce).to.be.true;
+
+      // Check that the temporary list is still empty
+      expect(getTemporaryList(), '`temporaryList` should still be empty').to.be.an('object').that.is.empty;
+    });
+
     it('adds the record to the temporary list if it does not exist', async function () {
       // Check that the temporary list is empty before submission
       expect(getTemporaryList(), '`temporaryList` should return an empty object before submission').to.be.an('object').that.is.empty;
