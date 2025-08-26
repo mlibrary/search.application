@@ -1,11 +1,10 @@
-import { addToList, getTemporaryList, setTemporaryList, updateResultUI } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
+import { addToList, getTemporaryList, handleFormSubmit, setTemporaryList, updateResultUI } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
+import fs from 'fs';
+import sinon from 'sinon';
 
-const recordIds = ['12345', '67890'];
-const recordMetadata = {};
-recordIds.forEach((id) => {
-  recordMetadata[id] = { holdings: [], metadata: [] };
-});
+const temporaryList = JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8'));
+const recordIds = Object.keys(temporaryList);
 const listItems = (records) => {
   let list = `
     <div class="list__go-to list__go-to--empty">
@@ -17,7 +16,7 @@ const listItems = (records) => {
   records.forEach((record) => {
     list += `
       <div class="record__container" data-record-id="${record}">
-        <form class="list__add-to" action="/everything/list/${record}" method="post">
+        <form class="list__add-to" action="/catalog/record/${record}/brief" method="post">
           <button type="submit" title="Add to My Temporary List">
             <span class="icon">add</span>
             <span class="text">Add this record to My Temporary List</span>
@@ -30,14 +29,30 @@ const listItems = (records) => {
 };
 
 describe('add to', function () {
-  const temporaryList = recordMetadata;
-
   beforeEach(function () {
     global.sessionStorage = window.sessionStorage;
   });
 
   afterEach(function () {
     delete global.sessionStorage;
+  });
+
+  describe('setTemporaryList()', function () {
+    afterEach(function () {
+      // Clear session storage after each test
+      global.sessionStorage.clear();
+    });
+
+    it('should update the temporary list in session storage', function () {
+      // Check that the function returns an empty object when no temporary list is set
+      expect(getTemporaryList(), '`temporaryList` should return an empty object').to.be.an('object').that.is.empty;
+
+      // Call the function
+      setTemporaryList(temporaryList);
+
+      // Check that the temporary list was set correctly
+      expect(getTemporaryList(), '`temporaryList` should have been set with the provided object').to.deep.equal(temporaryList);
+    });
   });
 
   describe('getTemporaryList()', function () {
@@ -53,28 +68,10 @@ describe('add to', function () {
 
     it('should return the temporary list from session storage', function () {
       // Set a temporary list in session storage
-      global.sessionStorage.setItem('temporaryList', JSON.stringify(temporaryList));
+      setTemporaryList(temporaryList);
 
       // Check that the function retrieves it correctly
       expect(getTemporaryList(), '`temporaryList` should return a defined object').to.deep.equal(temporaryList);
-    });
-  });
-
-  describe('setTemporaryList()', function () {
-    afterEach(function () {
-      // Clear session storage after each test
-      global.sessionStorage.clear();
-    });
-
-    it('should update the temporary list in session storage', function () {
-      // Check that the function returns an empty object when no temporary list is set
-      expect(getTemporaryList(), '`temporaryList` should return an empty object').to.be.an('object').that.is.empty;
-
-      // Call the function
-      setTemporaryList(recordMetadata);
-
-      // Check that the temporary list was set correctly
-      expect(getTemporaryList(), '`temporaryList` should have been set with the provided object').to.deep.equal(recordMetadata);
     });
   });
 
@@ -166,8 +163,118 @@ describe('add to', function () {
     });
   });
 
-  describe.skip('handleFormSubmit', function () {
-    //
+  describe('handleFormSubmit', function () {
+    let fetchStub = null;
+    let event = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = listItems(recordIds);
+
+      // Create a stub for fetch
+      fetchStub = sinon.stub(global, 'fetch');
+
+      // Create a fake event
+      event = {
+        preventDefault: sinon.stub(),
+        target: document.querySelector('form.list__add-to')
+      };
+    });
+
+    afterEach(function () {
+      // Clear session storage after each test
+      global.sessionStorage.clear();
+
+      fetchStub.restore();
+      event = null;
+    });
+
+    it('returns early if the event target does not match', async function () {
+      // Change the event target to a non-matching element
+      event.target = document.createElement('div');
+
+      // Check that the function returns early
+      const result = await handleFormSubmit(event);
+      expect(result).to.be.undefined;
+      expect(event.preventDefault.called).to.be.false;
+    });
+
+    it('calls `preventDefault` on the event', async function () {
+      // Call the function
+      await handleFormSubmit(event);
+
+      // Check if `event.preventDefault` was called
+      expect(event.preventDefault.calledOnce).to.be.true;
+    });
+
+    it('deletes the record from the temporary list if it is already added', async function () {
+      // Set the temporary list in session storage
+      setTemporaryList(temporaryList);
+
+      // Check that the temporary list has been set
+      expect(getTemporaryList(), '`temporaryList` should be set').to.deep.equal(temporaryList);
+
+      // Define the record ID to remove
+      const [recordId] = recordIds;
+
+      // Change the event target to the form for the first record
+      event.target = document.querySelector(`form[action="/catalog/record/${recordId}/brief"]`);
+
+      // Call the function
+      await handleFormSubmit(event);
+
+      // Check that the temporary list no longer contains the record after submission
+      expect(Object.keys(getTemporaryList()), '`temporaryList` should not contain the record after submission').to.not.include(JSON.parse(recordId));
+    });
+
+    it('adds the record to the temporary list if it does not exist', async function () {
+      // Check that the temporary list is empty before submission
+      expect(getTemporaryList(), '`temporaryList` should return an empty object before submission').to.be.an('object').that.is.empty;
+
+      // Define the record ID to add
+      const [recordId] = recordIds;
+
+      // Change the event target to the form for the first record
+      event.target = document.querySelector(`form[action="/catalog/record/${recordId}/brief"]`);
+
+      // Call the function
+      fetchStub.resolves({
+        json: () => {
+          return Promise.resolve(temporaryList[recordId]);
+        },
+        ok: true
+      });
+      await handleFormSubmit(event);
+
+      // Check that the temporary list has the record after submission
+      expect(String(getTemporaryList()), '`temporaryList` should contain the record metadata after submission').to.include(temporaryList[recordId]);
+    });
+
+    it('fetches using the action attribute of the form', async function () {
+      // Define the fake fetch response
+      fetchStub.resolves({
+        json: () => {
+          return Promise.resolve(temporaryList[recordIds[0]]);
+        },
+        ok: true
+      });
+
+      // Call the function
+      await handleFormSubmit(event);
+
+      // Check that fetch was called with the form action URL
+      expect(fetchStub.calledOnceWithExactly(`/catalog/record/${recordIds[0]}/brief`)).to.be.true;
+    });
+
+    it('should call setTemporaryList()', function () {
+      // Check that the code calls the setTemporaryList function
+      expect(handleFormSubmit.toString(), '`handleFormSubmit` should call `setTemporaryList`').to.include('setTemporaryList(');
+    });
+
+    it('should call updateResultUI()', function () {
+      // Check that the code calls the updateResultUI function
+      expect(handleFormSubmit.toString(), '`handleFormSubmit` should call `updateResultUI`').to.include('updateResultUI(');
+    });
   });
 
   describe.skip('addToList()', function () {
@@ -203,7 +310,7 @@ describe('add to', function () {
       getButton(recordId).click();
 
       // Check that the temporary list now contains the record metadata
-      expect(getTemporaryList(), '`temporaryList` should contain the record metadata after submission').to.deep.equal({ [recordId]: recordMetadata[recordId] });
+      expect(getTemporaryList(), '`temporaryList` should contain the record metadata after submission').to.deep.equal({ [recordId]: temporaryList[recordId] });
     });
 
     it('should remove the record metadata to the temporary list on submit', function () {
@@ -213,13 +320,13 @@ describe('add to', function () {
       });
 
       // Check that the temporary list contains all record metadata after submission
-      expect(getTemporaryList(), '`temporaryList` should contain all record metadata after submission').to.deep.equal(recordMetadata);
+      expect(getTemporaryList(), '`temporaryList` should contain all record metadata after submission').to.deep.equal(temporaryList);
 
       // Click the button to remove the first record
       getButton(recordIds[0]).click();
 
       // Check that the temporary list no longer contains the first record
-      expect(getTemporaryList(), '`temporaryList` should not contain the first record after removal').to.deep.equal({ [recordIds[1]]: recordMetadata[recordIds[1]] });
+      expect(getTemporaryList(), '`temporaryList` should not contain the first record after removal').to.deep.equal({ [recordIds[1]]: temporaryList[recordIds[1]] });
     });
   });
 });

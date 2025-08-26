@@ -2,13 +2,13 @@ import toggleBanner from './_go-to.js';
 
 const listName = 'temporaryList';
 
+const setTemporaryList = (list) => {
+  sessionStorage.setItem(listName, JSON.stringify(list));
+};
+
 const getTemporaryList = () => {
   // Retrieve the temporary list from session storage, or return an empty object if it doesn't exist
   return JSON.parse(sessionStorage.getItem(listName)) || {};
-};
-
-const setTemporaryList = (list) => {
-  sessionStorage.setItem(listName, JSON.stringify(list));
 };
 
 const updateResultUI = ({ button, recordId }) => {
@@ -34,22 +34,26 @@ const updateResultUI = ({ button, recordId }) => {
 };
 
 const handleFormSubmit = async (event) => {
-  if (!event.target.matches('.list__add-to')) {
+  const form = event.target;
+
+  if (!form.matches('.list__add-to')) {
     return;
   }
 
   event.preventDefault();
 
-  const form = event.target;
   const recordId = form.getAttribute('data-record-id');
-  const button = form.querySelector('button');
   const list = getTemporaryList();
 
   if (recordId in list) {
     delete list[recordId];
   } else {
     try {
-      const response = await fetch(form.action);
+      const action = form.getAttribute('action');
+      if (!action) {
+        throw new Error('Form action attribute is missing');
+      }
+      const response = await fetch(action);
       if (!response.ok) {
         throw new Error(`Fetching record failed: ${response.status}`);
       }
@@ -62,7 +66,7 @@ const handleFormSubmit = async (event) => {
   }
 
   setTemporaryList(list);
-  updateResultUI({ button, recordId });
+  updateResultUI({ button: form.querySelector('button'), recordId });
 };
 
 const addToList = () => {
@@ -77,4 +81,4 @@ const addToList = () => {
   });
 };
 
-export { addToList, getTemporaryList, setTemporaryList, updateResultUI };
+export { addToList, getTemporaryList, handleFormSubmit, setTemporaryList, updateResultUI };
