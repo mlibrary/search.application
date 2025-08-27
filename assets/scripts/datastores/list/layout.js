@@ -35,10 +35,13 @@ const temporaryList = () => {
     emptyList.removeAttribute('style');
   }
 
-  // Create temporary list
+  // Create temporary list by datastore
+  const listContainer = document.querySelector('.list');
+  const heading = document.createElement('h2');
+  listContainer.appendChild(heading);
+  heading.textContent = 'Catalog';
   const listItems = document.createElement('ol');
   listItems.classList.add(className, 'list__no-style');
-  const listContainer = document.querySelector('.list');
   listContainer.appendChild(listItems);
 
   // Display records
