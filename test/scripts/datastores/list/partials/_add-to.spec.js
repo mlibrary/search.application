@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 const temporaryList = JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8'));
 const recordIds = Object.keys(temporaryList);
-const listItems = (records) => {
+const listItems = (records = recordIds) => {
   let list = `
     <div class="list__go-to list__go-to--empty">
       <div class="list__in-list">
@@ -16,7 +16,7 @@ const listItems = (records) => {
   records.forEach((record) => {
     list += `
       <div class="record__container" data-record-id="${record}">
-        <form class="list__add-to" action="/catalog/record/${record}/brief" method="post">
+        <form class="list__add-to" action="/catalog/record/${record}/brief" method="post" data-record-id="${record}">
           <button type="submit" title="Add to My Temporary List">
             <span class="icon">add</span>
             <span class="text">Add this record to My Temporary List</span>
@@ -118,7 +118,7 @@ describe('add to', function () {
       expect(getContainer().classList.contains(activeContainerClass), '`.record__container` should not have an active class by default').to.be.false;
 
       // Set a temporary list in session storage
-      global.sessionStorage.setItem('temporaryList', JSON.stringify(temporaryList));
+      setTemporaryList(temporaryList);
 
       // Call the function again to update the UI
       callFunction();
@@ -143,7 +143,7 @@ describe('add to', function () {
       expect(buttonText.textContent, 'the button text should be "Add this record to My Temporary List"').to.equal('Add this record to My Temporary List');
 
       // Set a temporary list in session storage
-      global.sessionStorage.setItem('temporaryList', JSON.stringify(temporaryList));
+      setTemporaryList(temporaryList);
 
       // Call the function again to update the UI
       callFunction();
@@ -169,7 +169,7 @@ describe('add to', function () {
 
     beforeEach(function () {
       // Apply HTML to the body
-      document.body.innerHTML = listItems(recordIds);
+      document.body.innerHTML = listItems();
 
       // Create a stub for fetch
       fetchStub = sinon.stub(global, 'fetch');
@@ -218,13 +218,13 @@ describe('add to', function () {
       const [recordId] = recordIds;
 
       // Change the event target to the form for the first record
-      event.target = document.querySelector(`form[action="/catalog/record/${recordId}/brief"]`);
+      event.target = document.querySelector(`form[data-record-id="${recordId}"]`);
 
       // Call the function
       await handleFormSubmit(event);
 
       // Check that the temporary list no longer contains the record after submission
-      expect(Object.keys(getTemporaryList()), '`temporaryList` should not contain the record after submission').to.not.include(JSON.parse(recordId));
+      expect(Object.keys(getTemporaryList()), '`temporaryList` should not contain the record after submission').to.not.include(recordId);
     });
 
     it('returns early if the response is not ok', async function () {
@@ -254,7 +254,7 @@ describe('add to', function () {
       const [recordId] = recordIds;
 
       // Change the event target to the form for the first record
-      event.target = document.querySelector(`form[action="/catalog/record/${recordId}/brief"]`);
+      event.target = document.querySelector(`form[data-record-id="${recordId}"]`);
 
       // Call the function
       fetchStub.resolves({
@@ -296,56 +296,46 @@ describe('add to', function () {
     });
   });
 
-  describe.skip('addToList()', function () {
-    let getButton = null;
+  describe('addToList()', function () {
+    let addEventListenerSpy = null;
+    let updateResultSpy = null;
 
     beforeEach(function () {
       // Apply HTML to the body
-      document.body.innerHTML = listItems(recordIds);
+      document.body.innerHTML = listItems();
 
-      getButton = (recordId) => {
-        return document.querySelector(`[data-record-id="${recordId}"] button`);
-      };
-
-      // Call the function to add event listeners
-      addToList();
+      // Spy on document.body.addEventListener
+      addEventListenerSpy = sinon.spy(document.body, 'addEventListener');
+      updateResultSpy = sinon.spy();
     });
 
     afterEach(function () {
-      getButton = null;
-
-      // Clear session storage after each test
-      global.sessionStorage.clear();
+      addEventListenerSpy.restore();
+      updateResultSpy = null;
     });
 
-    it('should add the record metadata to the temporary list on submit', function () {
-      // Define the record ID to test
-      const [recordId] = recordIds;
+    it('should add a submit event listener to `document.body`, with `handleFormSubmit`', function () {
+      // Call the function
+      addToList();
 
-      // Check that the temporary list is empty before submission
-      expect(getTemporaryList(), '`temporaryList` should return an empty object before submission').to.be.an('object').that.is.empty;
-
-      // Click the button to submit the form
-      getButton(recordId).click();
-
-      // Check that the temporary list now contains the record metadata
-      expect(getTemporaryList(), '`temporaryList` should contain the record metadata after submission').to.deep.equal({ [recordId]: temporaryList[recordId] });
+      // Check that addEventListener was called with the correct parameters
+      expect(addEventListenerSpy.calledWith('submit', handleFormSubmit), '`handleFormSubmit` should be called on `submit`').to.be.true;
     });
 
-    it('should remove the record metadata to the temporary list on submit', function () {
-      // Submit all record IDs to the temporary list first
-      recordIds.forEach((recordId) => {
-        getButton(recordId).click();
+    it('calls `updateResult` for each form with correct arguments', function () {
+      addToList(updateResultSpy);
+
+      // Should be called for every matching form
+      expect(updateResultSpy.callCount).to.equal(recordIds.length);
+
+      // Should be called with correct arguments
+      recordIds.forEach((recordId, index) => {
+        const form = document.querySelector(`form[data-record-id="${recordId}"]`);
+        expect(updateResultSpy.getCall(index).args[0], `${recordId} should call \`updateResult\` with the correct arguments`).to.deep.include({
+          button: form.querySelector('button'),
+          recordId
+        });
       });
-
-      // Check that the temporary list contains all record metadata after submission
-      expect(getTemporaryList(), '`temporaryList` should contain all record metadata after submission').to.deep.equal(temporaryList);
-
-      // Click the button to remove the first record
-      getButton(recordIds[0]).click();
-
-      // Check that the temporary list no longer contains the first record
-      expect(getTemporaryList(), '`temporaryList` should not contain the first record after removal').to.deep.equal({ [recordIds[1]]: temporaryList[recordIds[1]] });
     });
   });
 });

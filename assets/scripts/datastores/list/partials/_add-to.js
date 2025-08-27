@@ -68,7 +68,7 @@ const handleFormSubmit = async (event) => {
   updateResultUI({ button: form.querySelector('button'), recordId });
 };
 
-const addToList = () => {
+const addToList = (updateResult = updateResultUI) => {
   document.body.addEventListener('submit', handleFormSubmit);
 
   // Initial UI update for all buttons
@@ -76,7 +76,8 @@ const addToList = () => {
   forms.forEach((form) => {
     const recordId = form.getAttribute('data-record-id');
     const button = form.querySelector('button');
-    updateResultUI({ button, recordId });
+    // `updateResult` is passed in for testing purposes
+    updateResult({ button, recordId });
   });
 };
 
