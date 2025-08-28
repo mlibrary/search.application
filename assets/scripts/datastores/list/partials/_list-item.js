@@ -66,4 +66,4 @@ const listItem = ({ record, recordId }) => {
   return clonedListItem;
 };
 
-export default listItem;
+export { listItem, listItemMetadata, listItemTitle };

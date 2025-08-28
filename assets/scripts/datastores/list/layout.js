@@ -3,7 +3,7 @@ import { disableDeselectAllButton } from './partials/_deselect-all.js';
 import { disableRemoveSelectedButton } from './partials/_remove-selected.js';
 import { disableSelectAllButton } from './partials/_select-all.js';
 import { getTemporaryList } from './partials/_add-to.js';
-import listItem from './partials/_list-item.js';
+import { listItem } from './partials/_list-item.js';
 
 const className = 'list__items';
 const checkboxSelector = 'input[type="checkbox"].list__item--checkbox';
