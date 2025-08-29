@@ -38,6 +38,11 @@ describe('add to', function () {
   });
 
   describe('setTemporaryList()', function () {
+    beforeEach(function () {
+      // Clear session storage before each test
+      global.sessionStorage.clear();
+    });
+
     afterEach(function () {
       // Clear session storage after each test
       global.sessionStorage.clear();
