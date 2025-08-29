@@ -1,9 +1,39 @@
-import { listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
+import { listItem, listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
 import { expect } from 'chai';
 import fs from 'fs';
 
 const temporaryListJSON = JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8'));
 const recordIds = Object.keys(temporaryListJSON);
+
+const listItemTitleHTML = `
+  <h2 class="list__item--title">
+    <a href="http://example.com/" class="list__item--title-original">
+      Original Title
+    </a>
+    <span class="list__item--title-transliterated h5">
+      Transliterated Title
+    </span>
+  </h2>
+`;
+const listItemMetadataHTML = `
+  <table class="metadata">
+    <tbody>
+      <tr class="metadata__row--clone">
+        <th scope="row">
+          Field
+        </th>
+        <td>
+          <span class="metadata__data--original">
+            Original Data
+          </span>
+          <span class="metadata__data--transliterated">
+            Transliterated Data
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+`;
 
 describe('listItem()', function () {
   describe('listItemTitle()', function () {
@@ -13,16 +43,7 @@ describe('listItem()', function () {
 
     beforeEach(function () {
       // Apply HTML to the body
-      document.body.innerHTML = `
-        <h2 class="list__item--title">
-          <a href="http://example.com/" class="list__item--title-original">
-            Original Title
-          </a>
-          <span class="list__item--title-transliterated h5">
-            Transliterated Title
-          </span>
-        </h2>
-      `;
+      document.body.innerHTML = listItemTitleHTML;
 
       args = {
         itemTitle: document.querySelector('.list__item--title'),
@@ -86,32 +107,15 @@ describe('listItem()', function () {
   describe('listItemMetadata()', function () {
     let args = null;
     let getRows = null;
+    const [recordId] = recordIds;
 
     beforeEach(function () {
       // Apply HTML to the body
-      document.body.innerHTML = `
-        <table class="metadata">
-          <tbody>
-            <tr class="metadata__row--clone">
-              <th scope="row">
-                Field
-              </th>
-              <td>
-                <span class="metadata__data--original">
-                  Original Data
-                </span>
-                <span class="metadata__data--transliterated">
-                  Transliterated Data
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      `;
+      document.body.innerHTML = listItemMetadataHTML;
 
       args = {
         itemTable: document.querySelector('table.metadata > tbody'),
-        metadata: temporaryListJSON[recordIds[1]].metadata
+        metadata: temporaryListJSON[recordId].metadata
       };
 
       getRows = () => {
@@ -165,6 +169,64 @@ describe('listItem()', function () {
 
       // Check that the metadata row does not have the transliterated element
       expect(getRows()[index].querySelector('.metadata__data--transliterated'), 'the metadata row should not have the transliterated element').to.be.null;
+    });
+  });
+
+  describe('listItem()', function () {
+    let args = null;
+    let getListItem = null;
+    const [recordId] = recordIds;
+    const cloneClass = 'list__item--clone';
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = `
+        <li class="container__rounded list__item list__item--clone">
+          <div class="list__item--header">
+            <input type="checkbox" class="list__item--checkbox" value="" aria-label="Select record">
+            ${listItemTitleHTML}
+          </div>
+          ${listItemMetadataHTML}
+        </li>
+      `;
+
+      args = {
+        record: temporaryListJSON[recordId],
+        recordId
+      };
+
+      getListItem = () => {
+        return document.querySelector(`[data-record-id="${recordId}"]`);
+      };
+
+      // Call the function by attaching it to the body
+      document.body.appendChild(listItem(args));
+    });
+
+    afterEach(function () {
+      args = null;
+      getListItem = null;
+    });
+
+    it('should clone the list item and remove the clone class and add the `data-record-id` attribute', function () {
+      // Check that the list item has `data-record-id` been defined
+      expect(getListItem().getAttribute('data-record-id'), 'the list item should have the `data-record-id` attribute defined').to.equal(recordId);
+
+      // Check that the clone class no longer exists
+      expect(getListItem().classList.contains(cloneClass), `the list item should not have the \`${cloneClass}\` class`).to.be.false;
+    });
+
+    it('should update the checkbox value to the record ID', function () {
+      const checkbox = getListItem().querySelector('.list__item--checkbox');
+      expect(checkbox.value, 'the checkbox value of the cloned list item should equal to the provided record ID').to.equal(recordId);
+    });
+
+    it('should call `listItemTitle`', function () {
+      expect(listItem.toString(), '`listItemTitle` should be called in the function').to.include('listItemTitle({');
+    });
+
+    it('should call `listItemMetadata`', function () {
+      expect(listItem.toString(), '`listItemMetadata` should be called in the function').to.include('listItemMetadata({');
     });
   });
 });
