@@ -6,14 +6,14 @@ const temporaryListJSON = JSON.parse(fs.readFileSync('./test/fixtures/temporary-
 const recordIds = Object.keys(temporaryListJSON);
 
 const listItemTitleHTML = `
-  <h2 class="list__item--title">
+  <h3 class="list__item--title">
     <a href="http://example.com/" class="list__item--title-original">
       Original Title
     </a>
     <span class="list__item--title-transliterated h5">
       Transliterated Title
     </span>
-  </h2>
+  </h3>
 `;
 const listItemMetadataHTML = `
   <table class="metadata">
