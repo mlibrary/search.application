@@ -1,0 +1,75 @@
+@use '../partials/breadcrumbs';
+@use './partials/select-all';
+@use './partials/deselect-all';
+@use './partials/remove-selected';
+@use './partials/in-list';
+@use './partials/list-item';
+@use '../../utilities';
+
+// --------------------------------------------------
+//
+// # List
+//   Styles to apply directly to `views/datastores/list/layout.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//   3. Header
+//   4. Empty
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.list';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} > * {
+  margin-top: 1rem;
+}
+
+
+
+
+
+
+// ***************** //
+// *** 3. HEADER *** //
+// ***************** //
+
+#{$class} #{$class}__header {
+  &,
+  & > * {
+    @include utilities.flex($responsive: true, $wrap: true);
+  }
+  & {
+    justify-content: space-between;
+  }
+}
+
+
+
+
+
+// **************** //
+// *** 4. EMPTY *** //
+// **************** //
+
+#{$class} #{$class}__empty {
+  padding: 1rem;
+  & > *:first-child {
+    margin-top: 0;
+  }
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+}

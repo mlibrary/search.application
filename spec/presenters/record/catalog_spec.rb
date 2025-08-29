@@ -144,6 +144,7 @@ describe Search::Presenters::Record::Catalog::Full do
     end.to_h
     @marc = {}
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
+      id: Faker::Number.number(digits: 10).to_s,
       title: Search::Models::Record::Catalog::Bib::PairedItem.for({
         "transliterated" => double("text", text: Faker::Book.title),
         "original" => double("text", text: Faker::Book.title)
@@ -169,6 +170,11 @@ describe Search::Presenters::Record::Catalog::Full do
     allow(record).to receive(:marc).and_return(@marc)
     described_class.new(record)
   end
+  context "#id" do
+    it "returns the mms_id for the record" do
+      expect(subject.id).to eq(@bib_stub.id)
+    end
+  end
   context "#title" do
     it "returns a title array for both title and v title when v title is present" do
       title = subject.title
@@ -182,7 +188,7 @@ describe Search::Presenters::Record::Catalog::Full do
         "original" => double("text", text: Faker::Book.title, paired?: false)
       }))
       title = subject.title
-      expect(title.first.text).to eq(@bib_stub.title.text)
+      expect(title.first.text).to eq(@bib_stub.title.original.text)
       expect(title.first.css_class).to eq("title-primary")
       expect(title.count).to eq(1)
     end
@@ -375,6 +381,99 @@ describe Search::Presenters::Record::Catalog::Full do
           expect(subject.public_send(uid)).to be_nil
         end
       end
+    end
+  end
+end
+describe Search::Presenters::Record::Catalog::Brief do
+  let(:record) { create(:catalog_record) }
+  before(:each) do
+    @citation_stub = instance_double(Search::Models::Record::Catalog::Citation, ris: Faker::Lorem.paragraph,
+      styles: [
+        OpenStruct.new(name: "mla", html: "<i>Birds</i>. v. 1-Jan./Feb. 1966-, 1966-2013."),
+        OpenStruct.new(name: "apa", html: "<i>Birds</i> (No. v. 1-Jan./Feb. 1966-). (1966-2013)."),
+        OpenStruct.new(name: "chicago", html: "\"Birds,\" 1966-2013."),
+        OpenStruct.new(name: "ieee", html: "\"Birds,\" Art. no. v. 1-Jan./Feb. 1966-, 1966-2013."),
+        OpenStruct.new(name: "nlm", html: "Birds. Sandy, Bedfordshire, Eng.: Royal Society for the Protection of Birds; 1966-2013;"),
+        OpenStruct.new(name: "bibtex", html: "@article{Birds_1966-2013, address={Sandy, Bedfordshire, Eng.}, callNumber={QL671 .B678}, number={v. 1-Jan./Feb. 1966-}, publisher={Royal Society for the Protection of Birds}, year={1966-2013} }")
+      ])
+
+    @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
+      id: Faker::Number.number(digits: 10).to_s,
+      title: Search::Models::Record::Catalog::Bib::PairedItem.for({
+        "transliterated" => double("text", text: Faker::Book.title),
+        "original" => double("text", text: Faker::Book.title)
+      }),
+      main_author: [double("paired",
+        transliterated: double("author_browse",
+          text: Faker::Lorem.sentence,
+          url: Faker::Internet.url,
+          browse_url: Faker::Internet.url,
+          kind: "author"),
+        original: double("author_browse",
+          text: Faker::Lorem.sentence,
+          url: Faker::Internet.url,
+          browse_url: Faker::Internet.url,
+          kind: "author"))],
+      published: [double("paired_text",
+        transliterated: double("text", text: Faker::Lorem.sentence),
+        original: double("text", text: Faker::Lorem.sentence))],
+      series: [double("paired_text",
+        transliterated: double("text", text: Faker::Lorem.sentence),
+        original: double("text", text: Faker::Lorem.sentence))])
+  end
+  subject do
+    allow(record).to receive(:bib).and_return(@bib_stub)
+    allow(record).to receive(:citation).and_return(@citation_stub)
+    described_class.new(record)
+  end
+  context "#metadata" do
+    it "has metadata" do
+      main_author = subject.metadata[0]
+      published = subject.metadata[1]
+      series = subject.metadata[2]
+      expect(main_author.field).to eq("Author/Creator")
+      expect(published.field).to eq("Published/Created")
+      expect(series.field).to eq("Series (transcribed)")
+    end
+  end
+  context "#to_h" do
+    it "returns the expected hash" do
+      expected = {
+        title: {
+          original: @bib_stub.title.original.text,
+          transliterated: @bib_stub.title.transliterated.text
+        },
+        metadata: [
+          {
+            field: "Author/Creator",
+            original: @bib_stub.main_author.first.original.text,
+            transliterated: @bib_stub.main_author.first.transliterated.text
+          },
+          {
+            field: "Published/Created",
+            original: @bib_stub.published.first.original.text,
+            transliterated: @bib_stub.published.first.transliterated.text
+          },
+          {
+            field: "Series (transcribed)",
+            original: @bib_stub.series.first.original.text,
+            transliterated: @bib_stub.series.first.transliterated.text
+          }
+        ],
+        url: "#{S.base_url}/catalog/record/#{@bib_stub.id}",
+        citation: {
+          ris: @citation_stub.ris,
+          styles: {
+            mla: "<i>Birds</i>. v. 1-Jan./Feb. 1966-, 1966-2013.",
+            apa: "<i>Birds</i> (No. v. 1-Jan./Feb. 1966-). (1966-2013).",
+            chicago: "\"Birds,\" 1966-2013.",
+            ieee: "\"Birds,\" Art. no. v. 1-Jan./Feb. 1966-, 1966-2013.",
+            nlm: "Birds. Sandy, Bedfordshire, Eng.: Royal Society for the Protection of Birds; 1966-2013;",
+            bibtex: "@article{Birds_1966-2013, address={Sandy, Bedfordshire, Eng.}, callNumber={QL671 .B678}, number={v. 1-Jan./Feb. 1966-}, publisher={Royal Society for the Protection of Birds}, year={1966-2013} }"
+          }
+        }
+      }
+      expect(subject.to_h).to eq(expected)
     end
   end
 end

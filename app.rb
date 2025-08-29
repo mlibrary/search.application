@@ -109,13 +109,26 @@ class Search::Application < Sinatra::Base
         end
         # result = profile.stop
         # printer = RubyProf::GraphHtmlPrinter.new(result)
-        # # printer.print(f)
-        # # File.open("profile.html", "w") do |f|
-        # #   printer.print(f)
-        # # end
+        # printer.print(f)
+        # File.open("profile.html", "w") do |f|
+        #   printer.print(f)
+        # end
       rescue Faraday::ResourceNotFound => error
         S.logger.error(error.message, error_response: error.response)
         redirect not_found
+      end
+      get "/#{datastore.slug}/record/:id/brief" do
+        content_type :json
+        Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").to_json
+      end
+    end
+    if datastore.slug == "everything"
+      get "/#{datastore.slug}/list" do
+        # headers "metrics.datastore" => datastore.slug, "metrics.route" => "list"
+        @presenter = Search::Presenters.for_datastore_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+        erb :"datastores/list/layout", layout: :layout do
+          erb :"datastores/list/#{datastore.slug}"
+        end
       end
     end
   end

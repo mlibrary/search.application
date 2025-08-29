@@ -1,0 +1,19 @@
+<div class="list">
+  <div class="list__header">
+    <%= h1(body: @presenter.page_title) %>
+    <div class="list__header--utilities">
+      <%= erb :'datastores/list/partials/_select-all' %>
+      <%= erb :'datastores/list/partials/_deselect-all' %>
+      <%= erb :'datastores/list/partials/_remove-selected' %>
+      <%= erb :'datastores/list/partials/_in-list' %>
+    </div>
+  </div>
+  <p>Items in this list are stored temporarily (within a single session).</p>
+  <div class="container__rounded list__empty">
+    <p>
+      <span class="strong">This list is empty.</span>
+      Continue searching to add to this list.
+    </p>
+  </div>
+  <%= erb :'datastores/list/partials/_list-item' %>
+</div>

@@ -25,7 +25,8 @@
                     </li>
                   </ul>
                 <% else %>
-                  <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: {value: value} %>
+                  <% my_value = value.respond_to?(:original) ? value.original : value %>
+                  <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: {value: my_value} %>
                 <% end %>
               </li>
             <% end %>
