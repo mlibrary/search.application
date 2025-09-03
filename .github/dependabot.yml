@@ -3,7 +3,8 @@ version: 2
 multi-ecosystem-groups:
   app-dependencies:
     schedule:
-      interval: "daily"
+      interval: "cron"
+      cronjob: "35 * * * *"
       #time: "06:00"
       #day: "monday"
       timezone: "America/Detroit"
