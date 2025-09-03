@@ -15,5 +15,6 @@
       Continue searching to add to this list.
     </p>
   </div>
+  <%= erb :'datastores/partials/_actions', locals: { patron: @patron } %>
   <%= erb :'datastores/list/partials/_list-item' %>
 </div>

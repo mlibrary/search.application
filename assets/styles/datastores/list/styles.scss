@@ -3,6 +3,7 @@
 @use './partials/deselect-all';
 @use './partials/remove-selected';
 @use './partials/in-list';
+@use '../partials/actions';
 @use './partials/list-item';
 @use '../../utilities';
 
@@ -16,6 +17,7 @@
 //   2. Container
 //   3. Header
 //   4. Empty
+//   5. Actions
 //
 // --------------------------------------------------
 
@@ -71,5 +73,21 @@ $class: '.list';
   }
   & > *:last-child {
     margin-bottom: 0;
+  }
+}
+
+
+
+
+
+// ****************** //
+// *** 5. ACTIONS *** //
+// ****************** //
+
+#{$class} .actions {
+  body.no-javascript &,
+  button#actions__link,
+  #actions__link--tabpanel {
+    display: none;
   }
 }

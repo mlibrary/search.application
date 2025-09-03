@@ -1,6 +1,6 @@
 <div class="record">
   <%= erb :'datastores/list/partials/_go-to' %>
-  <%= erb :'datastores/partials/_actions', locals: { patron: @patron, show_copy_link: true } %>
+  <%= erb :'datastores/partials/_actions', locals: { patron: @patron } %>
   <div class="container__rounded record__container" data-record-id="<%= @record.id %>">
     <section class="record__information">
       <div class="record__information--header">
