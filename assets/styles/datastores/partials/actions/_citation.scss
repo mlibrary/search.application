@@ -94,6 +94,16 @@ body.no-javascript {
 // *** 4. TABPANEL *** //
 // ******************* //
 
+#{$class} #{$class}__label,
 #{$class} #{$class}__input {
   display: block;
+}
+
+#{$class} #{$class}__label {
+  margin-top: 0.75rem;
+}
+
+#{$class} #{$class}__not-available {
+  color: var(--search-color-grey-600);
+  font-style: italic;
 }
