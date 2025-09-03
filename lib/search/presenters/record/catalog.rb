@@ -145,6 +145,10 @@ module Search
             Holdings.new(@record)
           end
 
+          def csl
+            @record.citation.csl
+          end
+
           def citations
             OpenStruct.new(
               mla: "<i>Birds</i>. v. 1-Jan./Feb. 1966-, 1966-2013.",
@@ -373,9 +377,7 @@ module Search
               url: "#{S.base_url}/catalog/record/#{id}",
               citation: {
                 ris: @record.citation.ris,
-                styles: @record.citation.styles.map do |c|
-                  [c.name.to_sym, c.html]
-                end.to_h
+                csl: csl
               }
             }
           end
