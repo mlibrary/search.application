@@ -20,6 +20,10 @@ class Search::Models::Record::Catalog::Citation
     end.flatten.compact.join("\n").strip
   end
 
+  def csl
+    @data["csl"]
+  end
+
   def styles
     [
       OpenStruct.new(name: "mla", html: "<i>Birds</i>. v. 1-Jan./Feb. 1966-, 1966-2013."),

@@ -24,7 +24,12 @@ RSpec.describe Search::Models::Record::Catalog::Citation do
             ],
             "meta" => []
           }
-        ]
+        ],
+        "csl" => {
+          "id" => "99mms_id",
+          "type" => "book",
+          "title" => "The title of the book"
+        }
       }
     }
   end
@@ -47,6 +52,11 @@ RSpec.describe Search::Models::Record::Catalog::Citation do
         ER  - 
       HEREDOC
       expect(subject.ris).to eq expected.strip
+    end
+  end
+  context "#csl" do
+    it "returns the csl metadata object" do
+      expect(subject.csl["type"]).to eq("book")
     end
   end
 end
