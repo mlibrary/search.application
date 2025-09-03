@@ -11,12 +11,9 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Container
-//   3. Header
-//   4. Tablist
-//     4.1 Tabs
-//   5. Tabpanel
-//     5.1 Form
+//   2. Tab
+//   3. Tabs
+//   4. Tabpanel
 //
 // --------------------------------------------------
 
@@ -30,8 +27,23 @@ $class: ".citation";
 
 
 
+// ************** //
+// *** 2. TAB *** //
+// ************** //
+
+body.no-javascript {
+  button#actions__citation,
+  #actions__citation--tabpanel {
+    display: none;
+  }
+}
+
+
+
+
+
 // *************** //
-// *** 2. TABS *** //
+// *** 3. TABS *** //
 // *************** //
 
 #{$class}__tablist {
@@ -41,9 +53,6 @@ $class: ".citation";
     @include media.breakpoint('xs') {
       border-bottom: 2px solid var(--search-color-grey-400);
     }
-  }
-  body.no-javascript & {
-    display: none;
   }
   button[role="tab"] {
     @include forms.button;
@@ -82,23 +91,9 @@ $class: ".citation";
 
 
 // ******************* //
-// *** 3. TABPANEL *** //
+// *** 4. TABPANEL *** //
 // ******************* //
-
-// *              * //
-// * 3.1 CITATION * //
-// *              * //
 
 #{$class} #{$class}__input {
   display: block;
-}
-
-
-
-// *                   * //
-// * 3.1 COPY CITATION * //
-// *                   * //
-
-body.no-javascript #{$class} #{$class}__copy {
-  display: none;
 }
