@@ -4,12 +4,36 @@
 //   Styles to apply directly to `views/datastores/partials/actions/_email.erb`.
 //
 // ## Table of Contents
-//   1. Alert
+//   1. Variables
+//   2. Log In
+//   3. Alert
 //
 // --------------------------------------------------
 
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: "email";
+
+
+
+
+
+// ***************** //
+// *** 2. LOG IN *** //
+// ***************** //
+
+body.no-javascript #actions__#{$class}--tabpanel:has(form[action="/auth/openid_connect"]) {
+  display: none;
+}
+
+
+
+
+
 // **************** //
-// *** 1. ALERT *** //
+// *** 3. ALERT *** //
 // **************** //
 
 .actions__alert {
