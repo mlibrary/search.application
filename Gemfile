@@ -9,7 +9,7 @@ gem "omniauth_openid_connect"
 gem "ostruct"
 gem "alma_rest_client",
   git: "https://github.com/mlibrary/alma_rest_client",
-  tag: "alma_rest_client/v2.1.0"
+  tag: "alma_rest_client/v2.2.0"
 gem "activesupport"
 gem "semantic_logger"
 
