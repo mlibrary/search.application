@@ -1,10 +1,8 @@
 import { getCheckboxes, someCheckboxesChecked, temporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
-import fs from 'fs';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import sinon from 'sinon';
 
-const temporaryListJSON = JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8'));
 const checkboxHTML = `
   <ol class="list__items">
     <li><input type="checkbox" class="list__item--checkbox" value="rec1" checked></li>
@@ -135,7 +133,7 @@ describe('layout', function () {
 
     it('should toggle the empty message based on the list count', function () {
       // Set a temporary list in session storage
-      setTemporaryList(temporaryListJSON);
+      setTemporaryList(global.temporaryList);
 
       // Call the function
       temporaryList();
@@ -161,7 +159,7 @@ describe('layout', function () {
       expect(getHeading(), 'an `h2` should not exist in an empty list').to.be.null;
 
       // Set a temporary list in session storage
-      setTemporaryList(temporaryListJSON);
+      setTemporaryList(global.temporaryList);
 
       // Call the function
       temporaryList();
@@ -176,7 +174,7 @@ describe('layout', function () {
       expect(getOrderedList(), 'an ordered list should not exist in an empty list').to.be.null;
 
       // Set a temporary list in session storage
-      setTemporaryList(temporaryListJSON);
+      setTemporaryList(global.temporaryList);
 
       // Call the function
       temporaryList();
@@ -188,7 +186,7 @@ describe('layout', function () {
       expect(getOrderedList().classList.contains('list__items', 'list__no-style'), 'classes should have been added to the ordered list').to.be.true;
 
       // Check that the ordered list has a list item for each record
-      expect(getOrderedList().querySelectorAll('li').length, 'a list item should exist for each provided record').to.equal(Object.keys(temporaryListJSON).length);
+      expect(getOrderedList().querySelectorAll('li').length, 'a list item should exist for each provided record').to.equal(Object.keys(global.temporaryList).length);
     });
 
     it('should add a `change` event listener to the list container', function () {

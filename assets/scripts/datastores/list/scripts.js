@@ -1,7 +1,7 @@
 import { shareForm, tabControl } from '../partials/_actions.js';
-import copyCitation from '../partials/actions/_citation.js';
-import copyLink from '../partials/actions/_link.js';
+import { copyCitation } from '../partials/actions/_citation.js';
 import { deselectAll } from './partials/_deselect-all.js';
+import downloadTemporaryListRIS from '../partials/actions/_ris.js';
 import { removeSelected } from './partials/_remove-selected.js';
 import { selectAll } from './partials/_select-all.js';
 import { temporaryList } from './layout.js';
@@ -31,5 +31,5 @@ shareForm('#actions__text--tabpanel');
 tabControl('.citation');
 copyCitation();
 
-// Copy link
-copyLink();
+// RIS
+downloadTemporaryListRIS();

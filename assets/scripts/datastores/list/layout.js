@@ -13,9 +13,16 @@ const getCheckboxes = () => {
 };
 
 const someCheckboxesChecked = (checked = false) => {
-  const checkboxes = getCheckboxes();
-  return [...checkboxes].some((checkbox) => {
+  return [...getCheckboxes()].some((checkbox) => {
     return checkbox.checked === checked;
+  });
+};
+
+const filterSelectedRecordIDs = () => {
+  return [...getCheckboxes()].filter((checkbox) => {
+    return checkbox.checked === true;
+  }).map((checkbox) => {
+    return checkbox.value;
   });
 };
 
@@ -59,4 +66,4 @@ const temporaryList = () => {
   });
 };
 
-export { getCheckboxes, someCheckboxesChecked, temporaryList };
+export { filterSelectedRecordIDs, getCheckboxes, someCheckboxesChecked, temporaryList };

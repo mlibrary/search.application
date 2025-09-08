@@ -1,10 +1,8 @@
 import { addToList, getTemporaryList, handleFormSubmit, setTemporaryList, updateResultUI } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
-import fs from 'fs';
 import sinon from 'sinon';
 
-const temporaryList = JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8'));
-const recordIds = Object.keys(temporaryList);
+const recordIds = Object.keys(global.temporaryList);
 const listItems = (records = recordIds) => {
   let list = `
     <div class="list__go-to list__go-to--empty">
@@ -53,10 +51,10 @@ describe('add to', function () {
       expect(getTemporaryList(), '`temporaryList` should return an empty object').to.be.an('object').that.is.empty;
 
       // Call the function
-      setTemporaryList(temporaryList);
+      setTemporaryList(global.temporaryList);
 
       // Check that the temporary list was set correctly
-      expect(getTemporaryList(), '`temporaryList` should have been set with the provided object').to.deep.equal(temporaryList);
+      expect(getTemporaryList(), '`temporaryList` should have been set with the provided object').to.deep.equal(global.temporaryList);
     });
   });
 
@@ -73,10 +71,10 @@ describe('add to', function () {
 
     it('should return the temporary list from session storage', function () {
       // Set a temporary list in session storage
-      setTemporaryList(temporaryList);
+      setTemporaryList(global.temporaryList);
 
       // Check that the function retrieves it correctly
-      expect(getTemporaryList(), '`temporaryList` should return a defined object').to.deep.equal(temporaryList);
+      expect(getTemporaryList(), '`temporaryList` should return a defined object').to.deep.equal(global.temporaryList);
     });
   });
 
@@ -123,7 +121,7 @@ describe('add to', function () {
       expect(getContainer().classList.contains(activeContainerClass), '`.record__container` should not have an active class by default').to.be.false;
 
       // Set a temporary list in session storage
-      setTemporaryList(temporaryList);
+      setTemporaryList(global.temporaryList);
 
       // Call the function again to update the UI
       callFunction();
@@ -148,7 +146,7 @@ describe('add to', function () {
       expect(buttonText.textContent, 'the button text should be "Add this record to My Temporary List"').to.equal('Add this record to My Temporary List');
 
       // Set a temporary list in session storage
-      setTemporaryList(temporaryList);
+      setTemporaryList(global.temporaryList);
 
       // Call the function again to update the UI
       callFunction();
@@ -214,10 +212,10 @@ describe('add to', function () {
 
     it('deletes the record from the temporary list if it is already added', async function () {
       // Set the temporary list in session storage
-      setTemporaryList(temporaryList);
+      setTemporaryList(global.temporaryList);
 
       // Check that the temporary list has been set
-      expect(getTemporaryList(), '`temporaryList` should be set').to.deep.equal(temporaryList);
+      expect(getTemporaryList(), '`temporaryList` should be set').to.deep.equal(global.temporaryList);
 
       // Define the record ID to remove
       const [recordId] = recordIds;
@@ -264,21 +262,21 @@ describe('add to', function () {
       // Call the function
       fetchStub.resolves({
         json: () => {
-          return Promise.resolve(temporaryList[recordId]);
+          return Promise.resolve(global.temporaryList[recordId]);
         },
         ok: true
       });
       await handleFormSubmit(event);
 
       // Check that the temporary list has the record after submission
-      expect(String(getTemporaryList()), '`temporaryList` should contain the record metadata after submission').to.include(temporaryList[recordId]);
+      expect(String(getTemporaryList()), '`temporaryList` should contain the record metadata after submission').to.include(global.temporaryList[recordId]);
     });
 
     it('fetches using the action attribute of the form', async function () {
       // Define the fake fetch response
       fetchStub.resolves({
         json: () => {
-          return Promise.resolve(temporaryList[recordIds[0]]);
+          return Promise.resolve(global.temporaryList[recordIds[0]]);
         },
         ok: true
       });

@@ -1,12 +1,10 @@
 import { disableRemoveSelectedButton, removeSelected, removeSelectedButton } from '../../../../../assets/scripts/datastores/list/partials/_remove-selected.js';
+import { getTemporaryList, setTemporaryList } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
-import fs from 'fs';
 import { getCheckboxes } from '../../../../../assets/scripts/datastores/list/layout.js';
-import { getTemporaryList } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import sinon from 'sinon';
 
-const temporaryList = JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8'));
-const recordIds = Object.keys(temporaryList);
+const recordIds = Object.keys(global.temporaryList);
 const temporaryListHTML = recordIds.map((recordId, index) => {
   return `<li><input type="checkbox" class="list__item--checkbox" value="${recordId}" ${index === 0 ? 'checked' : ''}></li>`;
 }).join('');
@@ -68,7 +66,7 @@ describe('removeSelected', function () {
 
     it('should delete the selected record(s) from session storage and reload the page', function () {
       // Set a temporary list in session storage
-      global.sessionStorage.setItem('temporaryList', JSON.stringify(temporaryList));
+      setTemporaryList(global.temporaryList);
 
       // Map the currently checked record IDs
       const checkedRecordIds = [...getCheckboxes()]
