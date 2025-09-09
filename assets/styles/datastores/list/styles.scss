@@ -6,6 +6,7 @@
 @use '../partials/actions';
 @use './partials/list-item';
 @use '../../utilities';
+@use '../../forms';
 
 // --------------------------------------------------
 //
@@ -44,17 +45,27 @@ $class: '.list';
 
 
 
-// ***************** //
-// *** 3. HEADER *** //
-// ***************** //
+// ****************** //
+// *** 3. ACTIONS *** //
+// ****************** //
 
-#{$class} #{$class}__header {
-  &,
-  & > * {
-    @include utilities.flex($responsive: true, $wrap: true);
+#{$class} #{$class}__actions {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  .actions {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
-  & {
-    justify-content: space-between;
+  &--utilities {
+    @include utilities.flex($responsive: true, $wrap: true);
+    & {
+      background-color: var(--search-color-blue-200);
+      border: 2px solid var(--search-color-blue-300);
+      border-radius: 0 0 forms.$radius forms.$radius;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+    }
   }
 }
 
