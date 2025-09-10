@@ -2,6 +2,7 @@ require "json"
 module Fakes
   class PatronFake < Search::Patron::Base
     include Search::Patron::SessionHelper
+
     [:affiliation, :email, :sms, :campus, :logged_in?].each do |method|
       define_method method do
         method.to_s

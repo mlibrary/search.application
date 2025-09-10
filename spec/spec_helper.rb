@@ -16,6 +16,7 @@ module RSpecMixin
   include Rack::Test::Methods
   include AlmaRestClient::Test::Helpers
   include Factories
+
   def app = Search::Application
 end
 

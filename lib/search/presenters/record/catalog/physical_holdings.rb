@@ -298,6 +298,7 @@ class Search::Presenters::Record::Catalog::Holdings::Physical <
       return true if in_game? && @item.process_type == "WORK_ORDER_DEPARTMENT"
       return true if in_library?("AAEL") && @item.item_policy == "05"
       return true if in_library?("FLINT") && @item.item_policy == "10"
+
       false
     end
   end

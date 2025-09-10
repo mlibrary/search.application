@@ -64,6 +64,7 @@ module Search
   module Patron
     class Alma < Base
       include SessionHelper
+
       def initialize(data, session_affiliation = nil)
         @data = data
         @session_affiliation = session_affiliation
