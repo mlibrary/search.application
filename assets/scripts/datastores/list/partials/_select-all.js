@@ -1,29 +1,30 @@
 import { getCheckboxes, someCheckboxesChecked } from '../layout.js';
-import { disableDeselectAllButton } from './_deselect-all.js';
-import { disableRemoveSelectedButton } from './_remove-selected.js';
 
-const selectAllButton = () => {
-  return document.querySelector('button.list__button--select-all');
+const selectAllCheckbox = () => {
+  return document.querySelector('.select-all > input[type="checkbox"]');
 };
 
-const disableSelectAllButton = () => {
-  selectAllButton().toggleAttribute('disabled', !someCheckboxesChecked());
+const selectAllState = () => {
+  const checkbox = selectAllCheckbox();
+
+  checkbox.indeterminate = someCheckboxesChecked(true) && someCheckboxesChecked(false);
+  checkbox.checked = someCheckboxesChecked(true) && !someCheckboxesChecked(false);
 };
 
 const selectAll = () => {
-  // Initialize button state
-  disableSelectAllButton();
+  // Initialize the state of the checkbox
+  selectAllState();
+
   // Add event listener
-  selectAllButton().addEventListener('click', () => {
-    // Select all checkboxes
+  selectAllCheckbox().addEventListener('change', () => {
+    // Check all checkboxes if some are unchecked, otherwise uncheck all
+    const checked = someCheckboxesChecked(false);
     getCheckboxes().forEach((checkbox) => {
-      checkbox.checked = true;
+      checkbox.checked = checked;
     });
-    // Update button states
-    disableSelectAllButton();
-    disableDeselectAllButton();
-    disableRemoveSelectedButton();
+    // Update the state of the select all checkbox
+    selectAllState();
   });
 };
 
-export { disableSelectAllButton, selectAll, selectAllButton };
+export { selectAll, selectAllCheckbox, selectAllState };

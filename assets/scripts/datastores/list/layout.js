@@ -1,9 +1,7 @@
 import changeCount from './partials/_in-list.js';
-import { disableDeselectAllButton } from './partials/_deselect-all.js';
-import { disableRemoveSelectedButton } from './partials/_remove-selected.js';
-import { disableSelectAllButton } from './partials/_select-all.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
+import { selectAllState } from './partials/_select-all.js';
 
 const className = 'list__items';
 const checkboxSelector = 'input[type="checkbox"].list__item--checkbox';
@@ -13,9 +11,16 @@ const getCheckboxes = () => {
 };
 
 const someCheckboxesChecked = (checked = false) => {
-  const checkboxes = getCheckboxes();
-  return [...checkboxes].some((checkbox) => {
+  return [...getCheckboxes()].some((checkbox) => {
     return checkbox.checked === checked;
+  });
+};
+
+const filterSelectedRecordIDs = () => {
+  return [...getCheckboxes()].filter((checkbox) => {
+    return checkbox.checked === true;
+  }).map((checkbox) => {
+    return checkbox.value;
   });
 };
 
@@ -52,11 +57,10 @@ const temporaryList = () => {
   // Watch for changes to the list and update accordingly
   listContainer.addEventListener('change', (event) => {
     if (event.target.matches(checkboxSelector)) {
-      disableSelectAllButton();
-      disableDeselectAllButton();
-      disableRemoveSelectedButton();
+      selectAllState();
+      // Actions button state
     }
   });
 };
 
-export { getCheckboxes, someCheckboxesChecked, temporaryList };
+export { filterSelectedRecordIDs, getCheckboxes, someCheckboxesChecked, temporaryList };

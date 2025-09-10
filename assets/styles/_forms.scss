@@ -122,15 +122,27 @@ input[type="checkbox"] {
   border-radius: 2px;
   height: 1rem;
   width: 1rem;
-  &:checked {
+  &:checked,
+  &:indeterminate {
     background: colors.$color-anchor;
     border-color: colors.$color-anchor;
-    &:before {
-      background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyNCAyNCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI5LjYuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDkpICAtLT4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnN0MCB7CiAgICAgICAgZmlsbDogI2ZmZjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTguNDYsMTUuMzZMMjAuMDYsMy43NmMuNDYtLjQ2LDEtLjY5LDEuNjMtLjY5czEuMTcuMjMsMS42My42OS42OSwxLC42OSwxLjYzLS4yMywxLjE3LS42OSwxLjYzbC0xMy4yMywxMy4yM2MtLjQ2LjQ2LTEsLjY5LTEuNjMuNjlzLTEuMTctLjIzLTEuNjMtLjY5TC42OSwxNC4xQy4yMywxMy42NCwwLDEzLjEsMCwxMi40N3MuMjMtMS4xNy42OS0xLjYzYy40Ni0uNDYsMS0uNjksMS42My0uNjlzMS4xNy4yMywxLjYzLjY5bDQuNTIsNC41MloiLz4KPC9zdmc+) center no-repeat;
-      background-size: contain;
-      height: 100%;
-      width: 100%;
-    }
+  }
+  &:checked:before {
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyNCAyNCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI5LjYuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDkpICAtLT4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnN0MCB7CiAgICAgICAgZmlsbDogI2ZmZjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTguNDYsMTUuMzZMMjAuMDYsMy43NmMuNDYtLjQ2LDEtLjY5LDEuNjMtLjY5czEuMTcuMjMsMS42My42OS42OSwxLC42OSwxLjYzLS4yMywxLjE3LS42OSwxLjYzbC0xMy4yMywxMy4yM2MtLjQ2LjQ2LTEsLjY5LTEuNjMuNjlzLTEuMTctLjIzLTEuNjMtLjY5TC42OSwxNC4xQy4yMywxMy42NCwwLDEzLjEsMCwxMi40N3MuMjMtMS4xNy42OS0xLjYzYy40Ni0uNDYsMS0uNjksMS42My0uNjlzMS4xNy4yMywxLjYzLjY5bDQuNTIsNC41MloiLz4KPC9zdmc+) center no-repeat;
+    background-size: contain;
+    height: 100%;
+    width: 100%;
+  }
+  &:indeterminate:before {
+    background: white;
+    border-radius: 2px;
+    content: '';
+    display: block;
+    position: absolute;
+    height: 25%;
+    top: 50%;
+    transform: translate((0, -50%));
+    width: 100%;
   }
   &:disabled:checked {
     filter: $filter;

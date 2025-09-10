@@ -1,4 +1,24 @@
+import { filterSelectedRecordIDs, someCheckboxesChecked } from '../../list/layout.js';
 import { copyToClipboard } from '../_actions.js';
+import { getTemporaryList } from '../../list/partials/_add-to.js';
+
+const getTemporaryListCitations = (type = 'csl') => {
+  let list = [];
+  if (someCheckboxesChecked(true)) {
+    // If some are checked, filter the selected records
+    filterSelectedRecordIDs().forEach((recordID) => {
+      list.push(getTemporaryList()[recordID]);
+    });
+  } else {
+    // Return the entire list
+    list = getTemporaryList();
+  }
+
+  // Map the citations
+  return Object.values(list).map((listItem) => {
+    return listItem.citation[type];
+  });
+};
 
 const copyCitation = () => {
   const citations = document.querySelector('.citation');
@@ -35,4 +55,4 @@ const copyCitation = () => {
   });
 };
 
-export default copyCitation;
+export { copyCitation, getTemporaryListCitations };

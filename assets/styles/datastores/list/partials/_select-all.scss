@@ -1,7 +1,9 @@
+@use '../../../utilities';
+
 // --------------------------------------------------
 //
 // # Add To
-//   Styles to apply directly to `views/datastores/list/_select-all.erb`.
+//   Styles to apply directly to `views/datastores/list/_toggle-all.erb`.
 //
 // ## Table of Contents
 //   1. Variables
@@ -13,22 +15,17 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: '.list__button--select-all';
+$class: '.select-all';
 
 
 
 
 
 
-// ***************** //
-// *** 2. BUTTON *** //
-// ***************** //
+// ********************* //
+// *** 2. SELECT ALL *** //
+// ********************* //
 
-button#{$class} {
-  body.no-javascript & {
-    display: none;
-  }
-  @media print {
-    display: none;
-  }
+#{$class} {
+  @include utilities.flex();
 }

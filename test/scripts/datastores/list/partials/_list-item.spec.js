@@ -1,9 +1,7 @@
 import { listItem, listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
 import { expect } from 'chai';
-import fs from 'fs';
 
-const temporaryListJSON = JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8'));
-const recordIds = Object.keys(temporaryListJSON);
+const recordIds = Object.keys(global.temporaryList);
 
 const listItemTitleHTML = `
   <h3 class="list__item--title">
@@ -115,7 +113,7 @@ describe('listItem()', function () {
 
       args = {
         itemTable: document.querySelector('table.metadata > tbody'),
-        metadata: temporaryListJSON[recordId].metadata
+        metadata: global.temporaryList[recordId].metadata
       };
 
       getRows = () => {
@@ -191,7 +189,7 @@ describe('listItem()', function () {
       `;
 
       args = {
-        record: temporaryListJSON[recordId],
+        record: global.temporaryList[recordId],
         recordId
       };
 

@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
 
@@ -10,7 +11,13 @@ const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
 const { window: { document } } = dom;
 
 // Define global properties for the JSDOM environment
-Object.assign(global, { document, window: dom.window });
+Object.assign(
+  global, {
+    document,
+    temporaryList: JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8')),
+    window: dom.window
+  }
+);
 
 // Clear everything after each test
 export const mochaHooks = {

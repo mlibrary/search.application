@@ -1,29 +1,22 @@
 <%
-  citations = {
-    "MLA" => @record.citations.mla,
-    "APA" => @record.citations.apa,
-    "Chicago" => @record.citations.chicago,
-    "IEEE" => @record.citations.ieee,
-    "NLM" => @record.citations.nlm,
-    "BibTex" => @record.citations.bibtex
-  }
+  citations = ["MLA", "APA", "Chicago", "IEEE", "NLM", "BibTex"]
 %>
 <div class="citation">
   <div role="tablist" aria-labelledby="actions__citation" class="citation__tablist">
-    <% citations.each do |key, value| %>
+    <% citations.each do |key| %>
       <button type="button" role="tab" aria-selected="<%= key == "MLA" %>" id="citation__<%= key.downcase %>" aria-controls="citation__<%= key.downcase %>--tabpanel">
         <%= key %>
       </button>
     <% end %>
   </div>
-  <% citations.each do |key, value| %>
+  <% citations.each do |key| %>
     <div id="citation__<%= key.downcase %>--tabpanel" role="tabpanel" aria-labelledby="citation__<%= key.downcase %>" class="citation__tabpanel">
       <div class="alert alert__success actions__alert">
         Citation copied to clipboard!
       </div>
-      <span id="citation__<%= key.downcase %>--label"><%= key %> citation</span>
-      <div role="textbox" contenteditable="true" aria-labelledby="citation__<%= key.downcase %>--label" aria-describedby="citation__input-disclaimer" class="citation__input" id="citation__<%= key.downcase %>--text">
-        <%= value %>
+      <span id="citation__<%= key.downcase %>--label" class="citation__label"><%= key %> citation</span>
+      <div role="textbox" disabled contenteditable="true" aria-labelledby="citation__<%= key.downcase %>--label" aria-describedby="citation__input-disclaimer" class="citation__input" id="citation__<%= key.downcase %>--text">
+        <span class="citation__not-available">Citation not available.</span>
       </div>
     </div>
   <% end %>
