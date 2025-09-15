@@ -1,4 +1,4 @@
-import { getCheckboxes, someCheckboxesChecked, temporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import { disableActionTabs, filterSelectedRecordIDs, getCheckboxes, someCheckboxesChecked, temporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import sinon from 'sinon';
@@ -23,6 +23,18 @@ describe('layout', function () {
     it('should return all the checkboxes in the temporary list', function () {
       // Check that the correct elements are returned
       expect(getCheckboxes(), 'the correct elements should be returned').to.deep.equal(document.querySelectorAll('ol.list__items input[type="checkbox"].list__item--checkbox'));
+    });
+  });
+
+  describe('filterSelectedRecordIDs()', function () {
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = checkboxHTML;
+    });
+
+    it('should return an array of the selected record IDs', function () {
+      // Check that the correct record IDs are returned
+      expect(filterSelectedRecordIDs(), 'the correct record IDs should be returned').to.deep.equal(['rec1']);
     });
   });
 
@@ -61,6 +73,56 @@ describe('layout', function () {
 
         // Check that the function returns false
         expect(someCheckboxesChecked(false), 'the function should return `false` if all checkboxes are checked').to.be.false;
+      });
+    });
+  });
+
+  describe('disableActionTabs()', function () {
+    let getTabs = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = `
+        <div class="actions">
+          <div class="actions__tablist" role="tablist">
+            <button role="tab" aria-selected="true">Tab 1</button>
+            <button role="tab" aria-selected="false">Tab 2</button>
+            <button role="tab" aria-selected="false">Tab 3</button>
+          </div>
+        </div>
+        ${checkboxHTML}
+      `;
+
+      getTabs = () => {
+        return document.querySelectorAll('.actions__tablist button[role="tab"]');
+      };
+    });
+
+    it('should disable all action tabs if no checkboxes are checked', function () {
+      // Ensure no checkboxes are checked
+      getCheckboxes().forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+
+      // Call the function
+      disableActionTabs();
+
+      // Check that all tabs are disabled
+      getTabs().forEach((tab) => {
+        expect(tab.disabled, 'all tabs should be disabled if no checkboxes are checked').to.be.true;
+      });
+    });
+
+    it('should enable all action tabs if at least one checkbox is checked', function () {
+      // Ensure at least one checkbox is checked
+      expect(someCheckboxesChecked(true), 'at least one checkbox should be checked for this test').to.be.true;
+
+      // Call the function
+      disableActionTabs();
+
+      // Check that all tabs are enabled
+      getTabs().forEach((tab) => {
+        expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
       });
     });
   });

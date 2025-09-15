@@ -10,17 +10,30 @@ const getCheckboxes = () => {
   return document.querySelectorAll(`ol.${className} ${checkboxSelector}`);
 };
 
+const filterSelectedRecordIDs = () => {
+  return [...getCheckboxes()].filter((checkbox) => {
+    return checkbox.checked === true;
+  }).map((checkbox) => {
+    return checkbox.value;
+  });
+};
+
 const someCheckboxesChecked = (checked = false) => {
   return [...getCheckboxes()].some((checkbox) => {
     return checkbox.checked === checked;
   });
 };
 
-const filterSelectedRecordIDs = () => {
-  return [...getCheckboxes()].filter((checkbox) => {
-    return checkbox.checked === true;
-  }).map((checkbox) => {
-    return checkbox.value;
+const disableActionTabs = () => {
+  const someChecked = someCheckboxesChecked(true);
+  const tabs = document.querySelectorAll('.actions__tablist button[role="tab"]');
+  tabs.forEach((tab) => {
+    if (!someChecked) {
+      if (tab.getAttribute('aria-selected') === 'true') {
+        tab.click();
+      }
+    }
+    tab.disabled = !someChecked;
   });
 };
 
@@ -59,11 +72,12 @@ const temporaryList = () => {
 
   // Watch for changes to the list and update accordingly
   listContainer.addEventListener('change', (event) => {
-    if (event.target.matches(checkboxSelector)) {
+    if (event.target.matches(`${checkboxSelector}, .select-all > input[type="checkbox"]`)) {
       selectAllState();
-      // Actions button state
+      disableActionTabs();
+      // # out of # items selected
     }
   });
 };
 
-export { filterSelectedRecordIDs, getCheckboxes, someCheckboxesChecked, temporaryList };
+export { disableActionTabs, filterSelectedRecordIDs, getCheckboxes, someCheckboxesChecked, temporaryList };
