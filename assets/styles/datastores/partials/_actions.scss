@@ -31,7 +31,8 @@ $tabs: (
   "text": "chat",
   "citation": "format_quote",
   "ris": "draft",
-  "link": "link"
+  "link": "link",
+  "remove-selected": "delete"
 );
 
 
@@ -79,7 +80,6 @@ $tabs: (
 .#{$class}__tablist {
   @include utilities.flex($align: start, $responsive: true);
   & {
-    gap: 0.5rem 2rem;
     padding-top: 0.5rem;
   }
 }

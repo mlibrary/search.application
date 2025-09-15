@@ -1,6 +1,7 @@
 import { shareForm, tabControl } from '../partials/_actions.js';
 import { copyCitation } from '../partials/actions/_citation.js';
 import downloadTemporaryListRIS from '../partials/actions/_ris.js';
+import { removeSelected } from '../partials/actions/_remove-selected.js';
 import { selectAll } from './partials/_select-all.js';
 import { temporaryList } from './layout.js';
 
@@ -19,6 +20,9 @@ copyCitation();
 
 // RIS
 downloadTemporaryListRIS();
+
+// Remove selected
+removeSelected();
 
 // Display My Temporary List items
 temporaryList();

@@ -45,8 +45,18 @@ $class: 'record';
 
 
 
+// *              * //
+// * 2.1. ACTIONS * //
+// *              * //
+
+.#{$class} .actions button#actions__remove-selected {
+  display: none;
+}
+
+
+
 // *                * //
-// * 2.1. CONTAINER * //
+// * 2.2. CONTAINER * //
 // *                * //
 
 .#{$class}__container--active {
