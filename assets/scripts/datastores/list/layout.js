@@ -29,15 +29,18 @@ const temporaryList = () => {
   const recordIds = Object.keys(list);
   const listCount = recordIds.length;
   const emptyList = document.querySelector('.list__empty');
+  const listActions = document.querySelector('.list__actions');
 
   // Update in list count
   changeCount(listCount);
 
-  // Toggle empty message
+  // Toggle empty message and actions panel
   if (listCount) {
     emptyList.style.display = 'none';
+    listActions.removeAttribute('style');
   } else {
     emptyList.removeAttribute('style');
+    listActions.style.display = 'none';
   }
 
   // Create temporary list by datastore

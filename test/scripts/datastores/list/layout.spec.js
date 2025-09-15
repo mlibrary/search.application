@@ -81,6 +81,7 @@ describe('layout', function () {
             </div>
             <p class="list__empty">The list is empty.</p>
           </div>
+          <div class="list__actions"></div>
           <li class="container__rounded list__item list__item--clone">
             <div class="list__item--header">
               <input type="checkbox" class="list__item--checkbox" value="" aria-label="Select record">
@@ -147,6 +148,24 @@ describe('layout', function () {
 
       // Check that the empty message is shown
       expect(document.querySelector('.list__empty').hasAttribute('style'), 'the empty message should be shown if there are no items in the list').to.be.false;
+    });
+
+    it('should toggle the actions panel based on the list count', function () {
+      // Set a temporary list in session storage
+      setTemporaryList(global.temporaryList);
+
+      // Call the function
+      temporaryList();
+
+      // Check that the actions panel is shown
+      expect(document.querySelector('.list__actions').hasAttribute('style'), 'the actions panel should be shown if there are items in the list').to.be.false;
+
+      // Set an empty temporary list in session storage and call the function again
+      setTemporaryList({});
+      temporaryList();
+
+      // Check that the actions panel is hidden
+      expect(document.querySelector('.list__actions').style.display, 'the actions panel should be hidden if there are no items in the list').to.equal('none');
     });
 
     it('should create a heading based off of the datastore', function () {
