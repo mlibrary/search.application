@@ -1,4 +1,12 @@
-import { disableActionTabs, filterSelectedRecordIDs, getCheckboxes, someCheckboxesChecked, temporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import {
+  actionsPanelText,
+  disableActionTabs,
+  filterSelectedRecordIDs,
+  getCheckboxes,
+  selectedText,
+  someCheckboxesChecked,
+  temporaryList
+} from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import sinon from 'sinon';
@@ -127,6 +135,123 @@ describe('layout', function () {
     });
   });
 
+  describe('actionsPanelText()', function () {
+    let getText = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = `
+        <div class="actions__summary--header">
+          <small></small>
+        </div>
+        ${checkboxHTML}
+      `;
+
+      getText = () => {
+        return document.querySelector('.actions__summary--header > small').textContent;
+      };
+
+      // Check that the initial text is empty
+      expect(getText(), 'the initial text should be empty').to.equal('');
+    });
+
+    afterEach(function () {
+      getText = null;
+    });
+
+    it('should update the selected text if there is only one selected record', function () {
+      // Check that there is only one selected record
+      expect(filterSelectedRecordIDs().length, 'there should be only one selected record').to.equal(1);
+
+      // Call the function
+      actionsPanelText();
+
+      // Check that the text is correct
+      expect(getText(), 'the text should be correct for a single selected record').to.equal('Choose what to do with the selected record.');
+    });
+
+    it('should update the selected text if there is more than one selected record', function () {
+      // Check more than one checkbox
+      const checkboxes = getCheckboxes();
+      for (let index = 1; index < 3; index += 1) {
+        checkboxes[index].checked = true;
+      }
+
+      // Check that there is more than one selected record
+      expect(filterSelectedRecordIDs().length, 'there should be more than one selected record').to.be.greaterThan(1);
+
+      // Call the function
+      actionsPanelText();
+
+      // Check that the text is correct
+      expect(getText(), 'the text should be correct for selected multiple records').to.equal('Choose what to do with the selected records.');
+    });
+
+    it('should update the text if no records are selected', function () {
+      // Uncheck all the checkboxes
+      getCheckboxes().forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+
+      // Check that are no selected records
+      expect(filterSelectedRecordIDs().length, 'there should be no selected records').to.equal(0);
+
+      // Call the function
+      actionsPanelText();
+
+      // Check that the text is correct
+      expect(getText(), 'the text should be correct for no selected records').to.equal('Select at least one record.');
+    });
+  });
+
+  describe('selectedText()', function () {
+    let getText = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = `
+        <div class="list__actions--utilities">
+          <div class="list__in-list"></div>
+        </div>
+        ${checkboxHTML}
+      `;
+
+      getText = () => {
+        return document.querySelector('.list__actions--utilities .list__in-list').textContent;
+      };
+
+      // Check that the initial text is empty
+      expect(getText(), 'the initial text should be empty').to.equal('');
+    });
+
+    afterEach(function () {
+      // Call the function
+      selectedText();
+
+      // Check that the text is correct
+      const checkboxesLength = getCheckboxes().length;
+      expect(getText(), 'the text should be correct').to.equal(`${filterSelectedRecordIDs().length} out of ${checkboxesLength} ${checkboxesLength === 1 ? 'item' : 'items'} selected.`);
+
+      getText = null;
+    });
+
+    it('should update the selected text if there is only one list item', function () {
+      // Delete all but one checkbox
+      const checkboxes = getCheckboxes();
+      for (let index = 1; index < checkboxes.length; index += 1) {
+        checkboxes[index].parentElement.remove();
+      }
+
+      // Check that there is only one checkbox
+      expect(getCheckboxes().length, 'there should be only one checkbox for this test').to.equal(1);
+    });
+
+    it('should update the selected text if there is more than one list item', function () {
+      // Check that there is only one checkbox
+      expect(getCheckboxes().length, 'there should be more than one checkbox').to.be.greaterThan(1);
+    });
+  });
+
   describe('temporaryList()', function () {
     let getOrderedList = null;
 
@@ -134,15 +259,15 @@ describe('layout', function () {
       // Apply HTML to the body
       document.body.innerHTML = `
         <div class="list">
-          <div class="list__in-list">
-            <span class="strong"></span>
-          </div>
-          <div class="list">
-            <div class="list__in-list">
-              <span class="strong"></span>
+          <div class="list__actions">
+            <div class="actions__summary--header">
+              <small></small>
             </div>
-            <p class="list__empty">The list is empty.</p>
+            <div class="list__actions--utilities">
+              <div class="list__in-list"></div>
+            </div>
           </div>
+          <p class="list__empty">The list is empty.</p>
           <div class="list__actions"></div>
           <li class="container__rounded list__item list__item--clone">
             <div class="list__item--header">
@@ -188,10 +313,6 @@ describe('layout', function () {
       delete global.sessionStorage;
 
       getOrderedList = null;
-    });
-
-    it('should call `changeCount`', function () {
-      expect(temporaryList.toString()).to.include('changeCount(');
     });
 
     it('should toggle the empty message based on the list count', function () {

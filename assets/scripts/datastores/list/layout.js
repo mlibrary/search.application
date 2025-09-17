@@ -1,4 +1,3 @@
-import changeCount from './partials/_in-list.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
 import { selectAllState } from './partials/_select-all.js';
@@ -37,15 +36,26 @@ const disableActionTabs = () => {
   });
 };
 
+const actionsPanelText = () => {
+  const summaryText = document.querySelector('.actions__summary--header > small');
+  const selectedCount = filterSelectedRecordIDs().length;
+  const recordText = selectedCount === 1 ? 'record' : 'records';
+  summaryText.textContent = selectedCount ? `Choose what to do with the selected ${recordText}.` : 'Select at least one record.';
+};
+
+const selectedText = () => {
+  const summaryText = document.querySelector('.list__actions--utilities .list__in-list');
+  const totalCount = getCheckboxes().length;
+  const recordText = totalCount === 1 ? 'item' : 'items';
+  summaryText.innerHTML = `<span class="strong">${filterSelectedRecordIDs().length}</span> out of <span class="strong">${totalCount}</span> ${recordText} selected.`;
+};
+
 const temporaryList = () => {
   const list = getTemporaryList();
   const recordIds = Object.keys(list);
   const listCount = recordIds.length;
   const emptyList = document.querySelector('.list__empty');
   const listActions = document.querySelector('.list__actions');
-
-  // Update in list count
-  changeCount(listCount);
 
   // Toggle empty message and actions panel
   if (listCount) {
@@ -70,14 +80,19 @@ const temporaryList = () => {
     listItems.appendChild(listItem({ index, record: list[recordId], recordId }));
   });
 
+  // Update Actions panel
+  actionsPanelText();
+  selectedText();
+
   // Watch for changes to the list and update accordingly
   listContainer.addEventListener('change', (event) => {
     if (event.target.matches(`${checkboxSelector}, .select-all > input[type="checkbox"]`)) {
       selectAllState();
+      actionsPanelText();
       disableActionTabs();
-      // # out of # items selected
+      selectedText();
     }
   });
 };
 
-export { disableActionTabs, filterSelectedRecordIDs, getCheckboxes, someCheckboxesChecked, temporaryList };
+export { actionsPanelText, disableActionTabs, filterSelectedRecordIDs, getCheckboxes, selectedText, someCheckboxesChecked, temporaryList };
