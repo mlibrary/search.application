@@ -1,4 +1,11 @@
-import { addToList, getTemporaryList, handleFormSubmit, setTemporaryList, updateResultUI } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
+import {
+  addToList,
+  getDatastore,
+  getTemporaryList,
+  handleFormSubmit,
+  setTemporaryList,
+  updateResultUI
+} from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -163,6 +170,34 @@ describe('add to', function () {
     it('should call toggleBanner()', function () {
       // Check that the code calls the toggleBanner function
       expect(updateResultUI.toString(), '`updateResultUI` should call `toggleBanner`').to.include('toggleBanner(');
+    });
+  });
+
+  describe('getDatastore()', function () {
+    it('should return `Guides and More` if the hostname does not match the current URL', function () {
+      const domain = 'https://example.com/';
+      const { hostname } = new URL(domain);
+      // Check that the current hostname is not 'example.com'
+      expect(window.location.hostname, 'the current hostname should not match the provided hostname').to.not.equal(hostname);
+
+      // Check that the function returns 'catalog' when no datastore parameter exists
+      expect(getDatastore(domain), 'the datastore should be `Guides and More`').to.equal('Guides and More');
+    });
+
+    it('should return `Online Journals`', function () {
+      // Check that the function returns 'catalog' when no datastore parameter exists
+      expect(getDatastore('http://localhost:4567/onlinejournals/123456'), 'the datastore should be `Online Journals`').to.equal('Online Journals');
+    });
+
+    it('should return the correct datastore', function () {
+      // Check that the function returns the expected datastore
+      [
+        { expected: 'Catalog', url: 'http://localhost:4567/catalog/123456' },
+        { expected: 'Articles', url: 'http://localhost:4567/articles/123456' },
+        { expected: 'Databases', url: 'http://localhost:4567/databases/123456' }
+      ].forEach(({ url, expected }) => {
+        expect(getDatastore(url), `the datastore should be \`${expected}\``).to.equal(expected);
+      });
     });
   });
 

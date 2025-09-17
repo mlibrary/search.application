@@ -33,6 +33,21 @@ const updateResultUI = ({ button, recordId }) => {
   toggleBanner(Object.keys(list).length);
 };
 
+const getDatastore = (url) => {
+  const { hostname, pathname } = new URL(url);
+  if (hostname !== window.location.hostname) {
+    return 'Guides and More';
+  }
+  const datastore = pathname.split('/').find(Boolean);
+  if (!datastore || datastore === 'guidesandmore') {
+    return 'Guides and More';
+  }
+  if (datastore === 'onlinejournals') {
+    return 'Online Journals';
+  }
+  return datastore[0].toUpperCase() + datastore.slice(1);
+};
+
 const handleFormSubmit = async (event) => {
   const form = event.target;
 
@@ -57,6 +72,7 @@ const handleFormSubmit = async (event) => {
       }
       // Add the record information to the list
       const data = await response.json();
+      data.datastore = getDatastore(data.url);
       list[recordId] = data;
     } catch {
       // Silent failure, so no action is needed
@@ -81,4 +97,4 @@ const addToList = (updateResult = updateResultUI) => {
   });
 };
 
-export { addToList, getTemporaryList, handleFormSubmit, setTemporaryList, updateResultUI };
+export { addToList, getDatastore, getTemporaryList, handleFormSubmit, setTemporaryList, updateResultUI };

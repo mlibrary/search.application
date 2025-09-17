@@ -61,38 +61,38 @@ const temporaryList = () => {
   if (listCount) {
     emptyList.style.display = 'none';
     listActions.removeAttribute('style');
+
+    // Create temporary list by datastore
+    const listContainer = document.querySelector('.list');
+    const heading = document.createElement('h2');
+    listContainer.appendChild(heading);
+    heading.textContent = 'Catalog';
+    const listItems = document.createElement('ol');
+    listItems.classList.add(className, 'list__no-style');
+    listContainer.appendChild(listItems);
+
+    // Display records
+    recordIds.forEach((recordId, index) => {
+      listItems.appendChild(listItem({ index, record: list[recordId], recordId }));
+    });
+
+    // Update Actions panel
+    actionsPanelText();
+    selectedText();
+
+    // Watch for changes to the list and update accordingly
+    listContainer.addEventListener('change', (event) => {
+      if (event.target.matches(`${checkboxSelector}, .select-all > input[type="checkbox"]`)) {
+        actionsPanelText();
+        disableActionTabs();
+        selectAllState();
+        selectedText();
+      }
+    });
   } else {
     emptyList.removeAttribute('style');
     listActions.style.display = 'none';
   }
-
-  // Create temporary list by datastore
-  const listContainer = document.querySelector('.list');
-  const heading = document.createElement('h2');
-  listContainer.appendChild(heading);
-  heading.textContent = 'Catalog';
-  const listItems = document.createElement('ol');
-  listItems.classList.add(className, 'list__no-style');
-  listContainer.appendChild(listItems);
-
-  // Display records
-  recordIds.forEach((recordId, index) => {
-    listItems.appendChild(listItem({ index, record: list[recordId], recordId }));
-  });
-
-  // Update Actions panel
-  actionsPanelText();
-  selectedText();
-
-  // Watch for changes to the list and update accordingly
-  listContainer.addEventListener('change', (event) => {
-    if (event.target.matches(`${checkboxSelector}, .select-all > input[type="checkbox"]`)) {
-      selectAllState();
-      actionsPanelText();
-      disableActionTabs();
-      selectedText();
-    }
-  });
 };
 
 export { actionsPanelText, disableActionTabs, filterSelectedRecordIDs, getCheckboxes, selectedText, someCheckboxesChecked, temporaryList };
