@@ -1,81 +1,242 @@
 {
-  "990038939650106381": {
-    "title": {
-      "original": "DOA 2 : 逃亡者 / 製作大映株式会社, 東映ビデオ株式会社 ; プロデューサー増田欣宏, 岡田真, 木村俊樹 ; 脚本 Naka 雅 Mura ; 監督三池崇史 = Dead or alive 2 : birds / Daiei Co., Ltd. Toei Video present ; producers, Yoshihiro Masuda, Makoto Okada, Toshiki Kimura ; written by Masa Nakamura ; directed by Takashi Miike.",
-      "transliterated": "Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds / seisaku Daiei Kabushiki Kaisha, Tōei Bideo Kabushiki Kaisha ; kantoku Miike Takashi ; produced by Yoshiro Masuda, Makoto Okada, Toshiki Kimura ; producer-screenplay, Masa Nakamura."
-    },
-    "metadata": [
-      {
-        "field": "Published/Created",
-        "original": "New York, NY : Kino on Video, ©2003.",
-        "transliterated": null
+  "catalog": {
+    "990038939650106381": {
+      "title": {
+        "original": "DOA 2 : 逃亡者 / 製作大映株式会社, 東映ビデオ株式会社 ; プロデューサー増田欣宏, 岡田真, 木村俊樹 ; 脚本 Naka 雅 Mura ; 監督三池崇史 = Dead or alive 2 : birds / Daiei Co., Ltd. Toei Video present ; producers, Yoshihiro Masuda, Makoto Okada, Toshiki Kimura ; written by Masa Nakamura ; directed by Takashi Miike.",
+        "transliterated": "Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds / seisaku Daiei Kabushiki Kaisha, Tōei Bideo Kabushiki Kaisha ; kantoku Miike Takashi ; produced by Yoshiro Masuda, Makoto Okada, Toshiki Kimura ; producer-screenplay, Masa Nakamura."
+      },
+      "metadata": [
+        {
+          "field": "Published/Created",
+          "original": "New York, NY : Kino on Video, ©2003.",
+          "transliterated": null
+        }
+      ],
+      "url": "http://localhost:4567/catalog/record/990038939650106381",
+      "citation": {
+        "ris": "TY  - VIDEO\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-09-22\nID  - 990038939650106381\nAU  - Miike, Takashi, 1960-\nAU  - Nakamura, Masa.\nAU  - Masuda, Yoshihiro.\nAU  - Okada, Makoto.\nAU  - Kimura, Toshiki.\nAU  - Aikawa, Shō, 1961-\nAU  - Takeuchi, Riki.\nAU  - Chen, Guanxi, 1980-\nAU  - Endō, Ken'ichi, 1961-\nAU  - Teah.\nAU  - Daiē, Kabushiki Kaisha.\nAU  - Tōei Bideo Kabushiki Kaisha.\nAU  - Kino International Corporation.\nAU  - 大映株式会社.\nCN  - PN1995.9.F67 D432 2000\nCP  - New York, NY :\nCY  - New York, NY :\nDA  - 2003\nPY  - 2003\nY1  - 2003\nJF  - Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /\nT1  - Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /\nTI  - Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /\nKW  - Yakuza -- Drama\nKW  - Assassins -- Japan -- Drama\nKW  - Gangster films -- Japan\nKW  - Assassins\nKW  - Gangster films\nKW  - Yakuza\nKW  - Japan\nKW  - Yakuza Dorama\nKW  - Foreign language films -- Japanese\nKW  - Feature films -- Japan\nKW  - Action and adventure films\nKW  - Drama\nKW  - Feature films\nKW  - Humanities | General and Comparative Literature\nKW  - Arts | Film and Video Studies\nLA  - Japanese\nLA  - English\nM1  - 1 videodisc (approximately 97 min.) :\nNV  - 1 videodisc (approximately 97 min.) :\nN2  - Now reunited, Mizuki and Shuichi team up to pay off their spiritual debts while staying one trigger-pull ahead of the mobsters and killers who want them dead.\nPB  - Kino on Video,\nER  -",
+        "csl": {
+          "id": "990038939650106381",
+          "type": "motion_picture",
+          "title": "Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /",
+          "call-number": "VIDEO-D 36841-D",
+          "publisher-place": "New York, NY :",
+          "publisher": "Kino on Video,",
+          "issued": {
+            "literal": "2003"
+          },
+          "author": [
+            {
+              "family": "Miike",
+              "given": "Takashi,"
+            },
+            {
+              "family": "Nakamura",
+              "given": "Masa."
+            },
+            {
+              "family": "Masuda",
+              "given": "Yoshihiro."
+            },
+            {
+              "family": "Okada",
+              "given": "Makoto."
+            },
+            {
+              "family": "Kimura",
+              "given": "Toshiki."
+            },
+            {
+              "family": "Aikawa",
+              "given": "Shō,"
+            },
+            {
+              "family": "Takeuchi",
+              "given": "Riki."
+            },
+            {
+              "family": "Chen",
+              "given": "Guanxi,"
+            },
+            {
+              "family": "Endō",
+              "given": "Ken'ichi,"
+            },
+            {
+              "literal": "Teah."
+            },
+            {
+              "literal": "Daiē, Kabushiki Kaisha."
+            },
+            {
+              "literal": "Tōei Bideo Kabushiki Kaisha."
+            },
+            {
+              "literal": "Kino International Corporation."
+            }
+          ]
+        }
       }
-    ],
-    "url": "http://localhost:4567/catalog/record/990038939650106381",
-    "citation": {
-      "ris": "TY  - VIDEO\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-08-18\nID  - 990038939650106381\nAU  - Miike, Takashi, 1960-\nAU  - Nakamura, Masa.\nAU  - Masuda, Yoshihiro.\nAU  - Okada, Makoto.\nAU  - Kimura, Toshiki.\nAU  - Aikawa, Shō, 1961-\nAU  - Takeuchi, Riki.\nAU  - Chen, Guanxi, 1980-\nAU  - Endō, Ken'ichi, 1961-\nAU  - Teah.\nAU  - Daiē, Kabushiki Kaisha.\nAU  - Tōei Bideo Kabushiki Kaisha.\nAU  - Kino International Corporation.\nAU  - 大映株式会社.\nCN  - PN1995.9.F67 D432 2000\nCP  - New York, NY :\nCY  - New York, NY :\nDA  - 2003\nPY  - 2003\nY1  - 2003\nJF  - Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /\nT1  - Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /\nTI  - Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /\nKW  - Yakuza -- Drama\nKW  - Assassins -- Japan -- Drama\nKW  - Gangster films -- Japan\nKW  - Assassins\nKW  - Gangster films\nKW  - Yakuza\nKW  - Japan\nKW  - Yakuza Dorama\nKW  - Foreign language films -- Japanese\nKW  - Feature films -- Japan\nKW  - Action and adventure films\nKW  - Drama\nKW  - Feature films\nKW  - Humanities | General and Comparative Literature\nKW  - Arts | Film and Video Studies\nLA  - Japanese\nLA  - English\nM1  - 1 videodisc (approximately 97 min.) :\nNV  - 1 videodisc (approximately 97 min.) :\nN2  - Now reunited, Mizuki and Shuichi team up to pay off their spiritual debts while staying one trigger-pull ahead of the mobsters and killers who want them dead.\nPB  - Kino on Video,\nER  -",
-      "styles": {
-        "mla": "\u003Ci\u003EBirds\u003C/i\u003E. v. 1-Jan./Feb. 1966-, 1966-2013.",
-        "apa": "\u003Ci\u003EBirds\u003C/i\u003E (No. v. 1-Jan./Feb. 1966-). (1966-2013).",
-        "chicago": "\"Birds,\" 1966-2013.",
-        "ieee": "\"Birds,\" Art. no. v. 1-Jan./Feb. 1966-, 1966-2013.",
-        "nlm": "Birds. Sandy, Bedfordshire, Eng.: Royal Society for the Protection of Birds; 1966-2013;",
-        "bibtex": "@article{Birds_1966-2013, address={Sandy, Bedfordshire, Eng.}, callNumber={QL671 .B678}, number={v. 1-Jan./Feb. 1966-}, publisher={Royal Society for the Protection of Birds}, year={1966-2013} }"
-      }
-    }
-  },
-  "990052871530106381": {
-    "title": {
-      "original": "The Da Vinci code / Dan Brown.",
-      "transliterated": null
     },
-    "metadata": [
-      {
-        "field": "Author/Creator",
-        "original": "Brown, Dan, 1964-",
+    "990052871530106381": {
+      "title": {
+        "original": "The Da Vinci code / Dan Brown.",
         "transliterated": null
       },
-      {
-        "field": "Published/Created",
-        "original": "New York : Random House Audio, ℗2003.",
-        "transliterated": null
+      "metadata": [
+        {
+          "field": "Author/Creator",
+          "original": "Brown, Dan, 1964-",
+          "transliterated": null
+        },
+        {
+          "field": "Published/Created",
+          "original": "New York : Random House Audio, ℗2003.",
+          "transliterated": null
+        }
+      ],
+      "url": "http://localhost:4567/catalog/record/990052871530106381",
+      "citation": {
+        "ris": "TY  - MUSIC\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-09-22\nID  - 990052871530106381\nAU  - Brown, Dan, 1964-\nAU  - Michael, Paul.\nCN  - PS 3552 .R792 D2 2003b\nCP  - New York :\nCY  - New York :\nDA  - 2003\nPY  - 2003\nY1  - 2003\nET  - Abridged.\nJF  - The Da Vinci code /\nT1  - The Da Vinci code /\nTI  - The Da Vinci code /\nKW  - Leonardo, da Vinci, 1452-1519 -- Manuscripts -- Fiction\nKW  - Cryptographers -- Fiction\nKW  - Leonardo, da Vinci, 1452-1519\nKW  - Cryptographers\nKW  - Manuscripts\nKW  - Audiobooks\nKW  - Fiction\nKW  - Detective and mystery fiction\nKW  - Thrillers (Fiction)\nKW  - Compact discs\nKW  - Humanities | English Language and Literature\nLA  - English\nM1  - 6 audio discs (approximately 6 hr.) :\nNV  - 6 audio discs (approximately 6 hr.) :\nN2  - Harvard symbologist Robert Langdon is once again caught up in an investigation initiated by the secret Catholic organization known as Opus Dei. His French cryptologist partner, Sophie Neveu, is the granddaughter of a man murdered in the Louvre. Sophie's grandfather left many ciphers they must decipher to solve the mysteries of his death and her family and protect an invaluable religious relic.\nPB  - Random House Audio,\nSN  - 9780739339787\nSN  - 0739339788\nSN  - 9780307879257\nSN  - 0307879259\nER  -",
+        "csl": {
+          "id": "990052871530106381",
+          "type": "song",
+          "title": "The Da Vinci code /",
+          "edition": "Abridged.",
+          "ISBN": [
+            "9780739339787",
+            "0739339788",
+            "9780307879257",
+            "0307879259"
+          ],
+          "call-number": "PS 3552 .R792 D2 2003b",
+          "publisher-place": "New York :",
+          "publisher": "Random House Audio,",
+          "issued": {
+            "literal": "2003"
+          },
+          "author": [
+            {
+              "family": "Brown",
+              "given": "Dan,"
+            },
+            {
+              "family": "Michael",
+              "given": "Paul."
+            }
+          ]
+        }
       }
-    ],
-    "url": "http://localhost:4567/catalog/record/990052871530106381",
-    "citation": {
-      "ris": "TY  - MUSIC\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-08-18\nID  - 990052871530106381\nAU  - Brown, Dan, 1964-\nAU  - Michael, Paul.\nCN  - PS 3552 .R792 D2 2003b\nCP  - New York :\nCY  - New York :\nDA  - 2003\nPY  - 2003\nY1  - 2003\nET  - Abridged.\nJF  - The Da Vinci code /\nT1  - The Da Vinci code /\nTI  - The Da Vinci code /\nKW  - Leonardo, da Vinci, 1452-1519 -- Manuscripts -- Fiction\nKW  - Cryptographers -- Fiction\nKW  - Leonardo, da Vinci, 1452-1519\nKW  - Cryptographers\nKW  - Manuscripts\nKW  - Audiobooks\nKW  - Fiction\nKW  - Detective and mystery fiction\nKW  - Thrillers (Fiction)\nKW  - Compact discs\nKW  - Humanities | English Language and Literature\nLA  - English\nM1  - 6 audio discs (approximately 6 hr.) :\nNV  - 6 audio discs (approximately 6 hr.) :\nN2  - Harvard symbologist Robert Langdon is once again caught up in an investigation initiated by the secret Catholic organization known as Opus Dei. His French cryptologist partner, Sophie Neveu, is the granddaughter of a man murdered in the Louvre. Sophie's grandfather left many ciphers they must decipher to solve the mysteries of his death and her family and protect an invaluable religious relic.\nPB  - Random House Audio,\nSN  - 9780739339787\nSN  - 0739339788\nSN  - 9780307879257\nSN  - 0307879259\nER  -",
-      "styles": {
-        "mla": "\u003Ci\u003EBirds\u003C/i\u003E. v. 1-Jan./Feb. 1966-, 1966-2013.",
-        "apa": "\u003Ci\u003EBirds\u003C/i\u003E (No. v. 1-Jan./Feb. 1966-). (1966-2013).",
-        "chicago": "\"Birds,\" 1966-2013.",
-        "ieee": "\"Birds,\" Art. no. v. 1-Jan./Feb. 1966-, 1966-2013.",
-        "nlm": "Birds. Sandy, Bedfordshire, Eng.: Royal Society for the Protection of Birds; 1966-2013;",
-        "bibtex": "@article{Birds_1966-2013, address={Sandy, Bedfordshire, Eng.}, callNumber={QL671 .B678}, number={v. 1-Jan./Feb. 1966-}, publisher={Royal Society for the Protection of Birds}, year={1966-2013} }"
+    },
+    "990006758990106381": {
+      "title": {
+        "original": "Birds.",
+        "transliterated": null
+      },
+      "metadata": [
+        {
+          "field": "Published/Created",
+          "original": "Sandy, Bedfordshire, Eng. : Royal Society for the Protection of Birds",
+          "transliterated": null
+        }
+      ],
+      "url": "http://localhost:4567/catalog/record/990006758990106381",
+      "citation": {
+        "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-09-22\nID  - 990006758990106381\nAU  - Royal Society for the Protection of Birds.\nCN  - QL671 .B678\nCP  - Sandy, Bedfordshire, Eng. :\nCY  - Sandy, Bedfordshire, Eng. :\nDA  - 1966-2013\nPY  - 1966-2013\nY1  - 1966-2013\nJF  - Birds.\nT1  - Birds.\nTI  - Birds.\nKW  - Birds -- Periodicals\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nLA  - English\nM1  - v. :\nNV  - v. :\nPB  - Royal Society for the Protection of Birds\nSN  - 0006-3665\nT2  - Bird notes\nER  -",
+        "csl": {
+          "id": "990006758990106381",
+          "type": "article-journal",
+          "title": "Birds.",
+          "ISSN": [
+            "0006-3665"
+          ],
+          "call-number": "QL671 .B678",
+          "publisher-place": "Sandy, Bedfordshire, Eng. :",
+          "publisher": "Royal Society for the Protection of Birds",
+          "issued": {
+            "literal": "1966-2013"
+          },
+          "author": [
+            {
+              "literal": "Royal Society for the Protection of Birds."
+            }
+          ],
+          "number": "v. 1- Jan./Feb. 1966-"
+        }
+      }
+    },
+    "99187335971706381": {
+      "title": {
+        "original": "ヤマシナチョウルイケンキュウジョケンキュウホウコク",
+        "transliterated": "山階鳥類研究所研究報告"
+      },
+      "metadata": [
+        {
+          "field": "Published/Created",
+          "original": "Chiba-ken Abiko-shi : Yamashina Chōrui Kenkyūjo, 1952-",
+          "transliterated": null
+        }
+      ],
+      "url": "http://localhost:4567/catalog/record/99187335971706381",
+      "citation": {
+        "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-09-22\nID  - 99187335971706381\nAU  - Yamashina Chōrui Kenkyūjo.\nCN  - QL691.J4 Y36\nCP  - Chiba-ken Abiko-shi :\nCY  - Chiba-ken Abiko-shi :\nDA  - 1952-2003\nPY  - 1952-2003\nY1  - 1952-2003\nJF  - 山階鳥類研究所研究報告\nT1  - 山階鳥類研究所研究報告\nTI  - 山階鳥類研究所研究報告\nKW  - Birds -- Japan -- Periodicals\nKW  - Zoology -- Japan -- Periodicals\nKW  - Birds\nKW  - Zoology\nKW  - Japan\nKW  - Ornithology -- Japan -- Periodicals\nKW  - Periodicals\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nLA  - Japanese\nLA  - English\nM1  - 1 online resource\nNV  - 1 online resource\nPB  - Yamashina Chōrui Kenkyūjo,\nSN  - 1883-3659\nER  -",
+        "csl": {
+          "id": "99187335971706381",
+          "type": "article-journal",
+          "title": "山階鳥類研究所研究報告",
+          "ISSN": [
+            "1883-3659"
+          ],
+          "publisher-place": "Chiba-ken Abiko-shi :",
+          "publisher": "Yamashina Chōrui Kenkyūjo,",
+          "issued": {
+            "literal": "1952-2003"
+          },
+          "author": [
+            {
+              "literal": "Yamashina Chōrui Kenkyūjo."
+            }
+          ],
+          "number": "No. 1 (1952)-dai 34-kan 2-gō (Heisei 15-nen 3-gtsu [Mar. 2003]) = no. 108."
+        }
       }
     }
   },
-  "990006758990106381": {
-    "title": {
-      "original": "Birds.",
-      "transliterated": null
-    },
-    "metadata": [
-      {
-        "field": "Published/Created",
-        "original": "Sandy, Bedfordshire, Eng. : Royal Society for the Protection of Birds",
-        "transliterated": null
-      }
-    ],
-    "url": "http://localhost:4567/catalog/record/990006758990106381",
-    "citation": {
-      "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-08-18\nID  - 990006758990106381\nAU  - Royal Society for the Protection of Birds.\nCN  - QL671 .B678\nCP  - Sandy, Bedfordshire, Eng. :\nCY  - Sandy, Bedfordshire, Eng. :\nDA  - 1966-2013\nPY  - 1966-2013\nY1  - 1966-2013\nJF  - Birds.\nT1  - Birds.\nTI  - Birds.\nKW  - Birds -- Periodicals\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nLA  - English\nM1  - v. :\nNV  - v. :\nPB  - Royal Society for the Protection of Birds\nSN  - 0006-3665\nT2  - Bird notes\nER  -",
-      "styles": {
-        "mla": "\u003Ci\u003EBirds\u003C/i\u003E. v. 1-Jan./Feb. 1966-, 1966-2013.",
-        "apa": "\u003Ci\u003EBirds\u003C/i\u003E (No. v. 1-Jan./Feb. 1966-). (1966-2013).",
-        "chicago": "\"Birds,\" 1966-2013.",
-        "ieee": "\"Birds,\" Art. no. v. 1-Jan./Feb. 1966-, 1966-2013.",
-        "nlm": "Birds. Sandy, Bedfordshire, Eng.: Royal Society for the Protection of Birds; 1966-2013;",
-        "bibtex": "@article{Birds_1966-2013, address={Sandy, Bedfordshire, Eng.}, callNumber={QL671 .B678}, number={v. 1-Jan./Feb. 1966-}, publisher={Royal Society for the Protection of Birds}, year={1966-2013} }"
+  "onlinejournals": {
+    "99187335971706381": {
+      "title": {
+        "original": "ヤマシナチョウルイケンキュウジョケンキュウホウコク",
+        "transliterated": "山階鳥類研究所研究報告"
+      },
+      "metadata": [
+        {
+          "field": "Published/Created",
+          "original": "Chiba-ken Abiko-shi : Yamashina Chōrui Kenkyūjo, 1952-",
+          "transliterated": null
+        }
+      ],
+      "url": "http://localhost:4567/catalog/record/99187335971706381",
+      "citation": {
+        "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-09-22\nID  - 99187335971706381\nAU  - Yamashina Chōrui Kenkyūjo.\nCN  - QL691.J4 Y36\nCP  - Chiba-ken Abiko-shi :\nCY  - Chiba-ken Abiko-shi :\nDA  - 1952-2003\nPY  - 1952-2003\nY1  - 1952-2003\nJF  - 山階鳥類研究所研究報告\nT1  - 山階鳥類研究所研究報告\nTI  - 山階鳥類研究所研究報告\nKW  - Birds -- Japan -- Periodicals\nKW  - Zoology -- Japan -- Periodicals\nKW  - Birds\nKW  - Zoology\nKW  - Japan\nKW  - Ornithology -- Japan -- Periodicals\nKW  - Periodicals\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nLA  - Japanese\nLA  - English\nM1  - 1 online resource\nNV  - 1 online resource\nPB  - Yamashina Chōrui Kenkyūjo,\nSN  - 1883-3659\nER  -",
+        "csl": {
+          "id": "99187335971706381",
+          "type": "article-journal",
+          "title": "山階鳥類研究所研究報告",
+          "ISSN": [
+            "1883-3659"
+          ],
+          "publisher-place": "Chiba-ken Abiko-shi :",
+          "publisher": "Yamashina Chōrui Kenkyūjo,",
+          "issued": {
+            "literal": "1952-2003"
+          },
+          "author": [
+            {
+              "literal": "Yamashina Chōrui Kenkyūjo."
+            }
+          ],
+          "number": "No. 1 (1952)-dai 34-kan 2-gō (Heisei 15-nen 3-gtsu [Mar. 2003]) = no. 108."
+        }
       }
     }
   }
