@@ -11,21 +11,21 @@ const getTemporaryList = () => {
   return JSON.parse(sessionStorage.getItem(listName)) || {};
 };
 
-const inTemporaryList = ({ datastore, recordId }) => {
+const inTemporaryList = ({ recordDatastore, recordId }) => {
   const list = getTemporaryList();
   // Check if the datastore is in the list and if the recordId exists within that datastore
-  return datastore in list && recordId in list[datastore];
+  return recordDatastore in list && recordId in list[recordDatastore];
 };
 
-const updateResultUI = ({ button, recordId }) => {
-  // Get the current temporary list from session storage
-  const list = getTemporaryList();
+const updateResultUI = (form) => {
   // Check if the record is already in the list
-  const isAdded = recordId in list;
+  const { recordDatastore, recordId } = form.dataset;
+  const isAdded = inTemporaryList({ recordDatastore, recordId });
   // Update the container class
-  const container = document.querySelector(`[data-record-id="${recordId}"]`);
+  const container = document.querySelector(`.record__container[data-record-id="${recordId}"][data-record-datastore="${recordDatastore}"]`);
   container.classList.toggle('record__container--active', isAdded);
   // Update the button class
+  const button = form.querySelector('button');
   button.classList.toggle('button__ghost--active', isAdded);
   // Update the button text
   const buttonTitle = button.getAttribute('title').replace(/Add to|Remove from/u, isAdded ? 'Remove from' : 'Add to');
@@ -36,22 +36,7 @@ const updateResultUI = ({ button, recordId }) => {
     .replace(/Add|Remove/u, isAdded ? 'Remove' : 'Add')
     .replace(/to My Temporary List|from My Temporary List/u, isAdded ? 'from My Temporary List' : 'to My Temporary List');
   // Toggle the banner
-  toggleBanner(Object.keys(list).length);
-};
-
-const getDatastore = (url) => {
-  const { hostname, pathname } = new URL(url);
-  if (hostname !== window.location.hostname) {
-    return 'Guides and More';
-  }
-  const datastore = pathname.split('/').find(Boolean);
-  if (!datastore || datastore === 'guidesandmore') {
-    return 'Guides and More';
-  }
-  if (datastore === 'onlinejournals') {
-    return 'Online Journals';
-  }
-  return datastore[0].toUpperCase() + datastore.slice(1);
+  toggleBanner(Object.keys(getTemporaryList()).length);
 };
 
 const handleFormSubmit = async (event) => {
@@ -63,12 +48,17 @@ const handleFormSubmit = async (event) => {
 
   event.preventDefault();
 
-  const recordId = form.getAttribute('data-record-id');
+  const { recordDatastore, recordId } = form.dataset;
+  console.log(form.dataset);
   const list = getTemporaryList();
 
-  if (recordId in list) {
+  if (inTemporaryList({ recordDatastore, recordId })) {
     // If the record is already in the list, remove it
-    delete list[recordId];
+    delete list[recordDatastore][recordId];
+    // If the datastore is now empty, remove it from the list
+    if (Object.keys(list[recordDatastore]).length === 0) {
+      delete list[recordDatastore];
+    }
   } else {
     try {
       const response = await fetch(form.getAttribute('action'));
@@ -78,8 +68,11 @@ const handleFormSubmit = async (event) => {
       }
       // Add the record information to the list
       const data = await response.json();
-      data.datastore = getDatastore(data.url);
-      list[recordId] = data;
+      // Ensure the datastore exists in the list
+      if (!(recordDatastore in list)) {
+        list[recordDatastore] = {};
+      }
+      list[recordDatastore][recordId] = data;
     } catch {
       // Silent failure, so no action is needed
       return;
@@ -87,7 +80,7 @@ const handleFormSubmit = async (event) => {
   }
 
   setTemporaryList(list);
-  updateResultUI({ button: form.querySelector('button'), recordId });
+  updateResultUI(form);
 };
 
 const addToList = (updateResult = updateResultUI) => {
@@ -96,11 +89,9 @@ const addToList = (updateResult = updateResultUI) => {
   // Initial UI update for all buttons
   const forms = document.querySelectorAll('.list__add-to');
   forms.forEach((form) => {
-    const recordId = form.getAttribute('data-record-id');
-    const button = form.querySelector('button');
     // `updateResult` is passed in for testing purposes
-    updateResult({ button, recordId });
+    updateResult(form);
   });
 };
 
-export { addToList, getDatastore, getTemporaryList, handleFormSubmit, inTemporaryList, setTemporaryList, updateResultUI };
+export { addToList, getTemporaryList, handleFormSubmit, inTemporaryList, setTemporaryList, updateResultUI };
