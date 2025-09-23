@@ -18,7 +18,7 @@ const prefilledList = {
 };
 const currentDatastore = 'catalog';
 const recordIds = Object.keys(global.temporaryList[currentDatastore]);
-const listItems = (records = recordIds) => {
+const listItems = () => {
   let list = `
     <div class="list__go-to list__go-to--empty">
       <div class="list__in-list">
@@ -26,17 +26,24 @@ const listItems = (records = recordIds) => {
       </div>
     </div>
   `;
-  records.forEach((record) => {
-    list += `
-      <div class="record__container" data-record-id="${record}" data-record-datastore="${currentDatastore}">
-        <form class="list__add-to" action="/catalog/record/${record}/brief" method="post" data-record-id="${record}" data-record-datastore="${currentDatastore}">
-          <button type="submit" title="Add to My Temporary List">
-            <span class="icon">add</span>
-            <span class="text">Add this record to My Temporary List</span>
-          </button>
-        </form>
-      </div>
-    `;
+  Object.keys(global.temporaryList).forEach((datastore) => {
+    const records = Object.keys(global.temporaryList[datastore]);
+    if (records.length > 0) {
+      list += `<h2>${datastore}</h2>`;
+      records.forEach((record) => {
+        list += `
+          <div class="record__container" data-record-id="${record}" data-record-datastore="${datastore}">
+            <form class="list__add-to" action="/catalog/record/${record}/brief" method="post" data-record-id="${record}" data-record-datastore="${datastore}">
+              <button type="submit" title="Add to My Temporary List">
+                <span class="icon">add</span>
+                <span class="text">Add this record to My Temporary List</span>
+              </button>
+            </form>
+          </div>
+        `;
+      });
+    };
+    list += `<div class="list__datastore" data-datastore="${datastore}"></div>`;
   });
   return list;
 };
@@ -377,7 +384,7 @@ describe('add to', function () {
       addToList(updateResultSpy);
 
       // Should be called for every matching form
-      expect(updateResultSpy.callCount).to.equal(recordIds.length);
+      expect(updateResultSpy.callCount).to.equal(document.querySelectorAll(`form[data-record-id][data-record-datastore]`).length);
 
       // Should be called with correct arguments
       recordIds.forEach((recordId, index) => {
