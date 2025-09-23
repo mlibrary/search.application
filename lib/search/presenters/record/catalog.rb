@@ -371,12 +371,24 @@ module Search
               citation: {
                 ris: ris,
                 csl: csl
+              },
+              holding: {
+                call_number: holding&.call_number,
+                location: holding&.physical_location&.text
               }
             }
           end
 
           def to_json
             to_h.to_json
+          end
+
+          private
+
+          def holding
+            if holdings.physical.count == 1
+              holdings.physical.first.holding
+            end
           end
         end
 
