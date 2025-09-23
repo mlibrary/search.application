@@ -11,6 +11,12 @@ const getTemporaryList = () => {
   return JSON.parse(sessionStorage.getItem(listName)) || {};
 };
 
+const inTemporaryList = ({ datastore, recordId }) => {
+  const list = getTemporaryList();
+  // Check if the datastore is in the list and if the recordId exists within that datastore
+  return datastore in list && recordId in list[datastore];
+};
+
 const updateResultUI = ({ button, recordId }) => {
   // Get the current temporary list from session storage
   const list = getTemporaryList();
@@ -97,4 +103,4 @@ const addToList = (updateResult = updateResultUI) => {
   });
 };
 
-export { addToList, getDatastore, getTemporaryList, handleFormSubmit, setTemporaryList, updateResultUI };
+export { addToList, getDatastore, getTemporaryList, handleFormSubmit, inTemporaryList, setTemporaryList, updateResultUI };

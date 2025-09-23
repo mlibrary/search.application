@@ -3,13 +3,15 @@ import {
   getDatastore,
   getTemporaryList,
   handleFormSubmit,
+  inTemporaryList,
   setTemporaryList,
   updateResultUI
 } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-const recordIds = Object.keys(global.temporaryList);
+const datastores = Object.keys(global.temporaryList);
+const recordIds = Object.keys(global.temporaryList[datastores[0]]);
 const listItems = (records = recordIds) => {
   let list = `
     <div class="list__go-to list__go-to--empty">
@@ -82,6 +84,37 @@ describe('add to', function () {
 
       // Check that the function retrieves it correctly
       expect(getTemporaryList(), '`temporaryList` should return a defined object').to.deep.equal(global.temporaryList);
+    });
+  });
+
+  describe('inTemporaryList()', function () {
+    afterEach(function () {
+      // Clear session storage after each test
+      global.sessionStorage.clear();
+    });
+
+    it('should return `false` if the datastore is not in the temporary list', function () {
+      // Set the temporary list in session storage
+      setTemporaryList(global.temporaryList);
+
+      // Check that the function returns false for a non-existing datastore
+      expect(inTemporaryList({ datastore: 'NonExistingDatastore', recordId: recordIds[0] }), '`inTemporaryList` should return false for a non-existing datastore').to.be.false;
+    });
+
+    it('should return `false` if record ID is not in the datastore in the temporary list', function () {
+      // Set the temporary list in session storage
+      setTemporaryList(global.temporaryList);
+
+      // Check that the function returns false for a non-existing recordId
+      expect(inTemporaryList({ datastore: datastores[0], recordId: 'NonExistingRecordId' }), '`inTemporaryList` should return false for a non-existing record ID in a datastore').to.be.false;
+    });
+
+    it('should return `true` if the datastore and record ID are in the temporary list', function () {
+      // Set a temporary list in session storage
+      setTemporaryList(global.temporaryList);
+
+      // Check that the function returns true for an existing datastore and recordId
+      expect(inTemporaryList({ datastore: datastores[0], recordId: recordIds[0] }), '`inTemporaryList` should return true for an existing datastore and recordId').to.be.true;
     });
   });
 
