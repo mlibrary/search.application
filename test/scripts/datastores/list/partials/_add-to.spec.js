@@ -1,6 +1,5 @@
 import {
   addToList,
-  getDatastore,
   getTemporaryList,
   handleFormSubmit,
   inTemporaryList,
@@ -10,8 +9,15 @@ import {
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-const datastores = Object.keys(global.temporaryList);
-const recordIds = Object.keys(global.temporaryList[datastores[0]]);
+const prefilledList = {
+  articles: {},
+  catalog: {},
+  databases: {},
+  guidesandmore: {},
+  onlinejournals: {}
+};
+const currentDatastore = 'catalog';
+const recordIds = Object.keys(global.temporaryList[currentDatastore]);
 const listItems = (records = recordIds) => {
   let list = `
     <div class="list__go-to list__go-to--empty">
@@ -22,8 +28,8 @@ const listItems = (records = recordIds) => {
   `;
   records.forEach((record) => {
     list += `
-      <div class="record__container" data-record-id="${record}">
-        <form class="list__add-to" action="/catalog/record/${record}/brief" method="post" data-record-id="${record}">
+      <div class="record__container" data-record-id="${record}" data-record-datastore="${currentDatastore}">
+        <form class="list__add-to" action="/catalog/record/${record}/brief" method="post" data-record-id="${record}" data-record-datastore="${currentDatastore}">
           <button type="submit" title="Add to My Temporary List">
             <span class="icon">add</span>
             <span class="text">Add this record to My Temporary List</span>
@@ -48,6 +54,9 @@ describe('add to', function () {
     beforeEach(function () {
       // Clear session storage before each test
       global.sessionStorage.clear();
+
+      // Check that the function returns prefilled object when no temporary list is set
+      expect(getTemporaryList(), '`temporaryList` should return prefilled object').to.deep.equal(prefilledList);
     });
 
     afterEach(function () {
@@ -56,9 +65,6 @@ describe('add to', function () {
     });
 
     it('should update the temporary list in session storage', function () {
-      // Check that the function returns an empty object when no temporary list is set
-      expect(getTemporaryList(), '`temporaryList` should return an empty object').to.be.an('object').that.is.empty;
-
       // Call the function
       setTemporaryList(global.temporaryList);
 
@@ -68,14 +74,14 @@ describe('add to', function () {
   });
 
   describe('getTemporaryList()', function () {
+    beforeEach(function () {
+      // Check that the function returns an empty object when no temporary list is set
+      expect(getTemporaryList(), '`temporaryList` should return prefilled object').to.deep.equal(prefilledList);
+    });
+
     afterEach(function () {
       // Clear session storage after each test
       global.sessionStorage.clear();
-    });
-
-    it('should return an empty object if no temporary list exists', function () {
-      // Check that the function returns an empty object when no temporary list is set
-      expect(getTemporaryList(), '`temporaryList` should return an empty object').to.be.an('object').that.is.empty;
     });
 
     it('should return the temporary list from session storage', function () {
@@ -88,38 +94,35 @@ describe('add to', function () {
   });
 
   describe('inTemporaryList()', function () {
+    beforeEach(function () {
+      // Set the temporary list in session storage
+      setTemporaryList(global.temporaryList);
+    });
+
     afterEach(function () {
       // Clear session storage after each test
       global.sessionStorage.clear();
     });
 
     it('should return `false` if the datastore is not in the temporary list', function () {
-      // Set the temporary list in session storage
-      setTemporaryList(global.temporaryList);
-
       // Check that the function returns false for a non-existing datastore
-      expect(inTemporaryList({ datastore: 'NonExistingDatastore', recordId: recordIds[0] }), '`inTemporaryList` should return false for a non-existing datastore').to.be.false;
+      expect(inTemporaryList({ recordDatastore: 'NonExistingDatastore', recordId: recordIds[0] }), '`inTemporaryList` should return false for a non-existing datastore').to.be.false;
     });
 
     it('should return `false` if record ID is not in the datastore in the temporary list', function () {
-      // Set the temporary list in session storage
-      setTemporaryList(global.temporaryList);
-
       // Check that the function returns false for a non-existing recordId
-      expect(inTemporaryList({ datastore: datastores[0], recordId: 'NonExistingRecordId' }), '`inTemporaryList` should return false for a non-existing record ID in a datastore').to.be.false;
+      expect(inTemporaryList({ recordDatastore: currentDatastore, recordId: 'NonExistingRecordId' }), '`inTemporaryList` should return false for a non-existing record ID in a datastore').to.be.false;
     });
 
     it('should return `true` if the datastore and record ID are in the temporary list', function () {
-      // Set a temporary list in session storage
-      setTemporaryList(global.temporaryList);
-
       // Check that the function returns true for an existing datastore and recordId
-      expect(inTemporaryList({ datastore: datastores[0], recordId: recordIds[0] }), '`inTemporaryList` should return true for an existing datastore and recordId').to.be.true;
+      expect(inTemporaryList({ recordDatastore: currentDatastore, recordId: recordIds[0] }), '`inTemporaryList` should return true for an existing datastore and recordId').to.be.true;
     });
   });
 
   describe('updateResultUI()', function () {
     let getContainer = null;
+    let getForm = null;
     let getButton = null;
     let callFunction = null;
     const [recordId] = recordIds;
@@ -132,12 +135,16 @@ describe('add to', function () {
         return document.querySelector('.record__container');
       };
 
+      getForm = () => {
+        return document.querySelector('form');
+      };
+
       getButton = () => {
-        return document.querySelector('button');
+        return getForm().querySelector('button');
       };
 
       callFunction = () => {
-        return updateResultUI({ button: getButton(), recordId });
+        return updateResultUI(getForm());
       };
 
       // Call the function
@@ -146,6 +153,7 @@ describe('add to', function () {
 
     afterEach(function () {
       getContainer = null;
+      getForm = null;
       getButton = null;
       callFunction = null;
 
@@ -206,34 +214,6 @@ describe('add to', function () {
     });
   });
 
-  describe('getDatastore()', function () {
-    it('should return `Guides and More` if the hostname does not match the current URL', function () {
-      const domain = 'https://example.com/';
-      const { hostname } = new URL(domain);
-      // Check that the current hostname is not 'example.com'
-      expect(window.location.hostname, 'the current hostname should not match the provided hostname').to.not.equal(hostname);
-
-      // Check that the function returns 'catalog' when no datastore parameter exists
-      expect(getDatastore(domain), 'the datastore should be `Guides and More`').to.equal('Guides and More');
-    });
-
-    it('should return `Online Journals`', function () {
-      // Check that the function returns 'catalog' when no datastore parameter exists
-      expect(getDatastore('http://localhost:4567/onlinejournals/123456'), 'the datastore should be `Online Journals`').to.equal('Online Journals');
-    });
-
-    it('should return the correct datastore', function () {
-      // Check that the function returns the expected datastore
-      [
-        { expected: 'Catalog', url: 'http://localhost:4567/catalog/123456' },
-        { expected: 'Articles', url: 'http://localhost:4567/articles/123456' },
-        { expected: 'Databases', url: 'http://localhost:4567/databases/123456' }
-      ].forEach(({ url, expected }) => {
-        expect(getDatastore(url), `the datastore should be \`${expected}\``).to.equal(expected);
-      });
-    });
-  });
-
   describe('handleFormSubmit', function () {
     let fetchStub = null;
     let event = null;
@@ -289,18 +269,18 @@ describe('add to', function () {
       const [recordId] = recordIds;
 
       // Change the event target to the form for the first record
-      event.target = document.querySelector(`form[data-record-id="${recordId}"]`);
+      event.target = document.querySelector(`form[data-record-id="${recordId}"][data-record-datastore="${currentDatastore}"]`);
 
       // Call the function
       await handleFormSubmit(event);
 
       // Check that the temporary list no longer contains the record after submission
-      expect(Object.keys(getTemporaryList()), '`temporaryList` should not contain the record after submission').to.not.include(recordId);
+      expect(Object.keys(getTemporaryList()[currentDatastore]), '`temporaryList` should not contain the record after submission').to.not.include(recordId);
     });
 
     it('returns early if the response is not ok', async function () {
-      // Check that the temporary list is empty before submission
-      expect(getTemporaryList(), '`temporaryList` should return an empty object before submission').to.be.an('object').that.is.empty;
+      // Check that the temporary list is prefilled before submission
+      expect(getTemporaryList(), '`temporaryList` should return a prefilled object before submission').deep.equal(prefilledList);
 
       // Change the fetch stub to return a non-ok response
       fetchStub.resolves({
@@ -313,31 +293,31 @@ describe('add to', function () {
       // Check that fetch was called
       expect(fetchStub.calledOnce).to.be.true;
 
-      // Check that the temporary list is still empty
-      expect(getTemporaryList(), '`temporaryList` should still be empty').to.be.an('object').that.is.empty;
+      // Check that the temporary list is still prefilled
+      expect(getTemporaryList(), '`temporaryList` should still be empty').deep.equal(prefilledList);
     });
 
     it('adds the record to the temporary list if it does not exist', async function () {
-      // Check that the temporary list is empty before submission
-      expect(getTemporaryList(), '`temporaryList` should return an empty object before submission').to.be.an('object').that.is.empty;
+      // Check that the temporary list is prefilled before submission
+      expect(getTemporaryList(), '`temporaryList` should return a prefilled object before submission').deep.equal(prefilledList);
 
       // Define the record ID to add
       const [recordId] = recordIds;
 
       // Change the event target to the form for the first record
-      event.target = document.querySelector(`form[data-record-id="${recordId}"]`);
+      event.target = document.querySelector(`form[data-record-id="${recordId}"][data-record-datastore="${currentDatastore}"]`);
 
       // Call the function
       fetchStub.resolves({
         json: () => {
-          return Promise.resolve(global.temporaryList[recordId]);
+          return Promise.resolve(global.temporaryList[currentDatastore][recordId]);
         },
         ok: true
       });
       await handleFormSubmit(event);
 
       // Check that the temporary list has the record after submission
-      expect(String(getTemporaryList()), '`temporaryList` should contain the record metadata after submission').to.include(global.temporaryList[recordId]);
+      expect(String(getTemporaryList()[currentDatastore]), '`temporaryList` should contain the record metadata after submission').to.include(global.temporaryList[currentDatastore][recordId]);
     });
 
     it('fetches using the action attribute of the form', async function () {
@@ -401,11 +381,8 @@ describe('add to', function () {
 
       // Should be called with correct arguments
       recordIds.forEach((recordId, index) => {
-        const form = document.querySelector(`form[data-record-id="${recordId}"]`);
-        expect(updateResultSpy.getCall(index).args[0], `${recordId} should call \`updateResult\` with the correct arguments`).to.deep.include({
-          button: form.querySelector('button'),
-          recordId
-        });
+        const form = document.querySelector(`form[data-record-id="${recordId}"][data-record-datastore="${currentDatastore}"]`);
+        expect(updateResultSpy.getCall(index).args[0], `${recordId} should call \`updateResult\` with the correct arguments`).to.deep.include(form);
       });
     });
   });

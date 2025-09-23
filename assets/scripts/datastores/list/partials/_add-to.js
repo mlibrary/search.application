@@ -7,8 +7,15 @@ const setTemporaryList = (list) => {
 };
 
 const getTemporaryList = () => {
-  // Retrieve the temporary list from session storage, or return an empty object if it doesn't exist
-  return JSON.parse(sessionStorage.getItem(listName)) || {};
+  // Retrieve the temporary list from session storage, or return a prefilled object if it doesn't exist
+  return JSON.parse(sessionStorage.getItem(listName))
+    || {
+      articles: {},
+      catalog: {},
+      databases: {},
+      guidesandmore: {},
+      onlinejournals: {}
+    };
 };
 
 const inTemporaryList = ({ recordDatastore, recordId }) => {
@@ -49,16 +56,11 @@ const handleFormSubmit = async (event) => {
   event.preventDefault();
 
   const { recordDatastore, recordId } = form.dataset;
-  console.log(form.dataset);
   const list = getTemporaryList();
 
   if (inTemporaryList({ recordDatastore, recordId })) {
     // If the record is already in the list, remove it
     delete list[recordDatastore][recordId];
-    // If the datastore is now empty, remove it from the list
-    if (Object.keys(list[recordDatastore]).length === 0) {
-      delete list[recordDatastore];
-    }
   } else {
     try {
       const response = await fetch(form.getAttribute('action'));
@@ -68,10 +70,6 @@ const handleFormSubmit = async (event) => {
       }
       // Add the record information to the list
       const data = await response.json();
-      // Ensure the datastore exists in the list
-      if (!(recordDatastore in list)) {
-        list[recordDatastore] = {};
-      }
       list[recordDatastore][recordId] = data;
     } catch {
       // Silent failure, so no action is needed

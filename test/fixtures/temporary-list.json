@@ -1,4 +1,5 @@
 {
+  "articles": {},
   "catalog": {
     "990038939650106381": {
       "title": {
@@ -202,6 +203,8 @@
       }
     }
   },
+  "databases": {},
+  "guidesandmore": {},
   "onlinejournals": {
     "99187335971706381": {
       "title": {
