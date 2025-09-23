@@ -124,6 +124,7 @@ end
 
 class Search::Presenters::Record::Catalog::Holdings::Physical <
   Search::Presenters::Record::Catalog::Holdings::PhysicalBase
+  attr_reader :holding
   def initialize(holding:, bib: nil)
     @holding = holding
     @bib = bib
