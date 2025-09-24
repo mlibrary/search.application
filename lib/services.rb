@@ -1,6 +1,7 @@
 require "canister"
 require "alma_rest_client"
 require "semantic_logger"
+require "twilio-ruby"
 
 Services = Canister.new
 
@@ -30,6 +31,14 @@ S.register(:catalog_api_url) { ENV["CATALOG_API_URL"] || "http://catalog-api:800
 
 S.register(:catalog_browse_url) { ENV["CATALOG_BROWSE_URL"] || "https://search.lib.umich.edu/catalog/browse" }
 
+S.register(:twilio_client) {
+  Twilio::REST::Client.new(ENV.fetch("TWILIO_ACCT_SID"), ENV.fetch("TWILIO_AUTH_TOKEN"))
+}
+
+S.register(:twilio_messaging_service_sid) do
+  ENV.fetch("TWILIO_MESSAGING_SERVICE_SID")
+end
+
 S.register(:log_stream) do
   $stdout.sync = true
   $stdout
@@ -44,10 +53,6 @@ S.register(:log_level) do
 end
 
 SemanticLogger.default_level = S.log_level
-
-S.register(:app_env) do
-  ENV["APP_ENV"] || "development"
-end
 
 # Should we run the profiler?
 S.register(:profile?) do
