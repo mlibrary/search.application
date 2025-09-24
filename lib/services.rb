@@ -2,16 +2,18 @@ require "canister"
 require "alma_rest_client"
 require "semantic_logger"
 require "twilio-ruby"
+require "mail"
 
 Services = Canister.new
 
 S = Services
 
+S.register(:app_env) { ENV["APP_ENV"] || "development" }
+
 AlmaRestClient.configure do |config|
   config.alma_api_key = ENV["ALMA_API_KEY"] || "your_alma_api_key"
 end
 
-S.register(:app_env) { ENV["APP_ENV"] || "development" }
 S.register(:version) { ENV["APP_VERSION"] || `git rev-parse HEAD` }
 S.register(:session_secret) { ENV["SESSION_SECRET"] || "session_secret_this_is_extra_text_so_that_it_is_32_bytes_aaaaaaa" }
 S.register(:project_root) do
@@ -86,5 +88,13 @@ if S.app_env != "test"
     SemanticLogger.add_appender(io: S.log_stream, formatter: :color)
   else
     SemanticLogger.add_appender(io: S.log_stream, formatter: ProductionFormatter.new)
+  end
+end
+
+Mail.defaults do
+  if S.app_env == "production"
+    delivery_method :smtp, address: ENV.fetch("MAIL_RELAY")
+  else
+    delivery_method :logger, logger: S.logger, severity: :info
   end
 end
