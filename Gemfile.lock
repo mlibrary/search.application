@@ -308,6 +308,7 @@ DEPENDENCIES
   canister
   debug
   faker
+  mail
   omniauth
   omniauth_openid_connect
   ostruct
