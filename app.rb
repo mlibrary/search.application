@@ -148,6 +148,10 @@ class Search::Application < Sinatra::Base
       ensure
         redirect request.referrer
       end
+      post "/#{datastore.slug}/record/:id/email" do
+        Search::Email::Catalog.for(params["id"]).send(to: params["to"])
+        redirect request.referrer
+      end
     end
     if datastore.slug == "everything"
       get "/#{datastore.slug}/list" do

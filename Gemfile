@@ -14,6 +14,7 @@ gem "alma_rest_client",
 gem "activesupport"
 gem "semantic_logger"
 gem "twilio-ruby"
+gem "mail"
 
 group :metrics do
   gem "yabeda-puma-plugin"
