@@ -137,13 +137,14 @@ class Search::Application < Sinatra::Base
       # TBD How are we handling this stuff? Flash messages? Something else?
       post "/#{datastore.slug}/record/:id/sms" do
         if not_logged_in_user?
-          flash_message = "User must be logged in"
+          # flash_message = "User must be logged in"
         else
           Search::SMS::Catalog.for(params["id"]).send(phone: params["phone"])
-          flash_message = "success"
+          # flash_message = "success"
         end
       rescue Twilio::REST::RestError => error
-        flash_message = error.error_message
+        S.logger.error(error.error_message, error_class: error.class)
+        # flash_message = error.error_message
       ensure
         redirect request.referrer
       end
