@@ -3,12 +3,17 @@ class Search::SMS
     raise NotImplementedError
   end
 
-  def send(phone:, client: "FIXME")
+  def send(phone:, client: S.twilio_client)
+    client.messages.create(
+      to: phone,
+      body: message,
+      messaging_service_sid: S.twilio_messaging_service_sid
+    )
   end
 
   class Catalog < self
     def self.for(id)
-      record = Search::Model::Record::Catalog.for(id)
+      record = Search::Models::Record::Catalog.for(id)
       new(record)
     end
 

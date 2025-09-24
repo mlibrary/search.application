@@ -121,15 +121,31 @@ class Search::Application < Sinatra::Base
         S.logger.error(error.message, error_response: error.response)
         redirect not_found
       end
+
       get "/#{datastore.slug}/record/:id/brief" do
         content_type :json
         Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").to_json
       end
+
       get "/#{datastore.slug}/record/:id/ris" do
         attachment "#{params["id"]}.ris"
         Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").ris
       rescue
         redirect "/#{datastore.slug}/record/:id"
+      end
+
+      # TBD How are we handling this stuff? Flash messages? Something else?
+      post "/#{datastore.slug}/record/:id/sms" do
+        if not_logged_in_user?
+          flash_message = "User must be logged in"
+        else
+          Search::SMS::Catalog.for(params["id"]).send(phone: params["phone"])
+          flash_message = "success"
+        end
+      rescue Twilio::REST::RestError => error
+        flash_message = error.error_message
+      ensure
+        redirect request.referrer
       end
     end
     if datastore.slug == "everything"

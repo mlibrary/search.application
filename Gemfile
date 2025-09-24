@@ -13,6 +13,7 @@ gem "alma_rest_client",
   tag: "alma_rest_client/v2.2.0"
 gem "activesupport"
 gem "semantic_logger"
+gem "twilio-ruby"
 
 group :metrics do
   gem "yabeda-puma-plugin"
