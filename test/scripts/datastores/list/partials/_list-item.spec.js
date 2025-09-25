@@ -1,7 +1,10 @@
 import { listItem, listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
 import { expect } from 'chai';
 
-const recordIds = Object.keys(global.temporaryList);
+const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
+  return Object.keys(global.temporaryList[datastore]).length > 0;
+});
+const recordIds = Object.keys(global.temporaryList[nonEmptyDatastores[0]]);
 
 const listItemTitleHTML = `
   <h3 class="list__item--title">
@@ -113,7 +116,7 @@ describe('listItem()', function () {
 
       args = {
         itemTable: document.querySelector('table.metadata > tbody'),
-        metadata: global.temporaryList[recordId].metadata
+        metadata: global.temporaryList[nonEmptyDatastores[0]][recordId].metadata
       };
 
       getRows = () => {
@@ -189,7 +192,7 @@ describe('listItem()', function () {
       `;
 
       args = {
-        record: global.temporaryList[recordId],
+        record: global.temporaryList[nonEmptyDatastores[0]][recordId],
         recordId
       };
 
