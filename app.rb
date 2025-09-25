@@ -1,4 +1,5 @@
 require "sinatra/base"
+require "sinatra/flash"
 require "puma"
 require "ostruct"
 require_relative "lib/services"
@@ -18,6 +19,7 @@ class Search::Application < Sinatra::Base
   set :app_file, S.project_root + "/app.rb"
 
   enable :sessions
+  register Sinatra::Flash
   set :session_secret, S.session_secret
 
   S.logger.info("App Environment: #{settings.environment}")
@@ -60,7 +62,7 @@ class Search::Application < Sinatra::Base
     # @return [Boolean]
     #
     def not_logged_in_user?
-      session[:logged_in].nil?
+      session[:logged_in].nil? || session[:logged_in] == false
     end
 
     #
@@ -134,20 +136,33 @@ class Search::Application < Sinatra::Base
         redirect "/#{datastore.slug}/record/:id"
       end
 
-      # TBD How are we handling this stuff? Flash messages? Something else?
-      post "/#{datastore.slug}/record/:id/sms" do
+      post "/#{datastore.slug}/record/:id/sms", provides: "html" do
         if not_logged_in_user?
-          # flash_message = "User must be logged in"
+          flash[:error] = "User must be logged in"
         else
           Search::SMS::Catalog.for(params["id"]).send(phone: params["phone"])
-          # flash_message = "success"
+          flash[:success] = "SMS message has been sent"
         end
       rescue Twilio::REST::RestError => error
         S.logger.error(error.error_message, error_class: error.class)
-        # flash_message = error.error_message
+        flash[:error] = "Something went wrong"
       ensure
-        redirect request.referrer
+        redirect request.path_info.sub(/\/sms$/, "")
       end
+
+      post "/#{datastore.slug}/record/:id/sms", provides: "json" do
+        content_type :json
+        if not_logged_in_user?
+          [403, {code: 403, error_message: "User must be logged in"}.to_json]
+        else
+          Search::SMS::Catalog.for(params["id"]).send(phone: params["phone"])
+          [202, {code: 202, message: "SMS message has been sent"}.to_json]
+        end
+      rescue Twilio::REST::RestError => error
+        S.logger.error(error.error_message, error_class: error.class)
+        [400, {code: 400, message: "Something went wrong"}.to_json]
+      end
+
       post "/#{datastore.slug}/record/:id/email" do
         Search::Email::Catalog.for(params["id"]).send(to: params["to"])
         redirect request.referrer

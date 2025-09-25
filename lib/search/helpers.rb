@@ -38,6 +38,15 @@ module Search
 
       "<h1 #{attributes.join(" ")}>#{body}</h1>"
     end
+
+    def search_styled_flash(key = :flash)
+      return "" if flash(key).empty?
+
+      flash(key).collect do |kind, message|
+        "<h2>#{kind}: #{message}</h2>"
+        # erb :"components/message", locals: {message: message, kind: kind}
+      end.join
+    end
   end
 
   class YamlErb
