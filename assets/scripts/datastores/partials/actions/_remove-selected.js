@@ -9,7 +9,7 @@ const removeSelected = (reloadPage = window.location.reload.bind(window.location
   // Add event listener
   removeSelectedButton().addEventListener('click', () => {
     // Get checkbox values
-    const recordIds = [...getCheckboxes()]
+    const records = [...getCheckboxes()]
       .filter((checkbox) => {
         return checkbox.checked;
       })
@@ -18,8 +18,9 @@ const removeSelected = (reloadPage = window.location.reload.bind(window.location
       });
     // Delete selected items from temporary list
     const list = getTemporaryList();
-    recordIds.forEach((recordId) => {
-      delete list[recordId];
+    records.forEach((record) => {
+      const [datastore, recordId] = record.split(',');
+      delete list[datastore][recordId];
     });
     // Update temporary list
     setTemporaryList(list);
