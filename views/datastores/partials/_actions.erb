@@ -15,6 +15,7 @@
       <small>Select what to do with this record.</small>
     </div>
   </summary>
+  <%= search_styled_flash %>
   <div role="tablist" aria-labelledby="actions__label" class="actions__tablist">
     <% tabs.each do |key, value| %>
       <button type="button" role="tab" id="actions__<%= key %>" aria-selected="false" aria-controls="actions__<%= key %>--tabpanel" class="button__ghost">
