@@ -1,5 +1,6 @@
 import {
   actionsPanelText,
+  datastoreHeading,
   disableActionTabs,
   filterSelectedRecordIDs,
   getCheckboxes,
@@ -10,6 +11,12 @@ import {
 import { expect } from 'chai';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import sinon from 'sinon';
+
+const actionsPanelHTML = `
+  <div class="actions__summary--header">
+    <small></small>
+  </div>
+`;
 
 const checkboxHTML = `
   <ol class="list__items">
@@ -85,6 +92,55 @@ describe('layout', function () {
     });
   });
 
+  describe('datastoreHeading()', function () {
+    let getHeading = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = '';
+
+      getHeading = () => {
+        return document.querySelector('h2');
+      };
+
+      // Check that an h2 does not exist
+      expect(getHeading(), 'an `h2` should not exist before the function is called').to.be.null;
+    });
+
+    afterEach(function () {
+      // Check that an h2 now exists
+      expect(getHeading(), 'an `h2` should exist after the function is called').to.not.be.null;
+
+      getHeading = null;
+    });
+
+    it('should create an h2 with the correct text for a normal datastore', function () {
+      const datastore = 'catalog';
+
+      // Call the function and append the heading to the body
+      document.body.appendChild(datastoreHeading(datastore));
+
+      // Check that the text is correct
+      expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case').to.equal(datastore.charAt(0).toUpperCase() + datastore.slice(1));
+    });
+
+    it('should create an h2 with the correct text for the `onlinejournals` datastore', function () {
+      // Call the function and append the heading to the body
+      document.body.appendChild(datastoreHeading('onlinejournals'));
+
+      // Check that the text is correct
+      expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case for `onlinejournals`').to.equal('Online Journals');
+    });
+
+    it('should create an h2 with the correct text for the `guidesandmore` datastore', function () {
+      // Call the function and append the heading to the body
+      document.body.appendChild(datastoreHeading('guidesandmore'));
+
+      // Check that the text is correct
+      expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case for `guidesandmore`').to.equal('Guides and More');
+    });
+  });
+
   describe('disableActionTabs()', function () {
     let getTabs = null;
 
@@ -141,9 +197,7 @@ describe('layout', function () {
     beforeEach(function () {
       // Apply HTML to the body
       document.body.innerHTML = `
-        <div class="actions__summary--header">
-          <small></small>
-        </div>
+        ${actionsPanelHTML}
         ${checkboxHTML}
       `;
 
@@ -253,16 +307,15 @@ describe('layout', function () {
   });
 
   describe('temporaryList()', function () {
-    let getOrderedList = null;
+    let getHeadings = null;
+    let getOrderedLists = null;
 
     beforeEach(function () {
       // Apply HTML to the body
       document.body.innerHTML = `
         <div class="list">
           <div class="list__actions">
-            <div class="actions__summary--header">
-              <small></small>
-            </div>
+            ${actionsPanelHTML}
             <div class="list__actions--utilities">
               <div class="list__in-list"></div>
             </div>
@@ -304,15 +357,20 @@ describe('layout', function () {
 
       global.sessionStorage = window.sessionStorage;
 
-      getOrderedList = () => {
-        return document.querySelector('ol');
+      getHeadings = () => {
+        return document.querySelectorAll('h2');
+      };
+
+      getOrderedLists = () => {
+        return document.querySelectorAll('ol');
       };
     });
 
     afterEach(function () {
       delete global.sessionStorage;
 
-      getOrderedList = null;
+      getHeadings = null;
+      getOrderedLists = null;
     });
 
     it('should toggle the empty message based on the list count', function () {
@@ -351,14 +409,9 @@ describe('layout', function () {
       expect(document.querySelector('.list__actions').style.display, 'the actions panel should be hidden if there are no items in the list').to.equal('none');
     });
 
-    it('should create a heading based off of the datastore', function () {
-      // Get the heading
-      const getHeading = () => {
-        return document.querySelector('h2');
-      };
-
-      // Check that an h2 does not exist
-      expect(getHeading(), 'an `h2` should not exist in an empty list').to.be.null;
+    it('should create a heading for each non-empty datastore', function () {
+      // Check that no h2s exist
+      expect(getHeadings(), 'an `h2` should not exist in an empty list').to.be.empty;
 
       // Set a temporary list in session storage
       setTemporaryList(global.temporaryList);
@@ -366,14 +419,20 @@ describe('layout', function () {
       // Call the function
       temporaryList();
 
-      // Check that an h2 now exists
-      expect(getHeading(), 'an `h2` should exist in a non-empty list').to.not.be.null;
-      expect(getHeading().textContent, 'an `h2` should have text').to.equal('Catalog');
+      // Check that non-empty h2s now exists
+      const nonEmptyDatastores = Object.values(global.temporaryList).filter((datastore) => {
+        return Object.keys(datastore).length > 0;
+      }).length;
+      expect(getHeadings(), 'an `h2` should exist in a non-empty list').to.not.be.null;
+      expect(getHeadings().length, 'an `h2` should exist for each non-empty datastore').to.equal(nonEmptyDatastores);
+      getHeadings().forEach((heading) => {
+        expect(heading.textContent, 'an `h2` should have text').to.not.be.empty;
+      });
     });
 
-    it('should create an ordered list that includes the provided records', function () {
+    it('should create an ordered list that includes the provided records for each non-empty datastore', function () {
       // Check that an ordered list does not exist
-      expect(getOrderedList(), 'an ordered list should not exist in an empty list').to.be.null;
+      expect(getOrderedLists(), 'an ordered list should not exist in an empty list').to.be.empty;
 
       // Set a temporary list in session storage
       setTemporaryList(global.temporaryList);
@@ -381,14 +440,22 @@ describe('layout', function () {
       // Call the function
       temporaryList();
 
-      // Check that an ordered list now exists
-      expect(getOrderedList(), 'an ordered list should exist in a non-empty list').to.not.be.null;
+      // Check that ordered lists now exists
+      const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
+        return Object.keys(global.temporaryList[datastore]).length > 0;
+      });
 
-      // Check that classes have been added to the ordered list
-      expect(getOrderedList().classList.contains('list__items', 'list__no-style'), 'classes should have been added to the ordered list').to.be.true;
+      expect(getOrderedLists(), 'an `ol` should exist').to.not.be.empty;
+      expect(getOrderedLists().length, 'an `ol` should exist for each non-empty datastore').to.equal(nonEmptyDatastores.length);
 
-      // Check that the ordered list has a list item for each record
-      expect(getOrderedList().querySelectorAll('li').length, 'a list item should exist for each provided record').to.equal(Object.keys(global.temporaryList).length);
+      // Get the properties of the temporary list that are non-empty
+      getOrderedLists().forEach((orderedList, index) => {
+        // Check that classes have been added to the ordered list
+        expect(orderedList.classList.contains('list__items', 'list__no-style'), 'classes should have been added to the ordered list').to.be.true;
+
+        // Check that the ordered list has a list item for each record
+        expect(orderedList.querySelectorAll('li').length, 'a list item should exist for each provided record').to.equal(Object.keys(global.temporaryList[nonEmptyDatastores[index]]).length);
+      });
     });
 
     it('should add a `change` event listener to the list container', function () {

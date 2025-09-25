@@ -50,6 +50,20 @@ const selectedText = () => {
   summaryText.innerHTML = `<span class="strong">${filterSelectedRecordIDs().length}</span> out of <span class="strong">${totalCount}</span> ${recordText} selected.`;
 };
 
+const datastoreHeading = (datastore) => {
+  const heading = document.createElement('h2');
+  // Capitalize first letter and replace underscores with spaces
+  let datastoreText = datastore.charAt(0).toUpperCase() + datastore.slice(1);
+  if (datastore === 'guidesandmore') {
+    datastoreText = 'Guides and More';
+  }
+  if (datastore === 'onlinejournals') {
+    datastoreText = 'Online Journals';
+  }
+  heading.textContent = datastoreText;
+  return heading;
+};
+
 const temporaryList = () => {
   const list = getTemporaryList();
   const recordIds = Object.keys(list);
@@ -64,16 +78,20 @@ const temporaryList = () => {
 
     // Create temporary list by datastore
     const listContainer = document.querySelector('.list');
-    const heading = document.createElement('h2');
-    listContainer.appendChild(heading);
-    heading.textContent = 'Catalog';
-    const listItems = document.createElement('ol');
-    listItems.classList.add(className, 'list__no-style');
-    listContainer.appendChild(listItems);
-
-    // Display records
-    recordIds.forEach((recordId, index) => {
-      listItems.appendChild(listItem({ index, record: list[recordId], recordId }));
+    Object.keys(list).forEach((datastore) => {
+      // Check if there are records for this datastore
+      if (Object.keys(list[datastore]).length > 0) {
+        // Create heading
+        listContainer.appendChild(datastoreHeading(datastore));
+        // Create list container
+        const listItems = document.createElement('ol');
+        listItems.classList.add(className, 'list__no-style');
+        listContainer.appendChild(listItems);
+        // Display records
+        Object.keys(list[datastore]).forEach((recordId, index) => {
+          listItems.appendChild(listItem({ datastore, index, record: list[datastore][recordId], recordId }));
+        });
+      }
     });
 
     // Update Actions panel
@@ -95,4 +113,4 @@ const temporaryList = () => {
   }
 };
 
-export { actionsPanelText, disableActionTabs, filterSelectedRecordIDs, getCheckboxes, selectedText, someCheckboxesChecked, temporaryList };
+export { actionsPanelText, datastoreHeading, disableActionTabs, filterSelectedRecordIDs, getCheckboxes, selectedText, someCheckboxesChecked, temporaryList };

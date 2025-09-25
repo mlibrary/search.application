@@ -44,7 +44,7 @@ const listItemMetadata = ({ itemTable, metadata }) => {
   row.remove();
 };
 
-const listItem = ({ record, recordId }) => {
+const listItem = ({ datastore, record, recordId }) => {
   // Clone the list item template
   const partialClass = 'list__item--clone';
   const listItemPartial = document.querySelector(`.${partialClass}`);
@@ -52,6 +52,7 @@ const listItem = ({ record, recordId }) => {
   // Remove the template class
   clonedListItem.classList.remove(partialClass);
   // Add the record ID as a data attribute
+  clonedListItem.setAttribute('data-record-datastore', datastore);
   clonedListItem.setAttribute('data-record-id', recordId);
   // Update the checkbox value
   const checkbox = clonedListItem.querySelector('.list__item--checkbox');

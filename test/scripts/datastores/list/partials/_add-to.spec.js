@@ -4,6 +4,7 @@ import {
   handleFormSubmit,
   inTemporaryList,
   setTemporaryList,
+  temporaryListCount,
   updateResultUI
 } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
@@ -43,7 +44,6 @@ const listItems = () => {
         `;
       });
     };
-    list += `<div class="list__datastore" data-datastore="${datastore}"></div>`;
   });
   return list;
 };
@@ -124,6 +124,31 @@ describe('add to', function () {
     it('should return `true` if the datastore and record ID are in the temporary list', function () {
       // Check that the function returns true for an existing datastore and recordId
       expect(inTemporaryList({ recordDatastore: currentDatastore, recordId: recordIds[0] }), '`inTemporaryList` should return true for an existing datastore and recordId').to.be.true;
+    });
+  });
+
+  describe('temporaryListCount()', function () {
+    beforeEach(function () {
+      // Clear session storage before each test
+      global.sessionStorage.clear();
+    });
+
+    afterEach(function () {
+      // Clear session storage after each test
+      global.sessionStorage.clear();
+    });
+
+    it('should return 0 if the temporary list is empty', function () {
+      // Check that the function returns 0 for an empty temporary list
+      expect(temporaryListCount(), '`temporaryListCount` should return 0 for an empty temporary list').to.equal(0);
+    });
+
+    it('should return the correct count of records in the temporary list', function () {
+      // Set a temporary list in session storage
+      setTemporaryList(global.temporaryList);
+
+      // Check that the function returns the correct count
+      expect(temporaryListCount(), '`temporaryListCount` should return the correct count of records in the temporary list').to.equal(5);
     });
   });
 

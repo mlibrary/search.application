@@ -9,19 +9,23 @@ const setTemporaryList = (list) => {
 const getTemporaryList = () => {
   // Retrieve the temporary list from session storage, or return a prefilled object if it doesn't exist
   return JSON.parse(sessionStorage.getItem(listName))
-    || {
-      articles: {},
-      catalog: {},
-      databases: {},
-      guidesandmore: {},
-      onlinejournals: {}
-    };
+    || ['catalog', 'articles', 'databases', 'onlinejournals', 'guidesandmore'].reduce((list, datastore) => {
+      list[datastore] = {};
+      return list;
+    }, {});
 };
 
 const inTemporaryList = ({ recordDatastore, recordId }) => {
   const list = getTemporaryList();
   // Check if the datastore is in the list and if the recordId exists within that datastore
   return recordDatastore in list && recordId in list[recordDatastore];
+};
+
+const temporaryListCount = () => {
+  // Count the total number of records across all datastores
+  return Object.values(getTemporaryList()).reduce((sum, datastore) => {
+    return sum + Object.keys(datastore).length;
+  }, 0);
 };
 
 const updateResultUI = (form) => {
@@ -43,7 +47,7 @@ const updateResultUI = (form) => {
     .replace(/Add|Remove/u, isAdded ? 'Remove' : 'Add')
     .replace(/to My Temporary List|from My Temporary List/u, isAdded ? 'from My Temporary List' : 'to My Temporary List');
   // Toggle the banner
-  toggleBanner(Object.keys(getTemporaryList()).length);
+  toggleBanner(temporaryListCount());
 };
 
 const handleFormSubmit = async (event) => {
@@ -92,4 +96,4 @@ const addToList = (updateResult = updateResultUI) => {
   });
 };
 
-export { addToList, getTemporaryList, handleFormSubmit, inTemporaryList, setTemporaryList, updateResultUI };
+export { addToList, getTemporaryList, handleFormSubmit, inTemporaryList, setTemporaryList, temporaryListCount, updateResultUI };
