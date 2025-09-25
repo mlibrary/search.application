@@ -1,4 +1,4 @@
-import { filterSelectedRecordIDs, someCheckboxesChecked } from '../../list/layout.js';
+import { filterSelectedRecords, someCheckboxesChecked } from '../../list/layout.js';
 import { copyToClipboard } from '../_actions.js';
 import { getTemporaryList } from '../../list/partials/_add-to.js';
 
@@ -6,8 +6,9 @@ const getTemporaryListCitations = (type = 'csl') => {
   let list = [];
   if (someCheckboxesChecked(true)) {
     // If some are checked, filter the selected records
-    filterSelectedRecordIDs().forEach((recordID) => {
-      list.push(getTemporaryList()[recordID]);
+    filterSelectedRecords().forEach((record) => {
+      const [datastore, recordId] = record.split(',');
+      list.push(getTemporaryList()[datastore][recordId]);
     });
   } else {
     // Return the entire list

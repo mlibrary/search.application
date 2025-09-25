@@ -9,7 +9,7 @@ const getCheckboxes = () => {
   return document.querySelectorAll(`ol.${className} ${checkboxSelector}`);
 };
 
-const filterSelectedRecordIDs = () => {
+const filterSelectedRecords = () => {
   return [...getCheckboxes()].filter((checkbox) => {
     return checkbox.checked === true;
   }).map((checkbox) => {
@@ -38,7 +38,7 @@ const disableActionTabs = () => {
 
 const actionsPanelText = () => {
   const summaryText = document.querySelector('.actions__summary--header > small');
-  const selectedCount = filterSelectedRecordIDs().length;
+  const selectedCount = filterSelectedRecords().length;
   const recordText = selectedCount === 1 ? 'record' : 'records';
   summaryText.textContent = selectedCount ? `Choose what to do with the selected ${recordText}.` : 'Select at least one record.';
 };
@@ -47,7 +47,7 @@ const selectedText = () => {
   const summaryText = document.querySelector('.list__actions--utilities .list__in-list');
   const totalCount = getCheckboxes().length;
   const recordText = totalCount === 1 ? 'item' : 'items';
-  summaryText.innerHTML = `<span class="strong">${filterSelectedRecordIDs().length}</span> out of <span class="strong">${totalCount}</span> ${recordText} selected.`;
+  summaryText.innerHTML = `<span class="strong">${filterSelectedRecords().length}</span> out of <span class="strong">${totalCount}</span> ${recordText} selected.`;
 };
 
 const datastoreHeading = (datastore) => {
@@ -66,13 +66,14 @@ const datastoreHeading = (datastore) => {
 
 const temporaryList = () => {
   const list = getTemporaryList();
-  const recordIds = Object.keys(list);
-  const listCount = recordIds.length;
+  const nonEmptyDatastores = Object.keys(list).filter((datastore) => {
+    return Object.keys(list[datastore]).length > 0;
+  });
   const emptyList = document.querySelector('.list__empty');
   const listActions = document.querySelector('.list__actions');
 
   // Toggle empty message and actions panel
-  if (listCount) {
+  if (nonEmptyDatastores.length) {
     emptyList.style.display = 'none';
     listActions.removeAttribute('style');
 
@@ -113,4 +114,4 @@ const temporaryList = () => {
   }
 };
 
-export { actionsPanelText, datastoreHeading, disableActionTabs, filterSelectedRecordIDs, getCheckboxes, selectedText, someCheckboxesChecked, temporaryList };
+export { actionsPanelText, datastoreHeading, disableActionTabs, filterSelectedRecords, getCheckboxes, selectedText, someCheckboxesChecked, temporaryList };

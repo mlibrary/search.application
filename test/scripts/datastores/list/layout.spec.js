@@ -2,7 +2,7 @@ import {
   actionsPanelText,
   datastoreHeading,
   disableActionTabs,
-  filterSelectedRecordIDs,
+  filterSelectedRecords,
   getCheckboxes,
   selectedText,
   someCheckboxesChecked,
@@ -41,7 +41,7 @@ describe('layout', function () {
     });
   });
 
-  describe('filterSelectedRecordIDs()', function () {
+  describe('filterSelectedRecords()', function () {
     beforeEach(function () {
       // Apply HTML to the body
       document.body.innerHTML = checkboxHTML;
@@ -49,7 +49,7 @@ describe('layout', function () {
 
     it('should return an array of the selected record IDs', function () {
       // Check that the correct record IDs are returned
-      expect(filterSelectedRecordIDs(), 'the correct record IDs should be returned').to.deep.equal(['rec1']);
+      expect(filterSelectedRecords(), 'the correct record IDs should be returned').to.deep.equal(['rec1']);
     });
   });
 
@@ -215,7 +215,7 @@ describe('layout', function () {
 
     it('should update the selected text if there is only one selected record', function () {
       // Check that there is only one selected record
-      expect(filterSelectedRecordIDs().length, 'there should be only one selected record').to.equal(1);
+      expect(filterSelectedRecords().length, 'there should be only one selected record').to.equal(1);
 
       // Call the function
       actionsPanelText();
@@ -232,7 +232,7 @@ describe('layout', function () {
       }
 
       // Check that there is more than one selected record
-      expect(filterSelectedRecordIDs().length, 'there should be more than one selected record').to.be.greaterThan(1);
+      expect(filterSelectedRecords().length, 'there should be more than one selected record').to.be.greaterThan(1);
 
       // Call the function
       actionsPanelText();
@@ -248,7 +248,7 @@ describe('layout', function () {
       });
 
       // Check that are no selected records
-      expect(filterSelectedRecordIDs().length, 'there should be no selected records').to.equal(0);
+      expect(filterSelectedRecords().length, 'there should be no selected records').to.equal(0);
 
       // Call the function
       actionsPanelText();
@@ -284,7 +284,7 @@ describe('layout', function () {
 
       // Check that the text is correct
       const checkboxesLength = getCheckboxes().length;
-      expect(getText(), 'the text should be correct').to.equal(`${filterSelectedRecordIDs().length} out of ${checkboxesLength} ${checkboxesLength === 1 ? 'item' : 'items'} selected.`);
+      expect(getText(), 'the text should be correct').to.equal(`${filterSelectedRecords().length} out of ${checkboxesLength} ${checkboxesLength === 1 ? 'item' : 'items'} selected.`);
 
       getText = null;
     });
