@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
 gem "sinatra"
+gem "sinatra-flash"
 gem "puma"
 gem "rackup"
 gem "canister"
@@ -12,6 +13,8 @@ gem "alma_rest_client",
   tag: "alma_rest_client/v2.2.0"
 gem "activesupport"
 gem "semantic_logger"
+gem "twilio-ruby"
+gem "mail"
 
 group :metrics do
   gem "yabeda-puma-plugin"
