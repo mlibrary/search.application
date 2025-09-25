@@ -38,7 +38,7 @@ S.register(:twilio_client) {
 }
 
 S.register(:twilio_messaging_service_sid) do
-  ENV.fetch("TWILIO_MESSAGING_SERVICE_SID")
+  ENV["TWILIO_MESSAGING_SERVICE_SID"] || "twilio_messaging_service_sid"
 end
 
 S.register(:log_stream) do

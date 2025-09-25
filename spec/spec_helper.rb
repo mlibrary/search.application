@@ -65,3 +65,23 @@ end
 def fixture(path)
   File.read("./spec/fixtures/#{path}")
 end
+
+class FakeTwilioClient
+  def messages
+    Messages.new
+  end
+
+  class Messages
+    def create(to:, body:, messaging_service_sid:)
+      if to == "bad_number"
+        raise Twilio::REST::RestError.new("Something", Twilio::Response.new(400, nil))
+      else
+        OpenStruct.new(to: to, body: body, messaging_service_sid: messaging_service_sid, status: "OK")
+      end
+    end
+  end
+end
+
+S.register(:twilio_client) {
+  FakeTwilioClient.new
+}

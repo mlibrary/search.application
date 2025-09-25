@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
 gem "sinatra"
+gem "sinatra-flash"
 gem "puma"
 gem "rackup"
 gem "canister"
