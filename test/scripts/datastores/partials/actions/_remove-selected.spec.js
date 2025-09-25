@@ -1,12 +1,10 @@
-import { disableRemoveSelectedButton, removeSelected, removeSelectedButton } from '../../../../../assets/scripts/datastores/list/partials/_remove-selected.js';
+import { removeSelected, removeSelectedButton } from '../../../../../assets/scripts/datastores/partials/actions/_remove-selected.js';
 import { expect } from 'chai';
-import fs from 'fs';
 import { getCheckboxes } from '../../../../../assets/scripts/datastores/list/layout.js';
 import { getTemporaryList } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import sinon from 'sinon';
 
-const temporaryList = JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8'));
-const recordIds = Object.keys(temporaryList);
+const recordIds = Object.keys(global.temporaryList);
 const temporaryListHTML = recordIds.map((recordId, index) => {
   return `<li><input type="checkbox" class="list__item--checkbox" value="${recordId}" ${index === 0 ? 'checked' : ''}></li>`;
 }).join('');
@@ -15,7 +13,9 @@ describe('removeSelected', function () {
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
-      <button class="list__button--remove-selected">Remove selected</button>
+      <div class="actions">
+        <button class="action__remove-selected">Remove selected</button>
+      </div>
       <ol class="list__items">
         ${temporaryListHTML}
       </ol>
@@ -24,36 +24,7 @@ describe('removeSelected', function () {
 
   describe('removeSelectedButton()', function () {
     it('should return the `Remove selected` button element', function () {
-      expect(removeSelectedButton(), 'the `Remove selected` button should be returned').to.deep.equal(document.querySelector('button.list__button--remove-selected'));
-    });
-  });
-
-  describe('disableRemoveSelectedButton()', function () {
-    it('should enable the `disableRemoveSelectedButton` button if not all checkboxes are unchecked', function () {
-      // Check that at least one checkbox is checked
-      const someChecked = [...getCheckboxes()].some((checkbox) => {
-        return checkbox.checked;
-      });
-      expect(someChecked, 'at least one checkbox should be checked before testing').to.be.true;
-
-      // Call the function
-      disableRemoveSelectedButton();
-
-      // Check that the button is enabled
-      expect(removeSelectedButton().hasAttribute('disabled'), 'the `disableRemoveSelectedButton` button should be enabled when not all checkboxes are unchecked').to.be.false;
-    });
-
-    it('should disable the `disableRemoveSelectedButton` button if all checkboxes are unchecked', function () {
-      // Uncheck all the checkboxes
-      getCheckboxes().forEach((checkbox) => {
-        checkbox.checked = false;
-      });
-
-      // Call the function
-      disableRemoveSelectedButton();
-
-      // Check that the button is disabled
-      expect(removeSelectedButton().hasAttribute('disabled'), 'the `disableRemoveSelectedButton` button should be disabled when all checkboxes are checked').to.be.true;
+      expect(removeSelectedButton(), 'the `Remove selected` button should be returned').to.deep.equal(document.querySelector('button.action__remove-selected'));
     });
   });
 
@@ -68,7 +39,7 @@ describe('removeSelected', function () {
 
     it('should delete the selected record(s) from session storage and reload the page', function () {
       // Set a temporary list in session storage
-      global.sessionStorage.setItem('temporaryList', JSON.stringify(temporaryList));
+      global.sessionStorage.setItem('temporaryList', JSON.stringify(global.temporaryList));
 
       // Map the currently checked record IDs
       const checkedRecordIds = [...getCheckboxes()]

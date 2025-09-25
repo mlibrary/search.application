@@ -30,9 +30,9 @@ $tabs: (
   "email": "mail",
   "text": "chat",
   "citation": "format_quote",
-  "endnote": "draft",
   "ris": "draft",
-  "link": "link"
+  "link": "link",
+  "remove-selected": "delete"
 );
 
 
@@ -182,4 +182,5 @@ body.no-javascript .#{$class}__tablist {
 [role="tabpanel"] .alert {
   display: none;
   margin-bottom: 1rem;
+  margin-top: 1rem;
 }

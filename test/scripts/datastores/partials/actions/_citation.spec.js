@@ -1,4 +1,4 @@
-import copyCitation from '../../../../../assets/scripts/datastores/partials/actions/_citation.js';
+import { copyCitation } from '../../../../../assets/scripts/datastores/partials/actions/_citation.js';
 import { expect } from 'chai';
 
 describe('copyCitation', function () {

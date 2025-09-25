@@ -1,17 +1,11 @@
-import { getCheckboxes, someCheckboxesChecked } from '../layout.js';
-import { getTemporaryList, setTemporaryList } from './_add-to.js';
+import { getTemporaryList, setTemporaryList } from '../../list/partials/_add-to.js';
+import { getCheckboxes } from '../../list/layout.js';
 
 const removeSelectedButton = () => {
-  return document.querySelector('button.list__button--remove-selected');
-};
-
-const disableRemoveSelectedButton = () => {
-  removeSelectedButton().toggleAttribute('disabled', !someCheckboxesChecked(true));
+  return document.querySelector('.actions button.action__remove-selected');
 };
 
 const removeSelected = (reloadPage = window.location.reload.bind(window.location)) => {
-  // Initialize button state
-  disableRemoveSelectedButton();
   // Add event listener
   removeSelectedButton().addEventListener('click', () => {
     // Get checkbox values
@@ -35,4 +29,4 @@ const removeSelected = (reloadPage = window.location.reload.bind(window.location
   });
 };
 
-export { disableRemoveSelectedButton, removeSelected, removeSelectedButton };
+export { removeSelected, removeSelectedButton };

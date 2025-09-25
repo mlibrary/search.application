@@ -1,9 +1,6 @@
-import changeCount from './partials/_in-list.js';
-import { disableDeselectAllButton } from './partials/_deselect-all.js';
-import { disableRemoveSelectedButton } from './partials/_remove-selected.js';
-import { disableSelectAllButton } from './partials/_select-all.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
+import { selectAllState } from './partials/_select-all.js';
 
 const className = 'list__items';
 const checkboxSelector = 'input[type="checkbox"].list__item--checkbox';
@@ -12,11 +9,59 @@ const getCheckboxes = () => {
   return document.querySelectorAll(`ol.${className} ${checkboxSelector}`);
 };
 
+const filterSelectedRecordIDs = () => {
+  return [...getCheckboxes()].filter((checkbox) => {
+    return checkbox.checked === true;
+  }).map((checkbox) => {
+    return checkbox.value;
+  });
+};
+
 const someCheckboxesChecked = (checked = false) => {
-  const checkboxes = getCheckboxes();
-  return [...checkboxes].some((checkbox) => {
+  return [...getCheckboxes()].some((checkbox) => {
     return checkbox.checked === checked;
   });
+};
+
+const disableActionTabs = () => {
+  const someChecked = someCheckboxesChecked(true);
+  const tabs = document.querySelectorAll('.actions__tablist button[role="tab"]');
+  tabs.forEach((tab) => {
+    if (!someChecked) {
+      if (tab.getAttribute('aria-selected') === 'true') {
+        tab.click();
+      }
+    }
+    tab.disabled = !someChecked;
+  });
+};
+
+const actionsPanelText = () => {
+  const summaryText = document.querySelector('.actions__summary--header > small');
+  const selectedCount = filterSelectedRecordIDs().length;
+  const recordText = selectedCount === 1 ? 'record' : 'records';
+  summaryText.textContent = selectedCount ? `Choose what to do with the selected ${recordText}.` : 'Select at least one record.';
+};
+
+const selectedText = () => {
+  const summaryText = document.querySelector('.list__actions--utilities .list__in-list');
+  const totalCount = getCheckboxes().length;
+  const recordText = totalCount === 1 ? 'item' : 'items';
+  summaryText.innerHTML = `<span class="strong">${filterSelectedRecordIDs().length}</span> out of <span class="strong">${totalCount}</span> ${recordText} selected.`;
+};
+
+const datastoreHeading = (datastore) => {
+  const heading = document.createElement('h2');
+  // Capitalize first letter and replace underscores with spaces
+  let datastoreText = datastore.charAt(0).toUpperCase() + datastore.slice(1);
+  if (datastore === 'guidesandmore') {
+    datastoreText = 'Guides and More';
+  }
+  if (datastore === 'onlinejournals') {
+    datastoreText = 'Online Journals';
+  }
+  heading.textContent = datastoreText;
+  return heading;
 };
 
 const temporaryList = () => {
@@ -24,39 +69,48 @@ const temporaryList = () => {
   const recordIds = Object.keys(list);
   const listCount = recordIds.length;
   const emptyList = document.querySelector('.list__empty');
+  const listActions = document.querySelector('.list__actions');
 
-  // Update in list count
-  changeCount(listCount);
-
-  // Toggle empty message
+  // Toggle empty message and actions panel
   if (listCount) {
     emptyList.style.display = 'none';
+    listActions.removeAttribute('style');
+
+    // Create temporary list by datastore
+    const listContainer = document.querySelector('.list');
+    Object.keys(list).forEach((datastore) => {
+      // Check if there are records for this datastore
+      if (Object.keys(list[datastore]).length > 0) {
+        // Create heading
+        listContainer.appendChild(datastoreHeading(datastore));
+        // Create list container
+        const listItems = document.createElement('ol');
+        listItems.classList.add(className, 'list__no-style');
+        listContainer.appendChild(listItems);
+        // Display records
+        Object.keys(list[datastore]).forEach((recordId, index) => {
+          listItems.appendChild(listItem({ datastore, index, record: list[datastore][recordId], recordId }));
+        });
+      }
+    });
+
+    // Update Actions panel
+    actionsPanelText();
+    selectedText();
+
+    // Watch for changes to the list and update accordingly
+    listContainer.addEventListener('change', (event) => {
+      if (event.target.matches(`${checkboxSelector}, .select-all > input[type="checkbox"]`)) {
+        actionsPanelText();
+        disableActionTabs();
+        selectAllState();
+        selectedText();
+      }
+    });
   } else {
     emptyList.removeAttribute('style');
+    listActions.style.display = 'none';
   }
-
-  // Create temporary list by datastore
-  const listContainer = document.querySelector('.list');
-  const heading = document.createElement('h2');
-  listContainer.appendChild(heading);
-  heading.textContent = 'Catalog';
-  const listItems = document.createElement('ol');
-  listItems.classList.add(className, 'list__no-style');
-  listContainer.appendChild(listItems);
-
-  // Display records
-  recordIds.forEach((recordId, index) => {
-    listItems.appendChild(listItem({ index, record: list[recordId], recordId }));
-  });
-
-  // Watch for changes to the list and update accordingly
-  listContainer.addEventListener('change', (event) => {
-    if (event.target.matches(checkboxSelector)) {
-      disableSelectAllButton();
-      disableDeselectAllButton();
-      disableRemoveSelectedButton();
-    }
-  });
 };
 
-export { getCheckboxes, someCheckboxesChecked, temporaryList };
+export { actionsPanelText, datastoreHeading, disableActionTabs, filterSelectedRecordIDs, getCheckboxes, selectedText, someCheckboxesChecked, temporaryList };

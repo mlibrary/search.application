@@ -1,10 +1,10 @@
 @use '../partials/breadcrumbs';
 @use './partials/select-all';
-@use './partials/deselect-all';
-@use './partials/remove-selected';
 @use './partials/in-list';
+@use '../partials/actions';
 @use './partials/list-item';
 @use '../../utilities';
+@use '../../forms';
 
 // --------------------------------------------------
 //
@@ -16,6 +16,7 @@
 //   2. Container
 //   3. Header
 //   4. Empty
+//   5. Actions
 //
 // --------------------------------------------------
 
@@ -42,17 +43,27 @@ $class: '.list';
 
 
 
-// ***************** //
-// *** 3. HEADER *** //
-// ***************** //
+// ****************** //
+// *** 3. ACTIONS *** //
+// ****************** //
 
-#{$class} #{$class}__header {
-  &,
-  & > * {
-    @include utilities.flex($responsive: true, $wrap: true);
+#{$class} #{$class}__actions {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  .actions {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
-  & {
-    justify-content: space-between;
+  &--utilities {
+    @include utilities.flex($responsive: true, $wrap: true);
+    & {
+      background-color: var(--search-color-blue-200);
+      border: 2px solid var(--search-color-blue-300);
+      border-radius: 0 0 forms.$radius forms.$radius;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+    }
   }
 }
 
@@ -71,5 +82,21 @@ $class: '.list';
   }
   & > *:last-child {
     margin-bottom: 0;
+  }
+}
+
+
+
+
+
+// ****************** //
+// *** 5. ACTIONS *** //
+// ****************** //
+
+#{$class} .actions {
+  body.no-javascript &,
+  button#actions__link,
+  #actions__link--tabpanel {
+    display: none;
   }
 }

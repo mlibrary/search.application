@@ -81,7 +81,7 @@ module Search::Presenters
       title: title([datastore.title]),
       current_datastore: slug,
       description: datastore.description,
-      icons: Icons.new,
+      icons: Icons.new(["mail", "chat", "format_quote", "draft", "delete"]),
       slug: datastore.slug,
       styles: ["styles.css", "datastores/styles.css", "datastores/list/styles.css"],
       scripts: ["scripts.js", "partials/scripts.js", "datastores/list/scripts.js"],

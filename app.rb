@@ -24,7 +24,7 @@ class Search::Application < Sinatra::Base
     subdirectory = request.path_info.split("/")[1]
 
     pass if ["auth", "change-affiliation", "logout", "-"].include?(subdirectory)
-    pass if subdirectory == "session_switcher" && S.dev_lkogin?
+    pass if subdirectory == "session_switcher" && S.dev_login?
     if expired_user_session?
       patron = Search::Patron.not_logged_in
       patron.to_h.each { |k, v| session[k] = v }

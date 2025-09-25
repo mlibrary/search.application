@@ -162,12 +162,15 @@ describe Search::Presenters::Record::Catalog::Full do
       # **parallel_plain_text_fields,
       **plain_text_fields,
       **browse_bib_fields)
+    @citation_stub = instance_double(Search::Models::Record::Catalog::Citation,
+      meta_tags: [], ris: [], csl: {"type" => "book"})
   end
   let(:record) { create(:catalog_record) }
   subject do
     allow(record).to receive(:bib).and_return(@bib_stub)
     allow(record).to receive(:indexing_date).and_return(indexing_date)
     allow(record).to receive(:marc).and_return(@marc)
+    allow(record).to receive(:citation).and_return(@citation_stub)
     described_class.new(record)
   end
   context "#id" do
@@ -307,6 +310,12 @@ describe Search::Presenters::Record::Catalog::Full do
     end
   end
 
+  context "#csl" do
+    it "returns the csl metadata hash" do
+      expect(subject.csl["type"]).to eq("book")
+    end
+  end
+
   context "Parallel plain text fields" do
     my_parallel_plain_text_fields.each do |uid, name|
       before(:each) do
@@ -387,15 +396,8 @@ end
 describe Search::Presenters::Record::Catalog::Brief do
   let(:record) { create(:catalog_record) }
   before(:each) do
-    @citation_stub = instance_double(Search::Models::Record::Catalog::Citation, ris: Faker::Lorem.paragraph,
-      styles: [
-        OpenStruct.new(name: "mla", html: "<i>Birds</i>. v. 1-Jan./Feb. 1966-, 1966-2013."),
-        OpenStruct.new(name: "apa", html: "<i>Birds</i> (No. v. 1-Jan./Feb. 1966-). (1966-2013)."),
-        OpenStruct.new(name: "chicago", html: "\"Birds,\" 1966-2013."),
-        OpenStruct.new(name: "ieee", html: "\"Birds,\" Art. no. v. 1-Jan./Feb. 1966-, 1966-2013."),
-        OpenStruct.new(name: "nlm", html: "Birds. Sandy, Bedfordshire, Eng.: Royal Society for the Protection of Birds; 1966-2013;"),
-        OpenStruct.new(name: "bibtex", html: "@article{Birds_1966-2013, address={Sandy, Bedfordshire, Eng.}, callNumber={QL671 .B678}, number={v. 1-Jan./Feb. 1966-}, publisher={Royal Society for the Protection of Birds}, year={1966-2013} }")
-      ])
+    @citation_stub = instance_double(Search::Models::Record::Catalog::Citation,
+      ris: Faker::Lorem.paragraph, csl: {"type" => "book"})
 
     @bib_stub = instance_double(Search::Models::Record::Catalog::Bib,
       id: Faker::Number.number(digits: 10).to_s,
@@ -463,14 +465,7 @@ describe Search::Presenters::Record::Catalog::Brief do
         url: "#{S.base_url}/catalog/record/#{@bib_stub.id}",
         citation: {
           ris: @citation_stub.ris,
-          styles: {
-            mla: "<i>Birds</i>. v. 1-Jan./Feb. 1966-, 1966-2013.",
-            apa: "<i>Birds</i> (No. v. 1-Jan./Feb. 1966-). (1966-2013).",
-            chicago: "\"Birds,\" 1966-2013.",
-            ieee: "\"Birds,\" Art. no. v. 1-Jan./Feb. 1966-, 1966-2013.",
-            nlm: "Birds. Sandy, Bedfordshire, Eng.: Royal Society for the Protection of Birds; 1966-2013;",
-            bibtex: "@article{Birds_1966-2013, address={Sandy, Bedfordshire, Eng.}, callNumber={QL671 .B678}, number={v. 1-Jan./Feb. 1966-}, publisher={Royal Society for the Protection of Birds}, year={1966-2013} }"
-          }
+          csl: @citation_stub.csl
         }
       }
       expect(subject.to_h).to eq(expected)
