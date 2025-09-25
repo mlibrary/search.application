@@ -1,6 +1,7 @@
 module Factories::CatalogRecord
   class << self
     include RSpec::Mocks::ExampleMethods
+
     def record
       instance_double(Search::Models::Record::Catalog, bib: bib, holdings: holdings)
     end

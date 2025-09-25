@@ -1,5 +1,6 @@
 RSpec.describe "authentication requests" do
   include Rack::Test::Methods
+
   let(:omniauth_auth) {
     {
       info: {nickname: "fakeuser"},

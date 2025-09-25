@@ -5,7 +5,7 @@ import stylistic from '@stylistic/eslint-plugin';
 
 export default [
   pluginJs.configs.all,
-  mochaPlugin.configs.flat.recommended,
+  mochaPlugin.configs.recommended,
   {
     languageOptions: {
       globals: {
