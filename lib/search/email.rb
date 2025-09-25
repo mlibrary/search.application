@@ -1,5 +1,5 @@
 class Search::Email
-  def message_body
+  def body
     raise NotImplementedError
   end
 

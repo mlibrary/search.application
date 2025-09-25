@@ -85,3 +85,7 @@ end
 S.register(:twilio_client) {
   FakeTwilioClient.new
 }
+
+Mail.defaults do
+  delivery_method :test
+end
