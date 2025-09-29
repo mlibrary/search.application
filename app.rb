@@ -10,6 +10,10 @@ require "ruby-prof" if S.profile?
 Metrics::Yabeda.configure!
 
 class Search::Application < Sinatra::Base
+  configure do
+    mime_type :ris, "application/x-research-info-systems"
+  end
+
   set :root, S.project_root
   set :app_file, S.project_root + "/app.rb"
 
@@ -120,6 +124,12 @@ class Search::Application < Sinatra::Base
       get "/#{datastore.slug}/record/:id/brief" do
         content_type :json
         Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").to_json
+      end
+      get "/#{datastore.slug}/record/:id/ris" do
+        attachment "#{params["id"]}.ris"
+        Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").ris
+      rescue
+        redirect "/#{datastore.slug}/record/:id"
       end
     end
     if datastore.slug == "everything"
