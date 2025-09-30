@@ -1,15 +1,23 @@
 <%
-  citations = ["MLA", "APA", "Chicago", "IEEE", "NLM", "BibTex"]
+  citations = {
+    "MLA" => "modern-language-association",
+    "APA" => "apa",
+    "Chicago" => "chicago-notes-bibliography",
+    "IEEE" => "ieee",
+    "NLM" => "national-library-of-medicine-grant-proposals",
+    "BibTex" => "bibtex"
+  }
 %>
 <div class="citation">
+  <textarea class="citation__csl"><%= @record && [@record.csl].to_json %></textarea>
   <div role="tablist" aria-labelledby="actions__citation" class="citation__tablist">
-    <% citations.each do |key| %>
-      <button type="button" role="tab" aria-selected="<%= key == "MLA" %>" id="citation__<%= key.downcase %>" aria-controls="citation__<%= key.downcase %>--tabpanel">
+    <% citations.each do |key, value| %>
+      <button type="button" role="tab" aria-selected="<%= key == "MLA" %>" id="citation__<%= key.downcase %>" aria-controls="citation__<%= key.downcase %>--tabpanel" data-citation-style="<%= value %>">
         <%= key %>
       </button>
     <% end %>
   </div>
-  <% citations.each do |key| %>
+  <% citations.each do |key, value| %>
     <div id="citation__<%= key.downcase %>--tabpanel" role="tabpanel" aria-labelledby="citation__<%= key.downcase %>" class="citation__tabpanel">
       <div class="alert alert__success actions__alert">
         Citation copied to clipboard!

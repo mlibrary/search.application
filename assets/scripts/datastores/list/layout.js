@@ -1,3 +1,4 @@
+import { displayCSLData } from '../partials/actions/_citation.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
 import { selectAllState } from './partials/_select-all.js';
@@ -97,6 +98,7 @@ const temporaryList = () => {
 
     // Update Actions panel
     actionsPanelText();
+    displayCSLData();
     selectedText();
 
     // Watch for changes to the list and update accordingly
@@ -104,6 +106,7 @@ const temporaryList = () => {
       if (event.target.matches(`${checkboxSelector}, .select-all > input[type="checkbox"]`)) {
         actionsPanelText();
         disableActionTabs();
+        displayCSLData();
         selectAllState();
         selectedText();
       }
