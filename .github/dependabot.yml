@@ -1,7 +1,7 @@
 version: 2
 
 multi-ecosystem-groups:
-  maintenance:
+  app-dependencies:
     schedule:
       interval: "cron"
       cronjob: "0 6 1-7 * 1" # Every first Monday of the month at 6:00am
