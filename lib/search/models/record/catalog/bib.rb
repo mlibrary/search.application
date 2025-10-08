@@ -17,7 +17,7 @@ class Search::Models::Record::Catalog::Bib
     :copy_specific_note, :copyright, :copyright_status_information, :created,
     :current_publication_frequency, :date_place_of_event, :distributed,
     :edition, :extended_summary, :finding_aids, :former_publication_frequency,
-    :funding_information, :in_collection, :language_note,
+    :funding_information, :language_note,
     :location_of_originals, :manufactured, :map_scale, :media_format, :note,
     :numbering, :numbering_notes, :original_version_note, :performers,
     :physical_description, :place, :playing_time, :preferred_citation, :printer,
@@ -49,6 +49,12 @@ class Search::Models::Record::Catalog::Bib
       _map_paired_field(uid.to_s) do |item|
         LinkToItem.new(item)
       end
+    end
+  end
+
+  def in_collection
+    _map_paired_field("in_collection") do |item|
+      InCollectionItem.new(item)
     end
   end
 
@@ -172,6 +178,18 @@ class Search::Models::Record::Catalog::Bib
 
     def paired?
       false
+    end
+  end
+
+  class InCollectionItem < Item
+    def text
+      base_text = super
+      base_text.match?(/^[0-9]+$/) ? "Record ID #{base_text}" : base_text
+    end
+
+    def url
+      doc_id = @data["search"].first["value"]
+      "#{S.base_url}/catalog/record/#{doc_id}"
     end
   end
 
