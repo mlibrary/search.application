@@ -9,7 +9,7 @@
   }
 %>
 <div class="citation">
-  <textarea class="citation__csl"><%= @record && [@record.csl].to_json %></textarea>
+  <%= erb :"datastores/partials/actions/citation/_csl" %>
   <div role="tablist" aria-labelledby="actions__citation" class="citation__tablist">
     <% citations.each do |key, value| %>
       <button type="button" role="tab" aria-selected="<%= key == "MLA" %>" id="citation__<%= key.downcase %>" aria-controls="citation__<%= key.downcase %>--tabpanel" data-citation-style="<%= value %>">
@@ -33,5 +33,5 @@
       These citations are generated from a variety of data sources. Remember to check citation format and content for accuracy before including them in your work. View the <%= link_to(body: "Citation Management guide on U-M Library Website", url: "https://guides.lib.umich.edu/citationhelp", open_in_new: true) %>.
     </small>
   </p>
-  <button class="citation__copy" disabled>Copy citation</button>
+  <%= erb :"datastores/partials/actions/citation/_copy-citation" %>
 </div>
