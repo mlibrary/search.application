@@ -10,13 +10,7 @@
 %>
 <div class="citation">
   <%= erb :"datastores/partials/actions/citation/_csl" %>
-  <div role="tablist" aria-labelledby="actions__citation" class="citation__tablist">
-    <% citations.each do |key, value| %>
-      <button type="button" role="tab" aria-selected="<%= key == "MLA" %>" id="citation__<%= key.downcase %>" aria-controls="citation__<%= key.downcase %>--tabpanel" data-citation-style="<%= value %>">
-        <%= key %>
-      </button>
-    <% end %>
-  </div>
+  <%= erb :"datastores/partials/actions/citation/_tablist", locals: { citations: citations } %>
   <% citations.each do |key, value| %>
     <div id="citation__<%= key.downcase %>--tabpanel" role="tabpanel" aria-labelledby="citation__<%= key.downcase %>" class="citation__tabpanel">
       <div class="alert alert__success actions__alert">
