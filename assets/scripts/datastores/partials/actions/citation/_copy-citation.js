@@ -12,4 +12,4 @@ const disableCopyCitationButton = () => {
   getCopyCitationButton().toggleAttribute('disabled', !hasEntry);
 };
 
-export { getCopyCitationButton, disableCopyCitationButton };
+export { disableCopyCitationButton, getCopyCitationButton };
