@@ -8,7 +8,7 @@ const getActiveCitationTab = () => {
   return getCitationTablist().querySelector('[role="tab"][aria-selected="true"]');
 };
 
-const triggerCitationTabChange = (toggleCopyCitationButton = disableCopyCitationButton) => {
+const citationTabClick = (toggleCopyCitationButton = disableCopyCitationButton) => {
   getCitationTablist().addEventListener('click', (event) => {
     const tab = event.target.closest('[role="tab"]');
     if (!tab) {
@@ -19,4 +19,4 @@ const triggerCitationTabChange = (toggleCopyCitationButton = disableCopyCitation
   });
 };
 
-export { getActiveCitationTab, getCitationTablist, triggerCitationTabChange };
+export { citationTabClick, getActiveCitationTab, getCitationTablist };
