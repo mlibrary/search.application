@@ -3,9 +3,6 @@
     <div class="alert alert__success actions__alert">
       Citation copied to clipboard!
     </div>
-    <span id="citation__<%= key.downcase %>--label" class="citation__label"><%= key %> citation</span>
-    <div role="textbox" disabled contenteditable="true" aria-labelledby="citation__<%= key.downcase %>--label" aria-describedby="citation__input-disclaimer" class="citation__input" id="citation__<%= key.downcase %>--text">
-      <span class="citation__not-available">Citation not available.</span>
-    </div>
+    <%= erb :"datastores/partials/actions/citation/tabpanel/_textbox", locals: { style: key } %>
   </div>
 <% end %>
