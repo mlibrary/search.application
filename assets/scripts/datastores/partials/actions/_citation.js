@@ -1,10 +1,8 @@
 import { filterSelectedRecords, someCheckboxesChecked } from '../../list/layout.js';
-import { copyToClipboard } from '../_actions.js';
 import CSL from 'citeproc';
 import { getTemporaryList } from '../../list/partials/_add-to.js';
 
-const citationPanel = document.querySelector('.citation');
-const tabList = citationPanel.querySelector('.citation__tablist');
+const tabList = document.querySelector('.citation .citation__tablist');
 
 const getTemporaryListCitations = (type = 'csl') => {
   let list = [];
@@ -89,37 +87,4 @@ const generateFullRecordCitations = () => {
   });
 };
 
-const copyCitation = () => {
-  const copyCitationButton = citationPanel.querySelector('.citation__copy');
-
-  // Enable "Copy citation" button if a tab is already selected
-  if (tabList.querySelector('[aria-selected="true"]')) {
-    copyCitationButton.removeAttribute('disabled');
-  }
-
-  tabList.addEventListener('click', (event) => {
-    const tab = event.target.closest('[role="tab"]');
-    if (!tab) {
-      return;
-    }
-
-    const isSelected = tab.getAttribute('aria-selected') === 'true';
-    const currentTab = citationPanel.querySelector(`#${tab.getAttribute('aria-controls')}`);
-    const alert = currentTab.querySelector('.actions__alert');
-
-    if (isSelected) {
-      // Enable "Copy citation" button if a tab is selected
-      copyCitationButton.removeAttribute('disabled');
-      // Grab the citation content of the selected tab
-      copyCitationButton.onclick = () => {
-        return copyToClipboard({ alert, text: currentTab.querySelector('.citation__input').textContent.trim() });
-      };
-    } else {
-      // Disable "Copy citation" button if no tab is selected
-      copyCitationButton.setAttribute('disabled', true);
-      copyCitationButton.onclick = null;
-    }
-  });
-};
-
-export { copyCitation, displayCSLData, generateFullRecordCitations, getTemporaryListCitations };
+export { displayCSLData, generateFullRecordCitations, getTemporaryListCitations };

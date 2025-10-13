@@ -11,17 +11,7 @@
 <div class="citation">
   <%= erb :"datastores/partials/actions/citation/_csl" %>
   <%= erb :"datastores/partials/actions/citation/_tablist", locals: { citations: citations } %>
-  <% citations.each do |key, value| %>
-    <div id="citation__<%= key.downcase %>--tabpanel" role="tabpanel" aria-labelledby="citation__<%= key.downcase %>" class="citation__tabpanel">
-      <div class="alert alert__success actions__alert">
-        Citation copied to clipboard!
-      </div>
-      <span id="citation__<%= key.downcase %>--label" class="citation__label"><%= key %> citation</span>
-      <div role="textbox" disabled contenteditable="true" aria-labelledby="citation__<%= key.downcase %>--label" aria-describedby="citation__input-disclaimer" class="citation__input" id="citation__<%= key.downcase %>--text">
-        <span class="citation__not-available">Citation not available.</span>
-      </div>
-    </div>
-  <% end %>
+  <%= erb :"datastores/partials/actions/citation/_tabpanel", locals: { citations: citations } %>
   <p>
     <small id="citation__input-disclaimer">
       These citations are generated from a variety of data sources. Remember to check citation format and content for accuracy before including them in your work. View the <%= link_to(body: "Citation Management guide on U-M Library Website", url: "https://guides.lib.umich.edu/citationhelp", open_in_new: true) %>.
