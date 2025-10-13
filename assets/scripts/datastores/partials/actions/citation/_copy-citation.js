@@ -1,3 +1,5 @@
+import { getCitationAlert, getCitationInput } from './_tabpanel.js';
+import { copyToClipboard } from '../../_actions.js';
 import { getActiveCitationTab } from './_tablist.js';
 import { getCitationCSL } from './_csl.js';
 
@@ -12,4 +14,13 @@ const disableCopyCitationButton = () => {
   getCopyCitationButton().toggleAttribute('disabled', !hasEntry);
 };
 
-export { disableCopyCitationButton, getCopyCitationButton };
+const copyCitation = () => {
+  getCopyCitationButton().addEventListener('click', () => {
+    return copyToClipboard({
+      alert: getCitationAlert(),
+      text: getCitationInput().textContent.trim()
+    });
+  });
+};
+
+export { copyCitation, disableCopyCitationButton, getCopyCitationButton };
