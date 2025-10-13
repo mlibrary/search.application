@@ -6,6 +6,10 @@ import { selectAllState } from './partials/_select-all.js';
 const className = 'list__items';
 const checkboxSelector = 'input[type="checkbox"].list__item--checkbox';
 
+const viewingTemporaryList = () => {
+  return window.location.pathname === '/everything/list';
+};
+
 const getCheckboxes = () => {
   return document.querySelectorAll(`ol.${className} ${checkboxSelector}`);
 };
@@ -117,4 +121,4 @@ const temporaryList = () => {
   }
 };
 
-export { actionsPanelText, datastoreHeading, disableActionTabs, filterSelectedRecords, getCheckboxes, selectedText, someCheckboxesChecked, temporaryList };
+export { actionsPanelText, datastoreHeading, disableActionTabs, filterSelectedRecords, getCheckboxes, selectedText, someCheckboxesChecked, temporaryList, viewingTemporaryList };
