@@ -484,6 +484,9 @@ describe('layout', function () {
     });
 
     it('should be `true` if the current pathname is `/everything/list`', function () {
+      // Store the original window object
+      const originalWindow = global.window;
+
       // Setup JSDOM with an updated URL
       const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
         url: 'http://localhost/everything/list'
@@ -492,7 +495,11 @@ describe('layout', function () {
       // Override the global window object
       global.window = dom.window;
 
+      // Check that My Temporary List is being viewed
       expect(viewingTemporaryList(), 'the variable should be `true` if the current pathname is `/everything/list`').to.be.true;
+
+      // Restore the original window object
+      global.window = originalWindow;
     });
   });
 });
