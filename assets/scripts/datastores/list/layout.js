@@ -1,31 +1,11 @@
+import { filterSelectedRecords, getCheckboxes, someCheckboxesChecked } from './partials/list-item/_checkbox.js';
 import { displayCSLData } from '../partials/actions/_citation.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
 import { selectAllState } from './partials/_select-all.js';
 
-const className = 'list__items';
-const checkboxSelector = 'input[type="checkbox"].list__item--checkbox';
-
 const viewingTemporaryList = () => {
   return window.location.pathname === '/everything/list';
-};
-
-const getCheckboxes = () => {
-  return document.querySelectorAll(`ol.${className} ${checkboxSelector}`);
-};
-
-const filterSelectedRecords = () => {
-  return [...getCheckboxes()].filter((checkbox) => {
-    return checkbox.checked === true;
-  }).map((checkbox) => {
-    return checkbox.value;
-  });
-};
-
-const someCheckboxesChecked = (checked = false) => {
-  return [...getCheckboxes()].some((checkbox) => {
-    return checkbox.checked === checked;
-  });
 };
 
 const disableActionTabs = () => {
@@ -91,7 +71,7 @@ const temporaryList = () => {
         listContainer.appendChild(datastoreHeading(datastore));
         // Create list container
         const listItems = document.createElement('ol');
-        listItems.classList.add(className, 'list__no-style');
+        listItems.classList.add('list__items', 'list__no-style');
         listContainer.appendChild(listItems);
         // Display records
         Object.keys(list[datastore]).forEach((recordId, index) => {
@@ -107,7 +87,7 @@ const temporaryList = () => {
 
     // Watch for changes to the list and update accordingly
     listContainer.addEventListener('change', (event) => {
-      if (event.target.matches(`${checkboxSelector}, .select-all > input[type="checkbox"]`)) {
+      if (event.target.matches(`input[type="checkbox"].list__item--checkbox, .select-all > input[type="checkbox"]`)) {
         actionsPanelText();
         disableActionTabs();
         displayCSLData();
@@ -121,4 +101,4 @@ const temporaryList = () => {
   }
 };
 
-export { actionsPanelText, datastoreHeading, disableActionTabs, filterSelectedRecords, getCheckboxes, selectedText, someCheckboxesChecked, temporaryList, viewingTemporaryList };
+export { actionsPanelText, datastoreHeading, disableActionTabs, selectedText, temporaryList, viewingTemporaryList };

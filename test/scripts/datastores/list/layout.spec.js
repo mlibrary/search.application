@@ -2,13 +2,11 @@ import {
   actionsPanelText,
   datastoreHeading,
   disableActionTabs,
-  filterSelectedRecords,
-  getCheckboxes,
   selectedText,
-  someCheckboxesChecked,
   temporaryList,
   viewingTemporaryList
 } from '../../../../assets/scripts/datastores/list/layout.js';
+import { filterSelectedRecords, getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
@@ -31,82 +29,6 @@ const checkboxHTML = `
 `;
 
 describe('layout', function () {
-  describe('getCheckboxes()', function () {
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = checkboxHTML;
-    });
-
-    it('should return all the checkboxes in the temporary list', function () {
-      // Check that the correct elements are returned
-      expect(getCheckboxes(), 'the correct elements should be returned').to.deep.equal(document.querySelectorAll('ol.list__items input[type="checkbox"].list__item--checkbox'));
-    });
-  });
-
-  describe('filterSelectedRecords()', function () {
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = checkboxHTML;
-
-      // Check that at least one checkbox is checked
-      expect(someCheckboxesChecked(true), 'at least one checkbox should be checked for this test').to.be.true;
-    });
-
-    it('should return an array of the selected record IDs', function () {
-      // Check that the correct record IDs are returned
-      expect(filterSelectedRecords(), 'the correct record IDs should be returned').to.deep.equal(['rec1']);
-    });
-
-    it('should return an array, even if no records are checked', function () {
-      // Remove the checked attribute from all checkboxes
-      getCheckboxes().forEach((checkbox) => {
-        checkbox.checked = false;
-      });
-
-      // Check that the correct record IDs are returned
-      expect(filterSelectedRecords(), 'an empty array should return if no checkboxes are checked').to.deep.equal([]);
-    });
-  });
-
-  describe('someCheckboxesChecked()', function () {
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = checkboxHTML;
-    });
-
-    describe('true', function () {
-      it('should return `true` if at least one checkbox is checked', function () {
-        expect(someCheckboxesChecked(true), 'the function should return `true` if at least one checkbox is checked').to.be.true;
-      });
-
-      it('should return `false` if no checkboxes are checked', function () {
-        // Uncheck all the checkboxes
-        getCheckboxes().forEach((checkbox) => {
-          checkbox.checked = false;
-        });
-
-        // Check that the function returns false
-        expect(someCheckboxesChecked(true), 'the function should return `false` if no checkboxes are checked').to.be.false;
-      });
-    });
-
-    describe('false', function () {
-      it('should return `true` if at least one checkbox is unchecked', function () {
-        expect(someCheckboxesChecked(false), 'the function should return `true` if at least one checkbox is unchecked').to.be.true;
-      });
-
-      it('should return `false` if all checkboxes are checked', function () {
-        // Check all the checkboxes
-        getCheckboxes().forEach((checkbox) => {
-          checkbox.checked = true;
-        });
-
-        // Check that the function returns false
-        expect(someCheckboxesChecked(false), 'the function should return `false` if all checkboxes are checked').to.be.false;
-      });
-    });
-  });
-
   describe('datastoreHeading()', function () {
     let getHeading = null;
 
