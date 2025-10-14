@@ -1,11 +1,10 @@
 import {
   datastoreHeading,
   disableActionTabs,
-  selectedText,
   temporaryList,
   viewingTemporaryList
 } from '../../../../assets/scripts/datastores/list/layout.js';
-import { filterSelectedRecords, getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
@@ -124,54 +123,6 @@ describe('layout', function () {
       getTabs().forEach((tab) => {
         expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
       });
-    });
-  });
-
-  describe('selectedText()', function () {
-    let getText = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = `
-        <div class="list__actions--utilities">
-          <div class="list__in-list"></div>
-        </div>
-        ${checkboxHTML}
-      `;
-
-      getText = () => {
-        return document.querySelector('.list__actions--utilities .list__in-list').textContent;
-      };
-
-      // Check that the initial text is empty
-      expect(getText(), 'the initial text should be empty').to.equal('');
-    });
-
-    afterEach(function () {
-      // Call the function
-      selectedText();
-
-      // Check that the text is correct
-      const checkboxesLength = getCheckboxes().length;
-      expect(getText(), 'the text should be correct').to.equal(`${filterSelectedRecords().length} out of ${checkboxesLength} ${checkboxesLength === 1 ? 'item' : 'items'} selected.`);
-
-      getText = null;
-    });
-
-    it('should update the selected text if there is only one list item', function () {
-      // Delete all but one checkbox
-      const checkboxes = getCheckboxes();
-      for (let index = 1; index < checkboxes.length; index += 1) {
-        checkboxes[index].parentElement.remove();
-      }
-
-      // Check that there is only one checkbox
-      expect(getCheckboxes().length, 'there should be only one checkbox for this test').to.equal(1);
-    });
-
-    it('should update the selected text if there is more than one list item', function () {
-      // Check that there is only one checkbox
-      expect(getCheckboxes().length, 'there should be more than one checkbox').to.be.greaterThan(1);
     });
   });
 

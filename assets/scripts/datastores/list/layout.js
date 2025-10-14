@@ -1,9 +1,10 @@
-import { filterSelectedRecords, getCheckboxes, someCheckboxesChecked } from './partials/list-item/_checkbox.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
 import { displayCSLData } from '../partials/actions/action/_citation.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
 import { selectAllState } from './partials/_select-all.js';
+import { selectedText } from './partials/_in-list.js';
+import { someCheckboxesChecked } from './partials/list-item/_checkbox.js';
 
 const viewingTemporaryList = () => {
   return window.location.pathname === '/everything/list';
@@ -20,13 +21,6 @@ const disableActionTabs = () => {
     }
     tab.disabled = !someChecked;
   });
-};
-
-const selectedText = () => {
-  const summaryText = document.querySelector('.list__actions--utilities .list__in-list');
-  const totalCount = getCheckboxes().length;
-  const recordText = totalCount === 1 ? 'item' : 'items';
-  summaryText.innerHTML = `<span class="strong">${filterSelectedRecords().length}</span> out of <span class="strong">${totalCount}</span> ${recordText} selected.`;
 };
 
 const datastoreHeading = (datastore) => {
@@ -95,4 +89,4 @@ const temporaryList = () => {
   }
 };
 
-export { datastoreHeading, disableActionTabs, selectedText, temporaryList, viewingTemporaryList };
+export { datastoreHeading, disableActionTabs, temporaryList, viewingTemporaryList };
