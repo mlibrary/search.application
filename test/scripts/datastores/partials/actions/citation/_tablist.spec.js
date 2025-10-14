@@ -1,4 +1,4 @@
-import { citationTabClick, getActiveCitationTab, getCitationTablist } from '../../../../../../assets/scripts/datastores/partials/actions/citation/_tablist.js';
+import { citationTabClick, getActiveCitationTab, getCitationTablist } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 

@@ -1,4 +1,4 @@
-import { citationCSLChange, displayCSLData, generateCSLData, getCitationCSL } from '../../../../../../assets/scripts/datastores/partials/actions/citation/_csl.js';
+import { citationCSLChange, displayCSLData, generateCSLData, getCitationCSL } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import sinon from 'sinon';

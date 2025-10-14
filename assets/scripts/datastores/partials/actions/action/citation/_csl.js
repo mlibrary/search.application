@@ -1,5 +1,5 @@
 import { disableCopyCitationButton } from './_copy-citation.js';
-import { viewingTemporaryList } from '../../../list/layout.js';
+import { viewingTemporaryList } from '../../../../list/layout.js';
 
 const getCitationCSL = () => {
   return document.querySelector('.citation textarea.citation__csl');

@@ -1,5 +1,5 @@
 import { getCitationAlert, getCitationInput } from './_tabpanel.js';
-import { copyToClipboard } from '../../_actions.js';
+import { copyToClipboard } from '../../../_actions.js';
 import { getActiveCitationTab } from './_tablist.js';
 import { getCitationCSL } from './_csl.js';
 

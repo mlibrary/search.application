@@ -1,4 +1,4 @@
-import { getActiveCitationTabpanel, getCitationAlert, getCitationInput } from '../../../../../../assets/scripts/datastores/partials/actions/citation/_tabpanel.js';
+import { getActiveCitationTabpanel, getCitationAlert, getCitationInput } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tabpanel.js';
 import { expect } from 'chai';
 
 describe('copy-citation', function () {

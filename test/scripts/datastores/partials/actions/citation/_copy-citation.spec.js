@@ -1,4 +1,4 @@
-import { copyCitation, disableCopyCitationButton, getCopyCitationButton } from '../../../../../../assets/scripts/datastores/partials/actions/citation/_copy-citation.js';
+import { copyCitation, disableCopyCitationButton, getCopyCitationButton } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_copy-citation.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 

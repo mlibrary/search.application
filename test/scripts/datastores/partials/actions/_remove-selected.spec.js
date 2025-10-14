@@ -1,4 +1,4 @@
-import { removeSelected, removeSelectedButton } from '../../../../../assets/scripts/datastores/partials/actions/_remove-selected.js';
+import { removeSelected, removeSelectedButton } from '../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
 import { expect } from 'chai';
 import { getCheckboxes } from '../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { getTemporaryList } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
