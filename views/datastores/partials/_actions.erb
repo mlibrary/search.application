@@ -10,10 +10,7 @@
 %>
 <details open class="container__rounded--no-shadow actions">
   <summary class="actions__summary">
-    <div class="actions__summary--header">
-      <span class="strong" id="actions__label">Actions</span>
-      <small>Select what to do with this record.</small>
-    </div>
+    <%= erb :"datastores/partials/actions/_summary" %>
   </summary>
   <div role="tablist" aria-labelledby="actions__label" class="actions__tablist">
     <% tabs.each do |key, value| %>
