@@ -1,5 +1,4 @@
 import {
-  actionsPanelText,
   datastoreHeading,
   disableActionTabs,
   selectedText,
@@ -125,73 +124,6 @@ describe('layout', function () {
       getTabs().forEach((tab) => {
         expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
       });
-    });
-  });
-
-  describe('actionsPanelText()', function () {
-    let getText = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = `
-        ${actionsPanelHTML}
-        ${checkboxHTML}
-      `;
-
-      getText = () => {
-        return document.querySelector('.actions__summary--header > small').textContent;
-      };
-
-      // Check that the initial text is empty
-      expect(getText(), 'the initial text should be empty').to.equal('');
-    });
-
-    afterEach(function () {
-      getText = null;
-    });
-
-    it('should update the selected text if there is only one selected record', function () {
-      // Check that there is only one selected record
-      expect(filterSelectedRecords().length, 'there should be only one selected record').to.equal(1);
-
-      // Call the function
-      actionsPanelText();
-
-      // Check that the text is correct
-      expect(getText(), 'the text should be correct for a single selected record').to.equal('Choose what to do with the selected record.');
-    });
-
-    it('should update the selected text if there is more than one selected record', function () {
-      // Check more than one checkbox
-      const checkboxes = getCheckboxes();
-      for (let index = 1; index < 3; index += 1) {
-        checkboxes[index].checked = true;
-      }
-
-      // Check that there is more than one selected record
-      expect(filterSelectedRecords().length, 'there should be more than one selected record').to.be.greaterThan(1);
-
-      // Call the function
-      actionsPanelText();
-
-      // Check that the text is correct
-      expect(getText(), 'the text should be correct for selected multiple records').to.equal('Choose what to do with the selected records.');
-    });
-
-    it('should update the text if no records are selected', function () {
-      // Uncheck all the checkboxes
-      getCheckboxes().forEach((checkbox) => {
-        checkbox.checked = false;
-      });
-
-      // Check that are no selected records
-      expect(filterSelectedRecords().length, 'there should be no selected records').to.equal(0);
-
-      // Call the function
-      actionsPanelText();
-
-      // Check that the text is correct
-      expect(getText(), 'the text should be correct for no selected records').to.equal('Select at least one record.');
     });
   });
 

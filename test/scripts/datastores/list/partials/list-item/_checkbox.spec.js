@@ -1,4 +1,4 @@
-import { filterSelectedRecords, getCheckboxes, someCheckboxesChecked } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, getCheckboxes, getCheckedCheckboxes, someCheckboxesChecked } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 
 describe('checkbox', function () {
@@ -22,6 +22,23 @@ describe('checkbox', function () {
     it('should return all the checkboxes in the temporary list', function () {
       // Check that the correct elements are returned
       expect(getCheckboxes(), 'the correct elements should be returned').to.deep.equal(document.querySelectorAll('input[type="checkbox"]'));
+    });
+  });
+
+  describe('getCheckedCheckboxes', function () {
+    it('should return only the checked checkboxes in the temporary list', function () {
+      // Check that the correct elements are returned
+      expect(getCheckedCheckboxes(), 'only the checked checkboxes should be returned').to.deep.equal(document.querySelectorAll('input[type="checkbox"]:checked'));
+    });
+
+    it('should return an empty NodeList if no checkboxes are checked', function () {
+      // Remove the checked attribute from all checkboxes
+      getCheckboxes().forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+
+      // Check that an empty NodeList is returned
+      expect(getCheckedCheckboxes().length, 'an empty NodeList should be returned if no checkboxes are checked').to.equal(0);
     });
   });
 

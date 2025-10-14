@@ -1,4 +1,5 @@
 import { filterSelectedRecords, getCheckboxes, someCheckboxesChecked } from './partials/list-item/_checkbox.js';
+import { actionsPanelText } from '../partials/actions/_summary.js';
 import { displayCSLData } from '../partials/actions/_citation.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
@@ -19,13 +20,6 @@ const disableActionTabs = () => {
     }
     tab.disabled = !someChecked;
   });
-};
-
-const actionsPanelText = () => {
-  const summaryText = document.querySelector('.actions__summary--header > small');
-  const selectedCount = filterSelectedRecords().length;
-  const recordText = selectedCount === 1 ? 'record' : 'records';
-  summaryText.textContent = selectedCount ? `Choose what to do with the selected ${recordText}.` : 'Select at least one record.';
 };
 
 const selectedText = () => {
@@ -101,4 +95,4 @@ const temporaryList = () => {
   }
 };
 
-export { actionsPanelText, datastoreHeading, disableActionTabs, selectedText, temporaryList, viewingTemporaryList };
+export { datastoreHeading, disableActionTabs, selectedText, temporaryList, viewingTemporaryList };
