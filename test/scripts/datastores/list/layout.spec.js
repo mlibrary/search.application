@@ -47,11 +47,24 @@ describe('layout', function () {
     beforeEach(function () {
       // Apply HTML to the body
       document.body.innerHTML = checkboxHTML;
+
+      // Check that at least one checkbox is checked
+      expect(someCheckboxesChecked(true), 'at least one checkbox should be checked for this test').to.be.true;
     });
 
     it('should return an array of the selected record IDs', function () {
       // Check that the correct record IDs are returned
       expect(filterSelectedRecords(), 'the correct record IDs should be returned').to.deep.equal(['rec1']);
+    });
+
+    it('should return an array, even if no records are checked', function () {
+      // Remove the checked attribute from all checkboxes
+      getCheckboxes().forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+
+      // Check that the correct record IDs are returned
+      expect(filterSelectedRecords(), 'an empty array should return if no checkboxes are checked').to.deep.equal([]);
     });
   });
 
