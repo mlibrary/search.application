@@ -1,4 +1,4 @@
-import { copyToClipboard } from '../_actions.js';
+import { copyToClipboard } from '../../_actions.js';
 
 const copyLink = () => {
   const link = document.querySelector('#actions__link--tabpanel');

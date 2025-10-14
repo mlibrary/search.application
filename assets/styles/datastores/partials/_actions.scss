@@ -1,8 +1,8 @@
 @use '../../utilities';
 @use '../../icons';
 @use '../../media';
-@use './actions/email';
-@use './actions/citation';
+@use './actions/action/email';
+@use './actions/action/citation';
 @use './actions/summary';
 
 // --------------------------------------------------

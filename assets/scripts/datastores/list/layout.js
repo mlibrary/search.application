@@ -1,6 +1,6 @@
 import { filterSelectedRecords, getCheckboxes, someCheckboxesChecked } from './partials/list-item/_checkbox.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
-import { displayCSLData } from '../partials/actions/_citation.js';
+import { displayCSLData } from '../partials/actions/action/_citation.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
 import { selectAllState } from './partials/_select-all.js';

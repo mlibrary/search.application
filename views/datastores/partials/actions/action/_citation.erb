@@ -9,13 +9,13 @@
   }
 %>
 <div class="citation">
-  <%= erb :"datastores/partials/actions/citation/_csl" %>
-  <%= erb :"datastores/partials/actions/citation/_tablist", locals: { citations: citations } %>
-  <%= erb :"datastores/partials/actions/citation/_tabpanel", locals: { citations: citations } %>
+  <%= erb :"datastores/partials/actions/action/citation/_csl" %>
+  <%= erb :"datastores/partials/actions/action/citation/_tablist", locals: { citations: citations } %>
+  <%= erb :"datastores/partials/actions/action/citation/_tabpanel", locals: { citations: citations } %>
   <p>
     <small id="citation__input-disclaimer">
       These citations are generated from a variety of data sources. Remember to check citation format and content for accuracy before including them in your work. View the <%= link_to(body: "Citation Management guide on U-M Library Website", url: "https://guides.lib.umich.edu/citationhelp", open_in_new: true) %>.
     </small>
   </p>
-  <%= erb :"datastores/partials/actions/citation/_copy-citation" %>
+  <%= erb :"datastores/partials/actions/action/citation/_copy-citation" %>
 </div>

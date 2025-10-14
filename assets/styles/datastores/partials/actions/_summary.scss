@@ -1,3 +1,5 @@
+@use '../../../utilities';
+
 // --------------------------------------------------
 //
 // # Summary
@@ -12,7 +14,7 @@
 // *** 1. HEADER *** //
 // ***************** //
 
-.#{$class}__summary--header {
+.actions__summary--header {
   @include utilities.flex($wrap: true, $align: baseline);
   gap: 0.25rem 1.5rem;
 }

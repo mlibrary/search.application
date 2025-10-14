@@ -1,5 +1,5 @@
-import { getTemporaryList, setTemporaryList } from '../../list/partials/_add-to.js';
-import { getCheckboxes } from '../../list/partials/list-item/_checkbox.js';
+import { getTemporaryList, setTemporaryList } from '../../../list/partials/_add-to.js';
+import { getCheckboxes } from '../../../list/partials/list-item/_checkbox.js';
 
 const removeSelectedButton = () => {
   return document.querySelector('.actions button.action__remove-selected');

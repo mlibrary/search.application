@@ -1,6 +1,6 @@
-import { filterSelectedRecords, someCheckboxesChecked } from '../../list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, someCheckboxesChecked } from '../../../list/partials/list-item/_checkbox.js';
 import CSL from 'citeproc';
-import { getTemporaryList } from '../../list/partials/_add-to.js';
+import { getTemporaryList } from '../../../list/partials/_add-to.js';
 
 const tabList = document.querySelector('.citation .citation__tablist');
 
