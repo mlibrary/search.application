@@ -1,8 +1,8 @@
-import { citationCSLChange, displayCSLData, generateCSLData, getCitationCSL } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
+import { citationCSLChange, displayCSLData, generateCSLData, getCitationCSL } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
-import { viewingTemporaryList } from '../../../../../../assets/scripts/datastores/list/layout.js';
+import { viewingTemporaryList } from '../../../../../../../assets/scripts/datastores/list/layout.js';
 
 describe('csl', function () {
   let getTextArea = null;

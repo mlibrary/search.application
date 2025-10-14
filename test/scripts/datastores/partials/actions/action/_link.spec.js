@@ -1,4 +1,4 @@
-import copyLink from '../../../../../assets/scripts/datastores/partials/actions/action/_link.js';
+import copyLink from '../../../../../../assets/scripts/datastores/partials/actions/action/_link.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
