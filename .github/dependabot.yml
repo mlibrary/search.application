@@ -3,16 +3,20 @@ version: 2
 multi-ecosystem-groups:
   app-dependencies:
     schedule:
-      interval: "daily"
+      interval: "weekly"
       time: "06:00"
-      #day: "monday"
+      day: "monday"
       timezone: "America/Detroit"
-    labels:
-      - "dependencies"
     commit-message:
-      prefix: "Monthly dependency updates: "
-    open-pull-requests-limit: 5
+      prefix: "Weekly dependency updates: "
 
+  container-updates:
+    schedule:
+      interval: "cron"
+      cronjob: "0 6 3 4 *" #April 3 at 6AM
+      timezone: "America/Detroit"
+    commit-message:
+      prefix: "Annual container update: "
 
 updates:
   # For npm/JavaScript dependencies
@@ -31,4 +35,16 @@ updates:
   - package-ecosystem: "bundler"
     directory: "/"
     multi-ecosystem-group: "app-dependencies"
+    patterns: ["*"]
+
+  # For Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    multi-ecosystem-group: "container-updates"
+    patterns: ["*"]
+
+  # For Docker Compose
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    multi-ecosystem-group: "container-updates"
     patterns: ["*"]

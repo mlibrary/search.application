@@ -3,7 +3,6 @@ name: Run Tests
 on: push
 
 jobs:
-  # Run tests
   test-ruby:
     runs-on: ubuntu-latest
     steps:
@@ -25,12 +24,16 @@ jobs:
   test-js:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - name: Set up node
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Install latest LTS version of Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - name: run tests
+          node-version: lts/*
+          check-latest: true
+      - name: Clean install
+        run: npm ci
+      - name: Run tests
         run: npm run test
