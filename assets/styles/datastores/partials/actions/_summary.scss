@@ -1,0 +1,20 @@
+@use '../../../utilities';
+
+// --------------------------------------------------
+//
+// # Summary
+//   Styles to apply directly to `views/datastores/partials/actions/_summary.erb`.
+//
+// ## Table of Contents
+//   1. Header
+//
+// --------------------------------------------------
+
+// ***************** //
+// *** 1. HEADER *** //
+// ***************** //
+
+.actions__summary--header {
+  @include utilities.flex($wrap: true, $align: baseline);
+  gap: 0.25rem 1.5rem;
+}

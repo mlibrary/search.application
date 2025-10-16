@@ -1,4 +1,4 @@
-import { getCheckboxes, someCheckboxesChecked } from '../layout.js';
+import { getCheckboxes, someCheckboxesChecked } from './list-item/_checkbox.js';
 
 const selectAllCheckbox = () => {
   return document.querySelector('.select-all > input[type="checkbox"]');

@@ -1,4 +1,4 @@
-import changeCount from './_in-list.js';
+import { changeCount } from './_in-list.js';
 
 const toggleBanner = (count) => {
   // Define the class name for the banner

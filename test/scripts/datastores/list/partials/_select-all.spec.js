@@ -1,4 +1,4 @@
-import { getCheckboxes, someCheckboxesChecked } from '../../../../../assets/scripts/datastores/list/layout.js';
+import { getCheckboxes, someCheckboxesChecked } from '../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { selectAll, selectAllCheckbox, selectAllState } from '../../../../../assets/scripts/datastores/list/partials/_select-all.js';
 import { expect } from 'chai';
 

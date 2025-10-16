@@ -1,12 +1,15 @@
-import { removeSelected, removeSelectedButton } from '../../../../../assets/scripts/datastores/partials/actions/_remove-selected.js';
+import { removeSelected, removeSelectedButton } from '../../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
 import { expect } from 'chai';
-import { getCheckboxes } from '../../../../../assets/scripts/datastores/list/layout.js';
-import { getTemporaryList } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
+import { getCheckboxes } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { getTemporaryList } from '../../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import sinon from 'sinon';
 
-const recordIds = Object.keys(global.temporaryList);
+const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
+  return Object.keys(global.temporaryList[datastore]).length > 0;
+});
+const recordIds = Object.keys(global.temporaryList[nonEmptyDatastores[0]]);
 const temporaryListHTML = recordIds.map((recordId, index) => {
-  return `<li><input type="checkbox" class="list__item--checkbox" value="${recordId}" ${index === 0 ? 'checked' : ''}></li>`;
+  return `<li><input type="checkbox" class="list__item--checkbox" value="${nonEmptyDatastores[0]},${recordId}" ${index === 0 ? 'checked' : ''}></li>`;
 }).join('');
 
 describe('removeSelected', function () {
@@ -42,13 +45,16 @@ describe('removeSelected', function () {
       global.sessionStorage.setItem('temporaryList', JSON.stringify(global.temporaryList));
 
       // Map the currently checked record IDs
-      const checkedRecordIds = [...getCheckboxes()]
+      const checkedRecords = [...getCheckboxes()]
         .filter((checkbox) => {
           return checkbox.checked;
         }).map((checkbox) => {
           return checkbox.value;
         });
-      expect(Object.keys(getTemporaryList()).includes(checkedRecordIds[0]), 'the `temporaryList` in session storage should contain the record IDs that are checked').to.be.true;
+      checkedRecords.forEach((record) => {
+        const [datastore, recordId] = record.split(',');
+        expect(Object.keys(getTemporaryList()[datastore]).includes(recordId), 'the `temporaryList` in session storage should contain the record that is checked').to.be.true;
+      });
 
       // Call the function with a stubbed reload function
       const reloadStub = sinon.stub();
@@ -58,7 +64,10 @@ describe('removeSelected', function () {
       removeSelectedButton().click();
 
       // Check that the temporary list no longer contains the removed record(s)
-      expect(Object.keys(getTemporaryList()).includes(checkedRecordIds[0]), 'the `temporaryList` in session storage should no longer contain the record IDs that are checked').to.be.false;
+      checkedRecords.forEach((record) => {
+        const [datastore, recordId] = record.split(',');
+        expect(Object.keys(getTemporaryList()[datastore]).includes(recordId), 'the `temporaryList` in session storage should no longer contain the record that is checked').to.be.false;
+      });
 
       // Check that the page was reloaded
       expect(reloadStub.calledOnce, '`removeSelected` should call the argument').to.be.true;

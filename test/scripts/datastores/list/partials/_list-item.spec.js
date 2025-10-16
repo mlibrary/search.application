@@ -192,6 +192,7 @@ describe('listItem()', function () {
       `;
 
       args = {
+        datastore: nonEmptyDatastores[0],
         record: global.temporaryList[nonEmptyDatastores[0]][recordId],
         recordId
       };
@@ -217,9 +218,9 @@ describe('listItem()', function () {
       expect(getListItem().classList.contains(cloneClass), `the list item should not have the \`${cloneClass}\` class`).to.be.false;
     });
 
-    it('should update the checkbox value to the record ID', function () {
+    it('should update the checkbox value to the datastore and record ID', function () {
       const checkbox = getListItem().querySelector('.list__item--checkbox');
-      expect(checkbox.value, 'the checkbox value of the cloned list item should equal to the provided record ID').to.equal(recordId);
+      expect(checkbox.value, 'the checkbox value of the cloned list item should equal to the provided datastore and record ID').to.equal([args.datastore, args.recordId].join(','));
     });
 
     it('should call `listItemTitle`', function () {

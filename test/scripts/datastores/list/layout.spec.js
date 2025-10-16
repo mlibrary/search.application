@@ -1,14 +1,12 @@
 import {
-  actionsPanelText,
   datastoreHeading,
   disableActionTabs,
-  filterSelectedRecordIDs,
-  getCheckboxes,
-  selectedText,
-  someCheckboxesChecked,
-  temporaryList
+  temporaryList,
+  viewingTemporaryList
 } from '../../../../assets/scripts/datastores/list/layout.js';
+import { getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
+import { JSDOM } from 'jsdom';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import sinon from 'sinon';
 
@@ -29,69 +27,6 @@ const checkboxHTML = `
 `;
 
 describe('layout', function () {
-  describe('getCheckboxes()', function () {
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = checkboxHTML;
-    });
-
-    it('should return all the checkboxes in the temporary list', function () {
-      // Check that the correct elements are returned
-      expect(getCheckboxes(), 'the correct elements should be returned').to.deep.equal(document.querySelectorAll('ol.list__items input[type="checkbox"].list__item--checkbox'));
-    });
-  });
-
-  describe('filterSelectedRecordIDs()', function () {
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = checkboxHTML;
-    });
-
-    it('should return an array of the selected record IDs', function () {
-      // Check that the correct record IDs are returned
-      expect(filterSelectedRecordIDs(), 'the correct record IDs should be returned').to.deep.equal(['rec1']);
-    });
-  });
-
-  describe('someCheckboxesChecked()', function () {
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = checkboxHTML;
-    });
-
-    describe('true', function () {
-      it('should return `true` if at least one checkbox is checked', function () {
-        expect(someCheckboxesChecked(true), 'the function should return `true` if at least one checkbox is checked').to.be.true;
-      });
-
-      it('should return `false` if no checkboxes are checked', function () {
-        // Uncheck all the checkboxes
-        getCheckboxes().forEach((checkbox) => {
-          checkbox.checked = false;
-        });
-
-        // Check that the function returns false
-        expect(someCheckboxesChecked(true), 'the function should return `false` if no checkboxes are checked').to.be.false;
-      });
-    });
-
-    describe('false', function () {
-      it('should return `true` if at least one checkbox is unchecked', function () {
-        expect(someCheckboxesChecked(false), 'the function should return `true` if at least one checkbox is unchecked').to.be.true;
-      });
-
-      it('should return `false` if all checkboxes are checked', function () {
-        // Check all the checkboxes
-        getCheckboxes().forEach((checkbox) => {
-          checkbox.checked = true;
-        });
-
-        // Check that the function returns false
-        expect(someCheckboxesChecked(false), 'the function should return `false` if all checkboxes are checked').to.be.false;
-      });
-    });
-  });
-
   describe('datastoreHeading()', function () {
     let getHeading = null;
 
@@ -188,121 +123,6 @@ describe('layout', function () {
       getTabs().forEach((tab) => {
         expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
       });
-    });
-  });
-
-  describe('actionsPanelText()', function () {
-    let getText = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = `
-        ${actionsPanelHTML}
-        ${checkboxHTML}
-      `;
-
-      getText = () => {
-        return document.querySelector('.actions__summary--header > small').textContent;
-      };
-
-      // Check that the initial text is empty
-      expect(getText(), 'the initial text should be empty').to.equal('');
-    });
-
-    afterEach(function () {
-      getText = null;
-    });
-
-    it('should update the selected text if there is only one selected record', function () {
-      // Check that there is only one selected record
-      expect(filterSelectedRecordIDs().length, 'there should be only one selected record').to.equal(1);
-
-      // Call the function
-      actionsPanelText();
-
-      // Check that the text is correct
-      expect(getText(), 'the text should be correct for a single selected record').to.equal('Choose what to do with the selected record.');
-    });
-
-    it('should update the selected text if there is more than one selected record', function () {
-      // Check more than one checkbox
-      const checkboxes = getCheckboxes();
-      for (let index = 1; index < 3; index += 1) {
-        checkboxes[index].checked = true;
-      }
-
-      // Check that there is more than one selected record
-      expect(filterSelectedRecordIDs().length, 'there should be more than one selected record').to.be.greaterThan(1);
-
-      // Call the function
-      actionsPanelText();
-
-      // Check that the text is correct
-      expect(getText(), 'the text should be correct for selected multiple records').to.equal('Choose what to do with the selected records.');
-    });
-
-    it('should update the text if no records are selected', function () {
-      // Uncheck all the checkboxes
-      getCheckboxes().forEach((checkbox) => {
-        checkbox.checked = false;
-      });
-
-      // Check that are no selected records
-      expect(filterSelectedRecordIDs().length, 'there should be no selected records').to.equal(0);
-
-      // Call the function
-      actionsPanelText();
-
-      // Check that the text is correct
-      expect(getText(), 'the text should be correct for no selected records').to.equal('Select at least one record.');
-    });
-  });
-
-  describe('selectedText()', function () {
-    let getText = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = `
-        <div class="list__actions--utilities">
-          <div class="list__in-list"></div>
-        </div>
-        ${checkboxHTML}
-      `;
-
-      getText = () => {
-        return document.querySelector('.list__actions--utilities .list__in-list').textContent;
-      };
-
-      // Check that the initial text is empty
-      expect(getText(), 'the initial text should be empty').to.equal('');
-    });
-
-    afterEach(function () {
-      // Call the function
-      selectedText();
-
-      // Check that the text is correct
-      const checkboxesLength = getCheckboxes().length;
-      expect(getText(), 'the text should be correct').to.equal(`${filterSelectedRecordIDs().length} out of ${checkboxesLength} ${checkboxesLength === 1 ? 'item' : 'items'} selected.`);
-
-      getText = null;
-    });
-
-    it('should update the selected text if there is only one list item', function () {
-      // Delete all but one checkbox
-      const checkboxes = getCheckboxes();
-      for (let index = 1; index < checkboxes.length; index += 1) {
-        checkboxes[index].parentElement.remove();
-      }
-
-      // Check that there is only one checkbox
-      expect(getCheckboxes().length, 'there should be only one checkbox for this test').to.equal(1);
-    });
-
-    it('should update the selected text if there is more than one list item', function () {
-      // Check that there is only one checkbox
-      expect(getCheckboxes().length, 'there should be more than one checkbox').to.be.greaterThan(1);
     });
   });
 
@@ -467,6 +287,37 @@ describe('layout', function () {
 
       // Check that the event listener was called with `change`
       expect(spy.calledWith('change'), 'the list container should have been called with a `change` event listener').to.be.true;
+    });
+  });
+
+  describe('viewingTemporaryList', function () {
+    beforeEach(function () {
+      // Check that the current pathname is not `/everything/list`
+      expect(window.location.pathname, 'the current pathname should not be `/everything/list`').to.not.equal('/everything/list');
+    });
+
+    it('should be `false` if the current pathname is not `/everything/list`', function () {
+      // Check that My Temporary List is not being viewed
+      expect(viewingTemporaryList(), 'the variable should be `false` if the current pathname is not `/everything/list`').to.be.false;
+    });
+
+    it('should be `true` if the current pathname is `/everything/list`', function () {
+      // Store the original window object
+      const originalWindow = global.window;
+
+      // Setup JSDOM with an updated URL
+      const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+        url: 'http://localhost/everything/list'
+      });
+
+      // Override the global window object
+      global.window = dom.window;
+
+      // Check that My Temporary List is being viewed
+      expect(viewingTemporaryList(), 'the variable should be `true` if the current pathname is `/everything/list`').to.be.true;
+
+      // Restore the original window object
+      global.window = originalWindow;
     });
   });
 });

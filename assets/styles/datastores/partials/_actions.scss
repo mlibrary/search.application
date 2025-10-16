@@ -1,8 +1,9 @@
 @use '../../utilities';
 @use '../../icons';
 @use '../../media';
-@use './actions/email';
-@use './actions/citation';
+@use './actions/action/email';
+@use './actions/action/citation';
+@use './actions/summary';
 
 // --------------------------------------------------
 //
@@ -12,12 +13,11 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Container
-//   3. Header
-//   4. Tablist
-//     4.1 Tabs
-//   5. Tabpanel
-//     5.1 Form
-//     5.2 Alert
+//   3. Tablist
+//     3.1 Tabs
+//   4. Tabpanel
+//     4.1 Form
+//     4.2 Alert
 //
 // --------------------------------------------------
 
@@ -60,21 +60,8 @@ $tabs: (
 
 
 
-// ***************** //
-// *** 3. HEADER *** //
-// ***************** //
-
-.#{$class}__summary--header {
-  @include utilities.flex($wrap: true, $align: baseline);
-  gap: 0.25rem 1.5rem;
-}
-
-
-
-
-
 // ****************** //
-// *** 4. TABLIST *** //
+// *** 3. TABLIST *** //
 // ****************** //
 
 .#{$class}__tablist {
@@ -87,7 +74,7 @@ $tabs: (
 
 
 // *          * //
-// * 4.1 TABS * //
+// * 3.1 TABS * //
 // *          * //
 
 body.no-javascript .#{$class}__tablist {
@@ -131,7 +118,7 @@ body.no-javascript .#{$class}__tablist {
 
 
 // ******************* //
-// *** 5. TABPANEL *** //
+// *** 4. TABPANEL *** //
 // ******************* //
 
 [role="tabpanel"] {
@@ -141,7 +128,7 @@ body.no-javascript .#{$class}__tablist {
 
 
 // *          * //
-// * 5.1 FORM * //
+// * 4.1 FORM * //
 // *          * //
 
 [role="tabpanel"] .#{$class}__form {
@@ -176,7 +163,7 @@ body.no-javascript .#{$class}__tablist {
 
 
 // *           * //
-// * 5.2 ALERT * //
+// * 4.2 ALERT * //
 // *           * //
 
 [role="tabpanel"] .alert {
