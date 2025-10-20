@@ -1,6 +1,7 @@
-import { downloadRISFile, downloadRISFormSubmit, generateRISDownloadAnchor, generateRISFile, generateRISFileName, generateTemporaryListRIS } from '../../../../../../assets/scripts/datastores/partials/actions/action/_ris.js';
+import { downloadRISFile, downloadRISFormSubmit, generateRISDownloadAnchor, generateRISFile, generateRISFileName } from '../../../../../../assets/scripts/datastores/partials/actions/action/_ris.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
+import { selectedCitations } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import sinon from 'sinon';
 import { viewingTemporaryList } from '../../../../../../assets/scripts/datastores/list/layout.js';
 
@@ -29,6 +30,9 @@ describe('RIS', function () {
     };
     createObjectURLStub = global.URL.createObjectURL;
     revokeObjectURLStub = global.URL.revokeObjectURL;
+    global.sessionStorage = window.sessionStorage;
+    // Set a temporary list in session storage
+    global.sessionStorage.setItem('temporaryList', JSON.stringify(global.temporaryList));
 
     anchorSpy = {
       click: sinon.spy(),
@@ -68,6 +72,7 @@ describe('RIS', function () {
     // Cleanup
     delete global.Blob;
     delete global.URL;
+    delete global.sessionStorage;
   });
 
   describe('generateRISFileName()', function () {
@@ -78,12 +83,6 @@ describe('RIS', function () {
       const expectedFileName = `MyTemporaryList-${formattedDate}.ris`;
 
       expect(generateRISFileName(), `the filename should be ${expectedFileName}`).to.equal(expectedFileName);
-    });
-  });
-
-  describe('generateTemporaryListRIS', function () {
-    it('should return a string', function () {
-      expect(generateTemporaryListRIS()).to.be.a.string;
     });
   });
 
@@ -104,7 +103,7 @@ describe('RIS', function () {
         reader.onload = function () {
           try {
             expect(reader.result, 'the Blob `text` property should return a string').to.be.a.string;
-            expect(reader.result, 'the Blob `text` property should return a joined string of `generateTemporaryListRIS()').to.deep.equal(generateTemporaryListRIS().join('\n\n'));
+            expect(reader.result, 'the Blob `text` property should return a joined string of `selectedCitations(\'ris\')`').to.deep.equal(selectedCitations('ris').join('\n\n'));
             resolve();
           } catch (err) {
             reject(err);

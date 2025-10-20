@@ -1,4 +1,5 @@
 import { getTemporaryListCitations } from './_citation.js';
+import { selectedCitations } from '../../../list/partials/list-item/_checkbox.js';
 import { viewingTemporaryList } from '../../../list/layout.js';
 
 const generateRISFileName = () => {
@@ -9,18 +10,8 @@ const generateRISFileName = () => {
   return `MyTemporaryList-${formattedDate}.ris`;
 };
 
-const generateTemporaryListRIS = () => {
-  return [
-    'TY  - JOUR',
-    `TI  - Title`,
-    `AU  - Author`,
-    `PY  - Publish year`,
-    'ER  -'
-  ];
-};
-
 const generateRISFile = () => {
-  return new Blob([generateTemporaryListRIS().join('\n\n')], { type: 'application/x-research-info-systems' });
+  return new Blob([selectedCitations('ris').join('\n\n')], { type: 'application/x-research-info-systems' });
 };
 
 const generateRISDownloadAnchor = () => {
@@ -68,4 +59,4 @@ const downloadTemporaryListRIS = () => {
   });
 };
 
-export { downloadRISFile, downloadRISFormSubmit, downloadTemporaryListRIS, generateRISDownloadAnchor, generateRISFile, generateRISFileName, generateTemporaryListRIS };
+export { downloadRISFile, downloadRISFormSubmit, downloadTemporaryListRIS, generateRISDownloadAnchor, generateRISFile, generateRISFileName };
