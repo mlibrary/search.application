@@ -24,12 +24,22 @@ describe('RIS', function () {
 
     // Setup globals with stubs
     global.Blob = window.Blob;
-    global.URL = {
-      createObjectURL: sinon.stub(),
-      revokeObjectURL: sinon.stub()
-    };
-    createObjectURLStub = global.URL.createObjectURL;
-    revokeObjectURLStub = global.URL.revokeObjectURL;
+    global.URL = window.URL;
+    // Provide the properties if missing
+    if (!('createObjectURL' in global.URL)) {
+      global.URL.createObjectURL = () => {
+        //
+      };
+    }
+    if (!('revokeObjectURL' in global.URL)) {
+      global.URL.revokeObjectURL = () => {
+        //
+      };
+    }
+
+    createObjectURLStub = sinon.stub(global.URL, 'createObjectURL').returns('blob:something');
+    revokeObjectURLStub = sinon.stub(global.URL, 'revokeObjectURL').returns(null);
+
     global.sessionStorage = window.sessionStorage;
     // Set a temporary list in session storage
     global.sessionStorage.setItem('temporaryList', JSON.stringify(global.temporaryList));
@@ -71,7 +81,6 @@ describe('RIS', function () {
 
     // Cleanup
     delete global.Blob;
-    delete global.URL;
     delete global.sessionStorage;
   });
 
