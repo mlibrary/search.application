@@ -1,4 +1,4 @@
-import { downloadRISFile, downloadRISFormSubmit, generateRISDownloadAnchor, generateRISFile, generateRISFileName } from '../../../../../../assets/scripts/datastores/partials/actions/action/_ris.js';
+import { downloadRISFormSubmit, downloadTemporaryListRIS, generateRISDownloadAnchor, generateRISFile, generateRISFileName } from '../../../../../../assets/scripts/datastores/partials/actions/action/_ris.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { selectedCitations } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
@@ -156,18 +156,18 @@ describe('RIS', function () {
     });
   });
 
-  describe('downloadRISFile()', function () {
+  describe('downloadTemporaryListRIS()', function () {
     describe('when not viewing the temporary list', function () {
       beforeEach(function () {
         // Check that Temporary List is not being viewed
         expect(viewingTemporaryList(), 'the current pathname should not be `/everything/list`').to.be.false;
 
         // Call the function
-        downloadRISFile();
+        downloadTemporaryListRIS();
       });
 
       it('should not return anything', function () {
-        expect(downloadRISFile()).to.be.undefined;
+        expect(downloadTemporaryListRIS()).to.be.undefined;
       });
     });
 
@@ -198,7 +198,7 @@ describe('RIS', function () {
       it('should call `downloadRISFormSubmit()`', function () {
         // Call the function with a stubbed reload function
         const downloadStub = sinon.stub();
-        downloadRISFile(downloadStub);
+        downloadTemporaryListRIS(downloadStub);
 
         const event = new window.Event('submit', { bubbles: true, cancelable: true });
         getForm().dispatchEvent(event);

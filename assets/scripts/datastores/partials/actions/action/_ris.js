@@ -1,4 +1,3 @@
-import { getTemporaryListCitations } from './_citation.js';
 import { selectedCitations } from '../../../list/partials/list-item/_checkbox.js';
 import { viewingTemporaryList } from '../../../list/layout.js';
 
@@ -28,7 +27,7 @@ const downloadRISFormSubmit = (event) => {
   return generateRISDownloadAnchor();
 };
 
-const downloadRISFile = (download = downloadRISFormSubmit) => {
+const downloadTemporaryListRIS = (download = downloadRISFormSubmit) => {
   // Only run if viewing temporary list
   if (!viewingTemporaryList()) {
     return;
@@ -38,25 +37,4 @@ const downloadRISFile = (download = downloadRISFormSubmit) => {
   document.querySelector('form.action__ris').addEventListener('submit', download);
 };
 
-const downloadTemporaryListRIS = () => {
-  // Only run if viewing temporary list
-  if (!viewingTemporaryList()) {
-    return;
-  }
-
-  document.querySelector('form.action__ris').addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    // Create content
-    const blob = new Blob([getTemporaryListCitations('ris').join('\n\n')], { type: 'application/x-research-info-systems' });
-
-    // Create a link to download the content
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = generateRISFileName();
-    link.click();
-    URL.revokeObjectURL(link.href);
-  });
-};
-
-export { downloadRISFile, downloadRISFormSubmit, downloadTemporaryListRIS, generateRISDownloadAnchor, generateRISFile, generateRISFileName };
+export { downloadRISFormSubmit, downloadTemporaryListRIS, generateRISDownloadAnchor, generateRISFile, generateRISFileName };
