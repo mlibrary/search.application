@@ -4,8 +4,7 @@ import { selectedCitations } from '../../../list/partials/list-item/_checkbox.js
 const tabList = document.querySelector('.citation .citation__tablist');
 
 const displayCSLData = () => {
-  const citations = selectedCitations('csl');
-  document.querySelector('.citation__csl').textContent = JSON.stringify(citations);
+  document.querySelector('.citation .citation__csl').textContent = JSON.stringify(selectedCitations('csl'));
 };
 
 const generateFullRecordCitations = () => {
