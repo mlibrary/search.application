@@ -1,30 +1,10 @@
-import { filterSelectedRecords, someCheckboxesChecked } from '../../../list/partials/list-item/_checkbox.js';
 import CSL from 'citeproc';
-import { getTemporaryList } from '../../../list/partials/_add-to.js';
+import { selectedCitations } from '../../../list/partials/list-item/_checkbox.js';
 
 const tabList = document.querySelector('.citation .citation__tablist');
 
-const getTemporaryListCitations = (type = 'csl') => {
-  let list = [];
-  if (someCheckboxesChecked(true)) {
-    // If some are checked, filter the selected records
-    filterSelectedRecords().forEach((record) => {
-      const [datastore, recordId] = record.split(',');
-      list.push(getTemporaryList()[datastore][recordId]);
-    });
-  } else {
-    // Return the entire list
-    list = getTemporaryList();
-  }
-
-  // Map the citations
-  return Object.values(list).map((listItem) => {
-    return listItem.citation[type];
-  });
-};
-
 const displayCSLData = () => {
-  const citations = getTemporaryListCitations('csl');
+  const citations = selectedCitations('csl');
   document.querySelector('.citation__csl').textContent = JSON.stringify(citations);
 };
 
@@ -87,4 +67,4 @@ const generateFullRecordCitations = () => {
   });
 };
 
-export { displayCSLData, generateFullRecordCitations, getTemporaryListCitations };
+export { displayCSLData, generateFullRecordCitations };
