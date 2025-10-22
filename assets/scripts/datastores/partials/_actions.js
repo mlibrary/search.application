@@ -1,3 +1,6 @@
+import { someCheckboxesChecked } from '../list/partials/list-item/_checkbox.js';
+import { viewingTemporaryList } from '../list/layout.js';
+
 const isSelected = (tab) => {
   return tab.getAttribute('aria-selected') === 'true';
 };
@@ -34,6 +37,24 @@ const tabControl = (element) => {
         }
       });
     });
+  });
+};
+
+const disableActionTabs = () => {
+  // Only run if viewing the temporary list
+  if (!viewingTemporaryList()) {
+    return;
+  }
+
+  const someChecked = someCheckboxesChecked(true);
+  const tabs = document.querySelectorAll('.actions__tablist button[role="tab"]');
+  tabs.forEach((tab) => {
+    if (!someChecked) {
+      if (tab.getAttribute('aria-selected') === 'true') {
+        tab.click();
+      }
+    }
+    tab.disabled = !someChecked;
   });
 };
 
@@ -82,7 +103,10 @@ const copyToClipboard = ({ alert, text }) => {
 export {
   changeAlert,
   copyToClipboard,
+  disableActionTabs,
   fetchFormResults,
+  getTabPanel,
+  isSelected,
   shareForm,
   tabControl
 };

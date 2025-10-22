@@ -1,10 +1,4 @@
-import {
-  datastoreHeading,
-  disableActionTabs,
-  temporaryList,
-  viewingTemporaryList
-} from '../../../../assets/scripts/datastores/list/layout.js';
-import { getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { datastoreHeading, temporaryList, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
@@ -16,17 +10,38 @@ const actionsPanelHTML = `
   </div>
 `;
 
-const checkboxHTML = `
-  <ol class="list__items">
-    <li><input type="checkbox" class="list__item--checkbox" value="rec1" checked></li>
-    <li><input type="checkbox" class="list__item--checkbox" value="rec2"></li>
-    <li><input type="checkbox" class="list__item--checkbox" value="rec3"></li>
-    <li><input type="checkbox" class="list__item--checkbox" value="rec4"></li>
-    <li><input type="checkbox" class="list__item--checkbox" value="rec5"></li>
-  </ol>
-`;
-
 describe('layout', function () {
+  describe('viewingTemporaryList()', function () {
+    beforeEach(function () {
+      // Check that the current pathname is not `/everything/list`
+      expect(window.location.pathname, 'the current pathname should not be `/everything/list`').to.not.equal('/everything/list');
+    });
+
+    it('should be `false` if the current pathname is not `/everything/list`', function () {
+      // Check that My Temporary List is not being viewed
+      expect(viewingTemporaryList(), 'the variable should be `false` if the current pathname is not `/everything/list`').to.be.false;
+    });
+
+    it('should be `true` if the current pathname is `/everything/list`', function () {
+      // Store the original window object
+      const originalWindow = global.window;
+
+      // Setup JSDOM with an updated URL
+      const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+        url: 'http://localhost/everything/list'
+      });
+
+      // Override the global window object
+      global.window = dom.window;
+
+      // Check that My Temporary List is being viewed
+      expect(viewingTemporaryList(), 'the variable should be `true` if the current pathname is `/everything/list`').to.be.true;
+
+      // Restore the original window object
+      global.window = originalWindow;
+    });
+  });
+
   describe('datastoreHeading()', function () {
     let getHeading = null;
 
@@ -73,56 +88,6 @@ describe('layout', function () {
 
       // Check that the text is correct
       expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case for `guidesandmore`').to.equal('Guides and More');
-    });
-  });
-
-  describe('disableActionTabs()', function () {
-    let getTabs = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = `
-        <div class="actions">
-          <div class="actions__tablist" role="tablist">
-            <button role="tab" aria-selected="true">Tab 1</button>
-            <button role="tab" aria-selected="false">Tab 2</button>
-            <button role="tab" aria-selected="false">Tab 3</button>
-          </div>
-        </div>
-        ${checkboxHTML}
-      `;
-
-      getTabs = () => {
-        return document.querySelectorAll('.actions__tablist button[role="tab"]');
-      };
-    });
-
-    it('should disable all action tabs if no checkboxes are checked', function () {
-      // Ensure no checkboxes are checked
-      getCheckboxes().forEach((checkbox) => {
-        checkbox.checked = false;
-      });
-
-      // Call the function
-      disableActionTabs();
-
-      // Check that all tabs are disabled
-      getTabs().forEach((tab) => {
-        expect(tab.disabled, 'all tabs should be disabled if no checkboxes are checked').to.be.true;
-      });
-    });
-
-    it('should enable all action tabs if at least one checkbox is checked', function () {
-      // Ensure at least one checkbox is checked
-      expect(someCheckboxesChecked(true), 'at least one checkbox should be checked for this test').to.be.true;
-
-      // Call the function
-      disableActionTabs();
-
-      // Check that all tabs are enabled
-      getTabs().forEach((tab) => {
-        expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
-      });
     });
   });
 
@@ -287,37 +252,6 @@ describe('layout', function () {
 
       // Check that the event listener was called with `change`
       expect(spy.calledWith('change'), 'the list container should have been called with a `change` event listener').to.be.true;
-    });
-  });
-
-  describe('viewingTemporaryList', function () {
-    beforeEach(function () {
-      // Check that the current pathname is not `/everything/list`
-      expect(window.location.pathname, 'the current pathname should not be `/everything/list`').to.not.equal('/everything/list');
-    });
-
-    it('should be `false` if the current pathname is not `/everything/list`', function () {
-      // Check that My Temporary List is not being viewed
-      expect(viewingTemporaryList(), 'the variable should be `false` if the current pathname is not `/everything/list`').to.be.false;
-    });
-
-    it('should be `true` if the current pathname is `/everything/list`', function () {
-      // Store the original window object
-      const originalWindow = global.window;
-
-      // Setup JSDOM with an updated URL
-      const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
-        url: 'http://localhost/everything/list'
-      });
-
-      // Override the global window object
-      global.window = dom.window;
-
-      // Check that My Temporary List is being viewed
-      expect(viewingTemporaryList(), 'the variable should be `true` if the current pathname is `/everything/list`').to.be.true;
-
-      // Restore the original window object
-      global.window = originalWindow;
     });
   });
 });

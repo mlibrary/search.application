@@ -1,26 +1,13 @@
 import { actionsPanelText } from '../partials/actions/_summary.js';
+import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/_citation.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
 import { selectAllState } from './partials/_select-all.js';
 import { selectedText } from './partials/_in-list.js';
-import { someCheckboxesChecked } from './partials/list-item/_checkbox.js';
 
 const viewingTemporaryList = () => {
   return window.location.pathname === '/everything/list';
-};
-
-const disableActionTabs = () => {
-  const someChecked = someCheckboxesChecked(true);
-  const tabs = document.querySelectorAll('.actions__tablist button[role="tab"]');
-  tabs.forEach((tab) => {
-    if (!someChecked) {
-      if (tab.getAttribute('aria-selected') === 'true') {
-        tab.click();
-      }
-    }
-    tab.disabled = !someChecked;
-  });
 };
 
 const datastoreHeading = (datastore) => {
@@ -89,4 +76,4 @@ const temporaryList = () => {
   }
 };
 
-export { datastoreHeading, disableActionTabs, temporaryList, viewingTemporaryList };
+export { datastoreHeading, temporaryList, viewingTemporaryList };
