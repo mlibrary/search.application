@@ -5,34 +5,36 @@ import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
 import { viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 
-const tabsHTML = `
-  <div class="tabs">
-    <div role="tablist">
-      <button type="button" role="tab" aria-selected="true" aria-controls="tabpanel1">
-        Tab 1
-      </button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="tabpanel2">
-        Tab 2
-      </button>
-    </div>
-    <div id="tabpanel1" role="tabpanel">
-      <div class="alert alert__warning">This is a warning.</div>
-      Tab Panel 1
-    </div>
-    <div id="tabpanel2" role="tabpanel">
-      Tab Panel 2
-    </div>
-  </div>
-`;
-
 describe('actions', function () {
   let firstTab = null;
   let secondTab = null;
   let getAlert = null;
+  let getForm = null;
 
   beforeEach(function () {
     // Apply HTML to the body
-    document.body.innerHTML = tabsHTML;
+    document.body.innerHTML = `
+      <div class="tabs">
+        <div role="tablist">
+          <button type="button" role="tab" aria-selected="true" aria-controls="tabpanel1">
+            Tab 1
+          </button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tabpanel2">
+            Tab 2
+          </button>
+        </div>
+        <div id="tabpanel1" role="tabpanel">
+          <div class="alert alert__warning">This is a warning.</div>
+          <form class="action__record--form" action="/submit" method="post">
+            <input type="email" id="record" name="record" required>
+            <button type="submit">Send Record</button>
+          </form>
+        </div>
+        <div id="tabpanel2" role="tabpanel">
+          Tab Panel 2
+        </div>
+      </div>
+    `;
 
     firstTab = () => {
       return document.querySelector('[aria-controls="tabpanel1"]');
@@ -46,6 +48,10 @@ describe('actions', function () {
       return document.querySelector('.alert');
     };
 
+    getForm = () => {
+      return document.querySelector('form');
+    };
+
     // Make sure the first tab is selected
     expect(firstTab().getAttribute('aria-selected'), 'Tab 1 should be selected.').to.equal('true');
   });
@@ -54,6 +60,7 @@ describe('actions', function () {
     firstTab = null;
     secondTab = null;
     getAlert = null;
+    getForm = null;
   });
 
   describe('isSelected()', function () {
@@ -121,14 +128,7 @@ describe('actions', function () {
 
     beforeEach(function () {
       // Apply HTML to the body
-      document.body.innerHTML = `
-        <div class="actions">
-          <div class="actions__tablist" role="tablist">
-            <button role="tab" aria-selected="true">Tab 1</button>
-            <button role="tab" aria-selected="false">Tab 2</button>
-            <button role="tab" aria-selected="false">Tab 3</button>
-          </div>
-        </div>
+      document.body.innerHTML += `
         <ol class="list__items">
           <li><input type="checkbox" class="list__item--checkbox" value="rec1" checked></li>
           <li><input type="checkbox" class="list__item--checkbox" value="rec2"></li>
@@ -264,8 +264,6 @@ describe('actions', function () {
   });
 
   describe('shareForm()', function () {
-    let getForm = null;
-
     beforeEach(function () {
       // Apply HTML to the body
       document.body.innerHTML = `
@@ -279,14 +277,6 @@ describe('actions', function () {
           </form>
         </div>
       `;
-
-      getForm = () => {
-        return document.querySelector('.action__record--form');
-      };
-    });
-
-    afterEach(function () {
-      getForm = null;
     });
 
     it('should prevent the default form submission and call shareForm', async function () {
