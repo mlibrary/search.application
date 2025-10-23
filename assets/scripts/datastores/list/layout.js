@@ -10,6 +10,19 @@ const viewingTemporaryList = () => {
   return window.location.pathname === '/everything/list';
 };
 
+const isTemporaryListEmpty = (list) => {
+  // Use for...in loop for fastest performance
+  for (const datastore in list) {
+    // Check if any of the datastores have records saved to them
+    if (Object.keys(list[datastore]).length > 0) {
+      // Exit early if non-empty found
+      return false;
+    }
+  }
+
+  return true;
+};
+
 const datastoreHeading = (datastore) => {
   const heading = document.createElement('h2');
   // Capitalize first letter and replace underscores with spaces
@@ -26,14 +39,14 @@ const datastoreHeading = (datastore) => {
 
 const temporaryList = () => {
   const list = getTemporaryList();
-  const nonEmptyDatastores = Object.keys(list).filter((datastore) => {
-    return Object.keys(list[datastore]).length > 0;
-  });
   const emptyList = document.querySelector('.list__empty');
   const listActions = document.querySelector('.list__actions');
 
   // Toggle empty message and actions panel
-  if (nonEmptyDatastores.length) {
+  if (isTemporaryListEmpty(list)) {
+    emptyList.removeAttribute('style');
+    listActions.style.display = 'none';
+  } else {
     emptyList.style.display = 'none';
     listActions.removeAttribute('style');
 
@@ -70,10 +83,7 @@ const temporaryList = () => {
         selectedText();
       }
     });
-  } else {
-    emptyList.removeAttribute('style');
-    listActions.style.display = 'none';
   }
 };
 
-export { datastoreHeading, temporaryList, viewingTemporaryList };
+export { datastoreHeading, isTemporaryListEmpty, temporaryList, viewingTemporaryList };

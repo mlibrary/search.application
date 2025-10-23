@@ -1,4 +1,4 @@
-import { datastoreHeading, temporaryList, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import { datastoreHeading, isTemporaryListEmpty, temporaryList, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
@@ -39,6 +39,24 @@ describe('layout', function () {
 
       // Restore the original window object
       global.window = originalWindow;
+    });
+  });
+
+  describe('isTemporaryListEmpty()', function () {
+    it('should return `false` if at least one datastore has at least one record saved', function () {
+      // Check that the temporary list is not empty
+      expect(isTemporaryListEmpty(global.temporaryList), 'the temporary list should not be empty').to.be.false;
+    });
+
+    it('should return `true` if all datastores do not have records saved to them', function () {
+      // Create a copy of the temporary list and remove all saved records
+      const list = { ...global.temporaryList };
+      Object.keys(list).forEach((datastore) => {
+        list[datastore] = {};
+      });
+
+      // Check that the temporary list is empty
+      expect(isTemporaryListEmpty(list), 'the temporary list should be empty').to.be.true;
     });
   });
 
