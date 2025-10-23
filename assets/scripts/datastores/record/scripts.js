@@ -1,7 +1,7 @@
 import { shareForm, tabControl } from '../partials/_actions.js';
 import { addToList } from '../list/partials/_add-to.js';
-import { copyCitation } from '../partials/actions/_citation.js';
-import copyLink from '../partials/actions/_link.js';
+import copyLink from '../partials/actions/action/_link.js';
+import { generateFullRecordCitations } from '../partials/actions/action/_citation.js';
 import shelfBrowse from './partials/_shelf-browse.js';
 import toggleItems from '../partials/_toggle.js';
 import toggleMARCData from './partials/_marc.js';
@@ -18,7 +18,7 @@ shareForm('#actions__text--tabpanel');
 
 // Citations
 tabControl('.citation');
-copyCitation();
+generateFullRecordCitations();
 
 // Copy link
 copyLink();

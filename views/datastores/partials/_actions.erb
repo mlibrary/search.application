@@ -1,5 +1,5 @@
 <%
-  tabs = {
+  actions = {
     "email" => "Email",
     "text" => "Text",
     "citation" => "Citation",
@@ -10,21 +10,18 @@
 %>
 <details open class="container__rounded--no-shadow actions">
   <summary class="actions__summary">
-    <div class="actions__summary--header">
-      <span class="strong" id="actions__label">Actions</span>
-      <small>Select what to do with this record.</small>
-    </div>
+    <%= erb :"datastores/partials/actions/_summary" %>
   </summary>
   <div role="tablist" aria-labelledby="actions__label" class="actions__tablist">
-    <% tabs.each do |key, value| %>
+    <% actions.each do |key, value| %>
       <button type="button" role="tab" id="actions__<%= key %>" aria-selected="false" aria-controls="actions__<%= key %>--tabpanel" class="button__ghost">
         <%= value %>
       </button>
     <% end %>
   </div>
-  <% tabs.each do |key, value| %>
+  <% actions.each do |key, value| %>
     <div id="actions__<%= key %>--tabpanel" role="tabpanel" aria-labelledby="actions__<%= key %>" class="actions__tabpanel">
-      <%= erb :"datastores/partials/actions/_#{key}" %>
+      <%= erb :"datastores/partials/actions/action/_#{key}" %>
     </div>
   <% end %>
 </details>

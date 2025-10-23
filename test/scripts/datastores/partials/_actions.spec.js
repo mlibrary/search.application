@@ -1,24 +1,222 @@
-import { changeAlert, copyToClipboard, shareForm, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { changeAlert, copyToClipboard, disableActionTabs, getTabPanel, isSelected, shareForm, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
+import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
+import { viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 
 describe('actions', function () {
-  describe('changeAlert()', function () {
-    let getAlert = null;
-    const alert = { element: '.alert__warning', message: 'This is a message.' };
+  let firstTab = null;
+  let secondTab = null;
+  let getAlert = null;
+  let getForm = null;
+
+  beforeEach(function () {
+    // Apply HTML to the body
+    document.body.innerHTML = `
+      <div class="tabs">
+        <div role="tablist">
+          <button type="button" role="tab" aria-selected="true" aria-controls="tabpanel1">
+            Tab 1
+          </button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tabpanel2">
+            Tab 2
+          </button>
+        </div>
+        <div id="tabpanel1" role="tabpanel">
+          <div class="alert alert__warning">This is a warning.</div>
+          <form class="action__record--form" action="/submit" method="post">
+            <input type="email" id="record" name="record" required>
+            <button type="submit">Send Record</button>
+          </form>
+        </div>
+        <div id="tabpanel2" role="tabpanel">
+          Tab Panel 2
+        </div>
+      </div>
+    `;
+
+    firstTab = () => {
+      return document.querySelector('[aria-controls="tabpanel1"]');
+    };
+
+    secondTab = () => {
+      return document.querySelector('[aria-controls="tabpanel2"]');
+    };
+
+    getAlert = () => {
+      return document.querySelector('.alert');
+    };
+
+    getForm = () => {
+      return document.querySelector('form');
+    };
+
+    // Make sure the first tab is selected
+    expect(firstTab().getAttribute('aria-selected'), 'Tab 1 should be selected.').to.equal('true');
+  });
+
+  afterEach(function () {
+    firstTab = null;
+    secondTab = null;
+    getAlert = null;
+    getForm = null;
+  });
+
+  describe('isSelected()', function () {
+    it('should return `true`', function () {
+      expect(isSelected(firstTab()), 'the first tab should be selected').to.be.true;
+    });
+
+    it('should return `false`', function () {
+      expect(isSelected(secondTab()), 'the second tab should not be selected').to.be.false;
+    });
+  });
+
+  describe('getTabPanel()', function () {
+    it('should return the appropriate `tabpanel`', function () {
+      const tab = firstTab();
+      expect(getTabPanel({ tab, tabContainer: document.querySelector('.tabs') }), 'the appropriate `tabpanel` should have been returned').to.equal(document.querySelector(`#${tab.getAttribute('aria-controls')}`));
+    });
+  });
+
+  describe('tabControl()', function () {
+    beforeEach(function () {
+      // Call the function
+      tabControl('.tabs');
+    });
+
+    it('should hide all other tab panels on click', function () {
+      // Make sure the second tab is not selected
+      expect(secondTab().getAttribute('aria-selected'), 'Tab 2 should not be selected.').to.equal('false');
+
+      // Click the second tab
+      secondTab().click();
+
+      // Make sure the second tab is selected, and not the first
+      expect(firstTab().getAttribute('aria-selected'), 'Tab 1 should not be selected after click.').to.equal('false');
+      expect(secondTab().getAttribute('aria-selected'), 'Tab 2 should be selected after click.').to.equal('true');
+    });
+
+    it('should hide the opened tab panel on click', function () {
+      // Click the first tab
+      firstTab().click();
+
+      // Make sure the first tab is no longer selected
+      expect(firstTab().getAttribute('aria-selected'), 'Tab 1 should not be selected after click.').to.equal('false');
+      // Make sure no other tabs are selected
+      expect(secondTab().getAttribute('aria-selected'), 'Tab 2 should not be selected after click.').to.equal('false');
+    });
+
+    it('should hide the alert when switching tab panels', function () {
+      // Make sure the alert is displaying
+      getAlert().style.display = 'block';
+      expect(getAlert().style.display, 'The alert in Tab 1 should be displaying.').to.equal('block');
+
+      // Switch to the second tab
+      secondTab().click();
+      // Switch back to the first tab
+      firstTab().click();
+
+      // Make sure the alert is no longer displaying
+      expect(getAlert().style.display, 'The alert in Tab 1 should no longer be displaying.').to.equal('none');
+    });
+  });
+
+  describe('disableActionTabs()', function () {
+    let getTabs = null;
 
     beforeEach(function () {
       // Apply HTML to the body
-      document.body.innerHTML = '<div class="alert__warning">This is a warning.</div>';
+      document.body.innerHTML += `
+        <ol class="list__items">
+          <li><input type="checkbox" class="list__item--checkbox" value="rec1" checked></li>
+          <li><input type="checkbox" class="list__item--checkbox" value="rec2"></li>
+          <li><input type="checkbox" class="list__item--checkbox" value="rec3"></li>
+          <li><input type="checkbox" class="list__item--checkbox" value="rec4"></li>
+          <li><input type="checkbox" class="list__item--checkbox" value="rec5"></li>
+        </ol>
+      `;
 
-      getAlert = () => {
-        return document.querySelector('[class^="alert__"]');
+      getTabs = () => {
+        return document.querySelectorAll('.actions__tablist button[role="tab"]');
       };
     });
 
-    afterEach(function () {
-      getAlert = null;
+    describe('when not viewing the temporary list', function () {
+      beforeEach(function () {
+        // Check that Temporary List is not being viewed
+        expect(viewingTemporaryList(), 'the current pathname should not be `/everything/list`').to.be.false;
+
+        // Call the function
+        disableActionTabs();
+      });
+
+      it('should not return anything', function () {
+        expect(disableActionTabs()).to.be.undefined;
+      });
     });
+
+    describe('when viewing the temporary list', function () {
+      let originalWindow = null;
+
+      beforeEach(function () {
+        // Save the original window object
+        originalWindow = global.window;
+
+        // Setup JSDOM with an updated URL
+        const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+          url: 'http://localhost/everything/list'
+        });
+
+        // Override the global window object
+        global.window = dom.window;
+
+        // Check that Temporary List is being viewed
+        expect(viewingTemporaryList(), 'the current pathname should be `/everything/list`').to.be.true;
+      });
+
+      afterEach(function () {
+        // Restore the original window object
+        global.window = originalWindow;
+      });
+
+      it('should disable all action tabs if no checkboxes are checked', function () {
+        // Ensure no checkboxes are checked
+        getCheckboxes().forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+
+        // Call the function
+        disableActionTabs();
+
+        // Check that all tabs are disabled
+        getTabs().forEach((tab) => {
+          expect(tab.disabled, 'all tabs should be disabled if no checkboxes are checked').to.be.true;
+        });
+      });
+
+      it('should enable all action tabs if at least one checkbox is checked', function () {
+        // Ensure at least one checkbox is checked
+        expect(someCheckboxesChecked(true), 'at least one checkbox should be checked for this test').to.be.true;
+
+        // Call the function
+        disableActionTabs();
+
+        // Check that all tabs are enabled
+        getTabs().forEach((tab) => {
+          expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
+        });
+      });
+    });
+  });
+
+  describe('fetchFormResults()', function () {
+    //
+  });
+
+  describe('changeAlert()', function () {
+    const alert = { element: '.alert__warning', message: 'This is a message.' };
 
     it('should change the type from `warning` to `success`', async function () {
       expect([...getAlert().classList], '`alert__warning` should be a class').to.include('alert__warning');
@@ -65,68 +263,7 @@ describe('actions', function () {
     });
   });
 
-  describe('copyToClipboard()', function () {
-    let getAlert = null;
-    let getText = null;
-    let clipboardSpy = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = `
-        <div class="alert" style="display: none;">This is an alert.</div>
-        <div class="copy-this">The text has been successfully copied.</div>
-      `;
-
-      getAlert = () => {
-        return document.querySelector('.alert');
-      };
-
-      getText = () => {
-        return document.querySelector('.copy-this').innerHTML;
-      };
-
-      clipboardSpy = sinon.spy();
-      Object.defineProperty(window.navigator, 'clipboard', {
-        configurable: true,
-        value: { writeText: clipboardSpy }
-      });
-      Object.defineProperty(global, 'navigator', {
-        configurable: true,
-        value: window.navigator
-      });
-    });
-
-    afterEach(function () {
-      getAlert = null;
-      getText = null;
-
-      // Clean up
-      delete global.navigator;
-    });
-
-    it('should show the alert', function () {
-      expect(getAlert().style.display, 'alert should not be displayed').to.equal('none');
-
-      // Call the function
-      copyToClipboard({ alert: getAlert(), text: getText() });
-
-      expect(getAlert().style.display, 'alert should be displayed').to.equal('block');
-    });
-
-    it('should copy the text', function () {
-      // Call the function
-      copyToClipboard({ alert: getAlert(), text: getText() });
-
-      // Check that the clipboard should have been called with the correct value
-      expect(clipboardSpy.calledOnce, 'should be called once').to.be.true;
-      expect(clipboardSpy.calledWith(getText()), `should be called with ${getText()}`).to.be.true;
-    });
-  });
-
   describe('shareForm()', function () {
-    let getForm = null;
-    let getAlert = null;
-
     beforeEach(function () {
       // Apply HTML to the body
       document.body.innerHTML = `
@@ -140,19 +277,6 @@ describe('actions', function () {
           </form>
         </div>
       `;
-
-      getForm = () => {
-        return document.querySelector('.action__record--form');
-      };
-
-      getAlert = () => {
-        return document.querySelector('.alert');
-      };
-    });
-
-    afterEach(function () {
-      getForm = null;
-      getAlert = null;
     });
 
     it('should prevent the default form submission and call shareForm', async function () {
@@ -196,91 +320,55 @@ describe('actions', function () {
     });
   });
 
-  describe('tabControl()', function () {
-    let firstTab = null;
-    let secondTab = null;
-    let getAlert = null;
+  describe('copyToClipboard()', function () {
+    let getText = null;
+    let clipboardSpy = null;
 
     beforeEach(function () {
       // Apply HTML to the body
       document.body.innerHTML = `
-        <div class="tabs">
-          <div role="tablist">
-            <button type="button" role="tab" aria-selected="true" aria-controls="tabpanel1">
-              Tab 1
-            </button>
-            <button type="button" role="tab" aria-selected="false" aria-controls="tabpanel2">
-              Tab 2
-            </button>
-          </div>
-          <div id="tabpanel1" role="tabpanel">
-            <div class="alert" style="display: block;"></div>
-            Tab Panel 1
-          </div>
-          <div id="tabpanel2" role="tabpanel">
-            Tab Panel 2
-          </div>
-        </div>
+        <div class="alert" style="display: none;">This is an alert.</div>
+        <div class="copy-this">The text has been successfully copied.</div>
       `;
 
-      firstTab = () => {
-        return document.querySelector('[aria-controls="tabpanel1"]');
+      getText = () => {
+        return document.querySelector('.copy-this').innerHTML;
       };
 
-      secondTab = () => {
-        return document.querySelector('[aria-controls="tabpanel2"]');
-      };
-
-      getAlert = () => {
-        return document.querySelector('.alert');
-      };
-
-      // Call the function to apply the event listener
-      tabControl('.tabs');
-
-      // Make sure the first tab is selected
-      expect(firstTab().getAttribute('aria-selected'), 'Tab 1 should be selected.').to.equal('true');
+      clipboardSpy = sinon.spy();
+      Object.defineProperty(window.navigator, 'clipboard', {
+        configurable: true,
+        value: { writeText: clipboardSpy }
+      });
+      Object.defineProperty(global, 'navigator', {
+        configurable: true,
+        value: window.navigator
+      });
     });
 
     afterEach(function () {
-      firstTab = null;
-      secondTab = null;
-      getAlert = null;
+      getText = null;
+
+      // Clean up
+      delete global.navigator;
     });
 
-    it('should hide all other tab panels on click', function () {
-      // Make sure the second tab is not selected
-      expect(secondTab().getAttribute('aria-selected'), 'Tab 2 should not be selected.').to.equal('false');
+    it('should show the alert', function () {
+      expect(getAlert().style.display, 'alert should not be displayed').to.equal('none');
 
-      // Click the second tab
-      secondTab().click();
+      // Call the function
+      copyToClipboard({ alert: getAlert(), text: getText() });
 
-      // Make sure the second tab is selected, and not the first
-      expect(firstTab().getAttribute('aria-selected'), 'Tab 1 should not be selected after click.').to.equal('false');
-      expect(secondTab().getAttribute('aria-selected'), 'Tab 2 should be selected after click.').to.equal('true');
+      expect(getAlert().style.display, 'alert should be displayed').to.equal('block');
     });
 
-    it('should hide the opened tab panel on click', function () {
-      // Click the first tab
-      firstTab().click();
+    it('should copy the text', function () {
+      // Call the function
+      copyToClipboard({ alert: getAlert(), text: getText() });
 
-      // Make sure the first tab is no longer selected
-      expect(firstTab().getAttribute('aria-selected'), 'Tab 1 should not be selected after click.').to.equal('false');
-      // Make sure no other tabs are selected
-      expect(secondTab().getAttribute('aria-selected'), 'Tab 2 should not be selected after click.').to.equal('false');
-    });
-
-    it('should hide the alert when switching tab panels', function () {
-      // Make sure the alert is displaying
-      expect(getAlert().style.display, 'The alert in Tab 1 should be displaying.').to.equal('block');
-
-      // Switch to the second tab
-      secondTab().click();
-      // Switch back to the first tab
-      firstTab().click();
-
-      // Make sure the alert is no longer displaying
-      expect(getAlert().style.display, 'The alert in Tab 1 should no longer be displaying.').to.equal('none');
+      // Check that the clipboard should have been called with the correct value
+      expect(clipboardSpy.calledOnce, 'should be called once').to.be.true;
+      expect(clipboardSpy.calledWith(getText()), `should be called with ${getText()}`).to.be.true;
     });
   });
 });

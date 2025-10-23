@@ -1,5 +1,5 @@
-import { getTemporaryList, setTemporaryList } from '../../list/partials/_add-to.js';
-import { getCheckboxes } from '../../list/layout.js';
+import { getTemporaryList, setTemporaryList } from '../../../list/partials/_add-to.js';
+import { getCheckboxes } from '../../../list/partials/list-item/_checkbox.js';
 
 const removeSelectedButton = () => {
   return document.querySelector('.actions button.action__remove-selected');
@@ -9,7 +9,7 @@ const removeSelected = (reloadPage = window.location.reload.bind(window.location
   // Add event listener
   removeSelectedButton().addEventListener('click', () => {
     // Get checkbox values
-    const recordIds = [...getCheckboxes()]
+    const records = [...getCheckboxes()]
       .filter((checkbox) => {
         return checkbox.checked;
       })
@@ -18,8 +18,9 @@ const removeSelected = (reloadPage = window.location.reload.bind(window.location
       });
     // Delete selected items from temporary list
     const list = getTemporaryList();
-    recordIds.forEach((recordId) => {
-      delete list[recordId];
+    records.forEach((record) => {
+      const [datastore, recordId] = record.split(',');
+      delete list[datastore][recordId];
     });
     // Update temporary list
     setTemporaryList(list);
