@@ -1,4 +1,4 @@
-import { datastoreHeading, isTemporaryListEmpty, temporaryList, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import { datastoreHeading, isTemporaryListEmpty, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
@@ -57,6 +57,80 @@ describe('layout', function () {
 
       // Check that the temporary list is empty
       expect(isTemporaryListEmpty(list), 'the temporary list should be empty').to.be.true;
+    });
+  });
+
+  describe('toggleListElements()', function () {
+    let getListActions = null;
+    let getEmptyMessage = null;
+    let list = null;
+
+    beforeEach(function () {
+      document.body.innerHTML = `
+        <div class="list__actions"></div>
+        <div class="list__empty"></div>
+      `;
+
+      getListActions = () => {
+        return document.querySelector('.list__actions');
+      };
+
+      getEmptyMessage = () => {
+        return document.querySelector('.list__empty');
+      };
+
+      list = { ...global.temporaryList };
+    });
+
+    afterEach(function () {
+      getListActions = null;
+      getEmptyMessage = null;
+      list = null;
+    });
+
+    describe('non-empty temporary list', function () {
+      beforeEach(function () {
+        // Check that the temporary list is not empty
+        expect(isTemporaryListEmpty(list), 'the temporary list should not be empty').to.be.false;
+
+        // Call the function
+        toggleListElements(list);
+      });
+
+      it('should show actions', function () {
+        // Check that the `style` attribute does not exist for Actions
+        expect(getListActions().hasAttribute('style'), 'the `style` attribute should not exist for Actions').to.be.false;
+      });
+
+      it('should hide the empty message', function () {
+        // Check that the empty message's `style` is set to `none`
+        expect(getEmptyMessage().style.display, 'the empty message should be hidden').to.equal('none');
+      });
+    });
+
+    describe('empty temporary list', function () {
+      beforeEach(function () {
+        // Remove all saved records from the list
+        Object.keys(list).forEach((datastore) => {
+          list[datastore] = {};
+        });
+
+        // Check that the temporary list is empty
+        expect(isTemporaryListEmpty(list), 'the temporary list should be empty').to.be.true;
+
+        // Call the function
+        toggleListElements(list);
+      });
+
+      it('should hide actions', function () {
+        // Check that Actions's `style` is set to `none`
+        expect(getListActions().style.display, 'actions should be hidden').to.equal('none');
+      });
+
+      it('should show the empty message', function () {
+        // Check that the `style` attribute does not exist for the empty message
+        expect(getEmptyMessage().hasAttribute('style'), 'the `style` attribute should not exist for the empty message').to.be.false;
+      });
     });
   });
 

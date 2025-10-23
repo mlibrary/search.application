@@ -23,6 +23,24 @@ const isTemporaryListEmpty = (list) => {
   return true;
 };
 
+const toggleListElements = (list) => {
+  const listActions = document.querySelector('.list__actions');
+  const emptyList = document.querySelector('.list__empty');
+
+  // Check if elements should be visible or not based on temporary list being empty
+  if (isTemporaryListEmpty(list)) {
+    // Hide Actions when there are no saved records
+    listActions.style.display = 'none';
+    // Show the empty message when there are no saved records
+    emptyList.removeAttribute('style');
+  } else {
+    // Show Actions when there are saved records
+    listActions.removeAttribute('style');
+    // Hide the empty message when there are saved records
+    emptyList.style.display = 'none';
+  }
+};
+
 const datastoreHeading = (datastore) => {
   const heading = document.createElement('h2');
   // Capitalize first letter and replace underscores with spaces
@@ -39,17 +57,12 @@ const datastoreHeading = (datastore) => {
 
 const temporaryList = () => {
   const list = getTemporaryList();
-  const emptyList = document.querySelector('.list__empty');
-  const listActions = document.querySelector('.list__actions');
+
+  // Toggle what should and should not be displaying
+  toggleListElements(list);
 
   // Toggle empty message and actions panel
-  if (isTemporaryListEmpty(list)) {
-    emptyList.removeAttribute('style');
-    listActions.style.display = 'none';
-  } else {
-    emptyList.style.display = 'none';
-    listActions.removeAttribute('style');
-
+  if (!isTemporaryListEmpty(list)) {
     // Create temporary list by datastore
     const listContainer = document.querySelector('.list');
     Object.keys(list).forEach((datastore) => {
@@ -86,4 +99,4 @@ const temporaryList = () => {
   }
 };
 
-export { datastoreHeading, isTemporaryListEmpty, temporaryList, viewingTemporaryList };
+export { datastoreHeading, isTemporaryListEmpty, temporaryList, toggleListElements, viewingTemporaryList };
