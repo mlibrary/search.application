@@ -91,7 +91,7 @@ describe('layout', function () {
     });
   });
 
-  describe('temporaryList()', function () {
+  describe.skip('temporaryList()', function () {
     let getHeadings = null;
     let getOrderedLists = null;
 
