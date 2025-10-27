@@ -61,35 +61,41 @@ const datastoreHeading = (datastore) => {
   return heading;
 };
 
+const createDatastoreList = (list) => {
+  // Get the list container
+  const listContainer = document.querySelector('.list');
+  // Create an ordered list for each non-empty datastore
+  nonEmptyDatastores(list).forEach((datastore) => {
+    // Create heading
+    listContainer.appendChild(datastoreHeading(datastore));
+    // Create list container
+    const listItems = document.createElement('ol');
+    listItems.classList.add('list__items', 'list__no-style');
+    listContainer.appendChild(listItems);
+    // Display records
+    Object.keys(list[datastore]).forEach((recordId, index) => {
+      listItems.appendChild(listItem({ datastore, index, record: list[datastore][recordId], recordId }));
+    });
+  });
+};
+
 const temporaryList = () => {
   const list = getTemporaryList();
 
   // Toggle what should and should not be displaying
   toggleListElements(list);
 
-  if (!isTemporaryListEmpty(list)) {
-    // Create temporary list by datastore
-    const listContainer = document.querySelector('.list');
-    nonEmptyDatastores(list).forEach((datastore) => {
-      // Create heading
-      listContainer.appendChild(datastoreHeading(datastore));
-      // Create list container
-      const listItems = document.createElement('ol');
-      listItems.classList.add('list__items', 'list__no-style');
-      listContainer.appendChild(listItems);
-      // Display records
-      Object.keys(list[datastore]).forEach((recordId, index) => {
-        listItems.appendChild(listItem({ datastore, index, record: list[datastore][recordId], recordId }));
-      });
-    });
+  // Build the list DOM
+  createDatastoreList(list);
 
+  if (!isTemporaryListEmpty(list)) {
     // Update Actions panel
     actionsPanelText();
     displayCSLData();
     selectedText();
 
     // Watch for changes to the list and update accordingly
-    listContainer.addEventListener('change', (event) => {
+    document.querySelector('.list').addEventListener('change', (event) => {
       if (event.target.matches(`input[type="checkbox"].list__item--checkbox, .select-all > input[type="checkbox"]`)) {
         actionsPanelText();
         disableActionTabs();
@@ -101,4 +107,4 @@ const temporaryList = () => {
   }
 };
 
-export { datastoreHeading, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };
+export { createDatastoreList, datastoreHeading, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };

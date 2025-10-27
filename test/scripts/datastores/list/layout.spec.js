@@ -1,4 +1,4 @@
-import { datastoreHeading, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import { createDatastoreList, datastoreHeading, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
@@ -197,6 +197,69 @@ describe('layout', function () {
 
       // Check that the text is correct
       expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case for `guidesandmore`').to.equal('Guides and More');
+    });
+  });
+
+  describe('createDatastoreList()', function () {
+    let datastores = null;
+
+    beforeEach(function () {
+      document.body.innerHTML = `
+        <div class="list"></div>
+        <li class="container__rounded list__item list__item--clone">
+          <div class="list__item--header">
+            <input type="checkbox" class="list__item--checkbox" value="" aria-label="Select record">
+            <h3 class="list__item--title">
+              <a href="http://example.com/" class="list__item--title-original">
+                Original Title
+              </a>
+              <span class="list__item--title-transliterated h5">
+                Transliterated Title
+              </span>
+            </h3>
+          </div>
+          <table class="metadata">
+            <tbody>
+              <tr class="metadata__row--clone">
+                <th scope="row">
+                  Field
+                </th>
+                <td>
+                  <span class="metadata__data--original">
+                    Original Data
+                  </span>
+                  <span class="metadata__data--transliterated">
+                    Transliterated Data
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </li>
+      `;
+
+      datastores = nonEmptyDatastores(global.temporaryList);
+
+      // Call the function
+      createDatastoreList(global.temporaryList);
+    });
+
+    afterEach(function () {
+      datastores = null;
+    });
+
+    it('should create a heading for every non-empty datastore', function () {
+      expect(document.querySelectorAll('h2').length, 'an `h2` should have been created for every non-empty datastore').to.equal(datastores.length);
+    });
+
+    it('should create an ordered list for every non-empty datastore', function () {
+      expect(document.querySelectorAll('ol').length, 'an `ol` should have been created for every non-empty datastore').to.equal(datastores.length);
+    });
+
+    it('should create list items for every record in each non-empty datastore', function () {
+      [...document.querySelectorAll('ol')].forEach((orderedList, index) => {
+        expect(orderedList.querySelectorAll('li').length, 'an `li` should have been created for every record that exists in the non-empty datastore').to.equal(Object.keys(global.temporaryList[datastores[index]]).length);
+      });
     });
   });
 
