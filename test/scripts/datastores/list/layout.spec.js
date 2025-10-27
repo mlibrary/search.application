@@ -1,4 +1,4 @@
-import { datastoreHeading, isTemporaryListEmpty, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import { datastoreHeading, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
@@ -57,6 +57,23 @@ describe('layout', function () {
 
       // Check that the temporary list is empty
       expect(isTemporaryListEmpty(list), 'the temporary list should be empty').to.be.true;
+    });
+  });
+
+  describe('nonEmptyDatastores()', function () {
+    it('should return an array', function () {
+      // Check that an array is always returned
+      expect(nonEmptyDatastores({}), '`nonEmptyDatastores()` should return an array').to.be.an('array');
+    });
+
+    it('should return datastore names that have records', function () {
+      // Check that datastore names are in the array
+      expect(nonEmptyDatastores(global.temporaryList), '`nonEmptyDatastores()` should return the names of the non-empty datastores').to.deep.equal(['catalog', 'onlinejournals']);
+    });
+
+    it('should return an empty array', function () {
+      // Check that an empty array is returned
+      expect(nonEmptyDatastores({}), '`nonEmptyDatastores()` should return an empty array').to.be.empty;
     });
   });
 
@@ -297,11 +314,8 @@ describe('layout', function () {
       temporaryList();
 
       // Check that non-empty h2s now exists
-      const nonEmptyDatastores = Object.values(global.temporaryList).filter((datastore) => {
-        return Object.keys(datastore).length > 0;
-      }).length;
       expect(getHeadings(), 'an `h2` should exist in a non-empty list').to.not.be.null;
-      expect(getHeadings().length, 'an `h2` should exist for each non-empty datastore').to.equal(nonEmptyDatastores);
+      expect(getHeadings().length, 'an `h2` should exist for each non-empty datastore').to.equal(nonEmptyDatastores(global.temporaryList).length);
       getHeadings().forEach((heading) => {
         expect(heading.textContent, 'an `h2` should have text').to.not.be.empty;
       });
@@ -318,12 +332,8 @@ describe('layout', function () {
       temporaryList();
 
       // Check that ordered lists now exists
-      const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
-        return Object.keys(global.temporaryList[datastore]).length > 0;
-      });
-
       expect(getOrderedLists(), 'an `ol` should exist').to.not.be.empty;
-      expect(getOrderedLists().length, 'an `ol` should exist for each non-empty datastore').to.equal(nonEmptyDatastores.length);
+      expect(getOrderedLists().length, 'an `ol` should exist for each non-empty datastore').to.equal(nonEmptyDatastores(global.temporaryList).length);
 
       // Get the properties of the temporary list that are non-empty
       getOrderedLists().forEach((orderedList, index) => {

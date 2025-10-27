@@ -23,6 +23,12 @@ const isTemporaryListEmpty = (list) => {
   return true;
 };
 
+const nonEmptyDatastores = (list) => {
+  return Object.keys(list).filter((datastore) => {
+    return Object.keys(list[datastore]).length > 0;
+  });
+};
+
 const toggleListElements = (list) => {
   const listActions = document.querySelector('.list__actions');
   const emptyList = document.querySelector('.list__empty');
@@ -61,24 +67,20 @@ const temporaryList = () => {
   // Toggle what should and should not be displaying
   toggleListElements(list);
 
-  // Toggle empty message and actions panel
   if (!isTemporaryListEmpty(list)) {
     // Create temporary list by datastore
     const listContainer = document.querySelector('.list');
-    Object.keys(list).forEach((datastore) => {
-      // Check if there are records for this datastore
-      if (Object.keys(list[datastore]).length > 0) {
-        // Create heading
-        listContainer.appendChild(datastoreHeading(datastore));
-        // Create list container
-        const listItems = document.createElement('ol');
-        listItems.classList.add('list__items', 'list__no-style');
-        listContainer.appendChild(listItems);
-        // Display records
-        Object.keys(list[datastore]).forEach((recordId, index) => {
-          listItems.appendChild(listItem({ datastore, index, record: list[datastore][recordId], recordId }));
-        });
-      }
+    nonEmptyDatastores(list).forEach((datastore) => {
+      // Create heading
+      listContainer.appendChild(datastoreHeading(datastore));
+      // Create list container
+      const listItems = document.createElement('ol');
+      listItems.classList.add('list__items', 'list__no-style');
+      listContainer.appendChild(listItems);
+      // Display records
+      Object.keys(list[datastore]).forEach((recordId, index) => {
+        listItems.appendChild(listItem({ datastore, index, record: list[datastore][recordId], recordId }));
+      });
     });
 
     // Update Actions panel
@@ -99,4 +101,4 @@ const temporaryList = () => {
   }
 };
 
-export { datastoreHeading, isTemporaryListEmpty, temporaryList, toggleListElements, viewingTemporaryList };
+export { datastoreHeading, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };
