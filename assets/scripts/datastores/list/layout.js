@@ -79,6 +79,19 @@ const createDatastoreList = (list) => {
   });
 };
 
+const handleSelectionChange = (actions) => {
+  // Watch for changes to the list and update accordingly
+  document.querySelector('.list').addEventListener('change', (event) => {
+    if (event.target.matches(`input[type="checkbox"].list__item--checkbox, .select-all > input[type="checkbox"]`)) {
+      actions.actionsPanelText();
+      actions.disableActionTabs();
+      actions.displayCSLData();
+      actions.selectAllState();
+      actions.selectedText();
+    }
+  });
+};
+
 const temporaryList = () => {
   const list = getTemporaryList();
 
@@ -88,23 +101,23 @@ const temporaryList = () => {
   // Build the list DOM
   createDatastoreList(list);
 
+  const actions = {
+    actionsPanelText,
+    disableActionTabs,
+    displayCSLData,
+    selectAllState,
+    selectedText
+  };
+
   if (!isTemporaryListEmpty(list)) {
     // Update Actions panel
-    actionsPanelText();
-    displayCSLData();
-    selectedText();
+    actions.actionsPanelText();
+    actions.displayCSLData();
+    actions.selectedText();
 
     // Watch for changes to the list and update accordingly
-    document.querySelector('.list').addEventListener('change', (event) => {
-      if (event.target.matches(`input[type="checkbox"].list__item--checkbox, .select-all > input[type="checkbox"]`)) {
-        actionsPanelText();
-        disableActionTabs();
-        displayCSLData();
-        selectAllState();
-        selectedText();
-      }
-    });
+    handleSelectionChange(actions);
   }
 };
 
-export { createDatastoreList, datastoreHeading, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };
+export { createDatastoreList, datastoreHeading, handleSelectionChange, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };

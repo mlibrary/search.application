@@ -1,4 +1,4 @@
-import { createDatastoreList, datastoreHeading, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import { createDatastoreList, datastoreHeading, handleSelectionChange, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
@@ -259,6 +259,92 @@ describe('layout', function () {
     it('should create list items for every record in each non-empty datastore', function () {
       [...document.querySelectorAll('ol')].forEach((orderedList, index) => {
         expect(orderedList.querySelectorAll('li').length, 'an `li` should have been created for every record that exists in the non-empty datastore').to.equal(Object.keys(global.temporaryList[datastores[index]]).length);
+      });
+    });
+  });
+
+  describe('handleSelectionChange()', function () {
+    let actions = null;
+    let listElement = null;
+    let checkbox = null;
+    let selectAll = null;
+
+    beforeEach(function () {
+      document.body.innerHTML = `
+        <div class="list">
+          <input type="checkbox" class="list__item--checkbox" />
+          <div class="select-all">
+            <input type="checkbox" />
+          </div>
+        </div>
+      `;
+
+      // Create sinon stubs for the action methods
+      actions = {
+        actionsPanelText: sinon.spy(),
+        disableActionTabs: sinon.spy(),
+        displayCSLData: sinon.spy(),
+        selectAllState: sinon.spy(),
+        selectedText: sinon.spy()
+      };
+
+      // Initialize the function with the stubbed actions
+      handleSelectionChange(actions);
+
+      listElement = () => {
+        return document.querySelector('.list');
+      };
+
+      checkbox = () => {
+        return document.querySelector('.list__item--checkbox');
+      };
+
+      selectAll = () => {
+        return document.querySelector('.select-all > input[type="checkbox"]');
+      };
+    });
+
+    afterEach(function () {
+      actions = null;
+      listElement = null;
+      checkbox = null;
+      selectAll = null;
+    });
+
+    it('should call all action functions when a list item checkbox changes', function () {
+      // Simulate a change event
+      const event = new window.Event('change', { bubbles: true });
+      checkbox().dispatchEvent(event);
+
+      // Check if all actions were called
+      Object.keys(actions).forEach((key) => {
+        expect(actions[key].calledOnce, `\`${key}\` should have been called`).to.be.true;
+      });
+    });
+
+    it('should call all action functions when the `Select all` checkbox changes', function () {
+      // Simulate a change event
+      const event = new window.Event('change', { bubbles: true });
+      selectAll().dispatchEvent(event);
+
+      // Check if all actions were called
+      Object.keys(actions).forEach((key) => {
+        expect(actions[key].calledOnce, `\`${key}\` should have been called`).to.be.true;
+      });
+    });
+
+    it('should not call action functions for irrelevant changes', function () {
+      // Create a `div` element
+      const div = document.createElement('div');
+      listElement().appendChild(div);
+
+      // Simulate a change event on the created element
+      const event = new window.Event('change', { bubbles: true });
+      div.dispatchEvent(event);
+
+      // Check if all actions were not called
+      Object.keys(actions).forEach((key) => {
+        expect(actions[key].called, `\`${key}\` should not have been called`).to.be.false;
       });
     });
   });
