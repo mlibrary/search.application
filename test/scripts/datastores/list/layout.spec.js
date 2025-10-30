@@ -1,14 +1,7 @@
-import { createDatastoreList, datastoreHeading, handleSelectionChange, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import { createDatastoreList, datastoreHeading, handleSelectionChange, initializeNonEmptyListFunctions, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
-import { setTemporaryList } from '../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import sinon from 'sinon';
-
-const actionsPanelHTML = `
-  <div class="actions__summary--header">
-    <small></small>
-  </div>
-`;
 
 describe('layout', function () {
   describe('viewingTemporaryList()', function () {
@@ -349,160 +342,92 @@ describe('layout', function () {
     });
   });
 
-  describe.skip('temporaryList()', function () {
-    let getHeadings = null;
-    let getOrderedLists = null;
+  describe('initializeNonEmptyListFunctions()', function () {
+    let stubs = null;
+    let handleChange = null;
 
     beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = `
-        <div class="list">
-          <div class="list__actions">
-            ${actionsPanelHTML}
-            <div class="list__actions--utilities">
-              <div class="list__in-list"></div>
-            </div>
-          </div>
-          <p class="list__empty">The list is empty.</p>
-          <div class="list__actions"></div>
-          <li class="container__rounded list__item list__item--clone">
-            <div class="list__item--header">
-              <input type="checkbox" class="list__item--checkbox" value="" aria-label="Select record">
-              <h3 class="list__item--title">
-                <a href="http://example.com/" class="list__item--title-original">
-                  Original Title
-                </a>
-                <span class="list__item--title-transliterated h5">
-                  Transliterated Title
-                </span>
-              </h3>
-            </div>
-            <table class="metadata">
-              <tbody>
-                <tr class="metadata__row--clone">
-                  <th scope="row">
-                    Field
-                  </th>
-                  <td>
-                    <span class="metadata__data--original">
-                      Original Data
-                    </span>
-                    <span class="metadata__data--transliterated">
-                      Transliterated Data
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </li>
-        </div>
-      `;
-
-      global.sessionStorage = window.sessionStorage;
-
-      getHeadings = () => {
-        return document.querySelectorAll('h2');
+      // Create spies
+      stubs = {
+        actionsPanelText: sinon.stub(),
+        displayCSLData: sinon.stub(),
+        selectedText: sinon.stub()
       };
+      handleChange = sinon.spy();
 
-      getOrderedLists = () => {
-        return document.querySelectorAll('ol');
-      };
+      // Call the function
+      initializeNonEmptyListFunctions({ actions: stubs, handleChange });
     });
 
     afterEach(function () {
-      delete global.sessionStorage;
-
-      getHeadings = null;
-      getOrderedLists = null;
+      stubs = null;
+      handleChange = null;
     });
 
-    it('should toggle the empty message based on the list count', function () {
-      // Set a temporary list in session storage
-      setTemporaryList(global.temporaryList);
-
-      // Call the function
-      temporaryList();
-
-      // Check that the empty message is hidden
-      expect(document.querySelector('.list__empty').style.display, 'the empty message should be hidden if there are items in the list').to.equal('none');
-
-      // Set an empty temporary list in session storage and call the function again
-      setTemporaryList({});
-      temporaryList();
-
-      // Check that the empty message is shown
-      expect(document.querySelector('.list__empty').hasAttribute('style'), 'the empty message should be shown if there are no items in the list').to.be.false;
-    });
-
-    it('should toggle the actions panel based on the list count', function () {
-      // Set a temporary list in session storage
-      setTemporaryList(global.temporaryList);
-
-      // Call the function
-      temporaryList();
-
-      // Check that the actions panel is shown
-      expect(document.querySelector('.list__actions').hasAttribute('style'), 'the actions panel should be shown if there are items in the list').to.be.false;
-
-      // Set an empty temporary list in session storage and call the function again
-      setTemporaryList({});
-      temporaryList();
-
-      // Check that the actions panel is hidden
-      expect(document.querySelector('.list__actions').style.display, 'the actions panel should be hidden if there are no items in the list').to.equal('none');
-    });
-
-    it('should create a heading for each non-empty datastore', function () {
-      // Check that no h2s exist
-      expect(getHeadings(), 'an `h2` should not exist in an empty list').to.be.empty;
-
-      // Set a temporary list in session storage
-      setTemporaryList(global.temporaryList);
-
-      // Call the function
-      temporaryList();
-
-      // Check that non-empty h2s now exists
-      expect(getHeadings(), 'an `h2` should exist in a non-empty list').to.not.be.null;
-      expect(getHeadings().length, 'an `h2` should exist for each non-empty datastore').to.equal(nonEmptyDatastores(global.temporaryList).length);
-      getHeadings().forEach((heading) => {
-        expect(heading.textContent, 'an `h2` should have text').to.not.be.empty;
+    it('calls all action methods', function () {
+      // Check that all stubs are called once
+      Object.keys(stubs).forEach((stub) => {
+        expect(stubs[stub].calledOnce, `\`${stub}()\` should have been called once`).to.be.true;
       });
     });
 
-    it('should create an ordered list that includes the provided records for each non-empty datastore', function () {
-      // Check that an ordered list does not exist
-      expect(getOrderedLists(), 'an ordered list should not exist in an empty list').to.be.empty;
+    it('should call `handleChange` with `stubs` as argument', function () {
+      // Check that `handleChange` was called with stubs
+      expect(handleChange.calledOnceWithExactly(stubs), '`handleChange` should have been called with `stubs` once').to.be.true;
+    });
+  });
 
-      // Set a temporary list in session storage
-      setTemporaryList(global.temporaryList);
+  describe('temporaryList()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      // Create spies
+      args = {
+        createList: sinon.spy(),
+        initializeFunctions: sinon.spy(),
+        list: sinon.spy(),
+        toggleElements: sinon.spy()
+      };
 
       // Call the function
-      temporaryList();
-
-      // Check that ordered lists now exists
-      expect(getOrderedLists(), 'an `ol` should exist').to.not.be.empty;
-      expect(getOrderedLists().length, 'an `ol` should exist for each non-empty datastore').to.equal(nonEmptyDatastores(global.temporaryList).length);
-
-      // Get the properties of the temporary list that are non-empty
-      getOrderedLists().forEach((orderedList, index) => {
-        // Check that classes have been added to the ordered list
-        expect(orderedList.classList.contains('list__items', 'list__no-style'), 'classes should have been added to the ordered list').to.be.true;
-
-        // Check that the ordered list has a list item for each record
-        expect(orderedList.querySelectorAll('li').length, 'a list item should exist for each provided record').to.equal(Object.keys(global.temporaryList[nonEmptyDatastores[index]]).length);
-      });
+      temporaryList(args);
     });
 
-    it('should add a `change` event listener to the list container', function () {
-      // Create the `addEventListener` spy
-      const spy = sinon.spy(document.querySelector('.list'), 'addEventListener');
+    afterEach(function () {
+      args = null;
+    });
 
-      // Call the function
-      temporaryList();
+    it('should call `toggleElements` with `list` as argument', function () {
+      // Check that `toggleElements` was called with list
+      expect(args.toggleElements.calledOnceWithExactly(args.list), '`toggleElements` should have been called with `list` once').to.be.true;
+    });
 
-      // Check that the event listener was called with `change`
-      expect(spy.calledWith('change'), 'the list container should have been called with a `change` event listener').to.be.true;
+    it('should call `createList` with `list` as argument', function () {
+      // Check that `createList` was called with list
+      expect(args.createList.calledOnceWithExactly(args.list), '`createList` should have been called with `list` once').to.be.true;
+    });
+
+    describe('initializeFunctions()', function () {
+      it('should not be called if the temporary list is empty', function () {
+        // Make the list empty
+        args.list = [];
+        expect(args.list, 'the temporary list should be empty').to.be.empty;
+
+        // Check that `initializeFunctions` was not called
+        expect(args.initializeFunctions.calledOnce, '`initializeFunctions` should have not been called').to.be.false;
+      });
+
+      it('should be called if the temporary list is not empty', function () {
+        // Make the list not empty
+        args.list = global.temporaryList;
+        expect(args.list, 'the temporary list should not be empty').to.not.be.empty;
+
+        // Call the function again
+        temporaryList(args);
+
+        // Check that `initializeFunctions` was called
+        expect(args.initializeFunctions.calledOnce, '`initializeFunctions` should have been called').to.be.true;
+      });
     });
   });
 });

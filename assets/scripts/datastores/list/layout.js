@@ -79,45 +79,55 @@ const createDatastoreList = (list) => {
   });
 };
 
+// Bring in actions after DOM has been built
+const defaultActions = {
+  actionsPanelText,
+  disableActionTabs: () => {
+    return disableActionTabs();
+  },
+  displayCSLData,
+  selectAllState,
+  selectedText: () => {
+    return selectedText();
+  }
+};
+
 const handleSelectionChange = (actions) => {
   // Watch for changes to the list and update accordingly
   document.querySelector('.list').addEventListener('change', (event) => {
     if (event.target.matches(`input[type="checkbox"].list__item--checkbox, .select-all > input[type="checkbox"]`)) {
+      actions.selectedText();
       actions.actionsPanelText();
+      actions.selectAllState();
       actions.disableActionTabs();
       actions.displayCSLData();
-      actions.selectAllState();
-      actions.selectedText();
     }
   });
 };
 
-const temporaryList = () => {
-  const list = getTemporaryList();
+const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChange = handleSelectionChange }) => {
+  // Update Actions panel
+  actions.selectedText();
+  actions.actionsPanelText();
+  actions.displayCSLData();
 
-  // Toggle what should and should not be displaying
-  toggleListElements(list);
-
-  // Build the list DOM
-  createDatastoreList(list);
-
-  const actions = {
-    actionsPanelText,
-    disableActionTabs,
-    displayCSLData,
-    selectAllState,
-    selectedText
-  };
-
-  if (!isTemporaryListEmpty(list)) {
-    // Update Actions panel
-    actions.actionsPanelText();
-    actions.displayCSLData();
-    actions.selectedText();
-
-    // Watch for changes to the list and update accordingly
-    handleSelectionChange(actions);
-  }
+  // `handleChange` is passed in for testing purposes
+  handleChange(actions);
 };
 
-export { createDatastoreList, datastoreHeading, handleSelectionChange, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };
+const temporaryList = ({ createList = createDatastoreList, initializeFunctions = initializeNonEmptyListFunctions, list = getTemporaryList(), toggleElements = toggleListElements }) => {
+  // Toggle what should and should not be displaying
+  toggleElements(list);
+
+  // Build the list DOM
+  createList(list);
+
+  // Return early if My Temporary List is empty
+  if (isTemporaryListEmpty(list)) {
+    return;
+  }
+
+  initializeFunctions();
+};
+
+export { createDatastoreList, datastoreHeading, handleSelectionChange, initializeNonEmptyListFunctions, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };
