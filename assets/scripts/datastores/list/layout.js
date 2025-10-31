@@ -105,7 +105,7 @@ const handleSelectionChange = (actions) => {
   });
 };
 
-const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChange = handleSelectionChange }) => {
+const initializeNonEmptyListFunctions = (actions = defaultActions, handleChange = handleSelectionChange) => {
   // Update Actions panel
   actions.selectedText();
   actions.actionsPanelText();
@@ -115,19 +115,25 @@ const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChang
   handleChange(actions);
 };
 
-const temporaryList = ({ createList = createDatastoreList, initializeFunctions = initializeNonEmptyListFunctions, list = getTemporaryList(), toggleElements = toggleListElements }) => {
+const temporaryListFunctions = {
+  createDatastoreList,
+  initializeNonEmptyListFunctions,
+  toggleListElements
+};
+
+const temporaryList = (list = getTemporaryList(), listFunctions = temporaryListFunctions) => {
   // Toggle what should and should not be displaying
-  toggleElements(list);
+  listFunctions.toggleListElements(list);
 
   // Build the list DOM
-  createList(list);
+  listFunctions.createDatastoreList(list);
 
   // Return early if My Temporary List is empty
   if (isTemporaryListEmpty(list)) {
     return;
   }
 
-  initializeFunctions();
+  listFunctions.initializeNonEmptyListFunctions();
 };
 
 export { createDatastoreList, datastoreHeading, handleSelectionChange, initializeNonEmptyListFunctions, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };

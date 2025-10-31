@@ -356,7 +356,7 @@ describe('layout', function () {
       handleChange = sinon.spy();
 
       // Call the function
-      initializeNonEmptyListFunctions({ actions: stubs, handleChange });
+      initializeNonEmptyListFunctions(stubs, handleChange);
     });
 
     afterEach(function () {
@@ -378,55 +378,57 @@ describe('layout', function () {
   });
 
   describe('temporaryList()', function () {
-    let args = null;
+    let stubs = null;
+    let list = null;
 
     beforeEach(function () {
       // Create spies
-      args = {
-        createList: sinon.spy(),
-        initializeFunctions: sinon.spy(),
-        list: sinon.spy(),
-        toggleElements: sinon.spy()
+      stubs = {
+        createDatastoreList: sinon.stub(),
+        initializeNonEmptyListFunctions: sinon.stub(),
+        toggleListElements: sinon.stub()
       };
+      list = sinon.spy();
 
       // Call the function
-      temporaryList(args);
+      temporaryList(list, stubs);
     });
 
     afterEach(function () {
-      args = null;
+      stubs = null;
+      list = null;
     });
 
-    it('should call `toggleElements` with `list` as argument', function () {
-      // Check that `toggleElements` was called with list
-      expect(args.toggleElements.calledOnceWithExactly(args.list), '`toggleElements` should have been called with `list` once').to.be.true;
+    it('should call `toggleListElements` with `list` as argument', function () {
+      // Check that `toggleListElements` was called with stubs
+      expect(stubs.toggleListElements.calledOnceWithExactly(list), '`toggleListElements` should have been called with `list` once').to.be.true;
     });
 
-    it('should call `createList` with `list` as argument', function () {
-      // Check that `createList` was called with list
-      expect(args.createList.calledOnceWithExactly(args.list), '`createList` should have been called with `list` once').to.be.true;
+    it('should call `createDatastoreList` with `list` as argument', function () {
+      // Check that `createDatastoreList` was called with stubs
+      expect(stubs.createDatastoreList.calledOnceWithExactly(list), '`createDatastoreList` should have been called with `list` once').to.be.true;
     });
 
-    describe('initializeFunctions()', function () {
+    describe('initializeNonEmptyListFunctions()', function () {
       it('should not be called if the temporary list is empty', function () {
         // Make the list empty
-        args.list = [];
-        expect(args.list, 'the temporary list should be empty').to.be.empty;
+        list = [];
+        expect(list, 'the temporary list should be empty').to.be.empty;
 
-        // Check that `initializeFunctions` was not called
-        expect(args.initializeFunctions.calledOnce, '`initializeFunctions` should have not been called').to.be.false;
+        // Check that `initializeNonEmptyListFunctions` was not called
+        expect(stubs.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have not been called').to.be.false;
       });
 
       it('should be called if the temporary list is not empty', function () {
         // Make the list not empty
-        args.list = global.temporaryList;
-        expect(args.list, 'the temporary list should not be empty').to.not.be.empty;
+        list = global.temporaryList;
+        expect(list, 'the temporary list should not be empty').to.not.be.empty;
 
         // Call the function again
-        temporaryList(args);
+        temporaryList(list, stubs);
 
-        // Check that `initializeFunctions` was called
-        expect(args.initializeFunctions.calledOnce, '`initializeFunctions` should have been called').to.be.true;
+        // Check that `initializeNonEmptyListFunctions` was called
+        expect(stubs.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have been called').to.be.true;
       });
     });
   });
