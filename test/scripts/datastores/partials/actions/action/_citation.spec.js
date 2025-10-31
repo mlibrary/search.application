@@ -1,12 +1,10 @@
+import { displayCSLData, getCSLTextarea } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import { getCheckboxes, getCheckedCheckboxes, someCheckboxesChecked } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
-import { displayCSLData } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import { expect } from 'chai';
+import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 
-const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
-  return Object.keys(global.temporaryList[datastore]).length > 0;
-});
 let temporaryListHTML = '';
-nonEmptyDatastores.forEach((datastore) => {
+nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
   const recordIds = Object.keys(global.temporaryList[datastore]);
   recordIds.forEach((recordId, index) => {
     temporaryListHTML += `<li><input type="checkbox" class="list__item--checkbox" value="${datastore},${recordId}" ${index === 0 ? 'checked' : ''}></li>`;
@@ -47,6 +45,12 @@ describe('citation', function () {
     getTextareaContent = null;
     // Cleanup
     delete global.sessionStorage;
+  });
+
+  describe('getCSLTextarea()', function () {
+    it('should return the CSL `textarea`', function () {
+      expect(getCSLTextarea(), 'the `textarea` that displays the CSL should have been returned').to.equal(document.querySelector('textarea'));
+    });
   });
 
   describe('displayCSLData()', function () {
@@ -108,7 +112,7 @@ describe('citation', function () {
     });
   });
 
-  describe.skip('generateFullRecordCitations()', function () {
+  describe('generateFullRecordCitations()', function () {
     // TO DO
   });
 });

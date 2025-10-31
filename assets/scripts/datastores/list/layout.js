@@ -1,6 +1,6 @@
+import { displayCSLData, generateFullRecordCitations } from '../partials/actions/action/_citation.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
 import { disableActionTabs } from '../partials/_actions.js';
-import { displayCSLData } from '../partials/actions/action/_citation.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
 import { selectAllState } from './partials/_select-all.js';
@@ -134,6 +134,8 @@ const temporaryList = (list = getTemporaryList(), listFunctions = temporaryListF
   }
 
   listFunctions.initializeNonEmptyListFunctions();
+
+  generateFullRecordCitations();
 };
 
 export { createDatastoreList, datastoreHeading, handleSelectionChange, initializeNonEmptyListFunctions, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };
