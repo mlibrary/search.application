@@ -1,9 +1,10 @@
+import { displayCitations, handleTabClick } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import { expect } from 'chai';
-import { handleTabClick } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
+import { getActiveCitationTab } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
 import sinon from 'sinon';
 
 describe('citation', function () {
-  let functionSpy = null;
+  let citationSpy = null;
   let getTabList = null;
   let getTab = null;
 
@@ -22,10 +23,7 @@ describe('citation', function () {
       </div>
     `;
 
-    functionSpy = sinon.spy();
-
-    // Call the function with the spy
-    handleTabClick(functionSpy);
+    citationSpy = sinon.spy();
 
     getTabList = () => {
       return document.querySelector('[role="tablist"]');
@@ -37,19 +35,24 @@ describe('citation', function () {
   });
 
   afterEach(function () {
-    functionSpy = null;
+    citationSpy = null;
     getTabList = null;
     getTab = null;
   });
 
   describe('handleTabClick()', function () {
+    beforeEach(function () {
+      // Call the function with the spy
+      handleTabClick(citationSpy);
+    });
+
     it('should not call the function if a tab was not clicked', function () {
       // Click the tablist
       const clickEvent = new window.Event('click', { bubbles: true });
       getTabList().dispatchEvent(clickEvent);
 
       // Check that the function was not called
-      expect(functionSpy.calledOnce, 'the function should not have been called if a tab was not clicked').to.be.false;
+      expect(citationSpy.calledOnce, 'the function should not have been called if a tab was not clicked').to.be.false;
     });
 
     it('should not call the function if a tab was unselected on click', function () {
@@ -64,7 +67,7 @@ describe('citation', function () {
       unselectedTab.dispatchEvent(clickEvent);
 
       // Check that the function was not called
-      expect(functionSpy.calledOnce, 'the function should not have been called if a tab was unselected').to.be.false;
+      expect(citationSpy.calledOnce, 'the function should not have been called if a tab was unselected').to.be.false;
     });
 
     it('should call the function if a tab was selected on click', function () {
@@ -79,7 +82,58 @@ describe('citation', function () {
       selectedTab.dispatchEvent(clickEvent);
 
       // Check that the function was not called
-      expect(functionSpy.calledOnce, 'the function should have been called if a tab was selected').to.be.true;
+      expect(citationSpy.calledOnce, 'the function should have been called if a tab was selected').to.be.true;
+    });
+  });
+
+  describe('displayCitations()', function () {
+    let tabClickSpy = null;
+    let callFunction = null;
+
+    beforeEach(function () {
+      tabClickSpy = sinon.spy();
+      callFunction = () => {
+        return displayCitations(citationSpy, tabClickSpy);
+      };
+    });
+
+    afterEach(function () {
+      tabClickSpy = null;
+      callFunction = null;
+    });
+
+    it('should call the citations spy if there is an active tab', function () {
+      // Check if there is an active tab
+      expect(getActiveCitationTab(), 'a tab should be active').to.not.be.null;
+
+      // Call the function
+      callFunction();
+
+      // Check that `citations` was called
+      expect(citationSpy.calledOnce, 'the `citationSpy` should have been called once').to.be.true;
+    });
+
+    it('should not call the citations spy if there is no active tab', function () {
+      // Make the active tab inactive
+      getActiveCitationTab().setAttribute('aria-selected', 'false');
+      expect(getActiveCitationTab(), 'a tab should not be active').to.be.null;
+
+      // Call the function
+      callFunction();
+
+      // Check that `citations` was not called
+      expect(citationSpy.calledOnce, 'the `citationSpy` should not have been called').to.be.false;
+    });
+
+    it('should call the `tabClick` function with `citations` stubbed', function () {
+      // Call the function
+      callFunction();
+
+      // Check that the `tabClick` function was called
+      expect(tabClickSpy.calledOnce, 'the `tabClick` should have been called once').to.be.true;
+
+      // Check that `tabClickSpy` was called with `citationSpy`
+      expect(tabClickSpy.calledOnceWithExactly(citationSpy), '`tabClickSpy` should have been called with `citationSpy` once').to.be.true;
     });
   });
 });

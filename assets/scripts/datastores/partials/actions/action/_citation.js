@@ -1,20 +1,59 @@
 import CSL from 'citeproc';
+import { getActiveCitationTab } from './citation/_tablist.js';
 import { getCSLTextarea } from './citation/_csl.js';
 
-const tabList = document.querySelector('.citation .citation__tablist');
+const generateCitations = async (tab) => {
+  const citationStyle = tab.getAttribute('data-citation-style');
+  // Fetch files from the server
+  const [styleRes, localeRes] = await Promise.all([
+    fetch(`/citations/${citationStyle}.csl`),
+    fetch('/citations/locales-en-US.xml')
+  ]);
 
-// Fetch .csl
+  if (!styleRes.ok || !localeRes.ok) {
+    throw new Error('Could not load CSL files');
+  }
 
-// Fetch locale
+  const [cslStyle, cslLocale] = await Promise.all([
+    styleRes.text(),
+    localeRes.text()
+  ]);
 
-// Generate citation (for on load)
+  const cslData = JSON.parse(getCSLTextarea().textContent);
 
-// Test function
-const testFunction = () => {
-  return 'test';
+  // Prepare item retrieval callback
+  const retrieveItem = (id) => {
+    return cslData.find((item) => {
+      return item.id === id;
+    });
+  };
+
+  // Set up system object required by citeproc
+  const sys = {
+    retrieveItem (id) {
+      return retrieveItem(id);
+    },
+    retrieveLocale () {
+      return cslLocale;
+    }
+  };
+
+  // Create CSL processor
+  const citeprocEngine = new CSL.Engine(sys, cslStyle, 'en-US');
+
+  // Register citation items
+  citeprocEngine.updateItems(cslData.map((item) => {
+    return item.id;
+  }));
+
+  // Generate bibliography
+  const [, bibEntries] = citeprocEngine.makeBibliography();
+
+  // Example: insert bibliography into the web page
+  document.querySelector(`#${tab.getAttribute('id')}--tabpanel [role='textbox']`).innerHTML = bibEntries.join('\n');
 };
 
-const handleTabClick = (func = testFunction) => {
+const handleTabClick = (citations) => {
   // Check if a click occurred in the tablist
   document.querySelector('.citation > [role="tablist"]').addEventListener('click', (event) => {
     const tab = event.target.closest('[role="tab"]');
@@ -24,74 +63,23 @@ const handleTabClick = (func = testFunction) => {
       return;
     }
 
-    // Call the function
-    func();
+    // `citations` is passed in for testing purposes
+    citations(tab);
   });
 };
 
-const generateFullRecordCitations = () => {
-  // Generate citation
+const displayCitations = (citations = generateCitations, tabClick = handleTabClick) => {
+  // Check if there is an active tab on load
+  const activeTab = getActiveCitationTab();
 
-  // Generate citation on click
-  tabList.addEventListener('click', async (event) => {
-    const tab = event.target.closest('[role="tab"]');
+  // Get the citations of the active tab
+  if (activeTab) {
+    // `citations` is passed in for testing purposes
+    citations(activeTab);
+  }
 
-    // Return early if tab is not clicked or has closed
-    if (!tab || tab.getAttribute('aria-selected') !== 'true') {
-      return;
-    }
-
-    // Generate citation (if have not yet)
-
-    const citationStyle = tab.getAttribute('data-citation-style');
-    // Fetch files from the server
-    const [styleRes, localeRes] = await Promise.all([
-      fetch(`/citations/${citationStyle}.csl`),
-      fetch('/citations/locales-en-US.xml')
-    ]);
-
-    if (!styleRes.ok || !localeRes.ok) {
-      throw new Error('Could not load CSL files');
-    }
-
-    const [cslStyle, cslLocale] = await Promise.all([
-      styleRes.text(),
-      localeRes.text()
-    ]);
-
-    const cslData = JSON.parse(getCSLTextarea().textContent);
-
-    // Prepare item retrieval callback
-    const retrieveItem = (id) => {
-      return cslData.find((item) => {
-        return item.id === id;
-      });
-    };
-
-    // Set up system object required by citeproc
-    const sys = {
-      retrieveItem (id) {
-        return retrieveItem(id);
-      },
-      retrieveLocale () {
-        return cslLocale;
-      }
-    };
-
-    // Create CSL processor
-    const citeprocEngine = new CSL.Engine(sys, cslStyle, 'en-US');
-
-    // Register citation items
-    citeprocEngine.updateItems(cslData.map((item) => {
-      return item.id;
-    }));
-
-    // Generate bibliography
-    const [, bibEntries] = citeprocEngine.makeBibliography();
-
-    // Example: insert bibliography into the web page
-    document.querySelector(`#${tab.getAttribute('id')}--tabpanel [role='textbox']`).innerHTML = bibEntries.join('\n');
-  });
+  // `tabClick` is passed in for testing purposes
+  tabClick(citations);
 };
 
-export { generateFullRecordCitations, handleTabClick };
+export { displayCitations, handleTabClick };
