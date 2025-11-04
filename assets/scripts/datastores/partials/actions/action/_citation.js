@@ -3,6 +3,32 @@ import { getCSLTextarea } from './citation/_csl.js';
 
 const tabList = document.querySelector('.citation .citation__tablist');
 
+// Fetch .csl
+
+// Fetch locale
+
+// Generate citation (for on load)
+
+// Test function
+const testFunction = () => {
+  return 'test';
+};
+
+const handleTabClick = (func = testFunction) => {
+  // Check if a click occurred in the tablist
+  document.querySelector('.citation > [role="tablist"]').addEventListener('click', (event) => {
+    const tab = event.target.closest('[role="tab"]');
+
+    // Return early if tab is not clicked or has closed
+    if (!tab || tab.getAttribute('aria-selected') !== 'true') {
+      return;
+    }
+
+    // Call the function
+    func();
+  });
+};
+
 const generateFullRecordCitations = () => {
   // Generate citation
 
@@ -14,6 +40,8 @@ const generateFullRecordCitations = () => {
     if (!tab || tab.getAttribute('aria-selected') !== 'true') {
       return;
     }
+
+    // Generate citation (if have not yet)
 
     const citationStyle = tab.getAttribute('data-citation-style');
     // Fetch files from the server
@@ -66,4 +94,4 @@ const generateFullRecordCitations = () => {
   });
 };
 
-export { generateFullRecordCitations };
+export { generateFullRecordCitations, handleTabClick };

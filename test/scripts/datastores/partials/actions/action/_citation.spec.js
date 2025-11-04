@@ -1,52 +1,85 @@
 import { expect } from 'chai';
-import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
-import { someCheckboxesChecked } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
-
-let temporaryListHTML = '';
-nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
-  const recordIds = Object.keys(global.temporaryList[datastore]);
-  recordIds.forEach((recordId, index) => {
-    temporaryListHTML += `<li><input type="checkbox" class="list__item--checkbox" value="${datastore},${recordId}" ${index === 0 ? 'checked' : ''}></li>`;
-  });
-});
+import { handleTabClick } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
+import sinon from 'sinon';
 
 describe('citation', function () {
-  let getTextareaContent = null;
+  let functionSpy = null;
+  let getTabList = null;
+  let getTab = null;
 
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
       <div class="citation">
-        <textarea class="citation__csl"></textarea>
+        <div role="tablist" class="citation__tablist">
+          <button type="button" role="tab" aria-selected="true" aria-controls="citation__mla--tabpanel">
+            MLA
+          </button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="citation__apa--tabpanel">
+            APA
+          </button>
+        </div>
       </div>
-      <ol class="list__items">
-        ${temporaryListHTML}
-      </ol>
     `;
 
-    getTextareaContent = () => {
-      return document.querySelector('textarea').value;
+    functionSpy = sinon.spy();
+
+    // Call the function with the spy
+    handleTabClick(functionSpy);
+
+    getTabList = () => {
+      return document.querySelector('[role="tablist"]');
     };
 
-    // Check that the textarea is empty
-    expect(getTextareaContent(), 'the textarea should be empty before each test').to.be.empty;
-
-    // Check that at least one checkbox is checked
-    expect(someCheckboxesChecked(true), 'at least one checkbox should be checked for this test').to.be.true;
-
-    global.sessionStorage = window.sessionStorage;
-
-    // Set a temporary list in session storage
-    global.sessionStorage.setItem('temporaryList', JSON.stringify(global.temporaryList));
+    getTab = (type = 'mla') => {
+      return document.querySelector(`[role="tab"][aria-controls="citation__${type}--tabpanel"]`);
+    };
   });
 
   afterEach(function () {
-    getTextareaContent = null;
-    // Cleanup
-    delete global.sessionStorage;
+    functionSpy = null;
+    getTabList = null;
+    getTab = null;
   });
 
-  describe('generateFullRecordCitations()', function () {
-    // TO DO
+  describe('handleTabClick()', function () {
+    it('should not call the function if a tab was not clicked', function () {
+      // Click the tablist
+      const clickEvent = new window.Event('click', { bubbles: true });
+      getTabList().dispatchEvent(clickEvent);
+
+      // Check that the function was not called
+      expect(functionSpy.calledOnce, 'the function should not have been called if a tab was not clicked').to.be.false;
+    });
+
+    it('should not call the function if a tab was unselected on click', function () {
+      // Get the `APA` tab
+      const unselectedTab = getTab('apa');
+
+      // Check that the tab is not selected
+      expect(unselectedTab.getAttribute('aria-selected'), 'the `APA` tab should not be selected').to.equal('false');
+
+      // Click the tab
+      const clickEvent = new window.Event('click', { bubbles: true });
+      unselectedTab.dispatchEvent(clickEvent);
+
+      // Check that the function was not called
+      expect(functionSpy.calledOnce, 'the function should not have been called if a tab was unselected').to.be.false;
+    });
+
+    it('should call the function if a tab was selected on click', function () {
+      // Get the `MLA` tab
+      const selectedTab = getTab('mla');
+
+      // Check that the tab is selected
+      expect(selectedTab.getAttribute('aria-selected'), 'the `MLA` tab should be selected').to.equal('true');
+
+      // Click the tab
+      const clickEvent = new window.Event('click', { bubbles: true });
+      selectedTab.dispatchEvent(clickEvent);
+
+      // Check that the function was not called
+      expect(functionSpy.calledOnce, 'the function should have been called if a tab was selected').to.be.true;
+    });
   });
 });
