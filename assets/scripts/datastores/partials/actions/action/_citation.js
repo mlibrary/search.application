@@ -2,21 +2,22 @@ import CSL from 'citeproc';
 import { getActiveCitationTab } from './citation/_tablist.js';
 import { getCSLTextarea } from './citation/_csl.js';
 
+const fetchCitationFileText = async (style) => {
+  // Return the appropriate `.csl` file if a style is provided, else, return the locale
+  const filePath = `/citations/${style ? `${style}.csl` : 'locales-en-US.xml'}`;
+  const response = await fetch(filePath);
+  if (!response.ok) {
+    throw new Error(`Fetching \`${filePath}\` failed: ${response.status} ${response.statusText}`);
+  }
+  return await response.text();
+};
+
 const generateCitations = async (tab) => {
   const citationStyle = tab.getAttribute('data-citation-style');
   // Fetch files from the server
-  const [styleRes, localeRes] = await Promise.all([
-    fetch(`/citations/${citationStyle}.csl`),
-    fetch('/citations/locales-en-US.xml')
-  ]);
-
-  if (!styleRes.ok || !localeRes.ok) {
-    throw new Error('Could not load CSL files');
-  }
-
   const [cslStyle, cslLocale] = await Promise.all([
-    styleRes.text(),
-    localeRes.text()
+    fetchCitationFileText(citationStyle),
+    fetchCitationFileText()
   ]);
 
   const cslData = JSON.parse(getCSLTextarea().textContent);
@@ -82,4 +83,4 @@ const displayCitations = (citations = generateCitations, tabClick = handleTabCli
   tabClick(citations);
 };
 
-export { displayCitations, handleTabClick };
+export { displayCitations, fetchCitationFileText, handleTabClick };

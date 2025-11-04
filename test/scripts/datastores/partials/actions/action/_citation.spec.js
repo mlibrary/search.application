@@ -1,4 +1,4 @@
-import { displayCitations, handleTabClick } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
+import { displayCitations, fetchCitationFileText, handleTabClick } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import { expect } from 'chai';
 import { getActiveCitationTab } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
 import sinon from 'sinon';
@@ -38,6 +38,106 @@ describe('citation', function () {
     citationSpy = null;
     getTabList = null;
     getTab = null;
+  });
+
+  describe('fetchCitationFileText()', function () {
+    let fetchStub = null;
+
+    beforeEach(function () {
+      fetchStub = sinon.stub(global, 'fetch');
+    });
+
+    afterEach(function () {
+      fetchStub = null;
+    });
+
+    describe('success', function () {
+      it('should fetch the appropriate `.csl` file when a style is provided', async function () {
+        // Create a mock response
+        const style = 'apa';
+        const mockText = 'Citation style data';
+        const mockResponse = {
+          ok: true,
+          text: sinon.stub().resolves(mockText)
+        };
+
+        // Apply the mock response
+        fetchStub.resolves(mockResponse);
+
+        // Fetch the file
+        const result = await fetchCitationFileText(style);
+
+        // Check that the correct `.csl` file was called
+        expect(fetchStub.calledOnceWith(`/citations/${style}.csl`), `the correct \`.csl\` file should be called for \`${style}\``).to.be.true;
+
+        // Check that the correct text was returned
+        expect(result, 'the response should have returned the correct text').to.equal(mockText);
+      });
+
+      it('should fetch the locale `.xml` file when a style is not provided', async function () {
+        // Create a mock response
+        const mockText = 'Local XML data';
+        const mockResponse = {
+          ok: true,
+          text: sinon.stub().resolves(mockText)
+        };
+
+        // Apply the mock response
+        fetchStub.resolves(mockResponse);
+
+        // Fetch the file
+        const result = await fetchCitationFileText();
+
+        // Check that the locale `.xml` file was called
+        expect(fetchStub.calledOnceWith(`/citations/locales-en-US.xml`), 'the locale `.xml` file should have been called if a style was not provided').to.be.true;
+
+        // Check that the correct text was returned
+        expect(result, 'the response should have returned the correct text').to.equal(mockText);
+      });
+    });
+
+    describe('error', function () {
+      it('should throw an error if fetch response is not ok', async function () {
+        // Create a mock response
+        const style = 'mla';
+        const mockResponse = {
+          ok: false,
+          status: 404,
+          statusText: 'Not Found',
+          text: sinon.stub()
+        };
+
+        // Apply the mock response
+        fetchStub.resolves(mockResponse);
+
+        try {
+          // Call the function
+          await fetchCitationFileText(style);
+          expect.fail('Should have thrown error');
+        } catch (error) {
+          // Check that the message is correct
+          expect(error.message, 'the error message should describe the specific file is being fetched and why it failed').to.include(`Fetching \`/citations/${style}.csl\` failed: ${mockResponse.status} ${mockResponse.statusText}`);
+        }
+      });
+
+      it('should throw and error for network problems', async function () {
+        // Create a new error
+        const style = 'chicago';
+        const fakeError = new Error('Network failure');
+
+        // Apply the rejected response
+        fetchStub.rejects(fakeError);
+
+        try {
+          // Call the function
+          await fetchCitationFileText(style);
+          expect.fail('Should have thrown fetch error');
+        } catch (error) {
+          // Check that the message matches the new error
+          expect(error, 'the error message should now have the new error').to.equal(fakeError);
+        }
+      });
+    });
   });
 
   describe('handleTabClick()', function () {
