@@ -1,15 +1,7 @@
 import CSL from 'citeproc';
-import { selectedCitations } from '../../../list/partials/list-item/_checkbox.js';
+import { getCSLTextarea } from './citation/_csl.js';
 
 const tabList = document.querySelector('.citation .citation__tablist');
-
-const getCSLTextarea = () => {
-  return document.querySelector('.citation textarea.citation__csl');
-};
-
-const displayCSLData = () => {
-  getCSLTextarea().textContent = JSON.stringify(selectedCitations('csl'));
-};
 
 const generateFullRecordCitations = () => {
   // Generate citation
@@ -74,4 +66,4 @@ const generateFullRecordCitations = () => {
   });
 };
 
-export { displayCSLData, getCSLTextarea, generateFullRecordCitations };
+export { generateFullRecordCitations };

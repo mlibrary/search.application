@@ -1,12 +1,9 @@
 import { disableCopyCitationButton } from './_copy-citation.js';
+import { selectedCitations } from '../../../../list/partials/list-item/_checkbox.js';
 import { viewingTemporaryList } from '../../../../list/layout.js';
 
-const getCitationCSL = () => {
+const getCSLTextarea = () => {
   return document.querySelector('.citation textarea.citation__csl');
-};
-
-const generateCSLData = () => {
-  return [];
 };
 
 const displayCSLData = () => {
@@ -16,12 +13,12 @@ const displayCSLData = () => {
   }
 
   // Apply the data to the textarea
-  getCitationCSL().textContent = JSON.stringify(generateCSLData());
+  getCSLTextarea().textContent = JSON.stringify(selectedCitations('csl'));
 };
 
 const citationCSLChange = (toggleCopyCitationButton = disableCopyCitationButton) => {
   // `toggleCopyCitationButton` is passed in for testing purposes
-  getCitationCSL().addEventListener('change', toggleCopyCitationButton());
+  getCSLTextarea().addEventListener('change', toggleCopyCitationButton());
 };
 
-export { citationCSLChange, displayCSLData, generateCSLData, getCitationCSL };
+export { citationCSLChange, displayCSLData, getCSLTextarea };
