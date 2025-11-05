@@ -1,6 +1,6 @@
 import CSL from 'citeproc';
+import { cslData } from './citation/_csl.js';
 import { getActiveCitationTab } from './citation/_tablist.js';
-import { getCSLTextarea } from './citation/_csl.js';
 
 const fetchCitationFileText = async (style) => {
   // Return the appropriate `.csl` file if a style is provided, else, return the locale
@@ -12,6 +12,12 @@ const fetchCitationFileText = async (style) => {
   return await response.text();
 };
 
+const retrieveItem = (id) => {
+  return cslData().find((item) => {
+    return item.id === id;
+  });
+};
+
 const generateCitations = async (tab) => {
   const citationStyle = tab.getAttribute('data-citation-style');
   // Fetch files from the server
@@ -19,15 +25,6 @@ const generateCitations = async (tab) => {
     fetchCitationFileText(citationStyle),
     fetchCitationFileText()
   ]);
-
-  const cslData = JSON.parse(getCSLTextarea().textContent);
-
-  // Prepare item retrieval callback
-  const retrieveItem = (id) => {
-    return cslData.find((item) => {
-      return item.id === id;
-    });
-  };
 
   // Set up system object required by citeproc
   const sys = {
@@ -43,7 +40,7 @@ const generateCitations = async (tab) => {
   const citeprocEngine = new CSL.Engine(sys, cslStyle, 'en-US');
 
   // Register citation items
-  citeprocEngine.updateItems(cslData.map((item) => {
+  citeprocEngine.updateItems(cslData().map((item) => {
     return item.id;
   }));
 
@@ -83,4 +80,4 @@ const displayCitations = (citations = generateCitations, tabClick = handleTabCli
   tabClick(citations);
 };
 
-export { displayCitations, fetchCitationFileText, handleTabClick };
+export { displayCitations, fetchCitationFileText, handleTabClick, retrieveItem };
