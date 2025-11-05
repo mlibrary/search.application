@@ -1,4 +1,4 @@
-import { citationCSLChange, displayCSLData, getCSLTextarea } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
+import { citationCSLChange, cslData, displayCSLData, getCSLTextarea } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
 import { nonEmptyDatastores, viewingTemporaryList } from '../../../../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
@@ -90,6 +90,18 @@ describe('csl', function () {
         // Check that the textarea was populated
         expect(getTextArea().textContent, 'the CSL data should be displayed in the textarea').to.equal(citationCSLData);
       });
+    });
+  });
+
+  describe('cslData', function () {
+    beforeEach(function () {
+      // Make sure there is displayed data to display
+      displayCSLData();
+    });
+
+    it('should return parsed JSON from the CSL `textarea`', function () {
+      // Check that the `textarea` has been parsed
+      expect(cslData(), 'the content of the `textarea` should have been parsed').to.deep.equal(JSON.parse(getTextArea().textContent));
     });
   });
 

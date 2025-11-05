@@ -16,9 +16,13 @@ const displayCSLData = () => {
   getCSLTextarea().textContent = JSON.stringify(selectedCitations('csl'));
 };
 
+const cslData = () => {
+  return JSON.parse(getCSLTextarea().textContent);
+};
+
 const citationCSLChange = (toggleCopyCitationButton = disableCopyCitationButton) => {
   // `toggleCopyCitationButton` is passed in for testing purposes
   getCSLTextarea().addEventListener('change', toggleCopyCitationButton());
 };
 
-export { citationCSLChange, displayCSLData, getCSLTextarea };
+export { citationCSLChange, cslData, displayCSLData, getCSLTextarea };
