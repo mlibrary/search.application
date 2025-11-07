@@ -2,6 +2,12 @@ import CSL from 'citeproc';
 import { cslData } from './citation/_csl.js';
 import { getActiveCitationTab } from './citation/_tablist.js';
 
+/*
+  TO DO: Cache fetched text
+
+  const citationFileCache = {};
+*/
+
 const fetchCitationFileText = async (style) => {
   // Return the appropriate `.csl` file if a style is provided, else, return the locale
   const filePath = `/citations/${style ? `${style}.csl` : 'locales-en-US.xml'}`;
@@ -10,6 +16,14 @@ const fetchCitationFileText = async (style) => {
     throw new Error(`Fetching \`${filePath}\` failed: ${response.status} ${response.statusText}`);
   }
   return await response.text();
+};
+
+const fetchCitationFiles = async ({ citationStyle, fetchFileText = fetchCitationFileText }) => {
+  // `fetchFileText` passed in for testing
+  return await Promise.all([
+    fetchFileText(citationStyle),
+    fetchFileText()
+  ]);
 };
 
 const retrieveItem = (id) => {
@@ -21,10 +35,7 @@ const retrieveItem = (id) => {
 const generateCitations = async (tab) => {
   const citationStyle = tab.getAttribute('data-citation-style');
   // Fetch files from the server
-  const [cslStyle, cslLocale] = await Promise.all([
-    fetchCitationFileText(citationStyle),
-    fetchCitationFileText()
-  ]);
+  const [cslStyle, cslLocale] = await fetchCitationFiles({ citationStyle });
 
   // Set up system object required by citeproc
   const sys = {
@@ -80,4 +91,4 @@ const displayCitations = (citations = generateCitations, tabClick = handleTabCli
   tabClick(citations);
 };
 
-export { displayCitations, fetchCitationFileText, handleTabClick, retrieveItem };
+export { displayCitations, fetchCitationFiles, fetchCitationFileText, handleTabClick, retrieveItem };

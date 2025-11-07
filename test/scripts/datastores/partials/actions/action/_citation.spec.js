@@ -1,4 +1,4 @@
-import { displayCitations, fetchCitationFileText, handleTabClick, retrieveItem } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
+import { displayCitations, fetchCitationFiles, fetchCitationFileText, handleTabClick, retrieveItem } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import { expect } from 'chai';
 import { getActiveCitationTab } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
 import sinon from 'sinon';
@@ -146,6 +146,50 @@ describe('citation', function () {
           expect(error, 'the error message should now have the new error').to.equal(fakeError);
         }
       });
+    });
+  });
+
+  describe('fetchCitationFiles()', function () {
+    let style = null;
+    let text = null;
+    let calls = null;
+    let styleFile = null;
+    let localeFile = null;
+
+    beforeEach(async function () {
+      style = 'apa';
+      text = {
+        localeFile: 'Locale file text',
+        styleFile: `Style file ${style}`
+      };
+      calls = [];
+      const fetchFileText = (arg) => {
+        calls.push(arg);
+        if (!arg) {
+          return text.localeFile;
+        }
+        return text.styleFile;
+      };
+
+      [styleFile, localeFile] = await fetchCitationFiles({ citationStyle: style, fetchFileText });
+    });
+
+    afterEach(function () {
+      style = null;
+      text = null;
+      calls = null;
+      styleFile = null;
+      localeFile = null;
+    });
+
+    it('calls the function as expected', function () {
+      expect(calls[0], 'the first called should have been the citation style').to.equal(style);
+      expect(calls[1], 'a second call should not exist').to.be.undefined;
+    });
+
+    it('returns the expected files', function () {
+      expect(styleFile, 'the citation file should have been returned if a style was provided').to.equal(text.styleFile);
+      expect(localeFile, 'the locale file should have been returned if not style was provided').to.equal(text.localeFile);
     });
   });
 
