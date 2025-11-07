@@ -1,4 +1,11 @@
-import { displayCitations, fetchCitationFiles, fetchCitationFileText, handleTabClick, retrieveItem } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
+import {
+  displayCitations,
+  fetchCitationFiles,
+  fetchCitationFileText,
+  handleTabClick,
+  retrieveItem,
+  systemObject
+} from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import { expect } from 'chai';
 import { getActiveCitationTab } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
 import sinon from 'sinon';
@@ -200,6 +207,60 @@ describe('citation', function () {
 
       // Check that the correct item was retrieved
       expect(retrieveItem(cslIDs[index]), 'the provided `id` should have retrieved the matching item').to.deep.equal(parsedCSL[index]);
+    });
+  });
+
+  describe('systemObject()', function () {
+    let locale = null;
+    let retrieveItemFunc = null;
+    let calledWithId = null;
+    let sys = null;
+
+    beforeEach(function () {
+      locale = '<xml>locale</xml>';
+      retrieveItemFunc = (id) => {
+        calledWithId = id;
+        return { id };
+      };
+
+      // Assign the function
+      sys = systemObject(locale, retrieveItemFunc);
+    });
+
+    afterEach(function () {
+      locale = null;
+      retrieveItemFunc = null;
+      calledWithId = null;
+      sys = null;
+    });
+
+    it('should return an object', function () {
+      expect(sys, 'the function should have returned an object').to.be.an('object');
+    });
+
+    it('should contain the property functions `retrieveItem` and `retrieveLocale`', function () {
+      ['retrieveItem', 'retrieveLocale'].forEach((prop) => {
+        expect(sys, `\`systemObject\` should have the property \`${prop}\``).to.have.property(prop);
+        expect(sys[prop], `\`${prop}\` should be a function`).to.be.a('function');
+      });
+    });
+
+    it('`retrieveLocale` should return the provided locale', function () {
+      expect(sys.retrieveLocale(), '').to.equal(locale);
+    });
+
+    it('`retrieveItem` should call the provided implementation with correct id', function () {
+      // Set a test id
+      const testId = 'test-id';
+
+      // Call the function
+      const result = sys.retrieveItem(testId);
+
+      // Check that the function was called with the correct id
+      expect(calledWithId, `the \`id\` should have returned \`${testId}\``).to.equal(testId);
+
+      // Check that the result is as expected
+      expect(result, 'the result should have returned an object with a defined `id` property containing the correct id').to.deep.equal({ id: testId });
     });
   });
 

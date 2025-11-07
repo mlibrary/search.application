@@ -32,23 +32,26 @@ const retrieveItem = (id) => {
   });
 };
 
+const systemObject = (locale, retrieveFunc = retrieveItem) => {
+  // Set up system object required by citeproc
+  return {
+    retrieveItem (id) {
+      // `retrieveFunc` passed in for testing
+      return retrieveFunc(id);
+    },
+    retrieveLocale () {
+      return locale;
+    }
+  };
+};
+
 const generateCitations = async (tab) => {
   const citationStyle = tab.getAttribute('data-citation-style');
   // Fetch files from the server
   const [cslStyle, cslLocale] = await fetchCitationFiles({ citationStyle });
 
-  // Set up system object required by citeproc
-  const sys = {
-    retrieveItem (id) {
-      return retrieveItem(id);
-    },
-    retrieveLocale () {
-      return cslLocale;
-    }
-  };
-
   // Create CSL processor
-  const citeprocEngine = new CSL.Engine(sys, cslStyle, 'en-US');
+  const citeprocEngine = new CSL.Engine(systemObject(cslLocale), cslStyle, 'en-US');
 
   // Register citation items
   citeprocEngine.updateItems(cslData().map((item) => {
@@ -91,4 +94,4 @@ const displayCitations = (citations = generateCitations, tabClick = handleTabCli
   tabClick(citations);
 };
 
-export { displayCitations, fetchCitationFiles, fetchCitationFileText, handleTabClick, retrieveItem };
+export { displayCitations, fetchCitationFiles, fetchCitationFileText, handleTabClick, retrieveItem, systemObject };
