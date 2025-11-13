@@ -138,6 +138,7 @@ export {
   displayCitations,
   fetchCitationFiles,
   fetchCitationFileText,
+  generateCitations,
   getBibliographyEntries,
   handleTabClick,
   retrieveItem,

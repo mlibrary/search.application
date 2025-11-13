@@ -5,6 +5,7 @@ import {
   displayCitations,
   fetchCitationFiles,
   fetchCitationFileText,
+  generateCitations,
   getBibliographyEntries,
   handleTabClick,
   retrieveItem,
@@ -35,10 +36,10 @@ describe('citation', function () {
           ${cslExample}
         </textarea>
         <div role="tablist" class="citation__tablist">
-          <button type="button" role="tab" aria-selected="true" aria-controls="citation__mla--tabpanel">
+          <button type="button" role="tab" aria-selected="true" aria-controls="citation__mla--tabpanel" data-citation-style="modern-language-association">
             MLA
           </button>
-          <button type="button" role="tab" aria-selected="false" aria-controls="citation__apa--tabpanel">
+          <button type="button" role="tab" aria-selected="false" aria-controls="citation__apa--tabpanel" data-citation-style="apa">
             APA
           </button>
         </div>
@@ -515,6 +516,44 @@ describe('citation', function () {
 
     it('should call the `attach` function with the tab panel and fetched bibliography entries', function () {
       expect(attachStub.calledOnceWithExactly(tabPanel, getBibEntriesStub()), '`attach` should have been called once with the tab panel and fetched bibliography entries').to.be.true;
+    });
+  });
+
+  describe('generateCitations()', function () {
+    let citationStyle = null;
+    let tab = null;
+    let tabPanel = null;
+    let citeprocEngine = null;
+    let buildEngineStub = null;
+    let buildCitationsStub = null;
+
+    beforeEach(async function () {
+      citationStyle = 'apa';
+      tab = getTab(citationStyle);
+      tabPanel = tab.getAttribute('aria-controls');
+      citeprocEngine = 'fake-engine';
+      buildEngineStub = sinon.stub().resolves(citeprocEngine);
+      buildCitationsStub = sinon.stub();
+
+      // Call the function
+      await generateCitations(tab, buildEngineStub, buildCitationsStub);
+    });
+
+    afterEach(function () {
+      citationStyle = null;
+      tab = null;
+      tabPanel = null;
+      citeprocEngine = null;
+      buildEngineStub = null;
+      buildCitationsStub = null;
+    });
+
+    it('should call `buildEngine` with the correct citation style', function () {
+      expect(buildEngineStub.calledOnceWithExactly(citationStyle), `\`buildEngine\` should have been called with \`${citationStyle}\``).to.be.true;
+    });
+
+    it('should call `buildCitations` with correct `citeprocEngine` and `tabPanel`', function () {
+      expect(buildCitationsStub.calledOnceWithExactly({ citeprocEngine, tabPanel }), '`buildCitations` should have been called once with the created CSL engine and tab panel').to.be.true;
     });
   });
 
