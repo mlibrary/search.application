@@ -1,3 +1,4 @@
+import { attachTheCitations } from './citation/tabpanel/_textbox.js';
 import CSL from 'citeproc';
 import { cslData } from './citation/_csl.js';
 import { getActiveCitationTab } from './citation/_tablist.js';
@@ -60,11 +61,6 @@ const updateCitations = (citeprocEngine, items = cslData()) => {
 const getBibliographyEntries = (citeprocEngine) => {
   const [, bibEntries] = citeprocEngine.makeBibliography();
   return bibEntries;
-};
-
-const attachTheCitations = (tabPanel, getBibEntries) => {
-  const textbox = document.querySelector(`#${tabPanel} [role='textbox']`);
-  textbox.innerHTML = getBibEntries.join('\n');
 };
 
 const buildCiteprocEngine = async (citationStyle, fetchFiles = fetchCitationFiles, createEngine = createCiteprocEngine) => {

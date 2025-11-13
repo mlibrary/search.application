@@ -1,5 +1,4 @@
 import {
-  attachTheCitations,
   buildCiteprocEngine,
   createCiteprocEngine,
   displayCitations,
@@ -390,45 +389,6 @@ describe('citation', function () {
 
       // Make sure the result returned `undefined`
       expect(result, 'the result should have returned `undefined`').to.be.undefined;
-    });
-  });
-
-  describe('attachTheCitations()', function () {
-    let tab = null;
-    let tabPanel = null;
-    let bibEntries = null;
-    let textbox = null;
-
-    beforeEach(function () {
-      tab = getTab('mla');
-      tabPanel = tab.getAttribute('aria-controls');
-      bibEntries = ['<div>Entry 1</div>', '<div>Entry 2</div>'];
-      textbox = () => {
-        return document.querySelector(`#${tabPanel} [role='textbox']`);
-      };
-    });
-
-    afterEach(function () {
-      tab = null;
-      tabPanel = null;
-      bibEntries = null;
-      textbox = null;
-    });
-
-    it('should set the `innerHTML` of the textbox to the joined bibliography entries', function () {
-      // Call the function
-      attachTheCitations(tabPanel, bibEntries);
-
-      // Check that the `innerHTML` is set correctly
-      expect(textbox().innerHTML, 'the `innerHTML` of the textbox should have been set to the joined bibliography entries').to.equal(bibEntries.join('\n'));
-    });
-
-    it('should set the `innerHTML` correctly when no entries are provided', function () {
-      // Call the function with no entries
-      attachTheCitations(tabPanel, []);
-
-      // Check that the `innerHTML` is empty
-      expect(textbox().innerHTML, 'the `innerHTML` of the textbox should be empty when no entries are provided').to.equal('');
     });
   });
 
