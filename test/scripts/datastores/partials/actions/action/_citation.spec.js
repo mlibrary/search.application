@@ -1,5 +1,6 @@
 import {
   attachTheCitations,
+  buildCiteprocEngine,
   createCiteprocEngine,
   displayCitations,
   fetchCitationFiles,
@@ -426,6 +427,48 @@ describe('citation', function () {
 
       // Check that the `innerHTML` is empty
       expect(textbox().innerHTML, 'the `innerHTML` of the textbox should be empty when no entries are provided').to.equal('');
+    });
+  });
+
+  describe('buildCiteprocEngine()', function () {
+    let fetchFilesStub = null;
+    let createEngineStub = null;
+    let citationStyle = null;
+    let cslStyle = null;
+    let cslLocale = null;
+    let result = null;
+
+    beforeEach(async function () {
+      citationStyle = 'mla';
+      cslStyle = { style: 'mla' };
+      cslLocale = '<xml>locale</xml>';
+
+      fetchFilesStub = sinon.stub().resolves([cslStyle, cslLocale]);
+      createEngineStub = sinon.stub().returns('CITEPROC_ENGINE');
+
+      // Call the function
+      result = await buildCiteprocEngine(citationStyle, fetchFilesStub, createEngineStub);
+    });
+
+    afterEach(function () {
+      fetchFilesStub = null;
+      createEngineStub = null;
+      citationStyle = null;
+      cslStyle = null;
+      cslLocale = null;
+      result = null;
+    });
+
+    it('should call `fetchFiles` with the provided citation style', function () {
+      expect(fetchFilesStub.calledOnceWithExactly({ citationStyle }), '`fetchFiles` should have been called once with the provided citation style').to.be.true;
+    });
+
+    it('should call `createEngine` with the fetched style and locale', function () {
+      expect(createEngineStub.calledOnceWithExactly({ cslLocale, cslStyle }), '`createEngine` should have been called once with the fetched style and locale').to.be.true;
+    });
+
+    it('should return the created CSL engine', function () {
+      expect(result, 'the created CSL engine should have been returned').to.equal('CITEPROC_ENGINE');
     });
   });
 

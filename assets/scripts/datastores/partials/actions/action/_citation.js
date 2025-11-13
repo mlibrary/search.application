@@ -68,16 +68,22 @@ const attachTheCitations = (tabPanel, getBibEntries) => {
   textbox.innerHTML = getBibEntries.join('\n');
 };
 
+const buildCiteprocEngine = async (citationStyle, fetchFiles = fetchCitationFiles, createEngine = createCiteprocEngine) => {
+  // Fetch files from the server
+  const [cslStyle, cslLocale] = await fetchFiles({ citationStyle });
+
+  // Create and return CSL engine
+  return createEngine({ cslLocale, cslStyle });
+};
+
 const generateCitations = async (tab) => {
   const [citationStyle, tabPanel] = [
     tab.getAttribute('data-citation-style'),
     tab.getAttribute('aria-controls')
   ];
-  // Fetch files from the server
-  const [cslStyle, cslLocale] = await fetchCitationFiles({ citationStyle });
 
   // Create CSL processor
-  const citeprocEngine = createCiteprocEngine({ cslLocale, cslStyle });
+  const citeprocEngine = await buildCiteprocEngine(citationStyle);
 
   // Update citation items
   updateCitations(citeprocEngine);
@@ -117,6 +123,7 @@ const displayCitations = (citations = generateCitations, tabClick = handleTabCli
 
 export {
   attachTheCitations,
+  buildCiteprocEngine,
   createCiteprocEngine,
   displayCitations,
   fetchCitationFiles,
