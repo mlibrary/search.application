@@ -1,0 +1,18 @@
+// --------------------------------------------------
+//
+// # Citation Textbox
+//   Styles to apply directly to `views/datastores/partials/actions/citation/tabpanel/_textbox.erb`.
+//
+// ## Table of Contents
+//   1. Textbox
+//
+// --------------------------------------------------
+
+// ****************** //
+// *** 1. TEXTBOX *** //
+// ****************** //
+
+.citation__input[role="textbox"] {
+  overflow-y: auto;
+  max-height: 40vh;
+}
