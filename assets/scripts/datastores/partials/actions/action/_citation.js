@@ -50,6 +50,13 @@ const createCiteprocEngine = ({ CSLModule = CSL, cslLocale, cslStyle, sys = syst
   return new CSLModule.Engine(sys(cslLocale), cslStyle, 'en-US');
 };
 
+const updateCitations = (citeprocEngine, items = cslData()) => {
+  // Update citation items with the CSL engine
+  citeprocEngine.updateItems(items.map((item) => {
+    return item.id;
+  }));
+};
+
 const generateCitations = async (tab) => {
   const citationStyle = tab.getAttribute('data-citation-style');
   // Fetch files from the server
@@ -58,10 +65,8 @@ const generateCitations = async (tab) => {
   // Create CSL processor
   const citeprocEngine = createCiteprocEngine({ cslLocale, cslStyle });
 
-  // Register citation items
-  citeprocEngine.updateItems(cslData().map((item) => {
-    return item.id;
-  }));
+  // Update citation items
+  updateCitations(citeprocEngine);
 
   // Generate bibliography
   const [, bibEntries] = citeprocEngine.makeBibliography();
@@ -106,5 +111,6 @@ export {
   fetchCitationFileText,
   handleTabClick,
   retrieveItem,
-  systemObject
+  systemObject,
+  updateCitations
 };

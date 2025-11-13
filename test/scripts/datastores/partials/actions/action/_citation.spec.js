@@ -5,7 +5,8 @@ import {
   fetchCitationFileText,
   handleTabClick,
   retrieveItem,
-  systemObject
+  systemObject,
+  updateCitations
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import { expect } from 'chai';
 import { getActiveCitationTab } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
@@ -308,6 +309,27 @@ describe('citation', function () {
 
     it('returns the created CSL engine', function () {
       expect(result, 'the created CSL engine should have been returned').to.deep.equal(engineObject);
+    });
+  });
+
+  describe('updateCitations()', function () {
+    let citeprocEngine = null;
+
+    beforeEach(function () {
+      citeprocEngine = {
+        updateItems: sinon.spy()
+      };
+
+      // Call the function
+      updateCitations(citeprocEngine);
+    });
+
+    afterEach(function () {
+      citeprocEngine = null;
+    });
+
+    it('should call `updateItems` on the provided CSL engine with the correct item IDs', function () {
+      expect(citeprocEngine.updateItems.calledOnceWithExactly(cslIDs), '`updateItems` should have been called once with the correct item IDs').to.be.true;
     });
   });
 
