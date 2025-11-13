@@ -64,7 +64,6 @@ const getBibliographyEntries = (citeprocEngine) => {
 
 const attachTheCitations = (tabPanel, getBibEntries) => {
   const textbox = document.querySelector(`#${tabPanel} [role='textbox']`);
-  // `getBibEntries` passed in for testing
   textbox.innerHTML = getBibEntries.join('\n');
 };
 
@@ -76,20 +75,31 @@ const buildCiteprocEngine = async (citationStyle, fetchFiles = fetchCitationFile
   return createEngine({ cslLocale, cslStyle });
 };
 
-const generateCitations = async (tab) => {
+const updateAndAttachCitations = ({
+  attach = attachTheCitations,
+  citeprocEngine,
+  getBibEntries = getBibliographyEntries,
+  tabPanel,
+  update = updateCitations
+}) => {
+  // Update citation items
+  update(citeprocEngine);
+
+  // Attach the bibliography entries to the tab panel
+  attach(tabPanel, getBibEntries(citeprocEngine));
+};
+
+const generateCitations = async (tab, buildEngine = buildCiteprocEngine, buildCitations = updateAndAttachCitations) => {
   const [citationStyle, tabPanel] = [
     tab.getAttribute('data-citation-style'),
     tab.getAttribute('aria-controls')
   ];
 
   // Create CSL processor
-  const citeprocEngine = await buildCiteprocEngine(citationStyle);
+  const citeprocEngine = await buildEngine(citationStyle);
 
   // Update citation items
-  updateCitations(citeprocEngine);
-
-  // Attach the bibliography entries to the tab panel
-  attachTheCitations(tabPanel, getBibliographyEntries(citeprocEngine));
+  buildCitations({ citeprocEngine, tabPanel });
 };
 
 const handleTabClick = (citations) => {
@@ -132,5 +142,6 @@ export {
   handleTabClick,
   retrieveItem,
   systemObject,
+  updateAndAttachCitations,
   updateCitations
 };

@@ -9,6 +9,7 @@ import {
   handleTabClick,
   retrieveItem,
   systemObject,
+  updateAndAttachCitations,
   updateCitations
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import { expect } from 'chai';
@@ -469,6 +470,51 @@ describe('citation', function () {
 
     it('should return the created CSL engine', function () {
       expect(result, 'the created CSL engine should have been returned').to.equal('CITEPROC_ENGINE');
+    });
+  });
+
+  describe('updateAndAttachCitations()', function () {
+    let attachStub = null;
+    let getBibEntriesStub = null;
+    let updateStub = null;
+    let citeprocEngine = null;
+    let tabPanel = null;
+
+    beforeEach(function () {
+      attachStub = sinon.stub();
+      getBibEntriesStub = sinon.stub().returns(['entry1', 'entry2']);
+      updateStub = sinon.stub();
+      citeprocEngine = 'CITEPROC_ENGINE';
+      tabPanel = 'TAB_PANEL';
+
+      // Call the function
+      updateAndAttachCitations({
+        attach: attachStub,
+        citeprocEngine,
+        getBibEntries: getBibEntriesStub,
+        tabPanel,
+        update: updateStub
+      });
+    });
+
+    afterEach(function () {
+      attachStub = null;
+      getBibEntriesStub = null;
+      updateStub = null;
+      citeprocEngine = null;
+      tabPanel = null;
+    });
+
+    it('should call the `update` function with the provided CSL engine', function () {
+      expect(updateStub.calledOnceWithExactly(citeprocEngine), '`update` should have been called once with the provided CSL engine').to.be.true;
+    });
+
+    it('should call the `getBibEntries` function with the provided CSL engine', function () {
+      expect(getBibEntriesStub.calledOnceWithExactly(citeprocEngine), '`getBibEntries` should have been called once with the provided CSL engine').to.be.true;
+    });
+
+    it('should call the `attach` function with the tab panel and fetched bibliography entries', function () {
+      expect(attachStub.calledOnceWithExactly(tabPanel, getBibEntriesStub()), '`attach` should have been called once with the tab panel and fetched bibliography entries').to.be.true;
     });
   });
 
