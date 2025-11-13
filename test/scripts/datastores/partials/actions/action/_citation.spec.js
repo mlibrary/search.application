@@ -1,4 +1,5 @@
 import {
+  createCiteprocEngine,
   displayCitations,
   fetchCitationFiles,
   fetchCitationFileText,
@@ -261,6 +262,52 @@ describe('citation', function () {
 
       // Check that the result is as expected
       expect(result, 'the result should have returned an object with a defined `id` property containing the correct id').to.deep.equal({ id: testId });
+    });
+  });
+
+  describe('createCiteprocEngine()', function () {
+    let args = null;
+    let engineObject = null;
+    let engineStub = null;
+    let sysObject = null;
+    let result = null;
+
+    beforeEach(function () {
+      engineObject = {
+        makeBibliography: sinon.spy(),
+        updateItems: sinon.spy()
+      };
+      engineStub = sinon.stub().returns(engineObject);
+      sysObject = 'SYS_OBJECT';
+
+      args = {
+        CSLModule: { Engine: engineStub },
+        cslLocale: '<xml>locale</xml>',
+        cslStyle: { style: 'apa' },
+        sys: sinon.stub().returns(sysObject)
+      };
+      // Assign the result
+      result = createCiteprocEngine(args);
+    });
+
+    afterEach(function () {
+      args = null;
+      engineObject = null;
+      engineStub = null;
+      sysObject = null;
+      result = null;
+    });
+
+    it('calls the `sys` function with the provided locale', function () {
+      expect(args.sys.calledOnceWithExactly(args.cslLocale), 'the `sys` function should have been called once with the provided locale').to.be.true;
+    });
+
+    it('creates a new CSL engine with the correct parameters', function () {
+      expect(engineStub.calledOnceWithExactly(sysObject, args.cslStyle, 'en-US'), 'the CSL engine should have been created with the correct parameters').to.be.true;
+    });
+
+    it('returns the created CSL engine', function () {
+      expect(result, 'the created CSL engine should have been returned').to.deep.equal(engineObject);
     });
   });
 

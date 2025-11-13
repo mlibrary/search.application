@@ -45,13 +45,18 @@ const systemObject = (locale, retrieveFunc = retrieveItem) => {
   };
 };
 
+const createCiteprocEngine = ({ CSLModule = CSL, cslLocale, cslStyle, sys = systemObject }) => {
+  // Create and return a new CSL engine
+  return new CSLModule.Engine(sys(cslLocale), cslStyle, 'en-US');
+};
+
 const generateCitations = async (tab) => {
   const citationStyle = tab.getAttribute('data-citation-style');
   // Fetch files from the server
   const [cslStyle, cslLocale] = await fetchCitationFiles({ citationStyle });
 
   // Create CSL processor
-  const citeprocEngine = new CSL.Engine(systemObject(cslLocale), cslStyle, 'en-US');
+  const citeprocEngine = createCiteprocEngine({ cslLocale, cslStyle });
 
   // Register citation items
   citeprocEngine.updateItems(cslData().map((item) => {
@@ -94,4 +99,12 @@ const displayCitations = (citations = generateCitations, tabClick = handleTabCli
   tabClick(citations);
 };
 
-export { displayCitations, fetchCitationFiles, fetchCitationFileText, handleTabClick, retrieveItem, systemObject };
+export {
+  createCiteprocEngine,
+  displayCitations,
+  fetchCitationFiles,
+  fetchCitationFileText,
+  handleTabClick,
+  retrieveItem,
+  systemObject
+};
