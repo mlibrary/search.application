@@ -62,8 +62,17 @@ const getBibliographyEntries = (citeprocEngine) => {
   return bibEntries;
 };
 
+const attachTheCitations = (tabPanel, getBibEntries) => {
+  const textbox = document.querySelector(`#${tabPanel} [role='textbox']`);
+  // `getBibEntries` passed in for testing
+  textbox.innerHTML = getBibEntries.join('\n');
+};
+
 const generateCitations = async (tab) => {
-  const citationStyle = tab.getAttribute('data-citation-style');
+  const [citationStyle, tabPanel] = [
+    tab.getAttribute('data-citation-style'),
+    tab.getAttribute('aria-controls')
+  ];
   // Fetch files from the server
   const [cslStyle, cslLocale] = await fetchCitationFiles({ citationStyle });
 
@@ -73,8 +82,8 @@ const generateCitations = async (tab) => {
   // Update citation items
   updateCitations(citeprocEngine);
 
-  // Example: insert bibliography into the web page
-  document.querySelector(`#${tab.getAttribute('id')}--tabpanel [role='textbox']`).innerHTML = getBibliographyEntries(citeprocEngine).join('\n');
+  // Attach the bibliography entries to the tab panel
+  attachTheCitations(tabPanel, getBibliographyEntries(citeprocEngine));
 };
 
 const handleTabClick = (citations) => {
@@ -107,6 +116,7 @@ const displayCitations = (citations = generateCitations, tabClick = handleTabCli
 };
 
 export {
+  attachTheCitations,
   createCiteprocEngine,
   displayCitations,
   fetchCitationFiles,
