@@ -3,6 +3,7 @@ import {
   displayCitations,
   fetchCitationFiles,
   fetchCitationFileText,
+  getBibliographyEntries,
   handleTabClick,
   retrieveItem,
   systemObject,
@@ -330,6 +331,55 @@ describe('citation', function () {
 
     it('should call `updateItems` on the provided CSL engine with the correct item IDs', function () {
       expect(citeprocEngine.updateItems.calledOnceWithExactly(cslIDs), '`updateItems` should have been called once with the correct item IDs').to.be.true;
+    });
+  });
+
+  describe('getBibliographyEntries()', function () {
+    let bibEntries = null;
+    let makeBibliographyProperties = null;
+    let makeBibliographyStub = null;
+    let citeprocEngine = null;
+    let result = null;
+
+    beforeEach(function () {
+      bibEntries = ['entry1', 'entry2'];
+      makeBibliographyProperties = ['irrelevant', bibEntries];
+      makeBibliographyStub = sinon.stub().returns(makeBibliographyProperties);
+      citeprocEngine = {
+        makeBibliography: makeBibliographyStub
+      };
+
+      // Assign the function
+      result = getBibliographyEntries(citeprocEngine);
+    });
+
+    afterEach(function () {
+      bibEntries = null;
+      makeBibliographyProperties = null;
+      makeBibliographyStub = null;
+      citeprocEngine = null;
+      result = null;
+    });
+
+    it('should call `makeBibliography`', function () {
+      expect(makeBibliographyStub.calledOnce, '`makeBibliography` should have been called').to.be.true;
+    });
+
+    it('should return the second element from `makeBibliography`', function () {
+      expect(result, 'the result should have returned the second element from `makeBibliography`').to.equal(makeBibliographyProperties[1]);
+    });
+
+    it('returns `undefined` if `makeBibliography` returns array with only one element', function () {
+      // Modify the stub to return only one element
+      citeprocEngine.makeBibliography = sinon.stub().returns(['justOne']);
+      // Reassign the result
+      result = getBibliographyEntries(citeprocEngine);
+
+      // Make sure `makeBibliography` was still called
+      expect(makeBibliographyStub.calledOnce, '`makeBibliography` should have been called').to.be.true;
+
+      // Make sure the result returned `undefined`
+      expect(result, 'the result should have returned `undefined`').to.be.undefined;
     });
   });
 

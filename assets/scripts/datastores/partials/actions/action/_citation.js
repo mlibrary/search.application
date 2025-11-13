@@ -57,6 +57,11 @@ const updateCitations = (citeprocEngine, items = cslData()) => {
   }));
 };
 
+const getBibliographyEntries = (citeprocEngine) => {
+  const [, bibEntries] = citeprocEngine.makeBibliography();
+  return bibEntries;
+};
+
 const generateCitations = async (tab) => {
   const citationStyle = tab.getAttribute('data-citation-style');
   // Fetch files from the server
@@ -68,11 +73,8 @@ const generateCitations = async (tab) => {
   // Update citation items
   updateCitations(citeprocEngine);
 
-  // Generate bibliography
-  const [, bibEntries] = citeprocEngine.makeBibliography();
-
   // Example: insert bibliography into the web page
-  document.querySelector(`#${tab.getAttribute('id')}--tabpanel [role='textbox']`).innerHTML = bibEntries.join('\n');
+  document.querySelector(`#${tab.getAttribute('id')}--tabpanel [role='textbox']`).innerHTML = getBibliographyEntries(citeprocEngine).join('\n');
 };
 
 const handleTabClick = (citations) => {
@@ -109,6 +111,7 @@ export {
   displayCitations,
   fetchCitationFiles,
   fetchCitationFileText,
+  getBibliographyEntries,
   handleTabClick,
   retrieveItem,
   systemObject,
