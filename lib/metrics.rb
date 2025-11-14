@@ -1,6 +1,7 @@
 Bundler.require(:metrics)
 require "prometheus/middleware/collector"
 require "sinatra/base"
+require "benchmark"
 
 module Metrics
 end
