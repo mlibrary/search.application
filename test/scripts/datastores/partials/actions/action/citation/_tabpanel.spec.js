@@ -1,10 +1,8 @@
-import { getActiveCitationTabpanel, getCitationAlert, getCitationInput } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tabpanel.js';
 import { expect } from 'chai';
+import { getActiveCitationTabpanel } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tabpanel.js';
 
 describe('copy-citation', function () {
   let getTabpanels = null;
-  let getAlert = null;
-  let getInput = null;
 
   beforeEach(function () {
     // Apply HTML to the body
@@ -33,14 +31,6 @@ describe('copy-citation', function () {
       return document.querySelectorAll('.citation [role="tabpanel"]');
     };
 
-    getAlert = () => {
-      return getTabpanels()[1].querySelector('.alert');
-    };
-
-    getInput = () => {
-      return getTabpanels()[1].querySelector('[role="textbox"]');
-    };
-
     // Check that there is an active tabpanel
     expect([...getTabpanels()].some((tabpanel) => {
       return tabpanel.style.display !== 'none';
@@ -49,8 +39,6 @@ describe('copy-citation', function () {
 
   afterEach(function () {
     getTabpanels = null;
-    getAlert = null;
-    getInput = null;
   });
 
   describe('getActiveCitationTabpanel', function () {
@@ -60,18 +48,6 @@ describe('copy-citation', function () {
 
       // Check that the active tabpanel is the second one
       expect(getActiveCitationTabpanel(), 'the active tabpanel should equal to the second tabpanel').to.deep.equal(getTabpanels()[1]);
-    });
-  });
-
-  describe('getCitationAlert', function () {
-    it('should return the citation alert element within the active tabpanel', function () {
-      expect(getCitationAlert()).to.deep.equal(getAlert());
-    });
-  });
-
-  describe('getCitationInput', function () {
-    it('should return the citation input element within the active tabpanel', function () {
-      expect(getCitationInput()).to.deep.equal(getInput());
     });
   });
 });

@@ -1,6 +1,6 @@
-import { getCitationAlert, getCitationInput } from './_tabpanel.js';
 import { copyToClipboard } from '../../../_actions.js';
 import { getActiveCitationTab } from './_tablist.js';
+import { getActiveCitationTabpanel } from './_tabpanel.js';
 import { getCSLTextarea } from './_csl.js';
 
 const getCopyCitationButton = () => {
@@ -14,13 +14,32 @@ const disableCopyCitationButton = () => {
   getCopyCitationButton().toggleAttribute('disabled', !hasEntry);
 };
 
-const copyCitation = () => {
-  getCopyCitationButton().addEventListener('click', () => {
-    return copyToClipboard({
-      alert: getCitationAlert(),
-      text: getCitationInput().textContent.trim()
-    });
+const copyCitationObject = (activeCitationTabpanel = getActiveCitationTabpanel) => {
+  // Pass in `activeCitationTabpanel` for testing
+  const [alert, citation] = activeCitationTabpanel().querySelectorAll('.actions__alert, .citation__input');
+
+  return { alert, text: citation.textContent.trim() };
+};
+
+const handleCopyCitation = (copyAction = copyToClipboard, citationObject = copyCitationObject) => {
+  return copyAction(citationObject());
+};
+
+const copyCitationAction = (copyCitationButton = getCopyCitationButton, handleCopy = handleCopyCitation) => {
+  copyCitationButton().addEventListener('click', () => {
+    return handleCopy();
   });
 };
 
-export { copyCitation, disableCopyCitationButton, getCopyCitationButton };
+const copyCitation = (copyAction = copyCitationAction) => {
+  copyAction();
+};
+
+export {
+  copyCitation,
+  copyCitationAction,
+  copyCitationObject,
+  disableCopyCitationButton,
+  getCopyCitationButton,
+  handleCopyCitation
+};

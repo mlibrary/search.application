@@ -5,12 +5,4 @@ const getActiveCitationTabpanel = () => {
   });
 };
 
-const getCitationAlert = () => {
-  return getActiveCitationTabpanel().querySelector('.actions__alert');
-};
-
-const getCitationInput = () => {
-  return getActiveCitationTabpanel().querySelector('.citation__input');
-};
-
-export { getActiveCitationTabpanel, getCitationAlert, getCitationInput };
+export { getActiveCitationTabpanel };

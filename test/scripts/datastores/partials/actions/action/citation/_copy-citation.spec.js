@@ -1,4 +1,11 @@
-import { copyCitation, disableCopyCitationButton, getCopyCitationButton } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_copy-citation.js';
+import {
+  copyCitation,
+  copyCitationAction,
+  copyCitationObject,
+  disableCopyCitationButton,
+  getCopyCitationButton,
+  handleCopyCitation
+} from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_copy-citation.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -99,6 +106,95 @@ describe('copy-citation', function () {
 
       // Check that the button is still disabled
       expect(getButton().hasAttribute('disabled'), '`disabled` attribute should still be set').to.be.true;
+    });
+  });
+
+  describe('copyCitationObject()', function () {
+    it('should have called `activeCitationTabpanel` once', function () {
+      // Stub the active tabpanel
+      const activeCitationTabpanel = sinon.stub().returns(document.querySelector('[role="tabpanel"]'));
+
+      // Call the function with the stub
+      copyCitationObject(activeCitationTabpanel);
+
+      // Check that the stub was called once
+      expect(activeCitationTabpanel.calledOnce, '`activeCitationTabpanel` should have been called once').to.be.true;
+    });
+
+    it('should return an object', function () {
+      expect(copyCitationObject(), '`copyCitationObject` should return an object').to.be.an('object');
+    });
+
+    it('should have the properties `alert` and `text`', function () {
+      expect(Object.keys(copyCitationObject()), '`copyCitationObject` should have the properties `alert` and `text`').to.deep.equal(['alert', 'text']);
+    });
+
+    it('should have the correct values', function () {
+      // Check that the alert HTML gets returned
+      expect(copyCitationObject().alert, 'the `alert` property should return the citation alert').to.deep.equal(getAlert());
+
+      // Check that the trimmed textcontent gets returned
+      expect(copyCitationObject().text, 'the `text` property should return the textcontent').to.equal(getTextboxText());
+    });
+  });
+
+  describe('handleCopyCitation', function () {
+    let copyActionSpy = null;
+    let citationObject = null;
+    let citationObjectStub = null;
+
+    beforeEach(function () {
+      // Define the spies
+      copyActionSpy = sinon.spy();
+      citationObject = { alert: 'alert', text: 'text' };
+      citationObjectStub = sinon.stub().returns(citationObject);
+
+      // Call the function
+      handleCopyCitation(copyActionSpy, citationObjectStub);
+    });
+
+    it('should call `copyAction` once with `citationObject`', function () {
+      expect(copyActionSpy.calledOnceWithExactly(citationObject), '`copyAction` should have been called once with `citationObject`').to.be.true;
+    });
+
+    afterEach(function () {
+      copyActionSpy = null;
+      citationObject = null;
+      citationObjectStub = null;
+    });
+  });
+
+  describe('copyCitationAction', function () {
+    let copyCitationButtonSpy = null;
+    let handleCopyStub = null;
+
+    beforeEach(function () {
+      // Define the spies
+      copyCitationButtonSpy = sinon.stub().returns(getCopyCitationButton());
+      handleCopyStub = sinon.stub();
+
+      // Call the function
+      copyCitationAction(copyCitationButtonSpy, handleCopyStub);
+    });
+
+    afterEach(function () {
+      copyCitationButtonSpy = null;
+      handleCopyStub = null;
+    });
+
+    it('should call `copyCitationButton` once', function () {
+      expect(copyCitationButtonSpy.calledOnce, '`copyCitationButton` should have been called').to.be.true;
+    });
+
+    it('should call `handleCopy` when the copy citation button is clicked', function () {
+      // Create a click event
+      const clickEvent = new window.Event('click', { bubbles: true });
+
+      // Click the copy citation button
+      copyCitationButtonSpy().dispatchEvent(clickEvent);
+
+      // Check that the `handleCopy` was called
+      expect(handleCopyStub.calledOnce, '`handleCopy` should have been called when the copy citation button was clicked').to.be.true;
     });
   });
 
