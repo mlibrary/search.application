@@ -1,5 +1,5 @@
+import { citationTabClick, getActiveCitationTab } from './_tablist.js';
 import { copyToClipboard } from '../../../_actions.js';
-import { getActiveCitationTab } from './_tablist.js';
 import { getActiveCitationTabpanel } from './_tabpanel.js';
 import { getCSLTextarea } from './_csl.js';
 
@@ -31,8 +31,12 @@ const copyCitationAction = (copyCitationButton = getCopyCitationButton, handleCo
   });
 };
 
-const copyCitation = (copyAction = copyCitationAction) => {
+const copyCitation = (copyAction = copyCitationAction, tabClick = citationTabClick) => {
+  // Attach the copy citation click event listener
   copyAction();
+
+  // Attach tab click event listeners
+  tabClick();
 };
 
 export {

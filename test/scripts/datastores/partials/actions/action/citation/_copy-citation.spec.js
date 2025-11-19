@@ -70,6 +70,14 @@ describe('copy-citation', function () {
     expect(getButton().hasAttribute('disabled'), '`disabled` attribute should be set').to.be.true;
   });
 
+  afterEach(function () {
+    getCitationCSL = null;
+    getTab = null;
+    getAlert = null;
+    getTextboxText = null;
+    getButton = null;
+  });
+
   describe('getCopyCitationButton', function () {
     it('should return the copy citation button element', function () {
       expect(getCopyCitationButton()).to.deep.equal(getButton());
@@ -199,60 +207,29 @@ describe('copy-citation', function () {
   });
 
   describe('copyCitation', function () {
-    let clipboardSpy = null;
+    let copyActionSpy = null;
+    let tabClickSpy = null;
 
     beforeEach(function () {
-      // Enable the button
-      disableCopyCitationButton();
+      // Define the spies
+      copyActionSpy = sinon.spy();
+      tabClickSpy = sinon.spy();
 
       // Call the function
-      copyCitation();
-
-      // Spy on `navigator.clipboard.writeText`
-      clipboardSpy = sinon.spy();
-      Object.defineProperty(window.navigator, 'clipboard', {
-        configurable: true,
-        value: { writeText: clipboardSpy }
-      });
-      Object.defineProperty(global, 'navigator', {
-        configurable: true,
-        value: window.navigator
-      });
-
-      // Check that the alert is hidden at the start of each test
-      expect(getAlert().style.display, 'alert should be hidden').to.equal('none');
-
-      // Click the button
-      const clickEvent = new window.Event('click', { bubbles: true });
-      getButton().dispatchEvent(clickEvent);
-    });
-
-    it('should generate the citation in the active tab when the button is clicked', function () {
-      // Check that `navigator.clipboard.writeText` was called once
-      expect(clipboardSpy.calledOnce, '`navigator.clipboard.writeText` should be called once').to.be.true;
-
-      // Check that `navigator.clipboard.writeText` was called with the correct text
-      expect(clipboardSpy.calledWith(getTextboxText()), '`navigator.clipboard.writeText` should be called with the correct text').to.be.true;
-    });
-
-    it('should make the alert visible when the button is clicked', function () {
-      // Check that the alert is now visible
-      expect(getAlert().style.display, 'alert should be visible').to.equal('block');
+      copyCitation(copyActionSpy, tabClickSpy);
     });
 
     afterEach(function () {
-      clipboardSpy = null;
-
-      // Clean up
-      delete global.navigator;
+      copyActionSpy = null;
+      tabClickSpy = null;
     });
-  });
 
-  afterEach(function () {
-    getCitationCSL = null;
-    getTab = null;
-    getAlert = null;
-    getTextboxText = null;
-    getButton = null;
+    it('should call `copyAction` once', function () {
+      expect(copyActionSpy.calledOnce, '`copyAction` should have been called once').to.be.true;
+    });
+
+    it('should call `tabClick` once', function () {
+      expect(tabClickSpy.calledOnce, '`tabClick` should have been called once').to.be.true;
+    });
   });
 });
