@@ -1,4 +1,4 @@
-import { citationTabClick, getActiveCitationTab, getCitationTablist } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
+import { citationTabClick, getActiveCitationTab } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -20,12 +20,6 @@ describe('tablist', function () {
     getTab = () => {
       return document.querySelector('button[role="tab"]');
     };
-  });
-
-  describe('getCitationTablist', function () {
-    it('should return the citation tablist', function () {
-      expect(getCitationTablist()).to.deep.equal(document.querySelector('[role="tablist"]'));
-    });
   });
 
   describe('getActiveCitationTab', function () {
