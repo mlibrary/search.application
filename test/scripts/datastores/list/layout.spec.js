@@ -1,4 +1,14 @@
-import { createDatastoreList, datastoreHeading, handleSelectionChange, initializeNonEmptyListFunctions, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import {
+  createDatastoreList,
+  datastoreHeading,
+  handleSelectionChange,
+  initializeNonEmptyListFunctions,
+  isTemporaryListEmpty,
+  nonEmptyDatastores,
+  temporaryList,
+  toggleListElements,
+  viewingTemporaryList
+} from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
@@ -258,6 +268,8 @@ describe('layout', function () {
 
   describe('handleSelectionChange()', function () {
     let actions = null;
+    let citationTabExample = null;
+    let activeCitationTabStub = null;
     let listElement = null;
     let checkbox = null;
     let selectAll = null;
@@ -277,12 +289,17 @@ describe('layout', function () {
         actionsPanelText: sinon.spy(),
         disableActionTabs: sinon.spy(),
         displayCSLData: sinon.spy(),
+        generateCitations: sinon.spy(),
         selectAllState: sinon.spy(),
         selectedText: sinon.spy()
       };
 
+      citationTabExample = 'APA';
+
+      activeCitationTabStub = sinon.stub().returns(citationTabExample);
+
       // Initialize the function with the stubbed actions
-      handleSelectionChange(actions);
+      handleSelectionChange(actions, activeCitationTabStub);
 
       listElement = () => {
         return document.querySelector('.list');
@@ -299,6 +316,7 @@ describe('layout', function () {
 
     afterEach(function () {
       actions = null;
+      activeCitationTabStub = null;
       listElement = null;
       checkbox = null;
       selectAll = null;
@@ -312,6 +330,10 @@ describe('layout', function () {
       // Check if all actions were called
       Object.keys(actions).forEach((key) => {
         expect(actions[key].calledOnce, `\`${key}\` should have been called`).to.be.true;
+
+        if (key === 'generateCitations') {
+          expect(actions[key].calledOnceWithExactly(citationTabExample), '`generateCitations` should have been called with `activeCitationTab`').to.be.true;
+        }
       });
     });
 
@@ -323,6 +345,10 @@ describe('layout', function () {
       // Check if all actions were called
       Object.keys(actions).forEach((key) => {
         expect(actions[key].calledOnce, `\`${key}\` should have been called`).to.be.true;
+
+        if (key === 'generateCitations') {
+          expect(actions[key].calledOnceWithExactly(citationTabExample), '`generateCitations` should have been called with `activeCitationTab`').to.be.true;
+        }
       });
     });
 
@@ -338,6 +364,10 @@ describe('layout', function () {
       // Check if all actions were not called
       Object.keys(actions).forEach((key) => {
         expect(actions[key].called, `\`${key}\` should not have been called`).to.be.false;
+
+        if (key === 'generateCitations') {
+          expect(actions[key].calledOnceWithExactly(citationTabExample), '`generateCitations` should not have been called with `activeCitationTab`').to.be.false;
+        }
       });
     });
   });

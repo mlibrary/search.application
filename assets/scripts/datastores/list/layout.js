@@ -1,6 +1,8 @@
 import { actionsPanelText } from '../partials/actions/_summary.js';
 import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
+import { generateCitations } from '../partials/actions/action/_citation.js';
+import { getActiveCitationTab } from '../partials/actions/action/citation/_tablist.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
 import { selectAllState } from './partials/_select-all.js';
@@ -86,13 +88,14 @@ const defaultActions = {
     return disableActionTabs();
   },
   displayCSLData,
+  generateCitations,
   selectAllState,
   selectedText: () => {
     return selectedText();
   }
 };
 
-const handleSelectionChange = (actions) => {
+const handleSelectionChange = (actions, activeCitationTab = getActiveCitationTab) => {
   // Watch for changes to the list and update accordingly
   document.querySelector('.list').addEventListener('change', (event) => {
     if (event.target.matches(`input[type="checkbox"].list__item--checkbox, .select-all > input[type="checkbox"]`)) {
@@ -101,6 +104,7 @@ const handleSelectionChange = (actions) => {
       actions.selectAllState();
       actions.disableActionTabs();
       actions.displayCSLData();
+      actions.generateCitations(activeCitationTab());
     }
   });
 };
