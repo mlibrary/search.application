@@ -40,6 +40,6 @@ describe('attachTheCitations()', function () {
     attachTheCitations(tabPanel, []);
 
     // Check that the `innerHTML` is empty
-    expect(textboxHTML(), 'the `innerHTML` of the textbox should be empty when no entries are provided').to.equal('');
+    expect(textboxHTML(), 'the `innerHTML` of the textbox should be empty when no entries are provided').to.equal('<span class="citation__not-available">Citation not available.</span>');
   });
 });
