@@ -1,7 +1,9 @@
 import { attachTheCitations } from './citation/tabpanel/_textbox.js';
+import { copyCitation } from './citation/_copy-citation.js';
 import CSL from 'citeproc';
 import { cslData } from './citation/_csl.js';
 import { getActiveCitationTab } from './citation/_tablist.js';
+import { tabControl } from '../../_actions.js';
 
 /*
   TO DO: Cache fetched text
@@ -127,6 +129,17 @@ const displayCitations = (citations = generateCitations, tabClick = handleTabCli
   tabClick(citations);
 };
 
+const initializeCitations = (citations = displayCitations, copyCitationButton = copyCitation, citationTabs = tabControl) => {
+  // Initialize tab control for citations
+  citationTabs('.citation');
+
+  // Display the citations
+  citations();
+
+  // Initialize the copy citation button
+  copyCitationButton();
+};
+
 export {
   attachTheCitations,
   buildCiteprocEngine,
@@ -137,6 +150,7 @@ export {
   generateCitations,
   getBibliographyEntries,
   handleTabClick,
+  initializeCitations,
   retrieveItem,
   systemObject,
   updateAndAttachCitations,

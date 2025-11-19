@@ -1,15 +1,13 @@
 import { disableCopyCitationButton } from './_copy-citation.js';
 
-const getCitationTablist = () => {
-  return document.querySelector('.citation .citation__tablist[role="tablist"]');
-};
+const tablistSelector = '.citation .citation__tablist[role="tablist"]';
 
 const getActiveCitationTab = () => {
-  return getCitationTablist().querySelector('[role="tab"][aria-selected="true"]');
+  return document.querySelector(`${tablistSelector} [role="tab"][aria-selected="true"]`);
 };
 
 const citationTabClick = (toggleCopyCitationButton = disableCopyCitationButton) => {
-  getCitationTablist().addEventListener('click', (event) => {
+  document.querySelector(tablistSelector).addEventListener('click', (event) => {
     const tab = event.target.closest('[role="tab"]');
     if (!tab) {
       return;
@@ -19,4 +17,4 @@ const citationTabClick = (toggleCopyCitationButton = disableCopyCitationButton) 
   });
 };
 
-export { citationTabClick, getActiveCitationTab, getCitationTablist };
+export { citationTabClick, getActiveCitationTab };

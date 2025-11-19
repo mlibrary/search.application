@@ -15,4 +15,7 @@
 .citation__input[role="textbox"] {
   overflow-y: auto;
   max-height: 40vh;
+  .csl-entry + .csl-entry {
+    margin-top: 1rem;
+  }
 }

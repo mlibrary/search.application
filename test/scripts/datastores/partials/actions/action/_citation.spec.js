@@ -7,6 +7,7 @@ import {
   generateCitations,
   getBibliographyEntries,
   handleTabClick,
+  initializeCitations,
   retrieveItem,
   systemObject,
   updateAndAttachCitations,
@@ -611,6 +612,39 @@ describe('citation', function () {
 
       // Check that `tabClickSpy` was called with `citationSpy`
       expect(tabClickSpy.calledOnceWithExactly(citationSpy), '`tabClickSpy` should have been called with `citationSpy` once').to.be.true;
+    });
+  });
+
+  describe('initializeCitations()', function () {
+    let citationTabsStub = null;
+    let citationsStub = null;
+    let copyCitationButtonStub = null;
+
+    beforeEach(function () {
+      citationTabsStub = sinon.stub();
+      citationsStub = sinon.stub();
+      copyCitationButtonStub = sinon.stub();
+
+      // Call the function
+      initializeCitations(citationsStub, copyCitationButtonStub, citationTabsStub);
+    });
+
+    afterEach(function () {
+      citationTabsStub = null;
+      citationsStub = null;
+      copyCitationButtonStub = null;
+    });
+
+    it('should call `citationTabs` with the correct selector', function () {
+      expect(citationTabsStub.calledOnceWithExactly('.citation'), '`citationTabs` should have been called once with the correct selector').to.be.true;
+    });
+
+    it('should call `citations`', function () {
+      expect(citationsStub.calledOnce, '`citations` should have been called once').to.be.true;
+    });
+
+    it('should call `copyCitationButton`', function () {
+      expect(copyCitationButtonStub.calledOnce, '`copyCitationButton` should have been called once').to.be.true;
     });
   });
 });

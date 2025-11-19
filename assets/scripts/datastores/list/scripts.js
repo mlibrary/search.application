@@ -1,6 +1,6 @@
 import { shareForm, tabControl } from '../partials/_actions.js';
-import { displayCitations } from '../partials/actions/action/_citation.js';
 import { downloadTemporaryListRIS } from '../partials/actions/action/_ris.js';
+import { initializeCitations } from '../partials/actions/action/_citation.js';
 import { removeSelected } from '../partials/actions/action/_remove-selected.js';
 import { selectAll } from './partials/_select-all.js';
 import { temporaryList } from './layout.js';
@@ -15,8 +15,7 @@ shareForm('#actions__email--tabpanel');
 shareForm('#actions__text--tabpanel');
 
 // Citations
-tabControl('.citation');
-displayCitations();
+initializeCitations();
 
 // RIS
 downloadTemporaryListRIS();
