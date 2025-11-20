@@ -1,4 +1,4 @@
-import { listItem, listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
+import { listItem, listItemCheckbox, listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
 import { expect } from 'chai';
 
 const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
@@ -38,6 +38,43 @@ const listItemMetadataHTML = `
 `;
 
 describe('listItem()', function () {
+  describe('listItemCheckbox()', function () {
+    let getCheckbox = null;
+    let args = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = '<input type="checkbox" class="list__item--checkbox" value="" aria-label="Select record">';
+
+      getCheckbox = () => {
+        return document.querySelector('input');
+      };
+
+      args = {
+        datastore: 'catalog',
+        itemCheckbox: getCheckbox(),
+        recordId: '1337',
+        title: 'This is a title'
+      };
+
+      // Call the function
+      listItemCheckbox(args);
+    });
+
+    afterEach(function () {
+      getCheckbox = null;
+      args = null;
+    });
+
+    it('should update the checkbox value', function () {
+      expect(getCheckbox().value, 'the value of the checkbox should include the `datastore` and `recordId`').to.equal(`${args.datastore},${args.recordId}`);
+    });
+
+    it('should update the `aria-label` attribute of the checkbox', function () {
+      expect(getCheckbox().getAttribute('aria-label'), 'the `aria-label` attribute of the checkbox should include the record title').to.equal(`Select ${args.title}`);
+    });
+  });
+
   describe('listItemTitle()', function () {
     let args = null;
     let getOriginalNumber = null;
