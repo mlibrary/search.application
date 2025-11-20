@@ -56,7 +56,13 @@ const listItemMetadata = ({ itemTable, metadata }) => {
   row.remove();
 };
 
-const listItem = ({ datastore, index, record, recordId }) => {
+const listItemUpdates = {
+  listItemCheckbox,
+  listItemMetadata,
+  listItemTitle
+};
+
+const listItem = ({ datastore, index, record, recordId, updates = listItemUpdates }) => {
   // Clone the list item template
   const partialClass = 'list__item--clone';
   const listItemPartial = document.querySelector(`.${partialClass}`);
@@ -69,13 +75,13 @@ const listItem = ({ datastore, index, record, recordId }) => {
   // Update the checkbox
   const { metadata, title, url } = record;
   const itemCheckbox = clonedListItem.querySelector('.list__item--checkbox');
-  listItemCheckbox({ datastore, itemCheckbox, recordId, title: title.original });
+  updates.listItemCheckbox({ datastore, itemCheckbox, recordId, title: title.original });
   // Update the title
   const itemTitle = clonedListItem.querySelector('.list__item--title');
-  listItemTitle({ index, itemTitle, title, url });
+  updates.listItemTitle({ index, itemTitle, title, url });
   // Update the metadata
   const itemTable = clonedListItem.querySelector('table.metadata > tbody');
-  listItemMetadata({ itemTable, metadata });
+  updates.listItemMetadata({ itemTable, metadata });
   return clonedListItem;
 };
 

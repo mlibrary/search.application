@@ -1,5 +1,6 @@
 import { listItem, listItemCheckbox, listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
 import { expect } from 'chai';
+import sinon from 'sinon';
 
 const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
   return Object.keys(global.temporaryList[datastore]).length > 0;
@@ -221,6 +222,7 @@ describe('listItem()', function () {
   describe('listItem()', function () {
     let args = null;
     let getListItem = null;
+    let clone = null;
     const [recordId] = recordIds;
     const cloneClass = 'list__item--clone';
 
@@ -239,41 +241,99 @@ describe('listItem()', function () {
       args = {
         datastore: nonEmptyDatastores[0],
         record: global.temporaryList[nonEmptyDatastores[0]][recordId],
-        recordId
+        recordId,
+        updates: {
+          listItemCheckbox: sinon.stub(),
+          listItemMetadata: sinon.stub(),
+          listItemTitle: sinon.stub()
+        }
       };
 
       getListItem = () => {
-        return document.querySelector(`[data-record-id="${recordId}"]`);
+        return document.querySelector(`.list__item--clone`);
       };
 
-      // Call the function by attaching it to the body
-      document.body.appendChild(listItem(args));
+      // Call the function
+      clone = listItem(args);
     });
 
     afterEach(function () {
       args = null;
       getListItem = null;
+      clone = null;
     });
 
-    it('should clone the list item and remove the clone class and add the `data-record-id` attribute', function () {
-      // Check that the list item has `data-record-id` been defined
-      expect(getListItem().getAttribute('data-record-id'), 'the list item should have the `data-record-id` attribute defined').to.equal(recordId);
-
-      // Check that the clone class no longer exists
-      expect(getListItem().classList.contains(cloneClass), `the list item should not have the \`${cloneClass}\` class`).to.be.false;
+    it('should clone the list item', function () {
+      expect(clone, 'the clone should be a new node').to.not.deep.equal(getListItem());
     });
 
-    it('should update the checkbox value to the datastore and record ID', function () {
-      const checkbox = getListItem().querySelector('.list__item--checkbox');
-      expect(checkbox.value, 'the checkbox value of the cloned list item should equal to the provided datastore and record ID').to.equal([args.datastore, args.recordId].join(','));
+    it('should no longer have the cloned class', function () {
+      expect(clone.classList.contains(cloneClass), `the list item should not have the \`${cloneClass}\` class`).to.be.false;
     });
 
-    it('should call `listItemTitle`', function () {
-      expect(listItem.toString(), '`listItemTitle` should be called in the function').to.include('listItemTitle({');
+    it('should set the `data-record-datastore` attribute', function () {
+      expect(clone.getAttribute('data-record-datastore'), '`data-record-datastore` should be defined to the provided datastore').to.equal(args.datastore);
     });
 
-    it('should call `listItemMetadata`', function () {
-      expect(listItem.toString(), '`listItemMetadata` should be called in the function').to.include('listItemMetadata({');
+    it('should set the `data-record-id` attribute', function () {
+      expect(clone.getAttribute('data-record-id'), '`data-record-id` should be defined to the provided record ID').to.equal(args.recordId);
+    });
+
+    it('should call `listItemCheckbox` with the correct arguments', function () {
+      // Get the cloned checkbox
+      const itemCheckbox = clone.querySelector('.list__item--checkbox');
+
+      // Check that `listItemCheckbox` was called
+      expect(args.updates.listItemCheckbox.calledOnce, '`listItemCheckbox` should have been called once').to.be.true;
+
+      // Get the arguments for `listItemCheckbox`
+      const [checkboxArgs] = args.updates.listItemCheckbox.firstCall.args;
+
+      // Check that each argument is returning the correct value
+      expect(checkboxArgs.datastore, '`datastore` should have the correct value').to.equal(args.datastore);
+      expect(checkboxArgs.itemCheckbox, '`itemCheckbox` should have the correct value').to.equal(itemCheckbox);
+      expect(checkboxArgs.recordId, '`recordId` should have the correct value').to.equal(args.recordId);
+      expect(checkboxArgs.title, '`title` should have the correct value').to.equal(args.record.title.original);
+    });
+
+    it('should call `listItemTitle` with the correct arguments', function () {
+      // Get the cloned title
+      const itemTitle = clone.querySelector('.list__item--title');
+
+      // Check that `listItemTitle` was called
+      expect(args.updates.listItemTitle.calledOnce, '`listItemTitle` should have been called once').to.be.true;
+
+      // Get the arguments for `listItemTitle`
+      const [titleArgs] = args.updates.listItemTitle.firstCall.args;
+
+      // Check that each argument is returning the correct value
+      expect(titleArgs.index, '`index` should have the correct value').to.equal(args.index);
+      expect(titleArgs.itemTitle, '`itemTitle` should have the correct value').to.equal(itemTitle);
+      expect(titleArgs.title, '`title` should have the correct value').to.deep.equal(args.record.title);
+      expect(titleArgs.url, '`url` should have the correct value').to.equal(args.record.url);
+    });
+
+    it('should call `listItemMetadata` with the correct arguments', function () {
+      // Get the cloned title
+      const itemTable = clone.querySelector('table.metadata > tbody');
+
+      // Check that `listItemMetadata` was called
+      expect(args.updates.listItemMetadata.calledOnce, '`listItemMetadata` should have been called once').to.be.true;
+
+      // Get the arguments for `listItemMetadata`
+      const [metadataArgs] = args.updates.listItemMetadata.firstCall.args;
+
+      // Check that each argument is returning the correct value
+      expect(metadataArgs.itemTable, '`itemTable` should have the correct value').to.equal(itemTable);
+      expect(metadataArgs.metadata, '`metadata` should have the correct value').to.deep.equal(args.record.metadata);
+    });
+
+    it('should return the cloned nod', function () {
+      // Call the function by attaching it to the body
+      document.body.appendChild(listItem(args));
+
+      // Check that there are now more list items
+      expect([...document.querySelectorAll('li')].length, 'there should be more than one list item').to.equal(2);
     });
   });
 });
