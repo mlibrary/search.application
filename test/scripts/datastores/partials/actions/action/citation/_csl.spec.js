@@ -1,9 +1,8 @@
-import { citationCSLChange, cslData, displayCSLData, getCSLTextarea } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
+import { cslData, displayCSLData, getCSLTextarea } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
 import { nonEmptyDatastores, viewingTemporaryList } from '../../../../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { selectedCitations } from '../../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
-import sinon from 'sinon';
 
 let temporaryListHTML = '';
 nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
@@ -102,30 +101,6 @@ describe('csl', function () {
     it('should return parsed JSON from the CSL `textarea`', function () {
       // Check that the `textarea` has been parsed
       expect(cslData(), 'the content of the `textarea` should have been parsed').to.deep.equal(JSON.parse(getTextArea().textContent));
-    });
-  });
-
-  describe('citationCSLChange', function () {
-    let toggleCopyCitationButtonSpy = null;
-
-    beforeEach(function () {
-      toggleCopyCitationButtonSpy = sinon.spy();
-
-      // Call the function
-      citationCSLChange(toggleCopyCitationButtonSpy);
-    });
-
-    it('should call `toggleCopyCitationButton` when the CSL data changes', function () {
-      // Change the data
-      const changeEvent = new window.Event('change', { bubbles: true });
-      getTextArea().dispatchEvent(changeEvent);
-
-      // Check that `toggleCopyCitationButton` was called
-      expect(toggleCopyCitationButtonSpy.calledOnce, '`toggleCopyCitationButton` should be called once').to.be.true;
-    });
-
-    afterEach(function () {
-      toggleCopyCitationButtonSpy = null;
     });
   });
 });

@@ -3,6 +3,7 @@ import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
+import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { selectAllState } from './partials/_select-all.js';
 import { selectedText } from './partials/_in-list.js';
 
@@ -86,6 +87,7 @@ const defaultActions = {
     return disableActionTabs();
   },
   displayCSLData,
+  regenerateCitations,
   selectAllState,
   selectedText: () => {
     return selectedText();
@@ -101,6 +103,7 @@ const handleSelectionChange = (actions) => {
       actions.selectAllState();
       actions.disableActionTabs();
       actions.displayCSLData();
+      actions.regenerateCitations();
     }
   });
 };

@@ -5,20 +5,37 @@ import { cslData } from './citation/_csl.js';
 import { getActiveCitationTab } from './citation/_tablist.js';
 import { tabControl } from '../../_actions.js';
 
-/*
-  TO DO: Cache fetched text
+const citationFileCache = {};
 
-  const citationFileCache = {};
-*/
-
-const fetchCitationFileText = async (style) => {
-  // Return the appropriate `.csl` file if a style is provided, else, return the locale
+const fetchCitationFileText = (style, fileCache = citationFileCache) => {
   const filePath = `/citations/${style ? `${style}.csl` : 'locales-en-US.xml'}`;
-  const response = await fetch(filePath);
-  if (!response.ok) {
-    throw new Error(`Fetching \`${filePath}\` failed: ${response.status} ${response.statusText}`);
+
+  // If the file is already in the cache, return the cached value
+  if (fileCache[filePath]) {
+    return fileCache[filePath];
   }
-  return await response.text();
+
+  // Create the fetch promise and store it immediately
+  const fileText = fetch(filePath)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Fetching \`${filePath}\` failed: ${response.status} ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then((text) => {
+      return text;
+    })
+    .catch((err) => {
+      // Remove the promise from the cache so retries are possible
+      delete fileCache[filePath];
+      throw err;
+    });
+
+  // Store the file text in the cache
+  fileCache[filePath] = fileText;
+
+  return fileText;
 };
 
 const fetchCitationFiles = async ({ citationStyle, fetchFileText = fetchCitationFileText }) => {
@@ -87,17 +104,40 @@ const updateAndAttachCitations = ({
   attach(tabPanel, getBibEntries(citeprocEngine));
 };
 
-const generateCitations = async (tab, buildEngine = buildCiteprocEngine, buildCitations = updateAndAttachCitations) => {
+let citationStyleCache = [];
+
+const generateCitations = async ({
+  buildCitations = updateAndAttachCitations,
+  buildEngine = buildCiteprocEngine,
+  citationCache = citationStyleCache,
+  tab
+}) => {
   const [citationStyle, tabPanel] = [
     tab.getAttribute('data-citation-style'),
     tab.getAttribute('aria-controls')
   ];
+
+  // Return early if citation style is already cached
+  if (citationCache.includes(citationStyle)) {
+    return;
+  }
 
   // Create CSL processor
   const citeprocEngine = await buildEngine(citationStyle);
 
   // Update citation items
   buildCitations({ citeprocEngine, tabPanel });
+
+  // Cache the citation style
+  citationCache.push(citationStyle);
+};
+
+const regenerateCitations = (citations = generateCitations, activeTab = getActiveCitationTab) => {
+  // Clear the cache
+  citationStyleCache = [];
+
+  // Generate the citations
+  citations({ tab: activeTab() });
 };
 
 const handleTabClick = (citations) => {
@@ -111,18 +151,18 @@ const handleTabClick = (citations) => {
     }
 
     // `citations` is passed in for testing purposes
-    citations(tab);
+    citations({ tab });
   });
 };
 
 const displayCitations = (citations = generateCitations, tabClick = handleTabClick) => {
   // Check if there is an active tab on load
-  const activeTab = getActiveCitationTab();
+  const tab = getActiveCitationTab();
 
   // Get the citations of the active tab
-  if (activeTab) {
+  if (tab) {
     // `citations` is passed in for testing purposes
-    citations(activeTab);
+    citations({ tab });
   }
 
   // `tabClick` is passed in for testing purposes
@@ -143,6 +183,7 @@ const initializeCitations = (citations = displayCitations, copyCitationButton = 
 export {
   attachTheCitations,
   buildCiteprocEngine,
+  citationStyleCache,
   createCiteprocEngine,
   displayCitations,
   fetchCitationFiles,
@@ -151,6 +192,7 @@ export {
   getBibliographyEntries,
   handleTabClick,
   initializeCitations,
+  regenerateCitations,
   retrieveItem,
   systemObject,
   updateAndAttachCitations,

@@ -1,4 +1,14 @@
-import { createDatastoreList, datastoreHeading, handleSelectionChange, initializeNonEmptyListFunctions, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import {
+  createDatastoreList,
+  datastoreHeading,
+  handleSelectionChange,
+  initializeNonEmptyListFunctions,
+  isTemporaryListEmpty,
+  nonEmptyDatastores,
+  temporaryList,
+  toggleListElements,
+  viewingTemporaryList
+} from '../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
@@ -258,6 +268,8 @@ describe('layout', function () {
 
   describe('handleSelectionChange()', function () {
     let actions = null;
+    let citationTabExample = null;
+    let activeCitationTabStub = null;
     let listElement = null;
     let checkbox = null;
     let selectAll = null;
@@ -277,12 +289,17 @@ describe('layout', function () {
         actionsPanelText: sinon.spy(),
         disableActionTabs: sinon.spy(),
         displayCSLData: sinon.spy(),
+        regenerateCitations: sinon.spy(),
         selectAllState: sinon.spy(),
         selectedText: sinon.spy()
       };
 
+      citationTabExample = 'APA';
+
+      activeCitationTabStub = sinon.stub().returns(citationTabExample);
+
       // Initialize the function with the stubbed actions
-      handleSelectionChange(actions);
+      handleSelectionChange(actions, activeCitationTabStub);
 
       listElement = () => {
         return document.querySelector('.list');
@@ -299,6 +316,7 @@ describe('layout', function () {
 
     afterEach(function () {
       actions = null;
+      activeCitationTabStub = null;
       listElement = null;
       checkbox = null;
       selectAll = null;
