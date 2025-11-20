@@ -106,8 +106,12 @@ const updateAndAttachCitations = ({
 
 let citationStyleCache = [];
 
-// eslint-disable-next-line max-params
-const generateCitations = async (tab, citationCache = citationStyleCache, buildEngine = buildCiteprocEngine, buildCitations = updateAndAttachCitations) => {
+const generateCitations = async ({
+  buildCitations = updateAndAttachCitations,
+  buildEngine = buildCiteprocEngine,
+  citationCache = citationStyleCache,
+  tab
+}) => {
   const [citationStyle, tabPanel] = [
     tab.getAttribute('data-citation-style'),
     tab.getAttribute('aria-controls')
@@ -133,7 +137,7 @@ const regenerateCitations = (citations = generateCitations, activeTab = getActiv
   citationStyleCache = [];
 
   // Generate the citations
-  citations(activeTab());
+  citations({ tab: activeTab() });
 };
 
 const handleTabClick = (citations) => {
@@ -147,18 +151,18 @@ const handleTabClick = (citations) => {
     }
 
     // `citations` is passed in for testing purposes
-    citations(tab);
+    citations({ tab });
   });
 };
 
 const displayCitations = (citations = generateCitations, tabClick = handleTabClick) => {
   // Check if there is an active tab on load
-  const activeTab = getActiveCitationTab();
+  const tab = getActiveCitationTab();
 
   // Get the citations of the active tab
-  if (activeTab) {
+  if (tab) {
     // `citations` is passed in for testing purposes
-    citations(activeTab);
+    citations({ tab });
   }
 
   // `tabClick` is passed in for testing purposes

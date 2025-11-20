@@ -546,6 +546,7 @@ describe('citation', function () {
     let buildEngineStub = null;
     let buildCitationsStub = null;
     let citationCache = null;
+    let args = null;
 
     beforeEach(async function () {
       citationStyle = 'apa';
@@ -555,9 +556,15 @@ describe('citation', function () {
       buildEngineStub = sinon.stub().resolves(citeprocEngine);
       buildCitationsStub = sinon.stub();
       citationCache = [];
+      args = {
+        buildCitations: buildCitationsStub,
+        buildEngine: buildEngineStub,
+        citationCache,
+        tab
+      };
 
       // Call the function
-      await generateCitations(tab, citationCache, buildEngineStub, buildCitationsStub);
+      await generateCitations(args);
     });
 
     afterEach(function () {
@@ -568,6 +575,7 @@ describe('citation', function () {
       buildEngineStub = null;
       buildCitationsStub = null;
       citationCache = null;
+      args = null;
     });
 
     it('should call `buildEngine` with the correct citation style, if not cached', function () {
@@ -588,7 +596,7 @@ describe('citation', function () {
       buildCitationsStub.resetHistory();
 
       // Call the function again
-      await generateCitations(tab, citationCache, buildEngineStub, buildCitationsStub);
+      await generateCitations(args);
 
       // Check that the calls were ignored due to caching
       expect(buildEngineStub.notCalled, '`buildEngine` should NOT be called if citation style is cached').to.be.true;
@@ -599,9 +607,10 @@ describe('citation', function () {
       // Simulate a new tab with a different citation style
       const newStyle = 'apa';
       buildEngineStub.withArgs(newStyle).resolves('fake-engine-apa');
+      args.tab = getTab(newStyle);
 
       // Call the function again
-      await generateCitations(getTab(newStyle), citationCache, buildEngineStub, buildCitationsStub);
+      await generateCitations(args);
       expect(buildEngineStub.calledWithExactly(newStyle), '`buildEngine` should be called for new style').to.be.true;
       expect(citationCache.includes(newStyle), 'New citation style should be cached').to.be.true;
     });
@@ -646,7 +655,7 @@ describe('citation', function () {
 
     it('should call `citations` with the result of `activeTab`', function () {
       expect(citationsSpy.calledOnce, '`citations` should have been called once').to.be.true;
-      expect(citationsSpy.calledOnceWithExactly(activeTabExample), '`citations` should have been called with `activeTab`').to.be.true;
+      expect(citationsSpy.calledOnceWithExactly({ tab: activeTabExample }), '`citations` should have been called with `activeTab`').to.be.true;
     });
   });
 
