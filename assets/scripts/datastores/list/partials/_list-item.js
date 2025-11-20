@@ -1,4 +1,8 @@
-const listItemTitle = ({ itemTitle, title, url }) => {
+const listItemTitle = ({ index, itemTitle, title, url }) => {
+  // Update the number
+  const originalNumber = itemTitle.querySelector('.list__item--title-number');
+  originalNumber.textContent = `${index + 1}.`;
+
   // Update original title
   const originalTitle = itemTitle.querySelector('.list__item--title-original');
   originalTitle.href = url;
@@ -44,7 +48,7 @@ const listItemMetadata = ({ itemTable, metadata }) => {
   row.remove();
 };
 
-const listItem = ({ datastore, record, recordId }) => {
+const listItem = ({ datastore, index, record, recordId }) => {
   // Clone the list item template
   const partialClass = 'list__item--clone';
   const listItemPartial = document.querySelector(`.${partialClass}`);
@@ -60,7 +64,7 @@ const listItem = ({ datastore, record, recordId }) => {
   const { metadata, title, url } = record;
   // Update the title
   const itemTitle = clonedListItem.querySelector('.list__item--title');
-  listItemTitle({ itemTitle, title, url });
+  listItemTitle({ index, itemTitle, title, url });
   // Update the metadata
   const itemTable = clonedListItem.querySelector('table.metadata > tbody');
   listItemMetadata({ itemTable, metadata });
