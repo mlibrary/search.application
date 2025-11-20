@@ -5,20 +5,37 @@ import { cslData } from './citation/_csl.js';
 import { getActiveCitationTab } from './citation/_tablist.js';
 import { tabControl } from '../../_actions.js';
 
-/*
-  TO DO: Cache fetched text
+const citationFileCache = {};
 
-  const citationFileCache = {};
-*/
-
-const fetchCitationFileText = async (style) => {
-  // Return the appropriate `.csl` file if a style is provided, else, return the locale
+const fetchCitationFileText = (style, fileCache = citationFileCache) => {
   const filePath = `/citations/${style ? `${style}.csl` : 'locales-en-US.xml'}`;
-  const response = await fetch(filePath);
-  if (!response.ok) {
-    throw new Error(`Fetching \`${filePath}\` failed: ${response.status} ${response.statusText}`);
+
+  // If the file is already in the cache, return the cached value
+  if (fileCache[filePath]) {
+    return fileCache[filePath];
   }
-  return await response.text();
+
+  // Create the fetch promise and store it immediately
+  const fileText = fetch(filePath)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Fetching \`${filePath}\` failed: ${response.status} ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then((text) => {
+      return text;
+    })
+    .catch((err) => {
+      // Remove the promise from the cache so retries are possible
+      delete fileCache[filePath];
+      throw err;
+    });
+
+  // Store the file text in the cache
+  fileCache[filePath] = fileText;
+
+  return fileText;
 };
 
 const fetchCitationFiles = async ({ citationStyle, fetchFileText = fetchCitationFileText }) => {

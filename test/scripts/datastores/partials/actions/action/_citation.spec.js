@@ -71,13 +71,16 @@ describe('citation', function () {
 
   describe('fetchCitationFileText()', function () {
     let fetchStub = null;
+    let citationFileCache = null;
 
     beforeEach(function () {
       fetchStub = sinon.stub(global, 'fetch');
+      citationFileCache = {};
     });
 
     afterEach(function () {
       fetchStub = null;
+      citationFileCache = null;
     });
 
     describe('success', function () {
@@ -94,7 +97,7 @@ describe('citation', function () {
         fetchStub.resolves(mockResponse);
 
         // Fetch the file
-        const result = await fetchCitationFileText(style);
+        const result = await fetchCitationFileText(style, citationFileCache);
 
         // Check that the correct `.csl` file was called
         expect(fetchStub.calledOnceWith(`/citations/${style}.csl`), `the correct \`.csl\` file should be called for \`${style}\``).to.be.true;
@@ -123,6 +126,30 @@ describe('citation', function () {
         // Check that the correct text was returned
         expect(result, 'the response should have returned the correct text').to.equal(mockText);
       });
+
+      it('should return cached result and not re-fetch for subsequent calls for the same style', async function () {
+        const style = 'apa';
+        const mockText = 'Citation style data';
+        const mockResponse = {
+          ok: true,
+          text: sinon.stub().resolves(mockText)
+        };
+
+        fetchStub.resolves(mockResponse);
+
+        // First fetch
+        const result1 = await fetchCitationFileText(style, citationFileCache);
+        expect(result1).to.equal(mockText);
+        expect(fetchStub.calledOnce, 'fetch should be called once').to.be.true;
+
+        // Reset the stub call count (if desired), but the cache should mean no network request
+        fetchStub.resetHistory();
+
+        // Second fetch: should come from cache, not call fetch again
+        const result2 = await fetchCitationFileText(style, citationFileCache);
+        expect(result2).to.equal(mockText);
+        expect(fetchStub.notCalled, 'subsequent fetch from cache should not call fetch').to.be.true;
+      });
     });
 
     describe('error', function () {
@@ -141,7 +168,7 @@ describe('citation', function () {
 
         try {
           // Call the function
-          await fetchCitationFileText(style);
+          await fetchCitationFileText(style, citationFileCache);
           expect.fail('Should have thrown error');
         } catch (error) {
           // Check that the message is correct
@@ -159,12 +186,41 @@ describe('citation', function () {
 
         try {
           // Call the function
-          await fetchCitationFileText(style);
+          await fetchCitationFileText(style, citationFileCache);
           expect.fail('Should have thrown fetch error');
         } catch (error) {
           // Check that the message matches the new error
           expect(error, 'the error message should now have the new error').to.equal(fakeError);
         }
+      });
+
+      it('should remove cache if fetch fails and retry fetch on next call', async function () {
+        const style = 'chicago';
+        const mockText = 'Chicago style data';
+        const fakeError = new Error('Network failure');
+
+        // First attempt -- fails
+        fetchStub.rejects(fakeError);
+
+        // Should throw error and not leave cached promise
+        try {
+          await fetchCitationFileText(style, citationFileCache);
+          expect.fail('Should have thrown fetch error');
+        } catch (err) {
+          expect(err).to.equal(fakeError);
+        }
+
+        // Now set fetchStub to succeed
+        fetchStub.resetHistory();
+        fetchStub.resolves({
+          ok: true,
+          text: sinon.stub().resolves(mockText)
+        });
+
+        // Next call should succeed and only call fetch once
+        const result = await fetchCitationFileText(style, citationFileCache);
+        expect(result).to.equal(mockText);
+        expect(fetchStub.calledOnce, 'fetch should be called a second time after error removes cache').to.be.true;
       });
     });
   });
