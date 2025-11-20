@@ -1,5 +1,6 @@
 import {
   buildCiteprocEngine,
+  citationStyleCache,
   createCiteprocEngine,
   displayCitations,
   fetchCitationFiles,
@@ -8,6 +9,7 @@ import {
   getBibliographyEntries,
   handleTabClick,
   initializeCitations,
+  regenerateCitations,
   retrieveItem,
   systemObject,
   updateAndAttachCitations,
@@ -543,6 +545,7 @@ describe('citation', function () {
     let citeprocEngine = null;
     let buildEngineStub = null;
     let buildCitationsStub = null;
+    let citationCache = null;
 
     beforeEach(async function () {
       citationStyle = 'apa';
@@ -551,9 +554,10 @@ describe('citation', function () {
       citeprocEngine = 'fake-engine';
       buildEngineStub = sinon.stub().resolves(citeprocEngine);
       buildCitationsStub = sinon.stub();
+      citationCache = [];
 
       // Call the function
-      await generateCitations(tab, buildEngineStub, buildCitationsStub);
+      await generateCitations(tab, citationCache, buildEngineStub, buildCitationsStub);
     });
 
     afterEach(function () {
@@ -563,14 +567,86 @@ describe('citation', function () {
       citeprocEngine = null;
       buildEngineStub = null;
       buildCitationsStub = null;
+      citationCache = null;
     });
 
-    it('should call `buildEngine` with the correct citation style', function () {
+    it('should call `buildEngine` with the correct citation style, if not cached', function () {
       expect(buildEngineStub.calledOnceWithExactly(citationStyle), `\`buildEngine\` should have been called with \`${citationStyle}\``).to.be.true;
     });
 
-    it('should call `buildCitations` with correct `citeprocEngine` and `tabPanel`', function () {
+    it('should call `buildCitations` with correct `citeprocEngine` and `tabPanel`, if not cached', function () {
       expect(buildCitationsStub.calledOnceWithExactly({ citeprocEngine, tabPanel }), '`buildCitations` should have been called once with the created CSL engine and tab panel').to.be.true;
+    });
+
+    it('should cache the citation style after processing', function () {
+      expect(citationCache.includes(citationStyle), 'Citation style should be cached').to.be.true;
+    });
+
+    it('should not reprocess a citation style that is already cached', async function () {
+      // Reset call count
+      buildEngineStub.resetHistory();
+      buildCitationsStub.resetHistory();
+
+      // Call the function again
+      await generateCitations(tab, citationCache, buildEngineStub, buildCitationsStub);
+
+      // Check that the calls were ignored due to caching
+      expect(buildEngineStub.notCalled, '`buildEngine` should NOT be called if citation style is cached').to.be.true;
+      expect(buildCitationsStub.notCalled, '`buildCitations` should NOT be called if citation style is cached').to.be.true;
+    });
+
+    it('should process a new citation style that is not cached', async function () {
+      // Simulate a new tab with a different citation style
+      const newStyle = 'apa';
+      buildEngineStub.withArgs(newStyle).resolves('fake-engine-apa');
+
+      // Call the function again
+      await generateCitations(getTab(newStyle), citationCache, buildEngineStub, buildCitationsStub);
+      expect(buildEngineStub.calledWithExactly(newStyle), '`buildEngine` should be called for new style').to.be.true;
+      expect(citationCache.includes(newStyle), 'New citation style should be cached').to.be.true;
+    });
+  });
+
+  describe('regenerateCitations()', function () {
+    let citationsSpy = null;
+    let activeTabExample = null;
+    let activeTabStub = null;
+
+    beforeEach(function () {
+      // Reset cache for a clean start
+      citationStyleCache.length = 0;
+
+      // Check that cache is clear
+      expect(citationStyleCache, '`citationStyleCache` should be empty').to.be.empty;
+
+      // Cache styles
+      citationStyleCache.push('apa', 'mla', 'chicago');
+
+      // Check that styles are cached
+      expect(citationStyleCache, '`citationStyleCache` should no longer be empty').to.not.be.empty;
+
+      // Create spies and stubs
+      citationsSpy = sinon.spy();
+      activeTabExample = 'mockTab';
+      activeTabStub = sinon.stub().returns(activeTabExample);
+
+      // Call the function
+      regenerateCitations(citationsSpy, activeTabStub);
+    });
+
+    afterEach(function () {
+      citationsSpy = null;
+      activeTabExample = null;
+      activeTabStub = null;
+    });
+
+    it('should clear `citationStyleCache`', function () {
+      expect(citationStyleCache, '`citationStyleCache` should have been cleared').to.deep.equal([]);
+    });
+
+    it('should call `citations` with the result of `activeTab`', function () {
+      expect(citationsSpy.calledOnce, '`citations` should have been called once').to.be.true;
+      expect(citationsSpy.calledOnceWithExactly(activeTabExample), '`citations` should have been called with `activeTab`').to.be.true;
     });
   });
 

@@ -289,7 +289,7 @@ describe('layout', function () {
         actionsPanelText: sinon.spy(),
         disableActionTabs: sinon.spy(),
         displayCSLData: sinon.spy(),
-        generateCitations: sinon.spy(),
+        regenerateCitations: sinon.spy(),
         selectAllState: sinon.spy(),
         selectedText: sinon.spy()
       };
@@ -330,10 +330,6 @@ describe('layout', function () {
       // Check if all actions were called
       Object.keys(actions).forEach((key) => {
         expect(actions[key].calledOnce, `\`${key}\` should have been called`).to.be.true;
-
-        if (key === 'generateCitations') {
-          expect(actions[key].calledOnceWithExactly(citationTabExample), '`generateCitations` should have been called with `activeCitationTab`').to.be.true;
-        }
       });
     });
 
@@ -345,10 +341,6 @@ describe('layout', function () {
       // Check if all actions were called
       Object.keys(actions).forEach((key) => {
         expect(actions[key].calledOnce, `\`${key}\` should have been called`).to.be.true;
-
-        if (key === 'generateCitations') {
-          expect(actions[key].calledOnceWithExactly(citationTabExample), '`generateCitations` should have been called with `activeCitationTab`').to.be.true;
-        }
       });
     });
 
@@ -364,10 +356,6 @@ describe('layout', function () {
       // Check if all actions were not called
       Object.keys(actions).forEach((key) => {
         expect(actions[key].called, `\`${key}\` should not have been called`).to.be.false;
-
-        if (key === 'generateCitations') {
-          expect(actions[key].calledOnceWithExactly(citationTabExample), '`generateCitations` should not have been called with `activeCitationTab`').to.be.false;
-        }
       });
     });
   });

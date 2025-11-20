@@ -104,17 +104,36 @@ const updateAndAttachCitations = ({
   attach(tabPanel, getBibEntries(citeprocEngine));
 };
 
-const generateCitations = async (tab, buildEngine = buildCiteprocEngine, buildCitations = updateAndAttachCitations) => {
+let citationStyleCache = [];
+
+// eslint-disable-next-line max-params
+const generateCitations = async (tab, citationCache = citationStyleCache, buildEngine = buildCiteprocEngine, buildCitations = updateAndAttachCitations) => {
   const [citationStyle, tabPanel] = [
     tab.getAttribute('data-citation-style'),
     tab.getAttribute('aria-controls')
   ];
+
+  // Return early if citation style is already cached
+  if (citationCache.includes(citationStyle)) {
+    return;
+  }
 
   // Create CSL processor
   const citeprocEngine = await buildEngine(citationStyle);
 
   // Update citation items
   buildCitations({ citeprocEngine, tabPanel });
+
+  // Cache the citation style
+  citationCache.push(citationStyle);
+};
+
+const regenerateCitations = (citations = generateCitations, activeTab = getActiveCitationTab) => {
+  // Clear the cache
+  citationStyleCache = [];
+
+  // Generate the citations
+  citations(activeTab());
 };
 
 const handleTabClick = (citations) => {
@@ -160,6 +179,7 @@ const initializeCitations = (citations = displayCitations, copyCitationButton = 
 export {
   attachTheCitations,
   buildCiteprocEngine,
+  citationStyleCache,
   createCiteprocEngine,
   displayCitations,
   fetchCitationFiles,
@@ -168,6 +188,7 @@ export {
   getBibliographyEntries,
   handleTabClick,
   initializeCitations,
+  regenerateCitations,
   retrieveItem,
   systemObject,
   updateAndAttachCitations,
