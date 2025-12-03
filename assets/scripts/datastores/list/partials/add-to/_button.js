@@ -13,26 +13,27 @@ const updateButtonTitle = ({ button, isAdded }) => {
 
 const updateButtonText = ({ button, isAdded }) => {
   const buttonContent = button.querySelector('.visually-hidden');
-  buttonContent.textContent
+  buttonContent.textContent = buttonContent.textContent
     .replace(/Add|Remove/u, isAdded ? 'Remove' : 'Add')
     .replace(/to My Temporary List|from My Temporary List/u, isAdded ? 'from My Temporary List' : 'to My Temporary List');
 };
 
-const buttonUIObject = {
+const buttonUIFuncs = {
   updateButtonClass,
   updateButtonIcon,
   updateButtonText,
   updateButtonTitle
 };
 
-const updateButtonUI = ({ button, buttonUI = buttonUIObject, isAdded }) => {
+const updateButtonUI = ({ button, isAdded }) => {
   // Initiate all functions
-  Object.keys(buttonUI).forEach((func) => {
-    buttonUI[func]({ button, isAdded });
+  Object.keys(buttonUIFuncs).forEach((func) => {
+    buttonUIFuncs[func]({ button, isAdded });
   });
 };
 
 export {
+  buttonUIFuncs,
   updateButtonClass,
   updateButtonIcon,
   updateButtonText,
