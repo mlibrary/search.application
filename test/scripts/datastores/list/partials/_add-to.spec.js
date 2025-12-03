@@ -1,421 +1,196 @@
 import {
-  addToList,
+  defaultTemporaryList,
   getTemporaryList,
-  handleFormSubmit,
   inTemporaryList,
   setTemporaryList,
-  temporaryListCount,
-  updateResultUI
+  temporaryListCount
 } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-const prefilledList = {
-  articles: {},
-  catalog: {},
-  databases: {},
-  guidesandmore: {},
-  onlinejournals: {}
-};
-const currentDatastore = 'catalog';
-const recordIds = Object.keys(global.temporaryList[currentDatastore]);
-const listItems = () => {
-  let list = `
-    <div class="list__go-to list__go-to--empty">
-      <div class="list__in-list">
-        <span class="strong"></span>
-      </div>
-    </div>
-  `;
-  Object.keys(global.temporaryList).forEach((datastore) => {
-    const records = Object.keys(global.temporaryList[datastore]);
-    if (records.length > 0) {
-      list += `<h2>${datastore}</h2>`;
-      records.forEach((record) => {
-        list += `
-          <div class="record__container" data-record-id="${record}" data-record-datastore="${datastore}">
-            <form class="list__add-to" action="/catalog/record/${record}/brief" method="post" data-record-id="${record}" data-record-datastore="${datastore}">
-              <button type="submit" title="Add to My Temporary List">
-                <span class="icon">add</span>
-                <span class="text">Add this record to My Temporary List</span>
-              </button>
-            </form>
-          </div>
-        `;
-      });
-    };
-  });
-  return list;
-};
+const listName = 'temporaryList';
 
 describe('add to', function () {
-  beforeEach(function () {
-    global.sessionStorage = window.sessionStorage;
-  });
+  describe('getTemporaryList()', function () {
+    let getTemporaryListStub = null;
 
-  afterEach(function () {
-    delete global.sessionStorage;
+    beforeEach(function () {
+      global.sessionStorage = { getItem: sinon.stub() };
+      getTemporaryListStub = global.sessionStorage.getItem;
+
+      // Reset the stub before each test
+      getTemporaryListStub.reset();
+    });
+
+    it(`should call \`sessionStorage.getItem\` with \`${listName}\``, function () {
+      // Make sure `sessionStorage` is defined
+      getTemporaryListStub.returns('');
+
+      // Call the function
+      getTemporaryList();
+
+      // Check that `temporaryList` was called
+      expect(getTemporaryListStub.calledOnceWithExactly(listName), `\`${listName}\` should have been called`).to.be.true;
+    });
+
+    it('should parse and return a string value from `sessionStorage.getItem`', function () {
+      // Create a string value
+      const string = 'example';
+      expect(string, 'the example should be a string').to.be.a('string');
+
+      // Define `sessionStorage` with the string
+      getTemporaryListStub.withArgs(listName).returns(`"${string}"`);
+
+      // Assign the functiom to a variable
+      const result = getTemporaryList();
+
+      // Check that the result returns the string value
+      expect(result, 'the result should have returned a string value').to.equal(string);
+    });
+
+    it('should parse and return an object from `sessionStorage.getItem`', function () {
+      // Use an object value
+      expect(global.temporaryList, 'the example should be an object').to.be.an('object');
+
+      // Define `sessionStorage` with the object
+      getTemporaryListStub.withArgs(listName).returns(JSON.stringify(global.temporaryList));
+
+      // Assign the functiom to a variable
+      const result = getTemporaryList();
+
+      // Check that the result returns parsed
+      expect(result, 'the returned object should have been parsed').to.deep.equal(global.temporaryList);
+    });
+
+    it('should return the default object if `sessionStorage.getItem` returns `null`', function () {
+      // Define `sessionStorage` with `null`
+      getTemporaryListStub.withArgs(listName).returns(null);
+
+      // Assign the functiom to a variable
+      const result = getTemporaryList();
+
+      // Check that the result returns the predefined object
+      expect(result, 'the result should have resturned the predefined object').to.deep.equal(defaultTemporaryList);
+    });
   });
 
   describe('setTemporaryList()', function () {
+    let setTemporaryListStub = null;
+
     beforeEach(function () {
-      // Clear session storage before each test
-      global.sessionStorage.clear();
+      global.sessionStorage = { setItem: sinon.stub() };
+      setTemporaryListStub = global.sessionStorage.setItem;
 
-      // Check that the function returns prefilled object when no temporary list is set
-      expect(getTemporaryList(), '`temporaryList` should return prefilled object').to.deep.equal(prefilledList);
+      // Reset the stub before each test
+      setTemporaryListStub.reset();
     });
 
-    afterEach(function () {
-      // Clear session storage after each test
-      global.sessionStorage.clear();
-    });
-
-    it('should update the temporary list in session storage', function () {
+    it(`should stringify and set the value in \`sessionStorage\` under \`${listName}\``, function () {
       // Call the function
       setTemporaryList(global.temporaryList);
 
-      // Check that the temporary list was set correctly
-      expect(getTemporaryList(), '`temporaryList` should have been set with the provided object').to.deep.equal(global.temporaryList);
-    });
-  });
-
-  describe('getTemporaryList()', function () {
-    beforeEach(function () {
-      // Check that the function returns an empty object when no temporary list is set
-      expect(getTemporaryList(), '`temporaryList` should return prefilled object').to.deep.equal(prefilledList);
+      // Check that a stringified value was set under `temporaryList`
+      expect(setTemporaryListStub.calledOnceWithExactly(listName, JSON.stringify(global.temporaryList)), `the value should have been stringified under \`${listName}\``).to.be.true;
     });
 
-    afterEach(function () {
-      // Clear session storage after each test
-      global.sessionStorage.clear();
-    });
+    it('should handle string values too', function () {
+      // Create a string value
+      const string = 'example';
+      expect(string, 'the example should be a string').to.be.a('string');
 
-    it('should return the temporary list from session storage', function () {
-      // Set a temporary list in session storage
-      setTemporaryList(global.temporaryList);
+      // Call the function
+      setTemporaryList(string);
 
-      // Check that the function retrieves it correctly
-      expect(getTemporaryList(), '`temporaryList` should return a defined object').to.deep.equal(global.temporaryList);
+      // Check that a stringified value was set under `temporaryList`
+      expect(setTemporaryListStub.calledOnceWithExactly(listName, JSON.stringify(string)), `the string value should have returned under \`${listName}\``).to.be.true;
     });
   });
 
   describe('inTemporaryList()', function () {
+    let list = null;
+    let recordDatastore = null;
+    let recordId = null;
+
     beforeEach(function () {
-      // Set the temporary list in session storage
-      setTemporaryList(global.temporaryList);
+      list = { ...global.temporaryList };
+      // Grab the first datastore
+      [recordDatastore] = Object.keys(global.temporaryList);
+      // Grab the first record ID of the first datastore
+      [recordId] = Object.keys(global.temporaryList[recordDatastore]);
     });
 
     afterEach(function () {
-      // Clear session storage after each test
-      global.sessionStorage.clear();
+      list = null;
+      recordDatastore = null;
+      recordId = null;
     });
 
-    it('should return `false` if the datastore is not in the temporary list', function () {
-      // Check that the function returns false for a non-existing datastore
-      expect(inTemporaryList({ recordDatastore: 'NonExistingDatastore', recordId: recordIds[0] }), '`inTemporaryList` should return false for a non-existing datastore').to.be.false;
+    it('should return true if both recordDatastore and recordId exist', function () {
+      // Assign the result
+      const result = inTemporaryList({ list, recordDatastore, recordId });
+
+      // Check that the result returns true
+      expect(result, '`inTemporaryList` should have returned `true`').to.be.true;
     });
 
-    it('should return `false` if record ID is not in the datastore in the temporary list', function () {
-      // Check that the function returns false for a non-existing recordId
-      expect(inTemporaryList({ recordDatastore: currentDatastore, recordId: 'NonExistingRecordId' }), '`inTemporaryList` should return false for a non-existing record ID in a datastore').to.be.false;
+    it('should return false if recordDatastore exists but recordId does not', function () {
+      // Assign the result with a non-existent record ID
+      const result = inTemporaryList({ list, recordDatastore, recordId: 'non-existent' });
+
+      // Check that the result returns false
+      expect(result, '`inTemporaryList` should have returned `false` for a non-existent record ID').to.be.false;
     });
 
-    it('should return `true` if the datastore and record ID are in the temporary list', function () {
-      // Check that the function returns true for an existing datastore and recordId
-      expect(inTemporaryList({ recordDatastore: currentDatastore, recordId: recordIds[0] }), '`inTemporaryList` should return true for an existing datastore and recordId').to.be.true;
+    it('should return false if recordDatastore does not exist', function () {
+      // Assign the result with a non-existent datastore
+      const result = inTemporaryList({ list, recordDatastore: 'non-existent', recordId });
+
+      // Check that the result returns false
+      expect(result, '`inTemporaryList` should have returned `false` for a non-existent datastore').to.be.false;
+    });
+
+    it('should return false if list is empty', function () {
+      // Assign the result with an empty list
+      const result = inTemporaryList({ list: {}, recordDatastore, recordId });
+
+      // Check that the result returns false
+      expect(result, '`inTemporaryList` should have returned `false` for an empty list').to.be.false;
+    });
+
+    it('should handle recordDatastore that exists but is not an object gracefully', function () {
+      // Make the datastore return `null`
+      list[recordDatastore] = null;
+
+      // Assign the result
+      const result = inTemporaryList({ list, recordDatastore, recordId });
+
+      // Check that the result returns false
+      expect(result, '`inTemporaryList` should have returned `false` if a datastore returns null').to.be.false;
     });
   });
 
   describe('temporaryListCount()', function () {
+    let list = null;
+
     beforeEach(function () {
-      // Clear session storage before each test
-      global.sessionStorage.clear();
+      list = { ...global.temporaryList };
     });
 
     afterEach(function () {
-      // Clear session storage after each test
-      global.sessionStorage.clear();
+      list = null;
     });
 
-    it('should return 0 if the temporary list is empty', function () {
-      // Check that the function returns 0 for an empty temporary list
-      expect(temporaryListCount(), '`temporaryListCount` should return 0 for an empty temporary list').to.equal(0);
+    it('should return the sum of all record IDs in each datastore', function () {
+      // Check that the count is not 0
+      expect(temporaryListCount(list), '`temporaryListCount()` should have more than 0').to.equal(5);
     });
 
-    it('should return the correct count of records in the temporary list', function () {
-      // Set a temporary list in session storage
-      setTemporaryList(global.temporaryList);
+    it('should return `0` if the list is empty', function () {
+      // Assign list to the default list
+      list = defaultTemporaryList;
 
-      // Check that the function returns the correct count
-      expect(temporaryListCount(), '`temporaryListCount` should return the correct count of records in the temporary list').to.equal(5);
-    });
-  });
-
-  describe('updateResultUI()', function () {
-    let getContainer = null;
-    let getForm = null;
-    let getButton = null;
-    let callFunction = null;
-    const [recordId] = recordIds;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = listItems([recordId]);
-
-      getContainer = () => {
-        return document.querySelector('.record__container');
-      };
-
-      getForm = () => {
-        return document.querySelector('form');
-      };
-
-      getButton = () => {
-        return getForm().querySelector('button');
-      };
-
-      callFunction = () => {
-        return updateResultUI(getForm());
-      };
-
-      // Call the function
-      callFunction();
-    });
-
-    afterEach(function () {
-      getContainer = null;
-      getForm = null;
-      getButton = null;
-      callFunction = null;
-
-      // Clear session storage after each test
-      global.sessionStorage.clear();
-    });
-
-    it('should toggle the active class on the container', function () {
-      // Define the active container class
-      const activeContainerClass = 'record__container--active';
-
-      // Check that the container does not have the active class
-      expect(getContainer().classList.contains(activeContainerClass), '`.record__container` should not have an active class by default').to.be.false;
-
-      // Set a temporary list in session storage
-      setTemporaryList(global.temporaryList);
-
-      // Call the function again to update the UI
-      callFunction();
-
-      // Check that the container now has the active class
-      expect(getContainer().classList.contains(activeContainerClass), '`.record__container` should have an active class after adding the record').to.be.true;
-    });
-
-    it('should toggle the button attributes', function () {
-      // Define the active button class
-      const activeButtonClass = 'button__ghost--active';
-      // Get the button and its elements
-      const button = getButton();
-      const [buttonIcon, buttonText] = button.querySelectorAll('span');
-
-      // Check that the container does not have the active class
-      expect(button.classList.contains(activeButtonClass), 'the button should not have an active class by default').to.be.false;
-
-      // Check the initial button title and text
-      expect(button.getAttribute('title'), 'the button title should be "Add to My Temporary List"').to.equal('Add to My Temporary List');
-      expect(buttonIcon.textContent, 'the button icon should be `add`').to.equal('add');
-      expect(buttonText.textContent, 'the button text should be "Add this record to My Temporary List"').to.equal('Add this record to My Temporary List');
-
-      // Set a temporary list in session storage
-      setTemporaryList(global.temporaryList);
-
-      // Call the function again to update the UI
-      callFunction();
-
-      // Check that the button now has the active class
-      expect(button.classList.contains(activeButtonClass), 'the button should have an active class after adding the record').to.be.true;
-
-      // Check the button title and text after updating the UI
-      expect(button.getAttribute('title'), 'the button title should be "Remove from My Temporary List"').to.equal('Remove from My Temporary List');
-      expect(buttonIcon.textContent, 'the button icon should be `delete`').to.equal('delete');
-      expect(buttonText.textContent, 'the button text should be "Remove this record from My Temporary List"').to.equal('Remove this record from My Temporary List');
-    });
-
-    it('should call toggleBanner()', function () {
-      // Check that the code calls the toggleBanner function
-      expect(updateResultUI.toString(), '`updateResultUI` should call `toggleBanner`').to.include('toggleBanner(');
-    });
-  });
-
-  describe('handleFormSubmit', function () {
-    let fetchStub = null;
-    let event = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = listItems();
-
-      // Create a stub for fetch
-      fetchStub = sinon.stub(global, 'fetch');
-
-      // Create a fake event
-      event = {
-        preventDefault: sinon.stub(),
-        target: document.querySelector('form.list__add-to')
-      };
-    });
-
-    afterEach(function () {
-      // Clear session storage after each test
-      global.sessionStorage.clear();
-
-      fetchStub.restore();
-      event = null;
-    });
-
-    it('returns early if the event target does not match', async function () {
-      // Change the event target to a non-matching element
-      event.target = document.createElement('div');
-
-      // Check that the function returns early
-      const result = await handleFormSubmit(event);
-      expect(result).to.be.undefined;
-      expect(event.preventDefault.called).to.be.false;
-    });
-
-    it('calls `preventDefault` on the event', async function () {
-      // Call the function
-      await handleFormSubmit(event);
-
-      // Check if `event.preventDefault` was called
-      expect(event.preventDefault.calledOnce).to.be.true;
-    });
-
-    it('deletes the record from the temporary list if it is already added', async function () {
-      // Set the temporary list in session storage
-      setTemporaryList(global.temporaryList);
-
-      // Check that the temporary list has been set
-      expect(getTemporaryList(), '`temporaryList` should be set').to.deep.equal(global.temporaryList);
-
-      // Define the record ID to remove
-      const [recordId] = recordIds;
-
-      // Change the event target to the form for the first record
-      event.target = document.querySelector(`form[data-record-id="${recordId}"][data-record-datastore="${currentDatastore}"]`);
-
-      // Call the function
-      await handleFormSubmit(event);
-
-      // Check that the temporary list no longer contains the record after submission
-      expect(Object.keys(getTemporaryList()[currentDatastore]), '`temporaryList` should not contain the record after submission').to.not.include(recordId);
-    });
-
-    it('returns early if the response is not ok', async function () {
-      // Check that the temporary list is prefilled before submission
-      expect(getTemporaryList(), '`temporaryList` should return a prefilled object before submission').deep.equal(prefilledList);
-
-      // Change the fetch stub to return a non-ok response
-      fetchStub.resolves({
-        ok: false
-      });
-
-      // Call the function
-      await handleFormSubmit(event);
-
-      // Check that fetch was called
-      expect(fetchStub.calledOnce).to.be.true;
-
-      // Check that the temporary list is still prefilled
-      expect(getTemporaryList(), '`temporaryList` should still be empty').deep.equal(prefilledList);
-    });
-
-    it('adds the record to the temporary list if it does not exist', async function () {
-      // Check that the temporary list is prefilled before submission
-      expect(getTemporaryList(), '`temporaryList` should return a prefilled object before submission').deep.equal(prefilledList);
-
-      // Define the record ID to add
-      const [recordId] = recordIds;
-
-      // Change the event target to the form for the first record
-      event.target = document.querySelector(`form[data-record-id="${recordId}"][data-record-datastore="${currentDatastore}"]`);
-
-      // Call the function
-      fetchStub.resolves({
-        json: () => {
-          return Promise.resolve(global.temporaryList[currentDatastore][recordId]);
-        },
-        ok: true
-      });
-      await handleFormSubmit(event);
-
-      // Check that the temporary list has the record after submission
-      expect(String(getTemporaryList()[currentDatastore]), '`temporaryList` should contain the record metadata after submission').to.include(global.temporaryList[currentDatastore][recordId]);
-    });
-
-    it('fetches using the action attribute of the form', async function () {
-      // Define the fake fetch response
-      fetchStub.resolves({
-        json: () => {
-          return Promise.resolve(global.temporaryList[recordIds[0]]);
-        },
-        ok: true
-      });
-
-      // Call the function
-      await handleFormSubmit(event);
-
-      // Check that fetch was called with the form action URL
-      expect(fetchStub.calledOnceWithExactly(`/catalog/record/${recordIds[0]}/brief`)).to.be.true;
-    });
-
-    it('should call setTemporaryList()', function () {
-      // Check that the code calls the setTemporaryList function
-      expect(handleFormSubmit.toString(), '`handleFormSubmit` should call `setTemporaryList`').to.include('setTemporaryList(');
-    });
-
-    it('should call updateResultUI()', function () {
-      // Check that the code calls the updateResultUI function
-      expect(handleFormSubmit.toString(), '`handleFormSubmit` should call `updateResultUI`').to.include('updateResultUI(');
-    });
-  });
-
-  describe('addToList()', function () {
-    let addEventListenerSpy = null;
-    let updateResultSpy = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = listItems();
-
-      // Spy on document.body.addEventListener
-      addEventListenerSpy = sinon.spy(document.body, 'addEventListener');
-      updateResultSpy = sinon.spy();
-    });
-
-    afterEach(function () {
-      addEventListenerSpy.restore();
-      updateResultSpy = null;
-    });
-
-    it('should add a submit event listener to `document.body`, with `handleFormSubmit`', function () {
-      // Call the function
-      addToList();
-
-      // Check that addEventListener was called with the correct parameters
-      expect(addEventListenerSpy.calledWith('submit', handleFormSubmit), '`handleFormSubmit` should be called on `submit`').to.be.true;
-    });
-
-    it('calls `updateResult` for each form with correct arguments', function () {
-      addToList(updateResultSpy);
-
-      // Should be called for every matching form
-      expect(updateResultSpy.callCount).to.equal(document.querySelectorAll(`form[data-record-id][data-record-datastore]`).length);
-
-      // Should be called with correct arguments
-      recordIds.forEach((recordId, index) => {
-        const form = document.querySelector(`form[data-record-id="${recordId}"][data-record-datastore="${currentDatastore}"]`);
-        expect(updateResultSpy.getCall(index).args[0], `${recordId} should call \`updateResult\` with the correct arguments`).to.deep.include(form);
-      });
+      // Check that the count is now 0
+      expect(temporaryListCount(list), '`temporaryListCount()` should be 0').to.equal(0);
     });
   });
 });

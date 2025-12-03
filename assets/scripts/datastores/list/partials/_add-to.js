@@ -1,51 +1,55 @@
 import toggleBanner from './_go-to.js';
+import toggleContainerClass from '../../record/layout.js';
+import { updateButtonUI } from './add-to/_button.js';
 
 const listName = 'temporaryList';
+
+/* eslint-disable sort-keys */
+const defaultTemporaryList = {
+  catalog: {},
+  articles: {},
+  databases: {},
+  onlinejournals: {},
+  guidesandmore: {}
+};
+/* eslint-enable sort-keys */
+
+const getTemporaryList = () => {
+  const item = sessionStorage.getItem(listName);
+  // Return the parsed list or the prefilled object if `temporaryList` does not exist
+  return item ? JSON.parse(item) : defaultTemporaryList;
+};
 
 const setTemporaryList = (list) => {
   sessionStorage.setItem(listName, JSON.stringify(list));
 };
 
-const getTemporaryList = () => {
-  // Retrieve the temporary list from session storage, or return a prefilled object if it doesn't exist
-  return JSON.parse(sessionStorage.getItem(listName))
-    || ['catalog', 'articles', 'databases', 'onlinejournals', 'guidesandmore'].reduce((list, datastore) => {
-      list[datastore] = {};
-      return list;
-    }, {});
+const inTemporaryList = ({ list = getTemporaryList(), recordDatastore, recordId }) => {
+  return (
+    // Check that the datastore is in the list
+    recordDatastore in list
+    // Make sure the datastore is an object and not null
+    && (typeof list[recordDatastore] === 'object' && list[recordDatastore] !== null)
+    // Check that the record ID exists in the datastore
+    && recordId in list[recordDatastore]
+  );
 };
 
-const inTemporaryList = ({ recordDatastore, recordId }) => {
-  const list = getTemporaryList();
-  // Check if the datastore is in the list and if the recordId exists within that datastore
-  return recordDatastore in list && recordId in list[recordDatastore];
-};
-
-const temporaryListCount = () => {
+const temporaryListCount = (list = getTemporaryList()) => {
   // Count the total number of records across all datastores
-  return Object.values(getTemporaryList()).reduce((sum, datastore) => {
+  return Object.values(list).reduce((sum, datastore) => {
     return sum + Object.keys(datastore).length;
   }, 0);
 };
 
-const updateResultUI = (form) => {
+const updateResultUI = (form, updateButton = updateButtonUI) => {
   // Check if the record is already in the list
   const { recordDatastore, recordId } = form.dataset;
   const isAdded = inTemporaryList({ recordDatastore, recordId });
   // Update the container class
-  const container = document.querySelector(`.record__container[data-record-id="${recordId}"][data-record-datastore="${recordDatastore}"]`);
-  container.classList.toggle('record__container--active', isAdded);
-  // Update the button class
-  const button = form.querySelector('button');
-  button.classList.toggle('button__ghost--active', isAdded);
-  // Update the button text
-  const buttonTitle = button.getAttribute('title').replace(/Add to|Remove from/u, isAdded ? 'Remove from' : 'Add to');
-  button.setAttribute('title', buttonTitle);
-  const [buttonIcon, buttonText] = button.querySelectorAll('span');
-  buttonIcon.textContent = isAdded ? 'delete' : 'add';
-  buttonText.textContent = buttonText.textContent
-    .replace(/Add|Remove/u, isAdded ? 'Remove' : 'Add')
-    .replace(/to My Temporary List|from My Temporary List/u, isAdded ? 'from My Temporary List' : 'to My Temporary List');
+  toggleContainerClass({ isAdded, recordDatastore, recordId });
+  // Update the button
+  updateButton({ button: form.querySelector('button'), isAdded });
   // Toggle the banner
   toggleBanner(temporaryListCount());
 };
@@ -86,6 +90,7 @@ const handleFormSubmit = async (event) => {
 };
 
 const addToList = (updateResult = updateResultUI) => {
+  // ADD GETTEMPORARYLIST HERE TO PASS THROUGH
   document.body.addEventListener('submit', handleFormSubmit);
 
   // Initial UI update for all buttons
@@ -96,4 +101,14 @@ const addToList = (updateResult = updateResultUI) => {
   });
 };
 
-export { addToList, getTemporaryList, handleFormSubmit, inTemporaryList, setTemporaryList, temporaryListCount, updateResultUI };
+export {
+  addToList,
+  defaultTemporaryList,
+  getTemporaryList,
+  handleFormSubmit,
+  inTemporaryList,
+  setTemporaryList,
+  temporaryListCount,
+  toggleContainerClass,
+  updateResultUI
+};
