@@ -24,7 +24,7 @@ const setTemporaryList = (list) => {
   sessionStorage.setItem(listName, JSON.stringify(list));
 };
 
-const inTemporaryList = ({ list = getTemporaryList(), recordDatastore, recordId }) => {
+const inTemporaryList = ({ list, recordDatastore, recordId }) => {
   return (
     // Check that the datastore is in the list
     recordDatastore in list
@@ -35,26 +35,26 @@ const inTemporaryList = ({ list = getTemporaryList(), recordDatastore, recordId 
   );
 };
 
-const temporaryListCount = (list = getTemporaryList()) => {
+const temporaryListCount = (list) => {
   // Count the total number of records across all datastores
   return Object.values(list).reduce((sum, datastore) => {
     return sum + Object.keys(datastore).length;
   }, 0);
 };
 
-const updateResultUI = (form, updateButton = updateButtonUI) => {
+const updateResultUI = ({ form, list, updateButton = updateButtonUI }) => {
   // Check if the record is already in the list
   const { recordDatastore, recordId } = form.dataset;
-  const isAdded = inTemporaryList({ recordDatastore, recordId });
+  const isAdded = inTemporaryList({ list, recordDatastore, recordId });
   // Update the container class
   toggleContainerClass({ isAdded, recordDatastore, recordId });
   // Update the button
   updateButton({ button: form.querySelector('button'), isAdded });
   // Toggle the banner
-  toggleBanner(temporaryListCount());
+  toggleBanner(temporaryListCount(list));
 };
 
-const handleFormSubmit = async (event) => {
+const handleFormSubmit = async ({ event, list }) => {
   const form = event.target;
 
   if (!form.matches('.list__add-to')) {
@@ -64,11 +64,11 @@ const handleFormSubmit = async (event) => {
   event.preventDefault();
 
   const { recordDatastore, recordId } = form.dataset;
-  const list = getTemporaryList();
+  const currentList = { ...list };
 
-  if (inTemporaryList({ recordDatastore, recordId })) {
+  if (inTemporaryList({ list: currentList, recordDatastore, recordId })) {
     // If the record is already in the list, remove it
-    delete list[recordDatastore][recordId];
+    delete currentList[recordDatastore][recordId];
   } else {
     try {
       const response = await fetch(form.getAttribute('action'));
@@ -78,26 +78,33 @@ const handleFormSubmit = async (event) => {
       }
       // Add the record information to the list
       const data = await response.json();
-      list[recordDatastore][recordId] = data;
+      currentList[recordDatastore][recordId] = data;
     } catch {
       // Silent failure, so no action is needed
       return;
     }
   }
 
-  setTemporaryList(list);
-  updateResultUI(form);
+  setTemporaryList(currentList);
+  updateResultUI({ form, list: currentList });
 };
 
-const addToList = (updateResult = updateResultUI) => {
-  // ADD GETTEMPORARYLIST HERE TO PASS THROUGH
-  document.body.addEventListener('submit', handleFormSubmit);
+const addToFormSubmit = ({ list, handleSubmit = handleFormSubmit }) => {
+  // Listen for form submits
+  document.body.addEventListener('submit', (event) => {
+    return handleSubmit({ event, list });
+  });
+};
+
+const addToList = (addToForm = addToFormSubmit, list = getTemporaryList(), updateResult = updateResultUI) => {
+  // Initialize form submissions
+  addToForm({ list });
 
   // Initial UI update for all buttons
   const forms = document.querySelectorAll('.list__add-to');
   forms.forEach((form) => {
     // `updateResult` is passed in for testing purposes
-    updateResult(form);
+    updateResult({ form, list });
   });
 };
 
