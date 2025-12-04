@@ -54,15 +54,7 @@ const updateResultUI = ({ form, list, updateButton = updateButtonUI }) => {
   toggleBanner(temporaryListCount(list));
 };
 
-const handleFormSubmit = async ({ event, list }) => {
-  const form = event.target;
-
-  if (!form.matches('.list__add-to')) {
-    return;
-  }
-
-  event.preventDefault();
-
+const handleFormSubmit = async ({ form, list }) => {
   const { recordDatastore, recordId } = form.dataset;
   const currentList = { ...list };
 
@@ -92,14 +84,21 @@ const handleFormSubmit = async ({ event, list }) => {
 const addToFormSubmit = ({ list, handleSubmit = handleFormSubmit }) => {
   // Listen for form submits
   document.body.addEventListener('submit', (event) => {
-    return handleSubmit({ event, list });
+    // Get the form
+    const form = event.target;
+
+    // Return if it's not the correct form
+    if (!form.matches('.list__add-to')) {
+      return;
+    }
+
+    event.preventDefault();
+
+    handleSubmit({ form, list });
   });
 };
 
-const addToList = (addToForm = addToFormSubmit, list = getTemporaryList(), updateResult = updateResultUI) => {
-  // Initialize form submissions
-  addToForm({ list });
-
+const addToFormsUI = ({ list, updateResult = updateResultUI }) => {
   // Initial UI update for all buttons
   const forms = document.querySelectorAll('.list__add-to');
   forms.forEach((form) => {
@@ -108,11 +107,26 @@ const addToList = (addToForm = addToFormSubmit, list = getTemporaryList(), updat
   });
 };
 
+const initializeAddToList = ({ addToFuncs = { addToFormSubmit, addToFormsUI }, list }) => {
+  // Initialize all functions
+  Object.keys(addToFuncs).forEach((addToFunc) => {
+    addToFuncs[addToFunc]({ list });
+  });
+};
+
+const addToList = (list = getTemporaryList(), initializeAddToButton = initializeAddToList) => {
+  // Initialize everything needed for the `Add to...` buttons
+  initializeAddToButton({ list });
+};
+
 export {
+  addToFormSubmit,
+  addToFormsUI,
   addToList,
   defaultTemporaryList,
   getTemporaryList,
   handleFormSubmit,
+  initializeAddToList,
   inTemporaryList,
   setTemporaryList,
   temporaryListCount,
