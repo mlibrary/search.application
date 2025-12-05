@@ -46,7 +46,7 @@ describe('add to', function () {
     getFormCount = null;
   });
 
-  describe('getTemporaryList()', function () {
+  describe.only('getTemporaryList()', function () {
     let getTemporaryListStub = null;
 
     beforeEach(function () {
@@ -68,44 +68,87 @@ describe('add to', function () {
       expect(getTemporaryListStub.calledOnceWithExactly(listName), `\`${listName}\` should have been called`).to.be.true;
     });
 
-    it('should parse and return a string value from `sessionStorage.getItem`', function () {
-      // Create a string value
-      const string = 'example';
-      expect(string, 'the example should be a string').to.be.a('string');
+    describe('returning valid data', function () {
+      it('should parse and return a string value from `sessionStorage.getItem`', function () {
+        // Create and assign a string value
+        const string = 'example';
+        getTemporaryListStub.withArgs(listName).returns(`"${string}"`);
 
-      // Define `sessionStorage` with the string
-      getTemporaryListStub.withArgs(listName).returns(`"${string}"`);
+        // Assign the result
+        const result = getTemporaryList();
 
-      // Assign the functiom to a variable
-      const result = getTemporaryList();
+        // Check that the result returns the string value
+        expect(result, `the result should have returned ${string}`).to.equal(string);
+      });
 
-      // Check that the result returns the string value
-      expect(result, 'the result should have returned a string value').to.equal(string);
+      it('should parse and return an object from `sessionStorage.getItem`', function () {
+        // Create and assign an object value
+        const obj = { abc: 1, def: 'c' };
+        getTemporaryListStub.withArgs(listName).returns(JSON.stringify(obj));
+
+        // Assign the result
+        const result = getTemporaryList();
+
+        // Check that the result returns the object value
+        expect(result, 'the result should have returned the object value').to.deep.equal(obj);
+      });
     });
 
-    it('should parse and return an object from `sessionStorage.getItem`', function () {
-      // Use an object value
-      expect(global.temporaryList, 'the example should be an object').to.be.an('object');
+    describe('returning `defaultTemporaryList`', function () {
+      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns `null`', function () {
+        // Assign `null`
+        getTemporaryListStub.withArgs(listName).returns(null);
 
-      // Define `sessionStorage` with the object
-      getTemporaryListStub.withArgs(listName).returns(JSON.stringify(global.temporaryList));
+        // Assign the result
+        const result = getTemporaryList();
 
-      // Assign the functiom to a variable
-      const result = getTemporaryList();
+        // Check that the result returns `defaultTemporaryList`
+        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+      });
 
-      // Check that the result returns parsed
-      expect(result, 'the returned object should have been parsed').to.deep.equal(global.temporaryList);
-    });
+      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "undefined"', function () {
+        // Assign "undefined"
+        getTemporaryListStub.withArgs(listName).returns('undefined');
 
-    it('should return the default object if `sessionStorage.getItem` returns `null`', function () {
-      // Define `sessionStorage` with `null`
-      getTemporaryListStub.withArgs(listName).returns(null);
+        // Assign the result
+        const result = getTemporaryList();
 
-      // Assign the functiom to a variable
-      const result = getTemporaryList();
+        // Check that the result returns `defaultTemporaryList`
+        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+      });
 
-      // Check that the result returns the predefined object
-      expect(result, 'the result should have resturned the predefined object').to.deep.equal(defaultTemporaryList);
+      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "null"', function () {
+        // Assign "null"
+        getTemporaryListStub.withArgs(listName).returns('null');
+
+        // Assign the result
+        const result = getTemporaryList();
+
+        // Check that the result returns `defaultTemporaryList`
+        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+      });
+
+      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns an empty string', function () {
+        // Assign an empty string
+        getTemporaryListStub.withArgs(listName).returns('');
+
+        // Assign the result
+        const result = getTemporaryList();
+
+        // Check that the result returns `defaultTemporaryList`
+        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+      });
+
+      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns invalid JSON', function () {
+        // Assign invalid JSON
+        getTemporaryListStub.withArgs(listName).returns('not valid json');
+
+        // Assign the result
+        const result = getTemporaryList();
+
+        // Check that the result returns `defaultTemporaryList`
+        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+      });
     });
   });
 

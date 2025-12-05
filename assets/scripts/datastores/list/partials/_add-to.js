@@ -15,9 +15,20 @@ const defaultTemporaryList = {
 /* eslint-enable sort-keys */
 
 const getTemporaryList = () => {
+  // Get session storage
   const item = sessionStorage.getItem(listName);
-  // Return the parsed list or the prefilled object if `temporaryList` does not exist
-  return item ? JSON.parse(item) : defaultTemporaryList;
+
+  // Return the default list if `item` is falsy, or returned problematic string values
+  if (!item || item === 'undefined' || item === 'null') {
+    return defaultTemporaryList;
+  }
+
+  // If failing to parse, return the default list
+  try {
+    return JSON.parse(item);
+  } catch {
+    return defaultTemporaryList;
+  }
 };
 
 const setTemporaryList = (list) => {
