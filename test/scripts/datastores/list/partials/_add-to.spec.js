@@ -6,8 +6,7 @@ import {
   getTemporaryList,
   initializeAddToList,
   inTemporaryList,
-  setTemporaryList,
-  temporaryListCount
+  setTemporaryList
 } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -46,7 +45,7 @@ describe('add to', function () {
     getFormCount = null;
   });
 
-  describe.only('getTemporaryList()', function () {
+  describe('getTemporaryList()', function () {
     let getTemporaryListStub = null;
 
     beforeEach(function () {
@@ -244,31 +243,6 @@ describe('add to', function () {
 
       // Check that the result returns false
       expect(result, '`inTemporaryList` should have returned `false` if a datastore returns null').to.be.false;
-    });
-  });
-
-  describe('temporaryListCount()', function () {
-    let list = null;
-
-    beforeEach(function () {
-      list = { ...global.temporaryList };
-    });
-
-    afterEach(function () {
-      list = null;
-    });
-
-    it('should return the sum of all record IDs in each datastore', function () {
-      // Check that the count is not 0
-      expect(temporaryListCount(list), '`temporaryListCount()` should have more than 0').to.equal(5);
-    });
-
-    it('should return `0` if the list is empty', function () {
-      // Assign list to the default list
-      list = defaultTemporaryList;
-
-      // Check that the count is now 0
-      expect(temporaryListCount(list), '`temporaryListCount()` should be 0').to.equal(0);
     });
   });
 

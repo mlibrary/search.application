@@ -46,13 +46,7 @@ const inTemporaryList = ({ list, recordDatastore, recordId }) => {
   );
 };
 
-const temporaryListCount = (list) => {
-  // Count the total number of records across all datastores
-  return Object.values(list).reduce((sum, datastore) => {
-    return sum + Object.keys(datastore).length;
-  }, 0);
-};
-
+/* REFACTOR START */
 const updateResultUI = ({ form, list, updateButton = updateButtonUI }) => {
   // Check if the record is already in the list
   const { recordDatastore, recordId } = form.dataset;
@@ -62,7 +56,10 @@ const updateResultUI = ({ form, list, updateButton = updateButtonUI }) => {
   // Update the button
   updateButton({ button: form.querySelector('button'), isAdded });
   // Toggle the banner
-  toggleBanner(temporaryListCount(list));
+  const temporaryListCount = Object.values(list).reduce((sum, datastore) => {
+    return sum + Object.keys(datastore).length;
+  }, 0);
+  toggleBanner(temporaryListCount);
 };
 
 const handleFormSubmit = async ({ form, list }) => {
@@ -91,6 +88,7 @@ const handleFormSubmit = async ({ form, list }) => {
   setTemporaryList(currentList);
   updateResultUI({ form, list: currentList });
 };
+/* REFACTOR END */
 
 const addToFormSubmit = ({ list, handleSubmit = handleFormSubmit }) => {
   // Listen for form submits
@@ -140,7 +138,6 @@ export {
   initializeAddToList,
   inTemporaryList,
   setTemporaryList,
-  temporaryListCount,
   toggleContainerClass,
   updateResultUI
 };
