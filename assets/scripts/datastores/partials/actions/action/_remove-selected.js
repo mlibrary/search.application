@@ -1,33 +1,26 @@
 import { getTemporaryList, setTemporaryList } from '../../../list/partials/_add-to.js';
-import { getCheckboxes } from '../../../list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords } from '../../../list/partials/list-item/_checkbox.js';
 
-const removeSelectedButton = () => {
-  return document.querySelector('.actions button.action__remove-selected');
+const deleteSelectedRecords = ({ list, setList = setTemporaryList }) => {
+  // Remove all selected records from the temporary list
+  filterSelectedRecords().forEach((record) => {
+    const [datastore, recordId] = record.split(',');
+    delete list[datastore][recordId];
+  });
+
+  // Update temporary list
+  setList(list);
 };
 
-const removeSelected = (reloadPage = window.location.reload.bind(window.location)) => {
+const removeSelected = ({ deleteRecords = deleteSelectedRecords, list = getTemporaryList(), reloadPage = window.location.reload.bind(window.location) } = {}) => {
   // Add event listener
-  removeSelectedButton().addEventListener('click', () => {
-    // Get checkbox values
-    const records = [...getCheckboxes()]
-      .filter((checkbox) => {
-        return checkbox.checked;
-      })
-      .map((checkbox) => {
-        return checkbox.value;
-      });
+  document.querySelector('.actions button.action__remove-selected').addEventListener('click', () => {
     // Delete selected items from temporary list
-    const list = getTemporaryList();
-    records.forEach((record) => {
-      const [datastore, recordId] = record.split(',');
-      delete list[datastore][recordId];
-    });
-    // Update temporary list
-    setTemporaryList(list);
+    deleteRecords({ list });
+
     // Reload page to reflect changes
-    // `reloadPage` is passed in for testing purposes
     reloadPage();
   });
 };
 
-export { removeSelected, removeSelectedButton };
+export { deleteSelectedRecords, removeSelected };
