@@ -9,7 +9,8 @@ import {
   initializeAddToList,
   inTemporaryList,
   removeRecordFromList,
-  setTemporaryList
+  setTemporaryList,
+  updateResultUI
 } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -246,6 +247,62 @@ describe('add to', function () {
 
       // Check that the result returns false
       expect(result, '`inTemporaryList` should have returned `false` if a datastore returns null').to.be.false;
+    });
+  });
+
+  describe('updateResultUI()', function () {
+    let form = null;
+    let recordDatastore = null;
+    let recordId = null;
+    let list = null;
+    let updateUI = null;
+
+    beforeEach(function () {
+      // Grab the first form
+      [form] = getForms();
+      ({ recordDatastore, recordId } = form.dataset);
+      list = { ...global.temporaryList };
+      updateUI = {
+        inTemporaryList: sinon.stub(),
+        toggleBanner: sinon.stub(),
+        toggleContainerClass: sinon.stub(),
+        updateButtonUI: sinon.stub()
+      };
+
+      // Call the function
+      updateResultUI({ form, list, updateUI });
+    });
+
+    afterEach(function () {
+      form = null;
+      recordDatastore = null;
+      recordId = null;
+      list = null;
+      updateUI = null;
+    });
+
+    it('should call `inTemporaryList` with the correct arguments', function () {
+      // Check that `inTemporaryList` was called with the correct arguments
+      expect(updateUI.inTemporaryList.calledOnceWithExactly({ list, recordDatastore, recordId }), '`inTemporaryList` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleContainerClass` with the correct arguments', function () {
+      const isAdded = updateUI.inTemporaryList.firstCall.returnValue;
+
+      // Check that `toggleContainerClass` was called with the correct arguments
+      expect(updateUI.toggleContainerClass.calledOnceWithExactly({ isAdded, recordDatastore, recordId }), '`toggleContainerClass` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `updateButtonUI` with the correct arguments', function () {
+      const isAdded = updateUI.inTemporaryList.firstCall.returnValue;
+
+      // Check that `updateButtonUI` was called with the correct arguments
+      expect(updateUI.updateButtonUI.calledOnceWithExactly({ button: form.querySelector('button'), isAdded }), '`updateButtonUI` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleBanner`', function () {
+      // Check that `toggleBanner` was called
+      expect(updateUI.toggleBanner.calledOnce, '`toggleBanner` should have been called once').to.be.true;
     });
   });
 

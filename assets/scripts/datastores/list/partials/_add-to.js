@@ -40,19 +40,29 @@ const inTemporaryList = ({ list, recordDatastore, recordId }) => {
   return Boolean(list?.[recordDatastore]?.[recordId]);
 };
 
-const updateResultUI = ({ form, list, updateButton = updateButtonUI }) => {
+const updateUIFuncs = {
+  inTemporaryList,
+  toggleBanner,
+  toggleContainerClass,
+  updateButtonUI
+};
+
+const updateResultUI = ({ form, list, updateUI = updateUIFuncs }) => {
   // Check if the record is already in the list
   const { recordDatastore, recordId } = form.dataset;
-  const isAdded = inTemporaryList({ list, recordDatastore, recordId });
+  const isAdded = updateUI.inTemporaryList({ list, recordDatastore, recordId });
+
   // Update the container class
-  toggleContainerClass({ isAdded, recordDatastore, recordId });
+  updateUI.toggleContainerClass({ isAdded, recordDatastore, recordId });
+
   // Update the button
-  updateButton({ button: form.querySelector('button'), isAdded });
+  updateUI.updateButtonUI({ button: form.querySelector('button'), isAdded });
+
   // Toggle the banner
   const temporaryListCount = Object.values(list).reduce((sum, datastore) => {
     return sum + Object.keys(datastore).length;
   }, 0);
-  toggleBanner(temporaryListCount);
+  updateUI.toggleBanner(temporaryListCount);
 };
 
 const removeRecordFromList = ({ list, recordDatastore, recordId }) => {
