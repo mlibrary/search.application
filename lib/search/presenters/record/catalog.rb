@@ -145,6 +145,10 @@ module Search
             Holdings.new(@record)
           end
 
+          def ris
+            @record.citation.ris
+          end
+
           def csl
             @record.citation.csl
           end
@@ -152,7 +156,7 @@ module Search
           def shelf_browse
             @shelf_browse ||= begin
               result = nil
-              Yabeda.shelf_browse_api_duration_seconds.measure do
+              Yabeda.shelf_browse_api_duration.measure do
                 result = ShelfBrowse.for(call_number: @record.bib.call_number&.first&.text)
               end
               result
@@ -365,7 +369,7 @@ module Search
               end,
               url: "#{S.base_url}/catalog/record/#{id}",
               citation: {
-                ris: @record.citation.ris,
+                ris: ris,
                 csl: csl
               }
             }

@@ -13,19 +13,19 @@ module Metrics::Yabeda
       counter :http_server_requests_total,
         comment: "The total number of http requests handled by the Search::Application",
         tags: [:method, :datastore, :route, :code]
-      histogram :http_server_request_duration_seconds do
+      histogram :http_server_request_duration do
         comment "The HTTP response duration of requests to Search::Application"
         tags [:method, :datastore, :route]
         unit :seconds
         buckets [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 15, 20, 30]
       end
-      histogram :shelf_browse_api_duration_seconds do
+      histogram :shelf_browse_api_duration do
         comment "The length of time to return data for shelf browse"
         tags []
         unit :seconds
         buckets [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 15, 20, 30]
       end
-      histogram :catalog_api_full_record_duration_seconds do
+      histogram :catalog_api_full_record_duration do
         comment "The length of time to get a full record form the catalog api"
         tags []
         unit :seconds
@@ -69,7 +69,7 @@ class Metrics::Middleware
     }
 
     Yabeda.http_server_requests_total.increment(tags.merge({code: code}))
-    Yabeda.http_server_request_duration_seconds.measure(tags, duration)
+    Yabeda.http_server_request_duration.measure(tags, duration)
   end
 end
 
