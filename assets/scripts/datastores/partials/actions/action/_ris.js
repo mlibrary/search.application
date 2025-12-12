@@ -9,32 +9,34 @@ const generateRISFileName = () => {
   return `MyTemporaryList-${formattedDate}.ris`;
 };
 
-const generateRISFile = () => {
-  return new Blob([selectedCitations('ris').join('\n\n')], { type: 'application/x-research-info-systems' });
+const generateRISFile = ({ citations = selectedCitations, list }) => {
+  return new Blob([citations({ list, type: 'ris' }).join('\n\n')], { type: 'application/x-research-info-systems' });
 };
 
-const generateRISDownloadAnchor = () => {
+const generateRISDownloadAnchor = ({ generateFile = generateRISFile, generateFileName = generateRISFileName, list }) => {
   const anchor = document.createElement('a');
-  anchor.href = URL.createObjectURL(generateRISFile());
-  anchor.download = generateRISFileName();
+  anchor.href = URL.createObjectURL(generateFile({ list }));
+  anchor.download = generateFileName();
   anchor.click();
   URL.revokeObjectURL(anchor.href);
 };
 
-const downloadRISFormSubmit = (event) => {
+const downloadRISFormSubmit = ({ event, generateDownloadAnchor = generateRISDownloadAnchor, list }) => {
   event.preventDefault();
 
-  return generateRISDownloadAnchor();
+  return generateDownloadAnchor({ list });
 };
 
-const downloadTemporaryListRIS = (download = downloadRISFormSubmit) => {
+const downloadTemporaryListRIS = ({ download = downloadRISFormSubmit, list, viewingList = viewingTemporaryList }) => {
   // Only run if viewing temporary list
-  if (!viewingTemporaryList()) {
+  if (!viewingList()) {
     return;
   }
 
   // `download` is passed in for testing purposes
-  document.querySelector('form.action__ris').addEventListener('submit', download);
+  document.querySelector('form.action__ris').addEventListener('submit', (event) => {
+    return download({ event, list });
+  });
 };
 
 export { downloadRISFormSubmit, downloadTemporaryListRIS, generateRISDownloadAnchor, generateRISFile, generateRISFileName };

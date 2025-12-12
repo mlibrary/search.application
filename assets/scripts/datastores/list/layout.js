@@ -1,7 +1,6 @@
 import { actionsPanelText } from '../partials/actions/_summary.js';
 import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
-import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { selectAllState } from './partials/_select-all.js';
@@ -124,7 +123,7 @@ const temporaryListFunctions = {
   toggleListElements
 };
 
-const temporaryList = (list = getTemporaryList(), listFunctions = temporaryListFunctions) => {
+const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) => {
   // Toggle what should and should not be displaying
   listFunctions.toggleListElements(list);
 

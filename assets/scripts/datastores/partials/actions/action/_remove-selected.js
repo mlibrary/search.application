@@ -1,5 +1,5 @@
-import { getTemporaryList, setTemporaryList } from '../../../list/partials/_add-to.js';
 import { filterSelectedRecords } from '../../../list/partials/list-item/_checkbox.js';
+import { setTemporaryList } from '../../../list/partials/_add-to.js';
 
 const deleteSelectedRecords = ({ list, setList = setTemporaryList }) => {
   // Remove all selected records from the temporary list
@@ -12,7 +12,7 @@ const deleteSelectedRecords = ({ list, setList = setTemporaryList }) => {
   setList(list);
 };
 
-const removeSelected = ({ deleteRecords = deleteSelectedRecords, list = getTemporaryList(), reloadPage = window.location.reload.bind(window.location) } = {}) => {
+const removeSelected = ({ deleteRecords = deleteSelectedRecords, list, reloadPage = window.location.reload.bind(window.location) } = {}) => {
   // Add event listener
   document.querySelector('.actions button.action__remove-selected').addEventListener('click', () => {
     // Delete selected items from temporary list

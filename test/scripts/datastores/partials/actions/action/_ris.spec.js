@@ -96,28 +96,69 @@ describe('RIS', function () {
   });
 
   describe('generateRISFile', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        list: global.temporaryList
+      };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
     it('should return a Blob object', function () {
-      expect(generateRISFile(), '`generateRISFile()` should return a Blob').to.be.instanceOf(Blob);
+      expect(generateRISFile(args), '`generateRISFile()` should return a Blob').to.be.instanceOf(Blob);
     });
 
-    it('should return an `ris` type', function () {
-      const result = generateRISFile();
-      expect(result.type, 'the type should return `application/x-research-info-systems`').to.equal('application/x-research-info-systems');
+    it('should return correct type', function () {
+      // Expected type
+      const type = 'application/x-research-info-systems';
+
+      // Call the function
+      const result = generateRISFile(args);
+
+      // Check that the type is correct
+      expect(result.type, `the Blob \`type\` property should return \`${type}\``).to.equal(type);
     });
 
-    it('should return the generated RIS content', function () {
-      const result = generateRISFile();
+    it('should call `selectedCitations` with the correct parameters', function () {
+      // Create a spy
+      const selectedCitationsSpy = sinon.spy(selectedCitations);
+
+      // Call the function
+      generateRISFile({ citations: selectedCitationsSpy, list: args.list });
+
+      // Check that the spy was called with the correct parameters
+      expect(selectedCitationsSpy.calledWith({ list: args.list, type: 'ris' }), '`selectedCitations` should have been called with the correct parameters').to.be.true;
+    });
+
+    it('should return a Blob with the correct content', function () {
+      // Call the function
+      const result = generateRISFile(args);
+
+      // Read the Blob content
       const reader = new window.FileReader();
+
+      // Return a promise to wait for the async read
       return new Promise((resolve, reject) => {
+        // Setup onload handler
         reader.onload = function () {
           try {
+            // Check that the content is correct
             expect(reader.result, 'the Blob `text` property should return a string').to.be.a.string;
-            expect(reader.result, 'the Blob `text` property should return a joined string of `selectedCitations(\'ris\')`').to.deep.equal(selectedCitations('ris').join('\n\n'));
+            // Check that the content matches the joined selected citations
+            expect(reader.result, 'the Blob `text` property should return a joined string of `selectedCitations(\'ris\')`').to.deep.equal(selectedCitations({ list: args.list, type: 'ris' }).join('\n\n'));
+            // Resolve the promise
             resolve();
           } catch (err) {
+            // Reject on error
             reject(err);
           }
         };
+
+        // Read the Blob as text
         reader.readAsText(result);
       });
     });

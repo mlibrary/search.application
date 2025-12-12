@@ -1,5 +1,3 @@
-import { getTemporaryList } from '../_add-to.js';
-
 const checkboxSelector = 'ol.list__items input[type="checkbox"].list__item--checkbox';
 
 const getCheckboxes = () => {
@@ -24,19 +22,16 @@ const someCheckboxesChecked = (checked = false) => {
   ));
 };
 
-const selectedCitations = (type) => {
+const selectedCitations = ({ list, type }) => {
   // Make sure `type` is either `csl` or `ris`
   if (!type || !['csl', 'ris'].includes(type)) {
     return null;
   }
 
-  // Save the temporary list
-  const temporaryList = getTemporaryList();
-
   // Create an array of the citation type of all selected records
   return filterSelectedRecords().map((record) => {
     const [datastore, recordId] = record.split(',');
-    return temporaryList[datastore][recordId].citation[type];
+    return list[datastore][recordId].citation[type];
   });
 };
 
