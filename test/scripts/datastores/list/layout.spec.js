@@ -213,6 +213,7 @@ describe('layout', function () {
           <div class="list__item--header">
             <input type="checkbox" class="list__item--checkbox" value="" aria-label="Select record">
             <h3 class="list__item--title">
+              <span class="list__item--title-number">0.</span>
               <a href="http://example.com/" class="list__item--title-original">
                 Original Title
               </a>

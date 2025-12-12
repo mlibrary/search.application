@@ -52,8 +52,11 @@ $class: '.list__item';
     }
     #{$class}--title {
       margin: 0;
+      #{$class}--title-number,
       #{$class}--title-transliterated {
         color: var(--search-color-grey-500);
+      }
+      #{$class}--title-transliterated {
         display: block;
       }
     }

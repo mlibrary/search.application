@@ -1,4 +1,16 @@
-const listItemTitle = ({ itemTitle, title, url }) => {
+const listItemCheckbox = ({ datastore, itemCheckbox, recordId, title }) => {
+  // Update the value
+  itemCheckbox.value = `${datastore},${recordId}`;
+
+  // Update the label
+  itemCheckbox.setAttribute('aria-label', `Select ${title}`);
+};
+
+const listItemTitle = ({ index, itemTitle, title, url }) => {
+  // Update the number
+  const originalNumber = itemTitle.querySelector('.list__item--title-number');
+  originalNumber.textContent = `${index + 1}.`;
+
   // Update original title
   const originalTitle = itemTitle.querySelector('.list__item--title-original');
   originalTitle.href = url;
@@ -44,7 +56,13 @@ const listItemMetadata = ({ itemTable, metadata }) => {
   row.remove();
 };
 
-const listItem = ({ datastore, record, recordId }) => {
+const listItemUpdates = {
+  listItemCheckbox,
+  listItemMetadata,
+  listItemTitle
+};
+
+const listItem = ({ datastore, index, record, recordId, updates = listItemUpdates }) => {
   // Clone the list item template
   const partialClass = 'list__item--clone';
   const listItemPartial = document.querySelector(`.${partialClass}`);
@@ -54,17 +72,17 @@ const listItem = ({ datastore, record, recordId }) => {
   // Add the record ID as a data attribute
   clonedListItem.setAttribute('data-record-datastore', datastore);
   clonedListItem.setAttribute('data-record-id', recordId);
-  // Update the checkbox value
-  const checkbox = clonedListItem.querySelector('.list__item--checkbox');
-  checkbox.value = `${datastore},${recordId}`;
+  // Update the checkbox
   const { metadata, title, url } = record;
+  const itemCheckbox = clonedListItem.querySelector('.list__item--checkbox');
+  updates.listItemCheckbox({ datastore, itemCheckbox, recordId, title: title.original });
   // Update the title
   const itemTitle = clonedListItem.querySelector('.list__item--title');
-  listItemTitle({ itemTitle, title, url });
+  updates.listItemTitle({ index, itemTitle, title, url });
   // Update the metadata
   const itemTable = clonedListItem.querySelector('table.metadata > tbody');
-  listItemMetadata({ itemTable, metadata });
+  updates.listItemMetadata({ itemTable, metadata });
   return clonedListItem;
 };
 
-export { listItem, listItemMetadata, listItemTitle };
+export { listItem, listItemCheckbox, listItemMetadata, listItemTitle };
