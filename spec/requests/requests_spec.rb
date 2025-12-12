@@ -154,7 +154,7 @@ RSpec.describe "requests" do
       end
     end
   end
-  context "/catalog/record/:bib_id" do
+  context "/catalog/record/:id" do
     it "shows the catalog record page" do
       bib_id = "9912345"
       data = create(:catalog_api_record)
@@ -166,6 +166,57 @@ RSpec.describe "requests" do
       get "/catalog/record/#{bib_id}"
       expect(last_response.status).to eq(200)
       expect(last_response.body).to include(data["title"][0]["original"]["text"])
+    end
+  end
+  context "/catalog/record/:bib_id/ris" do
+    it "returns an ris file" do
+      citation = {
+        "citation" => {
+          "tagged" => [
+            {
+              "content" => "MUSIC",
+              "ris" => [
+                "TY"
+              ],
+              "meta" => []
+            },
+            {
+              "content" => "Some Author Name",
+              "ris" => [
+                "AU"
+              ],
+              "meta" => ["author"]
+            },
+            {
+              "content" => "",
+              "ris" => [
+                "ER"
+              ],
+              "meta" => []
+            }
+          ],
+          "csl" => {
+            "id" => "99mms_id",
+            "type" => "book",
+            "title" => "The title of the book"
+          }
+        }
+      }
+      data = create(:catalog_api_record)
+      bib_id = data["id"]
+      data["citation"] = citation["citation"]
+      stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
+        .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
+      get "/catalog/record/#{bib_id}/ris"
+      expect(last_response.headers["Content-Type"]).to eq("application/x-research-info-systems")
+      expect(last_response.headers["Content-Disposition"]).to include("#{bib_id}.ris")
+    end
+    it "redirects to past activity when there is network timeout" do
+      bib_id = "9912345"
+      stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
+        .to_timeout
+      get "/catalog/record/#{bib_id}/ris"
+      expect(last_response.status).to eq(302)
     end
   end
 end
