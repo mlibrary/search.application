@@ -36,17 +36,10 @@ const setTemporaryList = (list) => {
 };
 
 const inTemporaryList = ({ list, recordDatastore, recordId }) => {
-  return (
-    // Check that the datastore is in the list
-    recordDatastore in list
-    // Make sure the datastore is an object and not null
-    && (typeof list[recordDatastore] === 'object' && list[recordDatastore] !== null)
-    // Check that the record ID exists in the datastore
-    && recordId in list[recordDatastore]
-  );
+  // Check that the datastore exists in the list, and the record ID exists within the datastore
+  return Boolean(list?.[recordDatastore]?.[recordId]);
 };
 
-/* REFACTOR START */
 const updateResultUI = ({ form, list, updateButton = updateButtonUI }) => {
   // Check if the record is already in the list
   const { recordDatastore, recordId } = form.dataset;
@@ -62,33 +55,61 @@ const updateResultUI = ({ form, list, updateButton = updateButtonUI }) => {
   toggleBanner(temporaryListCount);
 };
 
-const handleFormSubmit = async ({ form, list }) => {
-  const { recordDatastore, recordId } = form.dataset;
-  const currentList = { ...list };
+const removeRecordFromList = ({ list, recordDatastore, recordId }) => {
+  const updatedList = { ...list };
+  if (updatedList[recordDatastore] && updatedList[recordDatastore][recordId]) {
+    delete updatedList[recordDatastore][recordId];
+  }
+  return updatedList;
+};
 
-  if (inTemporaryList({ list: currentList, recordDatastore, recordId })) {
-    // If the record is already in the list, remove it
-    delete currentList[recordDatastore][recordId];
-  } else {
-    try {
-      const response = await fetch(form.getAttribute('action'));
-      if (!response.ok) {
-        // Do not add to the list if the fetch fails
-        return;
-      }
-      // Add the record information to the list
-      const data = await response.json();
-      currentList[recordDatastore][recordId] = data;
-    } catch {
-      // Silent failure, so no action is needed
-      return;
+const fetchAndAddRecord = async ({ list, recordDatastore, recordId, url }) => {
+  const updatedList = { ...list };
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      // Return the original list if the fetch fails
+      return updatedList;
     }
+    // Add the record information to the list
+    const data = await response.json();
+    updatedList[recordDatastore][recordId] = data;
+  } catch {
+    // Silent failure, so no action is needed
+    return updatedList;
   }
 
-  setTemporaryList(currentList);
-  updateResultUI({ form, list: currentList });
+  return updatedList;
 };
-/* REFACTOR END */
+
+const formSubmitFuncs = {
+  fetchAndAddRecord,
+  inTemporaryList,
+  removeRecordFromList,
+  setTemporaryList,
+  updateResultUI
+};
+
+const handleFormSubmit = async ({ form, list, submitFuncs = formSubmitFuncs }) => {
+  const { recordDatastore, recordId } = form.dataset;
+  let updatedList = { ...list };
+
+  // Update the list
+  if (submitFuncs.inTemporaryList({ list: updatedList, recordDatastore, recordId })) {
+    // If the record is already in the list, remove it
+    updatedList = submitFuncs.removeRecordFromList({ list: updatedList, recordDatastore, recordId });
+  } else {
+    // Add the record to the list
+    updatedList = await submitFuncs.fetchAndAddRecord({ list: updatedList, recordDatastore, recordId, url: form.action });
+  }
+
+  // Set `sessionStorage`
+  submitFuncs.setTemporaryList(updatedList);
+
+  // Update the UI
+  submitFuncs.updateResultUI({ form, list: updatedList });
+};
 
 const addToFormSubmit = ({ list, handleSubmit = handleFormSubmit }) => {
   // Listen for form submits
@@ -133,10 +154,12 @@ export {
   addToFormsUI,
   addToList,
   defaultTemporaryList,
+  fetchAndAddRecord,
   getTemporaryList,
   handleFormSubmit,
   initializeAddToList,
   inTemporaryList,
+  removeRecordFromList,
   setTemporaryList,
   toggleContainerClass,
   updateResultUI

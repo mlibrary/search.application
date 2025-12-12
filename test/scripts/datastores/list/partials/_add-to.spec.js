@@ -3,9 +3,12 @@ import {
   addToFormsUI,
   addToList,
   defaultTemporaryList,
+  fetchAndAddRecord,
   getTemporaryList,
+  handleFormSubmit,
   initializeAddToList,
   inTemporaryList,
+  removeRecordFromList,
   setTemporaryList
 } from '../../../../../assets/scripts/datastores/list/partials/_add-to.js';
 import { expect } from 'chai';
@@ -243,6 +246,187 @@ describe('add to', function () {
 
       // Check that the result returns false
       expect(result, '`inTemporaryList` should have returned `false` if a datastore returns null').to.be.false;
+    });
+  });
+
+  describe('removeRecordFromList()', function () {
+    let list = null;
+    let recordDatastore = null;
+    let recordId = null;
+    let args = null;
+
+    beforeEach(function () {
+      list = { datastore: { recordId: {} } };
+      [recordDatastore] = Object.keys(list);
+      [recordId] = Object.keys(list[recordDatastore]);
+
+      args = { list, recordDatastore, recordId };
+
+      // Check that the record exists in the list before testing
+      expect(list[recordDatastore][recordId], 'the record should exist in the list before testing').to.not.be.null;
+    });
+
+    afterEach(function () {
+      list = null;
+      recordDatastore = null;
+      recordId = null;
+      args = null;
+    });
+
+    it('should remove the record from the datastore in the list', function () {
+      // Assign the result
+      const updatedList = removeRecordFromList(args);
+
+      // eslint-disable-next-line no-console
+      console.log(updatedList, list);
+      // Check that the record no longer exists in the udated list
+      expect(updatedList[recordDatastore][recordId], 'the record should no longer exist in the list').to.be.undefined;
+    });
+
+    it('should return the original list if the record does not exist in the datastore', function () {
+      // Assign the result
+      const updatedList = removeRecordFromList({ ...args, recordId: 'non-existent' });
+
+      // Check that the list remains the same
+      expect(updatedList, 'the list should remain the same').to.deep.equal(list);
+    });
+
+    it('should return the original list if the datastore does not exist in the list', function () {
+      // Assign the result
+      const updatedList = removeRecordFromList({ ...args, recordDatastore: 'non-existent' });
+
+      // Check that the list remains the same
+      expect(updatedList, 'the list should remain the same').to.deep.equal(list);
+    });
+  });
+
+  describe('fetchAndAddRecord()', function () {
+    let fetchStub = null;
+    let list = null;
+    let recordDatastore = null;
+    let recordId = null;
+    let args = null;
+
+    beforeEach(function () {
+      fetchStub = sinon.stub(global, 'fetch');
+      list = { datastore: { recordId: {} } };
+      [recordDatastore] = Object.keys(list);
+      [recordId] = Object.keys(list[recordDatastore]);
+
+      args = { list, recordDatastore, recordId, url: `/${recordDatastore}/record/${recordId}/brief` };
+    });
+
+    afterEach(function () {
+      fetchStub.restore();
+      list = null;
+      recordDatastore = null;
+      recordId = null;
+      args = null;
+    });
+
+    it('should fetch the record and add it to the list', async function () {
+      // Mock a successful fetch response
+      const mockResponse = new Response(
+        JSON.stringify({ data: 'record data' }),
+        {
+          headers: { 'Content-type': 'application/json' },
+          status: 200
+        }
+      );
+      fetchStub.resolves(mockResponse);
+
+      // Call the function
+      const updatedList = await fetchAndAddRecord(args);
+
+      // Check that the record was added to the list
+      expect(updatedList[recordDatastore][recordId], 'the record should have been added to the list').to.deep.equal({ data: 'record data' });
+    });
+
+    it('should return the original list if the fetch fails', async function () {
+      // Mock a failed fetch response
+      const mockResponse = new Response(null, { status: 404 });
+      fetchStub.resolves(mockResponse);
+
+      // Call the function
+      const updatedList = await fetchAndAddRecord(args);
+
+      // Check that the list remains unchanged
+      expect(updatedList, 'the list should remain unchanged').to.deep.equal(list);
+    });
+
+    it('should return the original list if an error occurs during fetch', async function () {
+      // Mock a fetch error
+      fetchStub.rejects(new Error('Network error'));
+
+      // Call the function
+      const updatedList = await fetchAndAddRecord(args);
+
+      // Check that the list remains unchanged
+      expect(updatedList, 'the list should remain unchanged').to.deep.equal(list);
+    });
+  });
+
+  describe('handleFormSubmit()', function () {
+    let form = null;
+    let list = null;
+    let submitFuncs = null;
+    let args = null;
+
+    beforeEach(function () {
+      // Grab the first form
+      [form] = getForms();
+      list = { ...global.temporaryList };
+      submitFuncs = {
+        fetchAndAddRecord: sinon.stub().resolves({}),
+        inTemporaryList: sinon.stub().returns(true),
+        removeRecordFromList: sinon.stub().returns({}),
+        setTemporaryList: sinon.stub(),
+        updateResultUI: sinon.stub()
+      };
+
+      args = { form, list, submitFuncs };
+    });
+
+    afterEach(function () {
+      form = null;
+      list = null;
+      submitFuncs = null;
+      args = null;
+    });
+
+    it('should call the appropriate functions no matter the record is in the list or not', async function () {
+      // Call the function
+      await handleFormSubmit(args);
+
+      // Check that the appropriate functions were called
+      ['inTemporaryList', 'setTemporaryList', 'updateResultUI'].forEach((func) => {
+        expect(submitFuncs[func].calledOnce, `\`${func}\` should have been called once`).to.be.true;
+      });
+    });
+
+    it('should call the appropriate function to remove a record if it is already in the list', async function () {
+      // Call the function
+      await handleFormSubmit(args);
+
+      // Check that the appropriate function was called
+      expect(submitFuncs.fetchAndAddRecord.notCalled, '`fetchAndAddRecord` should not have been called').to.be.true;
+
+      // Check that the remove function was called
+      expect(submitFuncs.removeRecordFromList.calledOnce, '`removeRecordFromList` should have been called once').to.be.true;
+    });
+
+    it('should call the appropriate function to add a record if it is not already in the list', async function () {
+      // Create stubs for the submit functions
+      submitFuncs.inTemporaryList = sinon.stub().returns(false);
+
+      // Call the function
+      await handleFormSubmit(args);
+
+      // Check that the appropriate function was called
+      expect(submitFuncs.fetchAndAddRecord.calledOnce, '`fetchAndAddRecord` should have been called once').to.be.true;
+
+      // Check that the remove function was not called
+      expect(submitFuncs.removeRecordFromList.notCalled, '`removeRecordFromList` should not have been called').to.be.true;
     });
   });
 
