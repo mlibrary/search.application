@@ -4,6 +4,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require "services"
 require "yaml"
 require "active_support"
+require "sidekiq"
 
 module Search
 end

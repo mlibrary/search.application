@@ -1,6 +1,12 @@
 class Search::Email
+  include Sidekiq::Job
+
   def body
     raise NotImplementedError
+  end
+
+  def perform
+    puts "hey there"
   end
 
   def send(to:)
