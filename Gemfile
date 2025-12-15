@@ -8,6 +8,7 @@ gem "canister"
 gem "omniauth"
 gem "omniauth_openid_connect"
 gem "ostruct"
+gem "sidekiq"
 gem "benchmark"
 gem "alma_rest_client",
   git: "https://github.com/mlibrary/alma_rest_client",
