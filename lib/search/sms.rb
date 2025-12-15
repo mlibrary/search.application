@@ -3,6 +3,14 @@ class Search::SMS
     raise NotImplementedError
   end
 
+  def self.send_message(phone:, message:, client: S.twilio_client)
+    client.messages.create(
+      to: phone,
+      body: message,
+      messaging_service_sid: S.twilio_messaging_service_sid
+    )
+  end
+
   def send(phone:, client: S.twilio_client)
     client.messages.create(
       to: phone,
@@ -26,19 +34,19 @@ class Search::SMS
       when 0
         <<~TXT.strip
           Title: #{title}
-          Link: #{url} 
+          Link: #{url}
         TXT
       when 1
         <<~TXT.strip
           Title: #{title}
           Location: #{location}
           Call Number: #{call_number}
-          Catalog Record: #{url} 
+          Catalog Record: #{url}
         TXT
       else
         <<~TXT.strip
           Title: #{title}
-          There are multiple items available; see the catalog record for a list: #{url} 
+          There are multiple items available; see the catalog record for a list: #{url}
         TXT
       end
     end

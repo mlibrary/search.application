@@ -24,38 +24,38 @@ RSpec.describe "sms and email requests" do
       .to_return(status: 200, body: [], headers: {})
   end
 
-  context "POST /catalog/record/:id/sms accept json" do
-    it "returns an error for a not logged in user" do
-      env "rack.session", @session
-      post "/catalog/record/some_id/sms", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
-      body = JSON.parse(last_response.body)
-      expect(body["code"]).to eq(403)
-      expect(body["message"]).to eq("User must be logged in")
-    end
-    it "returns success message when successful" do
-      @session[:logged_in] = true
-      env "rack.session", @session
-      stub_catalog_record_request
+  # context "POST /catalog/record/:id/sms accept json" do
+  # it "returns an error for a not logged in user" do
+  # env "rack.session", @session
+  # post "/catalog/record/some_id/sms", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
+  # body = JSON.parse(last_response.body)
+  # expect(body["code"]).to eq(403)
+  # expect(body["message"]).to eq("User must be logged in")
+  # end
+  # it "returns success message when successful" do
+  # @session[:logged_in] = true
+  # env "rack.session", @session
+  # stub_catalog_record_request
 
-      post "/catalog/record/some_id/sms", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
+  # post "/catalog/record/some_id/sms", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
 
-      body = JSON.parse(last_response.body)
-      expect(body["code"]).to eq(202)
-      expect(body["message"]).to eq("SMS message has been sent")
-    end
+  # body = JSON.parse(last_response.body)
+  # expect(body["code"]).to eq(202)
+  # expect(body["message"]).to eq("SMS message has been sent")
+  # end
 
-    it "returns error message when twilio client raises an error" do
-      @session[:logged_in] = true
-      env "rack.session", @session
-      stub_catalog_record_request
+  # it "returns error message when twilio client raises an error" do
+  # @session[:logged_in] = true
+  # env "rack.session", @session
+  # stub_catalog_record_request
 
-      post "/catalog/record/some_id/sms", {phone: "bad_number"}, {"HTTP_ACCEPT" => "application/json"}
+  # post "/catalog/record/some_id/sms", {phone: "bad_number"}, {"HTTP_ACCEPT" => "application/json"}
 
-      body = JSON.parse(last_response.body)
-      expect(body["code"]).to eq(400)
-      expect(body["message"]).to eq("Something went wrong")
-    end
-  end
+  # body = JSON.parse(last_response.body)
+  # expect(body["code"]).to eq(400)
+  # expect(body["message"]).to eq("Something went wrong")
+  # end
+  # end
   context "POST /catalog/record/:id/sms accept html" do
     it "returns an error for a not logged in user" do
       env "rack.session", @session
