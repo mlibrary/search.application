@@ -93,7 +93,7 @@ const defaultActions = {
   }
 };
 
-const handleSelectionChange = (actions) => {
+const handleSelectionChange = ({ actions, list }) => {
   // Watch for changes to the list and update accordingly
   document.querySelector('.list').addEventListener('change', (event) => {
     if (event.target.matches(`input[type="checkbox"].list__item--checkbox, .select-all > input[type="checkbox"]`)) {
@@ -101,20 +101,20 @@ const handleSelectionChange = (actions) => {
       actions.actionsPanelText();
       actions.selectAllState();
       actions.disableActionTabs();
-      actions.displayCSLData();
+      actions.displayCSLData({ list });
       actions.regenerateCitations();
     }
   });
 };
 
-const initializeNonEmptyListFunctions = (actions = defaultActions, handleChange = handleSelectionChange) => {
+const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChange = handleSelectionChange, list } = {}) => {
   // Update Actions panel
   actions.selectedText();
   actions.actionsPanelText();
-  actions.displayCSLData();
+  actions.displayCSLData({ list });
 
   // `handleChange` is passed in for testing purposes
-  handleChange(actions);
+  handleChange({ actions, list });
 };
 
 const temporaryListFunctions = {
@@ -135,7 +135,7 @@ const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) =>
     return;
   }
 
-  listFunctions.initializeNonEmptyListFunctions();
+  listFunctions.initializeNonEmptyListFunctions({ list });
 };
 
 export { createDatastoreList, datastoreHeading, handleSelectionChange, initializeNonEmptyListFunctions, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };
