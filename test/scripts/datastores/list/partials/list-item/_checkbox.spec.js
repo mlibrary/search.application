@@ -104,34 +104,35 @@ describe('checkbox', function () {
   });
 
   describe('selectedCitations', function () {
-    beforeEach(function () {
-      global.sessionStorage = window.sessionStorage;
+    let args = null;
 
-      // Set a temporary list in session storage
-      global.sessionStorage.setItem('temporaryList', JSON.stringify(global.temporaryList));
+    beforeEach(function () {
+      args = {
+        list: global.temporaryList,
+        type: 'csl'
+      };
     });
 
     afterEach(function () {
-      // Cleanup
-      delete global.sessionStorage;
+      args = null;
     });
 
     it('should return `null` if no type is provided', function () {
-      expect(selectedCitations(), 'the return should be `null` if no type is provided').to.be.null;
+      expect(selectedCitations({ list: args.list }), 'the return should be `null` if no type is provided').to.be.null;
     });
 
     it('should return `null` if the incorrect type is provided', function () {
-      expect(selectedCitations('wrong type'), 'the return should be `null` if the incorrect type is provided').to.be.null;
+      expect(selectedCitations({ ...args, type: 'wrong type' }), 'the return should be `null` if the incorrect type is provided').to.be.null;
     });
 
     it('should return an array', function () {
-      expect(selectedCitations('csl'), '`selectedCitations(type)` should return an array').to.be.an('array');
+      expect(selectedCitations(args), '`selectedCitations(type)` should return an array').to.be.an('array');
     });
 
     it('should return the correct citation type', function () {
       ['csl', 'ris'].forEach((type) => {
         const [datastore, recordId] = getCheckedCheckboxes()[0].value.split(',');
-        expect(selectedCitations(type)[0], `\`citation.${type}\` values should be returned for each selected record`).to.deep.equal(global.temporaryList[datastore][recordId].citation[type]);
+        expect(selectedCitations({ ...args, type })[0], `\`citation.${type}\` values should be returned for each selected record`).to.deep.equal(global.temporaryList[datastore][recordId].citation[type]);
       });
     });
   });

@@ -626,15 +626,23 @@ describe('add to', function () {
   });
 
   describe('addToList()', function () {
-    let mockList = null;
+    let args = null;
     let initializeAddToButtonStub = null;
 
     beforeEach(function () {
-      mockList = { foo: 'bar' };
       initializeAddToButtonStub = sinon.stub();
+      args = {
+        initializeAddToButton: initializeAddToButtonStub,
+        list: { foo: 'bar' }
+      };
 
       // Call the function
-      addToList(mockList, initializeAddToButtonStub);
+      addToList(args);
+    });
+
+    afterEach(function () {
+      args = null;
+      initializeAddToButtonStub = null;
     });
 
     it('should call `initializeAddToButton`', function () {
@@ -644,7 +652,7 @@ describe('add to', function () {
 
     it('should provided the list argument for `initializeAddToButton`', function () {
       // Check that the arguments provided equal to the list
-      expect(initializeAddToButtonStub.firstCall.args[0], '`initializeAddToButton` should have received the argument of the provided list').to.deep.equal({ list: mockList });
+      expect(initializeAddToButtonStub.firstCall.args[0], '`initializeAddToButton` should have received the argument of the provided list').to.deep.equal({ list: args.list });
     });
   });
 });

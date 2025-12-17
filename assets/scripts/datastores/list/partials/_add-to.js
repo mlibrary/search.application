@@ -154,7 +154,7 @@ const initializeAddToList = ({ addToFuncs = { addToFormSubmit, addToFormsUI }, l
   });
 };
 
-const addToList = (list = getTemporaryList(), initializeAddToButton = initializeAddToList) => {
+const addToList = ({ initializeAddToButton = initializeAddToList, list }) => {
   // Initialize everything needed for the `Add to...` buttons
   initializeAddToButton({ list });
 };

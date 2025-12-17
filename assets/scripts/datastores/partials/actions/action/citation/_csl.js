@@ -1,22 +1,16 @@
 import { selectedCitations } from '../../../../list/partials/list-item/_checkbox.js';
-import { viewingTemporaryList } from '../../../../list/layout.js';
 
 const getCSLTextarea = () => {
   return document.querySelector('.citation textarea.citation__csl');
 };
 
-const displayCSLData = () => {
-  // Only run if viewing the temporary list
-  if (!viewingTemporaryList()) {
-    return;
-  }
-
+const displayCSLData = ({ getCitations = selectedCitations, list, textArea = getCSLTextarea }) => {
   // Apply the data to the textarea
-  getCSLTextarea().textContent = JSON.stringify(selectedCitations('csl'));
+  textArea().textContent = JSON.stringify(getCitations({ list, type: 'csl' }));
 };
 
-const cslData = () => {
-  return JSON.parse(getCSLTextarea().textContent);
+const cslData = ({ textArea = getCSLTextarea } = {}) => {
+  return JSON.parse(textArea().textContent);
 };
 
 export { cslData, displayCSLData, getCSLTextarea };

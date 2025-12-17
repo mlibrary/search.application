@@ -1,7 +1,6 @@
 import { actionsPanelText } from '../partials/actions/_summary.js';
 import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
-import { getTemporaryList } from './partials/_add-to.js';
 import { listItem } from './partials/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { selectAllState } from './partials/_select-all.js';
@@ -94,7 +93,7 @@ const defaultActions = {
   }
 };
 
-const handleSelectionChange = (actions) => {
+const handleSelectionChange = ({ actions, list }) => {
   // Watch for changes to the list and update accordingly
   document.querySelector('.list').addEventListener('change', (event) => {
     if (event.target.matches(`input[type="checkbox"].list__item--checkbox, .select-all > input[type="checkbox"]`)) {
@@ -102,20 +101,20 @@ const handleSelectionChange = (actions) => {
       actions.actionsPanelText();
       actions.selectAllState();
       actions.disableActionTabs();
-      actions.displayCSLData();
+      actions.displayCSLData({ list });
       actions.regenerateCitations();
     }
   });
 };
 
-const initializeNonEmptyListFunctions = (actions = defaultActions, handleChange = handleSelectionChange) => {
+const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChange = handleSelectionChange, list } = {}) => {
   // Update Actions panel
   actions.selectedText();
   actions.actionsPanelText();
-  actions.displayCSLData();
+  actions.displayCSLData({ list });
 
   // `handleChange` is passed in for testing purposes
-  handleChange(actions);
+  handleChange({ actions, list });
 };
 
 const temporaryListFunctions = {
@@ -124,7 +123,7 @@ const temporaryListFunctions = {
   toggleListElements
 };
 
-const temporaryList = (list = getTemporaryList(), listFunctions = temporaryListFunctions) => {
+const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) => {
   // Toggle what should and should not be displaying
   listFunctions.toggleListElements(list);
 
@@ -136,7 +135,7 @@ const temporaryList = (list = getTemporaryList(), listFunctions = temporaryListF
     return;
   }
 
-  listFunctions.initializeNonEmptyListFunctions();
+  listFunctions.initializeNonEmptyListFunctions({ list });
 };
 
 export { createDatastoreList, datastoreHeading, handleSelectionChange, initializeNonEmptyListFunctions, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };

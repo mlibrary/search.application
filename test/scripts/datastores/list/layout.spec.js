@@ -269,8 +269,7 @@ describe('layout', function () {
 
   describe('handleSelectionChange()', function () {
     let actions = null;
-    let citationTabExample = null;
-    let activeCitationTabStub = null;
+    let args = null;
     let listElement = null;
     let checkbox = null;
     let selectAll = null;
@@ -295,12 +294,10 @@ describe('layout', function () {
         selectedText: sinon.spy()
       };
 
-      citationTabExample = 'APA';
-
-      activeCitationTabStub = sinon.stub().returns(citationTabExample);
+      args = { actions, list: global.temporaryList };
 
       // Initialize the function with the stubbed actions
-      handleSelectionChange(actions, activeCitationTabStub);
+      handleSelectionChange(args);
 
       listElement = () => {
         return document.querySelector('.list');
@@ -317,7 +314,7 @@ describe('layout', function () {
 
     afterEach(function () {
       actions = null;
-      activeCitationTabStub = null;
+      args = null;
       listElement = null;
       checkbox = null;
       selectAll = null;
@@ -332,6 +329,9 @@ describe('layout', function () {
       Object.keys(actions).forEach((key) => {
         expect(actions[key].calledOnce, `\`${key}\` should have been called`).to.be.true;
       });
+
+      // Check that `displayCSLData` was called with the correct arguments
+      expect(actions.displayCSLData.calledWithExactly({ list: args.list }), '`displayCSLData` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call all action functions when the `Select all` checkbox changes', function () {
@@ -343,6 +343,9 @@ describe('layout', function () {
       Object.keys(actions).forEach((key) => {
         expect(actions[key].calledOnce, `\`${key}\` should have been called`).to.be.true;
       });
+
+      // Check that `displayCSLData` was called with the correct arguments
+      expect(actions.displayCSLData.calledWithExactly({ list: args.list }), '`displayCSLData` should have been called with the correct arguments').to.be.true;
     });
 
     it('should not call action functions for irrelevant changes', function () {
@@ -362,92 +365,97 @@ describe('layout', function () {
   });
 
   describe('initializeNonEmptyListFunctions()', function () {
-    let stubs = null;
+    let actions = null;
     let handleChange = null;
+    let args = null;
 
     beforeEach(function () {
       // Create spies
-      stubs = {
+      actions = {
         actionsPanelText: sinon.stub(),
         displayCSLData: sinon.stub(),
         selectedText: sinon.stub()
       };
       handleChange = sinon.spy();
+      args = { actions, handleChange, list: global.temporaryList };
 
       // Call the function
-      initializeNonEmptyListFunctions(stubs, handleChange);
+      initializeNonEmptyListFunctions(args);
     });
 
     afterEach(function () {
-      stubs = null;
+      actions = null;
       handleChange = null;
+      args = null;
     });
 
     it('calls all action methods', function () {
-      // Check that all stubs are called once
-      Object.keys(stubs).forEach((stub) => {
-        expect(stubs[stub].calledOnce, `\`${stub}()\` should have been called once`).to.be.true;
+      // Check that all actions are called once
+      Object.keys(actions).forEach((action) => {
+        expect(actions[action].calledOnce, `\`${action}()\` should have been called once`).to.be.true;
       });
     });
 
-    it('should call `handleChange` with `stubs` as argument', function () {
-      // Check that `handleChange` was called with stubs
-      expect(handleChange.calledOnceWithExactly(stubs), '`handleChange` should have been called with `stubs` once').to.be.true;
+    it('should call `handleChange` with `actions` as argument', function () {
+      // Check that `handleChange` was called with actions
+      expect(handleChange.calledOnceWithExactly({ actions: args.actions, list: args.list }), '`handleChange` should have been called with `actions` once').to.be.true;
     });
   });
 
   describe('temporaryList()', function () {
-    let stubs = null;
+    let listFunctions = null;
     let list = null;
+    let args = null;
 
     beforeEach(function () {
       // Create spies
-      stubs = {
+      listFunctions = {
         createDatastoreList: sinon.stub(),
         initializeNonEmptyListFunctions: sinon.stub(),
         toggleListElements: sinon.stub()
       };
       list = sinon.spy();
+      args = { list, listFunctions };
 
       // Call the function
-      temporaryList(list, stubs);
+      temporaryList(args);
     });
 
     afterEach(function () {
-      stubs = null;
+      listFunctions = null;
       list = null;
     });
 
     it('should call `toggleListElements` with `list` as argument', function () {
       // Check that `toggleListElements` was called with stubs
-      expect(stubs.toggleListElements.calledOnceWithExactly(list), '`toggleListElements` should have been called with `list` once').to.be.true;
+      expect(listFunctions.toggleListElements.calledOnceWithExactly(list), '`toggleListElements` should have been called with `list` once').to.be.true;
     });
 
     it('should call `createDatastoreList` with `list` as argument', function () {
       // Check that `createDatastoreList` was called with stubs
-      expect(stubs.createDatastoreList.calledOnceWithExactly(list), '`createDatastoreList` should have been called with `list` once').to.be.true;
+      expect(listFunctions.createDatastoreList.calledOnceWithExactly(list), '`createDatastoreList` should have been called with `list` once').to.be.true;
     });
 
     describe('initializeNonEmptyListFunctions()', function () {
       it('should not be called if the temporary list is empty', function () {
         // Make the list empty
-        list = [];
-        expect(list, 'the temporary list should be empty').to.be.empty;
+        args.list = [];
+        expect(args.list, 'the temporary list should be empty').to.be.empty;
 
         // Check that `initializeNonEmptyListFunctions` was not called
-        expect(stubs.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have not been called').to.be.false;
+        expect(listFunctions.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have not been called').to.be.false;
       });
 
       it('should be called if the temporary list is not empty', function () {
         // Make the list not empty
-        list = global.temporaryList;
-        expect(list, 'the temporary list should not be empty').to.not.be.empty;
+        args.list = global.temporaryList;
+        expect(args.list, 'the temporary list should not be empty').to.not.be.empty;
 
         // Call the function again
-        temporaryList(list, stubs);
+        temporaryList(args);
 
         // Check that `initializeNonEmptyListFunctions` was called
-        expect(stubs.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have been called').to.be.true;
+        expect(listFunctions.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have been called').to.be.true;
       });
     });
   });
