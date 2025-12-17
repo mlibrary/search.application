@@ -4,13 +4,13 @@ const getCSLTextarea = () => {
   return document.querySelector('.citation textarea.citation__csl');
 };
 
-const displayCSLData = ({ list }) => {
+const displayCSLData = ({ getCitations = selectedCitations, list, textArea = getCSLTextarea }) => {
   // Apply the data to the textarea
-  getCSLTextarea().textContent = JSON.stringify(selectedCitations({ list, type: 'csl' }));
+  textArea().textContent = JSON.stringify(getCitations({ list, type: 'csl' }));
 };
 
-const cslData = () => {
-  return JSON.parse(getCSLTextarea().textContent);
+const cslData = ({ textArea = getCSLTextarea } = {}) => {
+  return JSON.parse(textArea().textContent);
 };
 
 export { cslData, displayCSLData, getCSLTextarea };

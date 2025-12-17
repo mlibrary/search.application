@@ -1,8 +1,8 @@
 import { cslData, displayCSLData, getCSLTextarea } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
-import { nonEmptyDatastores, viewingTemporaryList } from '../../../../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
-import { JSDOM } from 'jsdom';
+import { nonEmptyDatastores } from '../../../../../../../assets/scripts/datastores/list/layout.js';
 import { selectedCitations } from '../../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import sinon from 'sinon';
 
 let temporaryListHTML = '';
 nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
@@ -31,76 +31,48 @@ describe('csl', function () {
       return document.querySelector('textarea');
     };
 
-    global.sessionStorage = window.sessionStorage;
-
-    // Set a temporary list in session storage
-    global.sessionStorage.setItem('temporaryList', JSON.stringify(global.temporaryList));
-
     // Grab CSL from temporary list
-    citationCSLData = JSON.stringify(selectedCitations('csl'));
+    citationCSLData = JSON.stringify(selectedCitations({ list: global.temporaryList, type: 'csl' }));
   });
 
   afterEach(function () {
     getTextArea = null;
     citationCSLData = null;
-
-    // Cleanup
-    delete global.sessionStorage;
   });
 
-  describe('getCSLTextarea', function () {
+  describe('getCSLTextarea()', function () {
     it('should return the CSL `textarea`', function () {
       expect(getCSLTextarea(), 'the `textarea` that displays the CSL should have been returned').to.deep.equal(getTextArea());
     });
   });
 
-  describe('displayCSLData', function () {
-    describe('when not viewing the temporary list', function () {
-      beforeEach(function () {
-        // Check that Temporary List is not being viewed
-        expect(viewingTemporaryList(), 'the current pathname should not be `/everything/list`').to.be.false;
+  describe('displayCSLData()', function () {
+    it('should display the CSL data in the textarea', function () {
+      // Call the function
+      displayCSLData({ list: global.temporaryList });
 
-        // Call the function
-        displayCSLData();
-      });
-
-      it('should not populate the textarea when not viewing the temporary list', function () {
-        // Check that the textarea was not populated
-        expect(getTextArea().textContent).to.not.equal(citationCSLData);
-      });
+      // Check the textarea content
+      expect(getTextArea().textContent, 'the CSL data in the textarea should match the expected data').to.equal(citationCSLData);
     });
 
-    describe('when viewing the temporary list', function () {
-      it('should populate the textarea with CSL data when viewing the temporary list', function () {
-        // Setup JSDOM with an updated URL
-        const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
-          url: 'http://localhost/everything/list'
-        });
+    it('should call `selectedCitations`', function () {
+      const selectedCitationsSpy = sinon.spy();
 
-        // Override the global window object
-        global.window = dom.window;
+      // Call the function
+      displayCSLData({ getCitations: selectedCitationsSpy, list: global.temporaryList });
 
-        // Check that Temporary List is being viewed
-        expect(viewingTemporaryList(), 'the current pathname should be `/everything/list`').to.be.true;
-
-        // Call the function
-        displayCSLData();
-
-        // Check that the textarea was populated
-        expect(getTextArea().textContent, 'the CSL data should be displayed in the textarea').to.equal(citationCSLData);
-      });
+      // Check that the spy was called
+      expect(selectedCitationsSpy.calledOnce, 'selectedCitations() should have been called').to.be.true;
     });
   });
 
-  describe('cslData', function () {
-    beforeEach(function () {
-      // Make sure there is displayed data to display
-      displayCSLData();
-    });
+  describe('cslData()', function () {
+    it('should return the parsed CSL data from the textarea', function () {
+      // Set the textarea content
+      getTextArea().textContent = citationCSLData;
 
-    it('should return parsed JSON from the CSL `textarea`', function () {
-      // Check that the `textarea` has been parsed
-      expect(cslData(), 'the content of the `textarea` should have been parsed').to.deep.equal(JSON.parse(getTextArea().textContent));
+      // Check the returned data
+      expect(cslData(), 'the returned CSL data should match the expected data').to.deep.equal(JSON.parse(citationCSLData));
     });
   });
 });
