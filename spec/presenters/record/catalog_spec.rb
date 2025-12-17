@@ -466,6 +466,10 @@ describe Search::Presenters::Record::Catalog::Brief do
         citation: {
           ris: @citation_stub.ris,
           csl: @citation_stub.csl
+        },
+        holding: {
+          call_number: nil,
+          location: nil
         }
       }
       expect(subject.to_h).to eq(expected)
