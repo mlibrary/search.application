@@ -166,6 +166,7 @@ RSpec.describe "requests" do
       get "/catalog/record/#{bib_id}"
       expect(last_response.status).to eq(200)
       expect(last_response.body).to include(data["title"][0]["original"]["text"])
+      expect(last_response.body).to include("/catalog/record/#{bib_id}/ris")
     end
   end
   context "/catalog/record/:bib_id/ris" do

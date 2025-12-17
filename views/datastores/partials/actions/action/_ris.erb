@@ -1,3 +1,3 @@
-<form method="get" action="<%= @presenter.record && "/#{@presenter.current_datastore}/record/#{@presenter.record.id}/ris" %>" class="action__ris">
+<form method="get" action="<%= @presenter.ris_action_url%>" class="action__ris">
   <button type="submit">Download (RIS)</button>
 </form>
