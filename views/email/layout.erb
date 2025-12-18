@@ -1,5 +1,116 @@
-<%= erb :"/email/partials/header" %>
+<%
+  font_family = "'Noto Sans', Tahoma, Verdana, Arial, sans-serif"
+  font = "font-family: #{font_family}; font-size: 16px; line-height: 1.5;"
+  styles = {
+    footer_text: "color: #4e4e4e; #{font}",
+    style_text: "color: #262626; #{font}",
+  }
+%>
+<!doctype html>
+<html
+  lang="en"
+  dir="auto"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+>
+<head>
+  <!--[if !mso]><!-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!--<![endif]-->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Library Search</title>
+  <style type="text/css">
+    #outlook a {
+      padding: 0;
+    }
 
-<%= yield %>
+    body {
+      margin: 0;
+      padding: 0;
+      -ms-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
 
-<%= erb :"/email/partials/footer" %>
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 16px 0;
+    }
+  </style>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:AllowPNG/>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <!--[if !mso]><!-->
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    @import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700);
+  </style>
+  <!--<![endif]-->
+  <style type="text/css">
+    a, 
+    a:link,
+    a:visited,
+    a:focus,
+    a:hover {
+      color: #126dc1;
+      text-decoration: underline;
+    }
+
+    /* Media Queries */
+    @media only screen and (max-width: 600px) {
+      img {
+        max-height: auto!important;
+        max-width: 100%!important;
+      }
+
+      .container {
+        max-width: 100%;
+        width: 100%!important;
+      }
+    }
+  </style>
+  <style type="text/css">
+    .style-text a {
+      color: #126dc1 !important;
+      text-decoration: underline;
+    }
+    .footer-text a {
+      color: #4e4e4e !important;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body style="background-color: #ffffff; <%= styles[:style_text] %> margin: 0px; padding: 0px; word-spacing: normal;">
+  <div aria-roledescription="Email" style="background-color: #ffffff;" role="article" lang="en" dir="auto">
+    <%= erb :"/email/partials/header", locals: styles %>
+
+    <%= yield %>
+
+    <%= erb :"/email/partials/footer", locals: styles %>
+  </div>
+</body>
+</html>
