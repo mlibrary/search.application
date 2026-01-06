@@ -91,6 +91,17 @@
         max-width: 100%;
         width: 100%!important;
       }
+
+      .responsive-cell {
+        box-sizing: border-box;
+        display: block;
+        padding: 0px!important;
+        width: 100%!important;
+      }
+
+      .metadata-field {
+        padding-top: 4px!important;
+      }
     }
   </style>
   <style type="text/css">
@@ -106,7 +117,7 @@
 </head>
 <body style="background-color: #ffffff; <%= styles[:style_text] %> margin: 0px; padding: 0px; word-spacing: normal;">
   <div aria-roledescription="Email" style="background-color: #ffffff;" role="article" lang="en" dir="auto">
-    <%= erb :"/email/partials/header", locals: styles %>
+    <%= erb :"/email/partials/_header", locals: styles %>
 
     <%# START BODY %>
     <table align="center" bgcolor="#f2f2f2" border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%" style="background: #f2f2f2; background-color: #f2f2f2; margin: 0 auto;">
@@ -121,7 +132,7 @@
                   <tr>
                     <td style="<%= styles[:style_text] %> padding: 16px; text-align: center;" class="body-text">
                       <%= yield %>
-                      <%= erb :"/email/partials/ask-a-librarian", locals: styles %>
+                      <%= erb :"/email/partials/_ask-a-librarian", locals: styles %>
                     </td>
                   </tr>
                 </table>
@@ -135,7 +146,7 @@
     </table>
     <%# END BODY %>
 
-    <%= erb :"/email/partials/footer", locals: styles %>
+    <%= erb :"/email/partials/_footer", locals: styles %>
   </div>
 </body>
 </html>
