@@ -45,8 +45,6 @@ services:
         GID: ${GID:-1000}
     depends_on:
       - 'redis'
-    ports:
-      - 9292:9292
     volumes:
       - .:/app
     env_file:
@@ -71,8 +69,6 @@ services:
         GID: ${GID:-1000}
     depends_on:
       - 'redis'
-    ports:
-      - 9292:9292
     volumes:
       - .:/app
     env_file:
