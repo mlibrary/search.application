@@ -1,22 +1,51 @@
 class Search::Email
   include Sidekiq::Job
 
-  def body
+  def text
+    raise NotImplementedError
+  end
+
+  def template
     raise NotImplementedError
   end
 
   def perform
-    puts "hey there"
+    raise NotImplementedError
+  end
+
+  def html
+    ERB.new(File.read(File.join(S.project_root, "views", template))).result(binding)
   end
 
   def send(to:)
-    mail = Mail.new do
-      from to
-      to to
-      subject "it's an email"
+    mail = Mail.new do |m|
+      m.from to
+      m.to to
+      m.subject "it's an email"
+      m.text_part do |t|
+        t.body = text
+      end
+      m.html_part do |h|
+        h.content_type "text/html; charset=UTF-8"
+        h.body = html
+      end
     end
-    mail.body = body
+
     mail.deliver!
+  end
+
+  class Whatever < self
+    def text
+      "heya"
+    end
+
+    def initialize
+      @something = "Blah"
+    end
+
+    def template
+      "email_test.erb"
+    end
   end
 
   class Catalog < self
@@ -25,11 +54,20 @@ class Search::Email
       new(record)
     end
 
+    def perform(to, id)
+      record = Search::Models::Record::Catalog.for(id)
+      new(record).send(to)
+    end
+
     def initialize(record)
       @record = record
     end
 
-    def body
+    def template
+      "email_test.erb"
+    end
+
+    def text
       "It's the body of an email"
     end
   end
