@@ -93,7 +93,8 @@ end
 
 Mail.defaults do
   if S.app_env == "production"
-    delivery_method :smtp, address: ENV.fetch("MAIL_RELAY")
+    # delivery_method :smtp, address: ENV.fetch("MAIL_RELAY")
+    delivery_method :logger, logger: S.logger, severity: :info
   else
     delivery_method :logger, logger: S.logger, severity: :info
   end
