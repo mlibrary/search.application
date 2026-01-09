@@ -1,0 +1,17 @@
+<%
+  heading_style = "color: #6e6e6e; font-size: 20px; font-weight: 700; margin: 0px; font-family: 'Noto Sans', Tahoma, Verdana, Arial, sans-serif; font-weight: 700; line-height: 1.5;"
+  link = link_to(body: title[:original], url: url)
+  transliterated = "<span style=\"display: block; font-size: 16px;\">#{title[:transliterated]}</span>"
+%>
+
+<% if show_index %>
+  <h3 style="<%= heading_style %>">
+    <%= "#{show_index}. " %><%= link %>
+    <%= transliterated %>
+  </h3>
+<% else %>
+  <h1 style="<%= heading_style %>">
+    <%= link %>
+    <%= transliterated %>
+  </h1>
+<% end %>
