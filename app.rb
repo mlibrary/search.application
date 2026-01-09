@@ -249,7 +249,11 @@ class Search::Application < Sinatra::Base
       # Email templates
       ["record", "list"].each do |type|
         get "/email/#{type}" do
-          erb :"email/#{type}", layout: :"email/layout"
+          if params["content_type"] == "txt"
+            erb :"email/#{type}", layout: :"email/#{type}/txt"
+          else
+            erb :"email/#{type}", layout: :"email/layout"
+          end
         end
       end
     end
