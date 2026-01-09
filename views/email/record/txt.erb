@@ -1,6 +1,5 @@
 <%= erb :"/email/partials/header/_txt" %>
-
-<%= yield %>
+<%= erb :"/email/partials/list-item/_txt", locals: { show_index: nil, record: @record.to_h } %>
 
 <%= erb :"/email/partials/ask-a-librarian/_txt" %>
 

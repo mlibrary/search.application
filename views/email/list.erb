@@ -1,7 +1,5 @@
 <%
-  require "search/presenters/record"
   heading_text = "color: #262626; font-family: 'Noto Sans', Tahoma, Verdana, Arial, sans-serif; line-height: 1.5;"
-  is_temporary_list = true
 %>
 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%" style="min-width: 100%;">
   <tr>
@@ -14,7 +12,7 @@
           <%= datastore %>
         </h2>
         <% @records[datastore].each_with_index do |record, index| %>
-          <%= erb :"/email/partials/_list-item", locals: { show_index: is_temporary_list ? index + 1 : nil, record: record.to_h } %>
+          <%= erb :"/email/partials/_list-item", locals: { show_index: index + 1, record: record.to_h } %>
         <% end %>
       <% end %>
     </td>

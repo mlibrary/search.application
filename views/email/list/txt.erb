@@ -2,7 +2,12 @@
 
 # My Temporary List
 
-<%= yield %>
+<% @records.keys.each do |datastore| %>
+## <%= datastore %>
+<% @records[datastore].each_with_index do |record, index| %>
+<%= erb :"/email/partials/list-item/_txt", locals: { show_index: index + 1, record: record.to_h } %>
+<% end %>
+<% end %>
 
 <%= erb :"/email/partials/ask-a-librarian/_txt" %>
 
