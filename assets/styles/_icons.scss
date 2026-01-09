@@ -27,6 +27,7 @@
 // * 1.1 VARIABLES * //
 // *               * //
 $icons: (
+  "add": "\e145",
   "chat": "\e0b7",
   "dashboard": "\e871",
   "delete": "\e872",
@@ -48,8 +49,12 @@ $icons: (
 // *            * //
 
 @mixin icon($fill: true, $icon) {
+  $fill-value: 0;
+  @if $fill {
+    $fill-value: 1;
+  }
   font-family: "Material Symbols Rounded";
-  font-variation-settings: "FILL" if($fill, 1, 0);
+  font-variation-settings: "FILL" $fill-value;
   @if $icon {
     @include messages.missing-key($icons, $icon);
     & {
