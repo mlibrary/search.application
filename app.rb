@@ -250,6 +250,7 @@ class Search::Application < Sinatra::Base
       ["record", "list"].each do |type|
         get "/email/#{type}" do
           if params["content_type"] == "txt"
+            content_type "text/plain"
             erb :"email/#{type}", layout: :"email/#{type}/txt"
           else
             erb :"email/#{type}", layout: :"email/layout"
