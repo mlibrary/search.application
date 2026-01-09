@@ -1,5 +1,6 @@
 require "sinatra/base"
 require "sinatra/flash"
+require "sinatra/namespace"
 require "puma"
 require "ostruct"
 require_relative "lib/services"
@@ -20,6 +21,7 @@ class Search::Application < Sinatra::Base
 
   enable :sessions
   register Sinatra::Flash
+  register Sinatra::Namespace
   set :session_secret, S.session_secret
 
   S.logger.info("App Environment: #{settings.environment}")
@@ -242,10 +244,14 @@ class Search::Application < Sinatra::Base
     redirect "https://search.lib.umich.edu/#{params[:search_datastore]}?query=#{query}"
   end
 
-  # Email templates
-  ["record", "list"].each do |type|
-    get "/email/#{type}" do
-      erb :"email/#{type}", layout: :"email/layout"
+  if S.workshop?
+    namespace "/dev" do
+      # Email templates
+      ["record", "list"].each do |type|
+        get "/email/#{type}" do
+          erb :"email/#{type}", layout: :"email/layout"
+        end
+      end
     end
   end
 end
