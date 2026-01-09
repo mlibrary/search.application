@@ -1,5 +1,6 @@
 require "sinatra/base"
 require "sinatra/flash"
+require "sinatra/namespace"
 require "puma"
 require "ostruct"
 require_relative "lib/services"
@@ -20,6 +21,7 @@ class Search::Application < Sinatra::Base
 
   enable :sessions
   register Sinatra::Flash
+  register Sinatra::Namespace
   set :session_secret, S.session_secret
 
   S.logger.info("App Environment: #{settings.environment}")
@@ -242,10 +244,35 @@ class Search::Application < Sinatra::Base
     redirect "https://search.lib.umich.edu/#{params[:search_datastore]}?query=#{query}"
   end
 
-  # Email templates
-  ["record", "list"].each do |type|
-    get "/email/#{type}" do
-      erb :"email/#{type}", layout: :"email/layout"
+  if S.workshop?
+    namespace "/dev" do
+      # Email templates
+      get "/email/record" do
+        datastore, id = params["record"].split(",")
+
+        @record = Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "brief")
+
+        if params["content_type"] == "txt"
+          content_type "text/plain"
+          erb :"email/record", layout: :"email/record/txt"
+        else
+          erb :"email/record", layout: :"email/layout"
+        end
+      end
+      get "/email/list" do
+        @records = Hash.new { |hash, key| hash[key] = [] }
+        params["record"].map do |r|
+          datastore, id = r.split(",")
+          @records[datastore.capitalize].push Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "brief")
+        end
+
+        if params["content_type"] == "txt"
+          content_type "text/plain"
+          erb :"email/list", layout: :"email/list/txt"
+        else
+          erb :"email/list", layout: :"email/layout"
+        end
+      end
     end
   end
 end
