@@ -5,6 +5,7 @@ import { initializeCitations } from '../partials/actions/action/_citation.js';
 import { removeSelected } from '../partials/actions/action/_remove-selected.js';
 import { selectAll } from './partials/_select-all.js';
 import { temporaryList } from './layout.js';
+import { toggleTemporaryListItem } from '../partials/actions/action/_my-temporary-list.js';
 
 // Get the temporary list from session storage
 const list = getTemporaryList();
@@ -29,6 +30,9 @@ removeSelected({ list });
 
 // Display My Temporary List items
 temporaryList({ list });
+
+// Toggle My Temporary List items
+toggleTemporaryListItem({ list });
 
 // Select all checkboxes
 selectAll();
