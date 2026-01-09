@@ -65,6 +65,10 @@ S.register(:dev_login?) do
   S.app_env == "development" && ENV["DEV_LOGIN"]
 end
 
+S.register(:workshop?) do
+  S.app_env == "development"
+end
+
 class ProductionFormatter < SemanticLogger::Formatters::Json
   # Leave out the pid
   def pid
