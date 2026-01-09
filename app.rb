@@ -247,14 +247,30 @@ class Search::Application < Sinatra::Base
   if S.workshop?
     namespace "/dev" do
       # Email templates
-      ["record", "list"].each do |type|
-        get "/email/#{type}" do
-          if params["content_type"] == "txt"
-            content_type "text/plain"
-            erb :"email/#{type}", layout: :"email/#{type}/txt"
-          else
-            erb :"email/#{type}", layout: :"email/layout"
-          end
+      get "/email/record" do
+        datastore, id = params["record"].split(",")
+
+        @record = Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "brief")
+
+        if params["content_type"] == "txt"
+          content_type "text/plain"
+          erb :"email/record", layout: :"email/record/txt"
+        else
+          erb :"email/record", layout: :"email/layout"
+        end
+      end
+      get "/email/list" do
+        @records = Hash.new { |hash, key| hash[key] = [] }
+        params["record"].map do |r|
+          datastore, id = r.split(",")
+          @records[datastore.capitalize].push Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "brief")
+        end
+
+        if params["content_type"] == "txt"
+          content_type "text/plain"
+          erb :"email/list", layout: :"email/list/txt"
+        else
+          erb :"email/list", layout: :"email/layout"
         end
       end
     end
