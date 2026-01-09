@@ -1,3 +1,3 @@
 <% metadata.each do |data| %>
-<%= data[:field] %>: <%= data[:original]%><% if data[:transliterated] %> | <%= data[:transliterated]%><% end %>
+   * **<%= data[:field] %>:** <%= data[:original]%><% if data[:transliterated] %> | <%= data[:transliterated]%><% end %>
 <% end %>
