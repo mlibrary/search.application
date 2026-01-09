@@ -1,5 +1,11 @@
 class Search::Email
   include Sidekiq::Job
+  include Sinatra::Templates
+  include Search::ViewHelpers
+
+  def template_cache
+    @template_cache ||= Sinatra::TemplateCache.new
+  end
 
   def text
     raise NotImplementedError
@@ -14,7 +20,16 @@ class Search::Email
   end
 
   def html
-    ERB.new(File.read(File.join(S.project_root, "views", template))).result(binding)
+    # ERB.new(File.read(File.join(S.project_root, "views", template))).result(binding)
+    erb(template, layout: html_layout)
+  end
+
+  def text
+    erb(template, layout: text_layout)
+  end
+
+  def settings
+    @settings ||= OpenStruct.new(views: File.join(S.project_root, "views"), templates: {})
   end
 
   def send(to:)
@@ -44,7 +59,15 @@ class Search::Email
     end
 
     def template
-      "email_test.erb"
+      :email_test
+    end
+
+    def html_layout
+      :email_layout
+    end
+
+    def text_layout
+      :email_layout
     end
   end
 
@@ -55,20 +78,23 @@ class Search::Email
     end
 
     def perform(to, id)
-      record = Search::Models::Record::Catalog.for(id)
-      new(record).send(to)
+      new(id).send(to)
     end
 
-    def initialize(record)
-      @record = record
+    def initialize(id)
+      @record = Search::Presenters::Record.for_datastore(datastore: "catalog", id: id, size: "brief")
     end
 
     def template
-      "email_test.erb"
+      :"email/record"
     end
 
-    def text
-      "It's the body of an email"
+    def html_layout
+      :"email/layout"
+    end
+
+    def text_layout
+      :"email/record/txt"
     end
   end
 end
