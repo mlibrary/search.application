@@ -29,7 +29,7 @@
   "homepage": "https://github.com/mlibrary/search.application#readme",
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@stylistic/eslint-plugin": "^5.6.1",
+    "@stylistic/eslint-plugin": "^5.7.0",
     "chai": "^6.2.2",
     "esbuild": "^0.27.2",
     "eslint": "^9.39.2",
@@ -37,7 +37,7 @@
     "globals": "^17.0.0",
     "jsdom": "^27.4.0",
     "mocha": "^11.7.5",
-    "sass": "^1.97.1",
+    "sass": "^1.97.2",
     "sinon": "^21.0.1"
   },
   "dependencies": {
