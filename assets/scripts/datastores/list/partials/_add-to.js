@@ -1,5 +1,7 @@
 import {
+  fetchAndAddRecord,
   inTemporaryList,
+  removeRecordFromList,
   setTemporaryList
 } from '../../partials/actions/action/_my-temporary-list.js';
 import toggleBanner from './_go-to.js';
@@ -29,34 +31,6 @@ const updateResultUI = ({ form, list, updateUI = updateUIFuncs }) => {
     return sum + Object.keys(datastore).length;
   }, 0);
   updateUI.toggleBanner(temporaryListCount);
-};
-
-const removeRecordFromList = ({ list, recordDatastore, recordId }) => {
-  const updatedList = { ...list };
-  if (updatedList[recordDatastore] && updatedList[recordDatastore][recordId]) {
-    delete updatedList[recordDatastore][recordId];
-  }
-  return updatedList;
-};
-
-const fetchAndAddRecord = async ({ list, recordDatastore, recordId, url }) => {
-  const updatedList = { ...list };
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      // Return the original list if the fetch fails
-      return updatedList;
-    }
-    // Add the record information to the list
-    const data = await response.json();
-    updatedList[recordDatastore][recordId] = data;
-  } catch {
-    // Silent failure, so no action is needed
-    return updatedList;
-  }
-
-  return updatedList;
 };
 
 const formSubmitFuncs = {
@@ -129,10 +103,8 @@ export {
   addToFormSubmit,
   addToFormsUI,
   addToList,
-  fetchAndAddRecord,
   handleFormSubmit,
   initializeAddToList,
-  removeRecordFromList,
   toggleContainerClass,
   updateResultUI
 };

@@ -74,6 +74,34 @@ const inTemporaryList = ({ list, recordDatastore, recordId }) => {
   return Boolean(list?.[recordDatastore]?.[recordId]);
 };
 
+const removeRecordFromList = ({ list, recordDatastore, recordId }) => {
+  const updatedList = { ...list };
+  if (updatedList[recordDatastore] && updatedList[recordDatastore][recordId]) {
+    delete updatedList[recordDatastore][recordId];
+  }
+  return updatedList;
+};
+
+const fetchAndAddRecord = async ({ list, recordDatastore, recordId, url }) => {
+  const updatedList = { ...list };
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      // Return the original list if the fetch fails
+      return updatedList;
+    }
+    // Add the record information to the list
+    const data = await response.json();
+    updatedList[recordDatastore][recordId] = data;
+  } catch {
+    // Silent failure, so no action is needed
+    return updatedList;
+  }
+
+  return updatedList;
+};
+
 const toggleTemporaryListItem = ({ list }) => {
   // eslint-disable-next-line no-console
   console.log('Toggling temporary list item with list:', list);
@@ -81,8 +109,10 @@ const toggleTemporaryListItem = ({ list }) => {
 
 export {
   defaultTemporaryList,
+  fetchAndAddRecord,
   getTemporaryList,
   inTemporaryList,
+  removeRecordFromList,
   setTemporaryList,
   toggleTemporaryListItem
 };
