@@ -1,5 +1,5 @@
 import { filterSelectedRecords } from '../../../list/partials/list-item/_checkbox.js';
-import { setTemporaryList } from '../../../list/partials/_add-to.js';
+import { setTemporaryList } from './_my-temporary-list.js';
 
 const deleteSelectedRecords = ({ list, setList = setTemporaryList }) => {
   // Remove all selected records from the temporary list

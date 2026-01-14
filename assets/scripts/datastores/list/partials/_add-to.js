@@ -1,44 +1,10 @@
+import {
+  inTemporaryList,
+  setTemporaryList
+} from '../../partials/actions/action/_my-temporary-list.js';
 import toggleBanner from './_go-to.js';
 import { toggleContainerClass } from '../../record/layout.js';
 import { updateButtonUI } from './add-to/_button.js';
-
-const listName = 'temporaryList';
-
-/* eslint-disable sort-keys */
-const defaultTemporaryList = {
-  catalog: {},
-  articles: {},
-  databases: {},
-  onlinejournals: {},
-  guidesandmore: {}
-};
-/* eslint-enable sort-keys */
-
-const getTemporaryList = () => {
-  // Get session storage
-  const item = sessionStorage.getItem(listName);
-
-  // Return the default list if `item` is falsy, or returned problematic string values
-  if (!item || item === 'undefined' || item === 'null') {
-    return defaultTemporaryList;
-  }
-
-  // If failing to parse, return the default list
-  try {
-    return JSON.parse(item);
-  } catch {
-    return defaultTemporaryList;
-  }
-};
-
-const setTemporaryList = (list) => {
-  sessionStorage.setItem(listName, JSON.stringify(list));
-};
-
-const inTemporaryList = ({ list, recordDatastore, recordId }) => {
-  // Check that the datastore exists in the list, and the record ID exists within the datastore
-  return Boolean(list?.[recordDatastore]?.[recordId]);
-};
 
 const updateUIFuncs = {
   inTemporaryList,
@@ -163,14 +129,10 @@ export {
   addToFormSubmit,
   addToFormsUI,
   addToList,
-  defaultTemporaryList,
   fetchAndAddRecord,
-  getTemporaryList,
   handleFormSubmit,
   initializeAddToList,
-  inTemporaryList,
   removeRecordFromList,
-  setTemporaryList,
   toggleContainerClass,
   updateResultUI
 };

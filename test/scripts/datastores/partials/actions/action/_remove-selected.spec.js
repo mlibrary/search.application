@@ -1,7 +1,7 @@
 import { deleteSelectedRecords, removeSelected } from '../../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
 import { expect } from 'chai';
 import { filterSelectedRecords } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
-import { getTemporaryList } from '../../../../../../assets/scripts/datastores/list/partials/_add-to.js';
+import { getTemporaryList } from '../../../../../../assets/scripts/datastores/partials/actions/action/_my-temporary-list.js';
 import sinon from 'sinon';
 
 const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
