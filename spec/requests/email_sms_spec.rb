@@ -95,7 +95,7 @@ RSpec.describe "sms and email requests" do
       stub_full_record_page_request
 
       get "/catalog/record/some_id"
-      post "/catalog/record/some_id/email", {to: "someone@umich.edu"}
+      post "/catalog/record/some_id/email", {email: "someone@umich.edu"}
       follow_redirect!
 
       expect(last_response.body).to include("User must be logged in")
@@ -106,11 +106,11 @@ RSpec.describe "sms and email requests" do
       env "rack.session", @session
       stub_full_record_page_request
 
-      expect(Search::Email::Catalog.jobs.size).to eq(0)
-      post "/catalog/record/some_id/email", {to: "someone@umich.edu"}
+      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      post "/catalog/record/some_id/email", {email: "someone@umich.edu"}
       follow_redirect!
       expect(last_response.body).to include("Email message has been sent")
-      expect(Search::Email::Catalog.jobs.size).to eq(1)
+      expect(Search::Email::Catalog::Worker.jobs.size).to eq(1)
     end
 
     it "returns error message when invalid email is given" do
@@ -119,11 +119,11 @@ RSpec.describe "sms and email requests" do
       stub_full_record_page_request
 
       allow_any_instance_of(Mail::TestMailer).to receive("deliver!").and_raise(StandardError, "some message")
-      post "/catalog/record/some_id/email", {to: "invalid email address"}
+      post "/catalog/record/some_id/email", {email: "invalid email address"}
       follow_redirect!
 
       expect(last_response.body).to include("Your email address is probably wrong")
-      expect(Search::Email::Catalog.jobs.size).to eq(0)
+      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
     end
   end
 end

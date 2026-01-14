@@ -1,5 +1,4 @@
 class Search::Email
-  include Sidekiq::Job
   include Sinatra::Templates
   include Search::ViewHelpers
 
@@ -12,10 +11,6 @@ class Search::Email
   end
 
   def template
-    raise NotImplementedError
-  end
-
-  def perform
     raise NotImplementedError
   end
 
@@ -36,7 +31,7 @@ class Search::Email
     mail = Mail.new do |m|
       m.from to
       m.to to
-      m.subject "it's an email"
+      m.subject subject
       m.text_part do |t|
         t.body = text
       end
@@ -49,25 +44,11 @@ class Search::Email
     mail.deliver!
   end
 
-  class Whatever < self
-    def text
-      "heya"
-    end
+  class Worker
+    include Sidekiq::Job
 
-    def initialize
-      @something = "Blah"
-    end
-
-    def template
-      :email_test
-    end
-
-    def html_layout
-      :email_layout
-    end
-
-    def text_layout
-      :email_layout
+    def perform
+      raise NotImplementedError
     end
   end
 
@@ -77,12 +58,12 @@ class Search::Email
       new(record)
     end
 
-    def perform(to, id)
-      new(id).send(to)
-    end
-
     def initialize(id)
       @record = Search::Presenters::Record.for_datastore(datastore: "catalog", id: id, size: "brief")
+    end
+
+    def subject
+      "Library Search: #{@record.title.first.text}"
     end
 
     def template
@@ -95,6 +76,12 @@ class Search::Email
 
     def text_layout
       :"email/record/txt"
+    end
+
+    class Worker < Search::Email::Worker
+      def perform(to, id)
+        Search::Email::Catalog.new(id).send(to: to)
+      end
     end
   end
 end
