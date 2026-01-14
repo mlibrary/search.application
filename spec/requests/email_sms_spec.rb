@@ -89,7 +89,7 @@ RSpec.describe "sms and email requests" do
       expect(last_response.body).to include("Something went wrong")
     end
   end
-  context "POST /catalog/record/:id/email accept html" do
+  context "POST /catalog/record/:id/email" do
     it "returns an error for a not logged in user" do
       env "rack.session", @session
       stub_full_record_page_request
@@ -106,61 +106,24 @@ RSpec.describe "sms and email requests" do
       env "rack.session", @session
       stub_full_record_page_request
 
+      expect(Search::Email::Catalog.jobs.size).to eq(0)
       post "/catalog/record/some_id/email", {to: "someone@umich.edu"}
       follow_redirect!
       expect(last_response.body).to include("Email message has been sent")
-      is_expected.to have_sent_email
+      expect(Search::Email::Catalog.jobs.size).to eq(1)
     end
 
-    it "returns error message when twilio client raises an error" do
+    it "returns error message when invalid email is given" do
       @session[:logged_in] = true
       env "rack.session", @session
       stub_full_record_page_request
 
       allow_any_instance_of(Mail::TestMailer).to receive("deliver!").and_raise(StandardError, "some message")
-      post "/catalog/record/some_id/email", {to: "someone@umich.edu"}
+      post "/catalog/record/some_id/email", {to: "invalid email address"}
       follow_redirect!
 
-      expect(last_response.body).to include("Something went wrong")
-      is_expected.not_to have_sent_email
-    end
-  end
-  context "POST /catalog/record/:id/email accept json" do
-    it "returns an error for a not logged in user" do
-      env "rack.session", @session
-      stub_catalog_record_request
-
-      post "/catalog/record/some_id/email", {to: "someone@umich.edu"}, {"HTTP_ACCEPT" => "application/json"}
-
-      body = JSON.parse(last_response.body)
-      expect(body["code"]).to eq(403)
-      expect(body["message"]).to eq("User must be logged in")
-      is_expected.not_to have_sent_email
-    end
-    it "returns success message when successful" do
-      @session[:logged_in] = true
-      env "rack.session", @session
-      stub_catalog_record_request
-
-      post "/catalog/record/some_id/email", {to: "someone@umich.edu"}, {"HTTP_ACCEPT" => "application/json"}
-      body = JSON.parse(last_response.body)
-      expect(body["code"]).to eq(202)
-      expect(body["message"]).to eq("Email message has been sent")
-      is_expected.to have_sent_email
-    end
-
-    it "returns error message when twilio client raises an error" do
-      @session[:logged_in] = true
-      env "rack.session", @session
-      stub_catalog_record_request
-
-      allow_any_instance_of(Mail::TestMailer).to receive("deliver!").and_raise(StandardError, "some message")
-      post "/catalog/record/some_id/email", {to: "someone@umich.edu"}, {"HTTP_ACCEPT" => "application/json"}
-
-      body = JSON.parse(last_response.body)
-      expect(body["code"]).to eq(400)
-      expect(body["message"]).to eq("Something went wrong")
-      is_expected.not_to have_sent_email
+      expect(last_response.body).to include("Your email address is probably wrong")
+      expect(Search::Email::Catalog.jobs.size).to eq(0)
     end
   end
 end

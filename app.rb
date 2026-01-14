@@ -172,25 +172,15 @@ class Search::Application < Sinatra::Base
         if not_logged_in_user?
           flash[:error] = "User must be logged in"
         else
-          Search::Email::Catalog.for(params["id"]).send(to: params["to"])
+          raise unless params["to"].match?(URI::MailTo::EMAIL_REGEXP)
+          Search::Email::Catalog.perform_async(params["to"], params["id"])
           flash[:success] = "Email message has been sent"
         end
       rescue => error
         S.logger.error(error, error_class: error.class)
-        flash[:error] = "Something went wrong"
+        flash[:error] = "Your email address is probably wrong."
       ensure
         redirect request.path_info.sub(/\/email$/, "")
-      end
-      post "/#{datastore.slug}/record/:id/email", provides: "json" do
-        if not_logged_in_user?
-          [403, {code: 403, message: "User must be logged in"}.to_json]
-        else
-          Search::Email::Catalog.for(params["id"]).send(to: params["to"])
-          [202, {code: 202, message: "Email message has been sent"}.to_json]
-        end
-      rescue => error
-        S.logger.error(error, error_class: error.class)
-        [400, {code: 400, message: "Something went wrong"}.to_json]
       end
     end
     if datastore.slug == "everything"
