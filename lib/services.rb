@@ -1,16 +1,19 @@
 require "canister"
 require "alma_rest_client"
 require "semantic_logger"
+require "twilio-ruby"
+require "mail"
 
 Services = Canister.new
 
 S = Services
 
+S.register(:app_env) { ENV["APP_ENV"] || "development" }
+
 AlmaRestClient.configure do |config|
   config.alma_api_key = ENV["ALMA_API_KEY"] || "your_alma_api_key"
 end
 
-S.register(:app_env) { ENV["APP_ENV"] || "development" }
 S.register(:version) { ENV["APP_VERSION"] || `git rev-parse HEAD` }
 S.register(:session_secret) { ENV["SESSION_SECRET"] || "session_secret_this_is_extra_text_so_that_it_is_32_bytes_aaaaaaa" }
 S.register(:project_root) do
@@ -30,6 +33,14 @@ S.register(:catalog_api_url) { ENV["CATALOG_API_URL"] || "http://catalog-api:800
 
 S.register(:catalog_browse_url) { ENV["CATALOG_BROWSE_URL"] || "https://search.lib.umich.edu/catalog/browse" }
 
+S.register(:twilio_client) {
+  Twilio::REST::Client.new(ENV.fetch("TWILIO_ACCT_SID"), ENV.fetch("TWILIO_AUTH_TOKEN"))
+}
+
+S.register(:twilio_messaging_service_sid) do
+  ENV["TWILIO_MESSAGING_SERVICE_SID"] || "twilio_messaging_service_sid"
+end
+
 S.register(:log_stream) do
   $stdout.sync = true
   $stdout
@@ -44,10 +55,6 @@ S.register(:log_level) do
 end
 
 SemanticLogger.default_level = S.log_level
-
-S.register(:app_env) do
-  ENV["APP_ENV"] || "development"
-end
 
 # Should we run the profiler?
 S.register(:profile?) do
@@ -82,4 +89,13 @@ if S.app_env != "test"
   else
     SemanticLogger.add_appender(io: S.log_stream, formatter: ProductionFormatter.new)
   end
+end
+
+Mail.defaults do
+  # if S.app_env == "production"
+  # delivery_method :smtp, address: ENV.fetch("MAIL_RELAY")
+  delivery_method :logger, logger: S.logger, severity: :info
+  # else
+  #   delivery_method :logger, logger: S.logger, severity: :info
+  # end
 end

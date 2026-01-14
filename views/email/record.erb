@@ -1,0 +1,11 @@
+<%
+  require "search/presenters/record"
+  heading_text = "color: #262626; font-family: 'Noto Sans', Tahoma, Verdana, Arial, sans-serif; line-height: 1.5;"
+%>
+<table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%" style="min-width: 100%;">
+  <tr>
+    <td style="<%= heading_text %> padding-bottom: 16px; text-align: left;" class="body-text">
+      <%= erb :"/email/partials/_list-item", locals: { show_index: nil, record: Search::Presenters::Record::Catalog::Brief.for("990038939650106381").to_h } %>
+    </td>
+  </tr>
+</table>

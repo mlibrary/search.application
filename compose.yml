@@ -18,6 +18,8 @@ services:
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
+    depends_on:
+      - 'redis'
     ports:
       - 4567:4567
       - 9100:9100
@@ -25,12 +27,61 @@ services:
       - .:/app
     env_file:
       - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
     command:
       - bundle
       - exec
       - puma
       - -b
       - "tcp://0.0.0.0:4567"
+
+  sidekiq:
+    build:
+      context: .
+      target: development
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    depends_on:
+      - 'redis'
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
+    command:
+      - bundle
+      - exec
+      - puma
+      - --no-config
+      - -b
+      - "tcp://0.0.0.0:9292"
+      - sidekiq.ru
+
+  worker:
+    build:
+      context: .
+      target: development
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    depends_on:
+      - 'redis'
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
+    command:
+      - bundle
+      - exec
+      - sidekiq
+      - -r
+      - "./app.rb"
+    
 
   catalog-api:
     image: ghcr.io/mlibrary/search.catalog-api-unstable:latest
@@ -46,6 +97,13 @@ services:
       - --host
       - 0.0.0.0
 
+  redis:
+    image: 'redis:latest'
+    command: redis-server
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis:/data'
   js:
     build:
       context: .
@@ -77,3 +135,6 @@ services:
       - npm
       - run
       - watch:css
+
+volumes:
+  redis:
