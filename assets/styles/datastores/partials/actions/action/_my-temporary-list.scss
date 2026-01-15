@@ -1,0 +1,44 @@
+@use '../../../../icons';
+
+// --------------------------------------------------
+//
+// # My Temporary List
+//   Styles to apply directly to `views/datastores/partials/actions/_my-temporary-list.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Tab
+//     2.1 Remove
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: "actions__my-temporary-list";
+
+
+
+
+
+// ************** //
+// *** 2. TAB *** //
+// ************** //
+
+body.no-javascript {
+  button##{$class},
+  ##{$class}--tabpanel {
+    display: none;
+  }
+}
+
+
+
+// *            * //
+// * 2.1 REMOVE * //
+// *            * //
+
+.actions__tablist>button[role=tab]##{$class}.#{$class}--remove:before {
+  @include icons.icon($icon: 'delete');
+}

@@ -4,7 +4,9 @@ import {
   getTemporaryList,
   inTemporaryList,
   removeRecordFromList,
-  setTemporaryList
+  setTemporaryList,
+  toggleTabpanelButtonUI,
+  toggleTabUI
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_my-temporary-list.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -340,6 +342,157 @@ describe('my temporary list', function () {
 
       // Check that the list remains unchanged
       expect(updatedList, 'the list should remain unchanged').to.deep.equal(list);
+    });
+  });
+
+  describe('toggleTabUI()', function () {
+    let getButton = null;
+    let args = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = `<button></button>`;
+
+      getButton = () => {
+        return document.querySelector('button');
+      };
+
+      args = {
+        button: getButton(),
+        isAdded: true,
+        isFullRecordView: true
+      };
+    });
+
+    describe('class', function () {
+      beforeEach(function () {
+        // Check that the button does not have a class
+        expect(getButton().className, 'the button should not have a class').to.equal('');
+      });
+
+      it('should add a class if `isAdded` is `true`', function () {
+        // Check that `isAdded` is `true`
+        expect(args.isAdded, 'the `isAdded` flag should be true').to.be.true;
+
+        // Call the function
+        toggleTabUI(args);
+
+        // Check that the class has been added
+        expect(getButton().className, 'the button should have a class').to.equal('actions__my-temporary-list--remove');
+      });
+
+      it('should remove the class if `isAdded` is `false`', function () {
+        // Check that `isAdded` is `false`
+        args.isAdded = false;
+        expect(args.isAdded, 'the `isAdded` flag should be false').to.be.false;
+
+        // Call the function
+        toggleTabUI(args);
+
+        // Check that the class has been removed
+        expect(getButton().className, 'the button should not have a class').to.equal('');
+      });
+    });
+
+    describe('text', function () {
+      beforeEach(function () {
+        // Check that the button does not have text
+        expect(getButton().textContent, 'the button should not have text').to.equal('');
+      });
+
+      describe('full record view', function () {
+        beforeEach(function () {
+          // Check that full record is being viewed
+          expect(args.isFullRecordView, 'the `isFullRecordView` flag should be true').to.be.true;
+
+          // Call the function
+          toggleTabUI(args);
+        });
+
+        it('should update the text to remove the item', function () {
+          expect(getButton().textContent, 'the button should have the correct text').to.equal('Remove item from list');
+        });
+
+        it('should update the text to add the item', function () {
+          // Check that `isAdded` is set to `false`
+          args.isAdded = false;
+          expect(args.isAdded, 'the `isAdded` flag should be false').to.be.false;
+
+          // Call the function again
+          toggleTabUI(args);
+
+          // Check that the button text has been updated
+          expect(getButton().textContent, 'the button should have the correct text').to.equal('Add item to list');
+        });
+      });
+
+      describe('not full record view', function () {
+        beforeEach(function () {
+          // Check that full record is not being viewed
+          args.isFullRecordView = false;
+          expect(args.isFullRecordView, 'the `isFullRecordView` flag should be false').to.be.false;
+
+          // Call the function
+          toggleTabUI(args);
+        });
+
+        it('should update the text to remove the selected items', function () {
+          expect(getButton().textContent, 'the button should have the correct text').to.equal('Remove selected from list');
+        });
+
+        it('should update the text to add the selected items', function () {
+          // Check that `isAdded` is set to `false`
+          args.isAdded = false;
+          expect(args.isAdded, 'the `isAdded` flag should be false').to.be.false;
+
+          // Call the function again
+          toggleTabUI(args);
+
+          // Check that the button text has been updated
+          expect(getButton().textContent, 'the button should have the correct text').to.equal('Add selected to list');
+        });
+      });
+    });
+  });
+
+  describe('toggleTabpanelButtonUI()', function () {
+    let getButton = null;
+    let args = null;
+
+    beforeEach(function () {
+      // Apply HTML to the body
+      document.body.innerHTML = `<button></button>`;
+
+      getButton = () => {
+        return document.querySelector('button');
+      };
+
+      args = {
+        button: getButton(),
+        isAdded: true
+      };
+
+      // Check that the button does not have text
+      expect(getButton().textContent, 'the button should not have text').to.equal('');
+
+      // Call the function
+      toggleTabpanelButtonUI(args);
+    });
+
+    it('should update the text to remove the item', function () {
+      expect(getButton().textContent, 'the button should have the correct text').to.equal('Remove from My Temporary List');
+    });
+
+    it('should update the text to add the item', function () {
+      // Check that `isAdded` is set to `false`
+      args.isAdded = false;
+      expect(args.isAdded, 'the `isAdded` flag should be false').to.be.false;
+
+      // Call the function again
+      toggleTabpanelButtonUI(args);
+
+      // Check that the button text has been updated
+      expect(getButton().textContent, 'the button should have the correct text').to.equal('Add to My Temporary List');
     });
   });
 });

@@ -36,6 +36,8 @@
   ^^ [] Create function to handle button click event
 */
 
+import { viewingFullRecord } from '../../../record/layout.js';
+
 const listName = 'temporaryList';
 
 /* eslint-disable sort-keys */
@@ -102,6 +104,19 @@ const fetchAndAddRecord = async ({ list, recordDatastore, recordId, url }) => {
   return updatedList;
 };
 
+const toggleTabUI = ({ button, isAdded, isFullRecordView = viewingFullRecord }) => {
+  // Update the button class
+  button.classList.toggle('actions__my-temporary-list--remove', isAdded);
+  // Update the button text
+  const type = isFullRecordView ? 'item' : 'selected';
+  button.textContent = isAdded ? `Remove ${type} from list` : `Add ${type} to list`;
+};
+
+const toggleTabpanelButtonUI = ({ button, isAdded }) => {
+  // Update the button text
+  button.textContent = `${isAdded ? 'Remove from' : 'Add to'} My Temporary List`;
+};
+
 const toggleTemporaryListItem = ({ list }) => {
   // eslint-disable-next-line no-console
   console.log('Toggling temporary list item with list:', list);
@@ -114,5 +129,7 @@ export {
   inTemporaryList,
   removeRecordFromList,
   setTemporaryList,
+  toggleTabpanelButtonUI,
+  toggleTabUI,
   toggleTemporaryListItem
 };
