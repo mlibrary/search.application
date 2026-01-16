@@ -36,6 +36,10 @@
   ^^ [] Create function to handle button click event
 */
 
+/*
+  Scan all elements that contain `data-record-id` and `data-record-datastore` attributes, and toggle class
+*/
+
 import { viewingFullRecord } from '../../../record/layout.js';
 
 const listName = 'temporaryList';
@@ -116,6 +120,12 @@ const toggleTabpanelButtonUI = ({ button, isAdded }) => {
   // Update the button text
   button.textContent = `${isAdded ? 'Remove from' : 'Add to'} My Temporary List`;
 };
+
+const allRecordsInList = ({ list, records }) => {
+  return records.length === list.length;
+};
+
+const toggleUI
 
 const toggleTemporaryListItem = ({ list }) => {
   // eslint-disable-next-line no-console

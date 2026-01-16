@@ -3,6 +3,7 @@ import { addToList } from '../list/partials/_add-to.js';
 import copyLink from '../partials/actions/action/_link.js';
 import { getTemporaryList } from '../partials/actions/action/_my-temporary-list.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
+import { initializeFullRecord } from './layout.js';
 import shelfBrowse from './partials/_shelf-browse.js';
 import toggleItems from '../partials/_toggle.js';
 import toggleMARCData from './partials/_marc.js';
@@ -28,6 +29,9 @@ copyLink();
 
 // Add to My Temporary List
 addToList({ list });
+
+// Full record functions
+initializeFullRecord({ list });
 
 // Record Title
 toggleTruncatedText();
