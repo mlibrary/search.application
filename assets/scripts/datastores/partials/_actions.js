@@ -63,10 +63,10 @@ const fetchFormResults = async (form) => {
 
   const response = await fetch(form.action, {
     body: formData,
-    method: form.method,
     headers: {
-      "Accept": "application/json",
+      Accept: 'application/json'
     },
+    method: form.method
   });
 
   return response;

@@ -6,7 +6,6 @@ describe Search::Email::Catalog do
   it "sends an email?" do
     bib_id = "9912345"
     data = create(:catalog_api_record)
-    call_number = data["call_number"][0]["text"]
     stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
       .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
     # stub_request(:get, "#{S.catalog_browse_url}/carousel?query=#{call_number}")

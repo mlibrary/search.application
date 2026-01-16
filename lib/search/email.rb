@@ -6,10 +6,6 @@ class Search::Email
     @template_cache ||= Sinatra::TemplateCache.new
   end
 
-  def text
-    raise NotImplementedError
-  end
-
   def template
     raise NotImplementedError
   end
