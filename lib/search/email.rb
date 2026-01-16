@@ -29,11 +29,12 @@ class Search::Email
       m.to to
       m.subject subject
       m.text_part do |t|
-        t.body = text
+        t.charset = "UTF-8"
+        t.body text
       end
       m.html_part do |h|
         h.content_type "text/html; charset=UTF-8"
-        h.body = html
+        h.body html
       end
     end
 
