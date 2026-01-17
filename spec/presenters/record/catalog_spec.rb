@@ -21,7 +21,6 @@ describe Search::Presenters::Record::Catalog::Full do
     finding_aids: "Indexes/Finding Aids",
     former_publication_frequency: "Former Publication Frequency",
     funding_information: "Funding Information",
-    in_collection: "In Collection",
     language_note: "Language note",
     location_of_originals: "Location of Originals",
     manufactured: "Manufactured",
@@ -55,7 +54,8 @@ describe Search::Presenters::Record::Catalog::Full do
     related_title: "Related Title",
     preferred_title: "Preferred Title",
     previous_title: "Previous Title",
-    other_titles: "Other Titles"
+    other_titles: "Other Titles",
+    in_collection: "In Collection"
   }
   single_string_fields = {
     contents: "Contents",
