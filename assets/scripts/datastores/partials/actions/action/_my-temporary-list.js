@@ -80,34 +80,6 @@ const inTemporaryList = ({ list, recordDatastore, recordId }) => {
   return Boolean(list?.[recordDatastore]?.[recordId]);
 };
 
-const removeRecordFromList = ({ list, recordDatastore, recordId }) => {
-  const updatedList = { ...list };
-  if (updatedList[recordDatastore] && updatedList[recordDatastore][recordId]) {
-    delete updatedList[recordDatastore][recordId];
-  }
-  return updatedList;
-};
-
-const fetchAndAddRecord = async ({ list, recordDatastore, recordId, url }) => {
-  const updatedList = { ...list };
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      // Return the original list if the fetch fails
-      return updatedList;
-    }
-    // Add the record information to the list
-    const data = await response.json();
-    updatedList[recordDatastore][recordId] = data;
-  } catch {
-    // Silent failure, so no action is needed
-    return updatedList;
-  }
-
-  return updatedList;
-};
-
 const toggleTabUI = ({ button, isAdded, isFullRecordView = viewingFullRecord }) => {
   // Update the button class
   button.classList.toggle('actions__my-temporary-list--remove', isAdded);
@@ -116,16 +88,9 @@ const toggleTabUI = ({ button, isAdded, isFullRecordView = viewingFullRecord }) 
   button.textContent = isAdded ? `Remove ${type} from list` : `Add ${type} to list`;
 };
 
-const toggleTabpanelButtonUI = ({ button, isAdded }) => {
-  // Update the button text
-  button.textContent = `${isAdded ? 'Remove from' : 'Add to'} My Temporary List`;
-};
-
 const allRecordsInList = ({ list, records }) => {
   return records.length === list.length;
 };
-
-const toggleUI
 
 const toggleTemporaryListItem = ({ list }) => {
   // eslint-disable-next-line no-console
@@ -133,13 +98,11 @@ const toggleTemporaryListItem = ({ list }) => {
 };
 
 export {
+  allRecordsInList,
   defaultTemporaryList,
-  fetchAndAddRecord,
   getTemporaryList,
   inTemporaryList,
-  removeRecordFromList,
   setTemporaryList,
-  toggleTabpanelButtonUI,
   toggleTabUI,
   toggleTemporaryListItem
 };

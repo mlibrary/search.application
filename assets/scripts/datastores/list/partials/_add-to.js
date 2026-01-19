@@ -1,9 +1,5 @@
-import {
-  fetchAndAddRecord,
-  inTemporaryList,
-  removeRecordFromList,
-  setTemporaryList
-} from '../../partials/actions/action/_my-temporary-list.js';
+import { fetchAndAddRecord, removeRecordFromList } from '../../partials/actions/action/my-temporary-list/_button.js';
+import { inTemporaryList, setTemporaryList } from '../../partials/actions/action/_my-temporary-list.js';
 import toggleBanner from './_go-to.js';
 import { toggleContainerClass } from '../../record/layout.js';
 import { updateButtonUI } from './add-to/_button.js';
