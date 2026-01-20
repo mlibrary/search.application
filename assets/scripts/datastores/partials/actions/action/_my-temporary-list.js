@@ -88,17 +88,12 @@ const toggleTabUI = ({ button, isAdded, isFullRecordView = viewingFullRecord }) 
   button.textContent = isAdded ? `Remove ${type} from list` : `Add ${type} to list`;
 };
 
-const allRecordsInList = ({ list, records }) => {
-  return records.length === list.length;
-};
-
 const toggleTemporaryListItem = ({ list }) => {
   // eslint-disable-next-line no-console
   console.log('Toggling temporary list item with list:', list);
 };
 
 export {
-  allRecordsInList,
   defaultTemporaryList,
   getTemporaryList,
   inTemporaryList,

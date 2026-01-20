@@ -1,21 +1,35 @@
 import {
   fetchAndAddRecord,
+  listButton,
   removeRecordFromList,
-  toggleButtonText
+  toggleButtonText,
+  toggleItemsForList
 } from '../../../../../../../assets/scripts/datastores/partials/actions/action/my-temporary-list/_button.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
 describe('button', function () {
-  let getButton = null;
-
   beforeEach(function () {
     // Apply HTML to the body
-    document.body.innerHTML = `<button></button>`;
+    document.body.innerHTML = `<button class="action__my-temporary-list"></button>`;
+  });
 
-    getButton = () => {
-      return document.createElement('button');
-    };
+  describe('listButton()', function () {
+    beforeEach(function () {
+      global.HTMLButtonElement = window.HTMLButtonElement;
+    });
+
+    afterEach(function () {
+      delete global.HTMLButtonElement;
+    });
+
+    it('should return the button', function () {
+      expect(listButton(), 'listButton() should return an HTMLButtonElement').to.be.instanceOf(HTMLButtonElement);
+    });
+
+    it('should have the class "action__my-temporary-list"', function () {
+      expect(listButton().classList.contains('action__my-temporary-list'), 'listButton() should have the class "action__my-temporary-list"').to.be.true;
+    });
   });
 
   describe('toggleButtonText()', function () {
@@ -23,7 +37,7 @@ describe('button', function () {
 
     beforeEach(function () {
       args = {
-        button: getButton(),
+        button: listButton(),
         isAdded: false
       };
 
@@ -117,7 +131,7 @@ describe('button', function () {
       [recordDatastore] = Object.keys(list);
       [recordId] = Object.keys(list[recordDatastore]);
 
-      args = { list, recordDatastore, recordId, url: `/${recordDatastore}/record/${recordId}/brief` };
+      args = { list, recordDatastore, recordId };
     });
 
     afterEach(function () {
@@ -126,6 +140,14 @@ describe('button', function () {
       recordDatastore = null;
       recordId = null;
       args = null;
+    });
+
+    it('should try and fetch the record brief', async function () {
+      // Call the function
+      await fetchAndAddRecord(args);
+
+      // Check that the fetch URL is correct
+      expect(fetchStub.calledOnceWithExactly(`/${recordDatastore}/record/${recordId}/brief`), 'fetch should be called with the correct URL').to.be.true;
     });
 
     it('should fetch the record and add it to the list', async function () {
@@ -167,6 +189,40 @@ describe('button', function () {
 
       // Check that the list remains unchanged
       expect(updatedList, 'the list should remain unchanged').to.deep.equal(list);
+    });
+  });
+
+  describe('toggleItemsForList()', function () {
+    let listButtonSpy = null;
+    let handleListStub = null;
+
+    beforeEach(function () {
+      // Define the spies
+      listButtonSpy = sinon.stub().returns(listButton());
+      handleListStub = sinon.stub();
+
+      // Call the function
+      toggleItemsForList({ button: listButtonSpy, handleList: handleListStub, list: {} });
+    });
+
+    afterEach(function () {
+      listButtonSpy = null;
+      handleListStub = null;
+    });
+
+    it('should call `button` once', function () {
+      expect(listButtonSpy.calledOnce, '`button` should have been called').to.be.true;
+    });
+
+    it('should call `handleList` when the list button is clicked', function () {
+      // Create a click event
+      const clickEvent = new window.Event('click', { bubbles: true });
+
+      // Click the list button
+      listButtonSpy().dispatchEvent(clickEvent);
+
+      // Check that the `handleList` was called
+      expect(handleListStub.calledOnceWithExactly({ list: {} }), '`handleList` should have been called when the list button was clicked').to.be.true;
     });
   });
 });
