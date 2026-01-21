@@ -63,7 +63,7 @@ module Factories
         "previous_title_issn", "remediated_lc_subjects",
         "report_number"]
         .map do |f|
-        [f, text_field]
+          [f, text_field]
       end
     end
 
