@@ -138,8 +138,7 @@ class Search::Application < Sinatra::Base
         redirect "/#{datastore.slug}/record/:id"
       end
 
-      # post "/#{datastore.slug}/record/:id/sms", provides: "html" do
-      post "/#{datastore.slug}/record/:id/sms" do
+      post "/#{datastore.slug}/record/:id/sms", provides: "html" do
         record_url = request.url.split("?")[0].sub(/\/sms$/, "")
         if not_logged_in_user?
           flash[:error] = "User must be logged in"
@@ -155,18 +154,18 @@ class Search::Application < Sinatra::Base
         redirect record_url
       end
 
-      # post "/#{datastore.slug}/record/:id/sms", provides: "json" do
-      # content_type :json
-      # if not_logged_in_user?
-      #[403, {code: 403, message: "User must be logged in"}.to_json]
-      # else
-      # Search::SMS::Catalog.for(params["id"]).send(phone: params["phone"])
-      #[202, {code: 202, message: "SMS message has been sent"}.to_json]
-      # end
-      # rescue Twilio::REST::RestError => error
-      # S.logger.error(error.error_message, error_class: error.class)
-      #[400, {code: 400, message: "Something went wrong"}.to_json]
-      # end
+      post "/#{datastore.slug}/record/:id/sms", provides: "json" do
+        content_type :json
+        if not_logged_in_user?
+          [403, {code: 403, message: "User must be logged in"}.to_json]
+        else
+          Search::SMS::Catalog.for(params["id"]).send(phone: params["phone"])
+          [202, {code: 202, message: "SMS message has been sent"}.to_json]
+        end
+      rescue Twilio::REST::RestError => error
+        S.logger.error(error.error_message, error_class: error.class)
+        [400, {code: 400, message: "Something went wrong"}.to_json]
+      end
 
       post "/#{datastore.slug}/record/:id/email", provides: "html" do
         if not_logged_in_user?
