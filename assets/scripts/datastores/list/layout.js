@@ -6,6 +6,44 @@ import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { selectAllState } from './partials/_select-all.js';
 import { selectedText } from './partials/_in-list.js';
 
+const listName = 'temporaryList';
+
+/* eslint-disable sort-keys */
+const defaultTemporaryList = {
+  catalog: {},
+  articles: {},
+  databases: {},
+  onlinejournals: {},
+  guidesandmore: {}
+};
+/* eslint-enable sort-keys */
+
+const getTemporaryList = () => {
+  // Get session storage
+  const item = sessionStorage.getItem(listName);
+
+  // Return the default list if `item` is falsy, or returned problematic string values
+  if (!item || item === 'undefined' || item === 'null') {
+    return defaultTemporaryList;
+  }
+
+  // If failing to parse, return the default list
+  try {
+    return JSON.parse(item);
+  } catch {
+    return defaultTemporaryList;
+  }
+};
+
+const setTemporaryList = (list) => {
+  sessionStorage.setItem(listName, JSON.stringify(list));
+};
+
+const inTemporaryList = ({ list, recordDatastore, recordId }) => {
+  // Check that the datastore exists in the list, and the record ID exists within the datastore
+  return Boolean(list?.[recordDatastore]?.[recordId]);
+};
+
 const viewingTemporaryList = () => {
   return window.location.pathname === '/everything/list';
 };
@@ -138,4 +176,18 @@ const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) =>
   listFunctions.initializeNonEmptyListFunctions({ list });
 };
 
-export { createDatastoreList, datastoreHeading, handleSelectionChange, initializeNonEmptyListFunctions, isTemporaryListEmpty, nonEmptyDatastores, temporaryList, toggleListElements, viewingTemporaryList };
+export {
+  createDatastoreList,
+  datastoreHeading,
+  defaultTemporaryList,
+  getTemporaryList,
+  handleSelectionChange,
+  initializeNonEmptyListFunctions,
+  inTemporaryList,
+  isTemporaryListEmpty,
+  nonEmptyDatastores,
+  setTemporaryList,
+  temporaryList,
+  toggleListElements,
+  viewingTemporaryList
+};
