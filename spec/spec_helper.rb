@@ -5,6 +5,8 @@ require "webmock/rspec"
 require "httpx/adapters/webmock"
 require "simplecov"
 require "faker"
+require "sidekiq/testing"
+Sidekiq::Testing.fake!
 SimpleCov.start
 
 ENV["APP_ENV"] = "test"
@@ -60,6 +62,9 @@ RSpec.configure do |config|
   #   # test failures related to randomization by passing the same `--seed` value
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
+  config.before(:each) do
+    Sidekiq::Worker.clear_all
+  end
 end
 
 def fixture(path)
