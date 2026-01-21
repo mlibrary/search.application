@@ -8,8 +8,5 @@
     <button type="submit">Send email</button>
   </form>
 <% else %>
-  <form method="post" action="/auth/openid_connect">
-    <input type="hidden" name="authenticity_token" value="#{request.env["rack.session"]["csrf"]}">
-    <button type="submit">Log in to continue</button>
-  </form>
+  <%= erb :"partials/header/_login" %>
 <% end %>

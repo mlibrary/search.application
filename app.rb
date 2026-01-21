@@ -86,12 +86,7 @@ class Search::Application < Sinatra::Base
       if @patron.logged_in?
         link_to(body: "Log out", url: "/logout", classes: ["underline__none"])
       else
-        <<-HTML
-          <form id="login_form" method="post" action="/auth/openid_connect">
-            <input type="hidden" name="authenticity_token" value="#{request.env["rack.session"]["csrf"]}">
-            <button type="submit">Log in</button>
-          </form>
-        HTML
+        erb :"partials/header/_login"
       end
     end
   end
