@@ -3,6 +3,8 @@
 @use '../../media';
 @use './actions/action/email';
 @use './actions/action/citation';
+@use './actions/action/add-selected';
+@use './actions/action/remove-selected';
 @use './actions/summary';
 
 // --------------------------------------------------

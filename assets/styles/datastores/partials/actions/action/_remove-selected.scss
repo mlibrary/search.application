@@ -1,0 +1,28 @@
+// --------------------------------------------------
+//
+// # Remove selected
+//   Styles to apply directly to `views/datastores/partials/actions/action/_remove-selected.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Tabpanel
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: "remove-selected";
+
+
+
+
+
+// ******************* //
+// *** 2. TABPANEL *** //
+// ******************* //
+
+body.no-javascript #actions__#{$class}--tabpanel {
+  display: none;
+}

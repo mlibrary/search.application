@@ -1,5 +1,6 @@
 import { addToList, getTemporaryList } from '../list/partials/_add-to.js';
 import { shareForm, tabControl } from '../partials/_actions.js';
+import { addSelected } from '../partials/actions/action/_add-selected.js';
 import copyLink from '../partials/actions/action/_link.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
 import shelfBrowse from './partials/_shelf-browse.js';
@@ -21,6 +22,9 @@ shareForm('#actions__text--tabpanel');
 
 // Citations
 initializeCitations();
+
+// Add selected
+addSelected();
 
 // Copy link
 copyLink();

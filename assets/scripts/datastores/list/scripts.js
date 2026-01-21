@@ -1,4 +1,5 @@
 import { shareForm, tabControl } from '../partials/_actions.js';
+import { addSelected } from '../partials/actions/action/_add-selected.js';
 import { downloadTemporaryListRIS } from '../partials/actions/action/_ris.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
@@ -23,6 +24,9 @@ initializeCitations();
 
 // RIS
 downloadTemporaryListRIS({ list });
+
+// Add selected
+addSelected();
 
 // Remove selected
 removeSelected({ list });
