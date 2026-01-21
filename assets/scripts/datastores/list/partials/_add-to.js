@@ -1,4 +1,5 @@
 import { inTemporaryList, setTemporaryList } from '../layout.js';
+import { fetchAndAddRecord } from '../../partials/actions/action/_add-selected.js';
 import toggleBanner from './_go-to.js';
 import { toggleContainerClass } from '../../record/layout.js';
 import { updateButtonUI } from './add-to/_button.js';
@@ -33,26 +34,6 @@ const removeRecordFromList = ({ list, recordDatastore, recordId }) => {
   if (updatedList[recordDatastore] && updatedList[recordDatastore][recordId]) {
     delete updatedList[recordDatastore][recordId];
   }
-  return updatedList;
-};
-
-const fetchAndAddRecord = async ({ list, recordDatastore, recordId, url }) => {
-  const updatedList = { ...list };
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      // Return the original list if the fetch fails
-      return updatedList;
-    }
-    // Add the record information to the list
-    const data = await response.json();
-    updatedList[recordDatastore][recordId] = data;
-  } catch {
-    // Silent failure, so no action is needed
-    return updatedList;
-  }
-
   return updatedList;
 };
 
