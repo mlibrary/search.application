@@ -1,5 +1,4 @@
 require "rack/session"
-require "debug"
 require "sidekiq"
 require "sidekiq/web"
 require "securerandom"

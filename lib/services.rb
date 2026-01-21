@@ -65,6 +65,10 @@ S.register(:dev_login?) do
   S.app_env == "development" && ENV["DEV_LOGIN"]
 end
 
+S.register(:workshop?) do
+  S.app_env == "development"
+end
+
 class ProductionFormatter < SemanticLogger::Formatters::Json
   # Leave out the pid
   def pid
@@ -93,9 +97,9 @@ end
 
 Mail.defaults do
   # if S.app_env == "production"
-  # delivery_method :smtp, address: ENV.fetch("MAIL_RELAY")
-  delivery_method :logger, logger: S.logger, severity: :info
-  # else
-  #   delivery_method :logger, logger: S.logger, severity: :info
-  # end
+  if ENV["MAIL_RELAY"]
+    delivery_method :smtp, address: ENV.fetch("MAIL_RELAY")
+  else
+    delivery_method :logger, logger: S.logger, severity: :info
+  end
 end
