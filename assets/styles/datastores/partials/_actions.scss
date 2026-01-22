@@ -2,7 +2,9 @@
 @use '../../icons';
 @use '../../media';
 @use './actions/action/email';
+@use './actions/action/text';
 @use './actions/action/citation';
+@use './actions/action/remove-selected';
 @use './actions/summary';
 
 // --------------------------------------------------
