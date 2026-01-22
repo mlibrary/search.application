@@ -81,7 +81,7 @@ const changeAlert = async ({ element, response }) => {
 };
 
 const shareForm = (panel, formResults = fetchFormResults) => {
-  const form = document.querySelector(`${panel} form:not(#login_form)`);
+  const form = document.querySelector(`${panel} form:not(.login__form)`);
 
   // Return if form not found because the user is not logged in
   if (!form) {
