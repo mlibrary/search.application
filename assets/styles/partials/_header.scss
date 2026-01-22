@@ -84,6 +84,10 @@ $component: "m-website-header";
 // * 3.2 LOGIN * //
 // *           * //
 
+body.no-javascript #{ $component} .utility__list--item-login {
+  display: none;
+}
+
 #{$component} .login__form button {
   all: unset;
   color: white;

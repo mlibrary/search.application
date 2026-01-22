@@ -12,14 +12,14 @@
 <m-website-header name="Search" variant="dark">
   <nav aria-label="Utility" class="viewport-container">
     <%= erb :'partials/header/_logo' %>
-    <ul>
-      <li>
+    <ul class="utility__list">
+      <li class="utility__list--item">
         <%= link_to(body: "Account", url: "https://account.lib.umich.edu/", classes: ["underline__none"]) %>
       </li>
-      <li>
+      <li class="utility__list--item utility__list--item-login">
         <%= login %>
       </li>
-      <li>
+      <li class="utility__list--item">
         <%= erb :'partials/header/_choose-affiliation', locals: { current_affiliation: @patron.affiliation } %>
       </li>
     </ul>
