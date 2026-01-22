@@ -5,8 +5,7 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Log In
-//   3. Alert
+//   2. No JavaScript
 //
 // --------------------------------------------------
 
@@ -20,26 +19,13 @@ $class: "email";
 
 
 
-// ***************** //
-// *** 2. LOG IN *** //
-// ***************** //
+// ************************ //
+// *** 2. NO JAVASCRIPT *** //
+// ************************ //
 
 body.no-javascript {
   button#actions__#{$class},
   #actions__#{$class}--tabpanel {
     display: none;
   }
-}
-
-
-
-
-
-// **************** //
-// *** 3. ALERT *** //
-// **************** //
-
-.actions__alert {
-  display: none;
-  margin-bottom: 1rem;
 }

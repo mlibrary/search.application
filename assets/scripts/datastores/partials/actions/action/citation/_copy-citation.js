@@ -16,7 +16,7 @@ const disableCopyCitationButton = () => {
 
 const copyCitationObject = (activeCitationTabpanel = getActiveCitationTabpanel) => {
   // Pass in `activeCitationTabpanel` for testing
-  const [alert, citation] = activeCitationTabpanel().querySelectorAll('.actions__alert, .citation__input');
+  const [alert, citation] = activeCitationTabpanel().querySelectorAll('.alert, .citation__input');
 
   return { alert, text: citation.textContent.trim() };
 };

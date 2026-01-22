@@ -1,8 +1,6 @@
 <% citations.each do |key, value| %>
   <div id="citation__<%= key.downcase %>--tabpanel" role="tabpanel" aria-labelledby="citation__<%= key.downcase %>" class="citation__tabpanel">
-    <div class="alert alert__success actions__alert">
-      Citation copied to clipboard!
-    </div>
+    <%= erb :"datastores/partials/actions/_alert", locals: { type: "success", message: "Citation copied to clipboard!" } %>
     <%= erb :"datastores/partials/actions/action/citation/tabpanel/_textbox", locals: { style: key } %>
   </div>
 <% end %>
