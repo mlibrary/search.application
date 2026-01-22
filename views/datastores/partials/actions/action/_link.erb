@@ -1,6 +1,4 @@
-<div class="alert alert__success actions__alert">
-  Link copied!
-</div>
+<%= erb :"datastores/partials/actions/_alert", locals: { type: "success", message: "Link copied!" } %>
 <form class="actions__form action__link--form">
   <label for="action__link--input">Copy link</label>
   <input type="url" id="action__link--input" name="action__link--input" autocomplete="off" value="<%= request.url.sub("?" + request.query_string, "") %>">
