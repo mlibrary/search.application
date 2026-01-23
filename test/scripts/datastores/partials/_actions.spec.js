@@ -1,4 +1,4 @@
-import { copyToClipboard, disableActionTabs, getTabPanel, isSelected, shareForm, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { copyToClipboard, disableActionTabs, getTabPanel, isSelected, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
@@ -9,7 +9,6 @@ describe('actions', function () {
   let firstTab = null;
   let secondTab = null;
   let getAlert = null;
-  let getForm = null;
 
   beforeEach(function () {
     // Apply HTML to the body
@@ -25,10 +24,6 @@ describe('actions', function () {
         </div>
         <div id="tabpanel1" role="tabpanel">
           <div class="alert alert__warning">This is a warning.</div>
-          <form class="action__record--form" action="/submit" method="post">
-            <input type="email" id="record" name="record" required>
-            <button type="submit">Send Record</button>
-          </form>
         </div>
         <div id="tabpanel2" role="tabpanel">
           Tab Panel 2
@@ -48,10 +43,6 @@ describe('actions', function () {
       return document.querySelector('.alert');
     };
 
-    getForm = () => {
-      return document.querySelector('form');
-    };
-
     // Make sure the first tab is selected
     expect(firstTab().getAttribute('aria-selected'), 'Tab 1 should be selected.').to.equal('true');
   });
@@ -60,7 +51,6 @@ describe('actions', function () {
     firstTab = null;
     secondTab = null;
     getAlert = null;
-    getForm = null;
   });
 
   describe('isSelected()', function () {
@@ -208,67 +198,6 @@ describe('actions', function () {
           expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
         });
       });
-    });
-  });
-
-  describe('fetchFormResults()', function () {
-    //
-  });
-
-  describe('shareForm()', function () {
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = `
-        <div id="actions__record--tabpanel">
-          <div class="alert alert__warning actions__alert">
-            We're sorry. Something went wrong. Please use Ask a Librarian for help.
-          </div>
-          <form class="action__record--form" action="/submit" method="post">
-            <input type="email" id="record" name="record" required>
-            <button type="submit">Send Record</button>
-          </form>
-        </div>
-      `;
-    });
-
-    it('should prevent the default form submission and call shareForm', async function () {
-      const response = Response.json({ message: 'Record sent successfully.' }, { status: 200 });
-
-      const fetchFormFake = sinon.fake.resolves(response);
-      shareForm('#actions__record--tabpanel', fetchFormFake);
-
-      // Simulate form submission
-      const submitEvent = new window.Event('submit', {
-        bubbles: true,
-        cancelable: true
-      });
-      getForm().dispatchEvent(submitEvent);
-      // Wait until the async calls resolve
-      await new Promise((resolve) => {
-        setTimeout(resolve, 10);
-      });
-
-      expect(getAlert().textContent).to.include('Record sent successfully.');
-    });
-
-    it('should show an error on submission', async function () {
-      const response = Response.json({ message: 'Please enter a valid email address (e.g. uniqname@umich.edu)' }, { status: 500 });
-
-      const fetchFormFake = sinon.fake.returns(response);
-      shareForm('#actions__record--tabpanel', fetchFormFake);
-
-      // Simulate form submission
-      const submitEvent = new window.Event('submit', {
-        bubbles: true,
-        cancelable: true
-      });
-      getForm().dispatchEvent(submitEvent);
-      // Wait until the async calls resolve
-      await new Promise((resolve) => {
-        setTimeout(resolve, 10);
-      });
-
-      expect(getAlert().textContent).to.include('Please enter a valid email address (e.g. uniqname@umich.edu)');
     });
   });
 

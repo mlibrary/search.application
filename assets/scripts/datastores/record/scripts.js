@@ -1,9 +1,10 @@
 import { addToList, getTemporaryList } from '../list/partials/_add-to.js';
-import { shareForm, tabControl } from '../partials/_actions.js';
 import copyLink from '../partials/actions/action/_link.js';
 import { emailAction } from '../partials/actions/action/_email.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
 import shelfBrowse from './partials/_shelf-browse.js';
+import { tabControl } from '../partials/_actions.js';
+import { textAction } from '../partials/actions/action/_text.js';
 import toggleItems from '../partials/_toggle.js';
 import toggleMARCData from './partials/_marc.js';
 import toggleTruncatedText from './partials/_title.js';
@@ -18,7 +19,7 @@ tabControl('.actions');
 emailAction();
 
 // Text
-shareForm('#actions__text--tabpanel');
+textAction();
 
 // Citations
 initializeCitations();
