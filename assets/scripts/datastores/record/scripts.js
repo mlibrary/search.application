@@ -1,6 +1,7 @@
 import { addToList, getTemporaryList } from '../list/partials/_add-to.js';
 import { shareForm, tabControl } from '../partials/_actions.js';
 import copyLink from '../partials/actions/action/_link.js';
+import { emailAction } from '../partials/actions/action/_email.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
 import shelfBrowse from './partials/_shelf-browse.js';
 import toggleItems from '../partials/_toggle.js';
@@ -14,7 +15,7 @@ const list = getTemporaryList();
 tabControl('.actions');
 
 // Email
-shareForm('#actions__email--tabpanel');
+emailAction();
 
 // Text
 shareForm('#actions__text--tabpanel');

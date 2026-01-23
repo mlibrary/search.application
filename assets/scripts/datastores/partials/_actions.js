@@ -59,7 +59,7 @@ const disableActionTabs = () => {
   });
 };
 
-const fetchFormResults = async (form) => {
+const fetchFormResults = async ({ form }) => {
   const formData = new FormData(form);
 
   const response = await fetch(form.action, {
@@ -85,7 +85,7 @@ const shareForm = (panel, formResults = fetchFormResults) => {
     event.preventDefault();
     changeAlert({
       alert: document.querySelector(`${panel} .alert`),
-      response: await formResults(form)
+      response: await formResults({ form })
     });
   });
 };
