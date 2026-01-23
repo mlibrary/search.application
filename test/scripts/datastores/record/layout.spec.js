@@ -1,9 +1,41 @@
+import { toggleContainerClass, viewingFullRecord } from '../../../../assets/scripts/datastores/record/layout.js';
 import { expect } from 'chai';
-import toggleContainerClass from '../../../../assets/scripts/datastores/record/layout.js';
+import { JSDOM } from 'jsdom';
 
 const activeClass = 'record__container--active';
 
 describe('layout', function () {
+  describe('viewingFullRecord()', function () {
+    beforeEach(function () {
+      // Check that the current pathname does not include `/record/`
+      expect(window.location.pathname.includes('/record/'), 'the current pathname should not include `/record/`').to.be.false;
+    });
+
+    it('should be `false` if the current pathname does not include `/record/`', function () {
+      // Check that a full record is not being viewed
+      expect(viewingFullRecord(), 'the variable should be `false` if the current pathname is not `/record/`').to.be.false;
+    });
+
+    it('should be `true` if the current pathname is `/record/`', function () {
+      // Store the original window object
+      const originalWindow = global.window;
+
+      // Setup JSDOM with an updated URL
+      const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+        url: 'http://localhost/record/'
+      });
+
+      // Override the global window object
+      global.window = dom.window;
+
+      // Check that a full record is being viewed
+      expect(viewingFullRecord(), 'the variable should be `true` if the current pathname includes `/record/`').to.be.true;
+
+      // Restore the original window object
+      global.window = originalWindow;
+    });
+  });
+
   describe('toggleContainerClass()', function () {
     let args = null;
     let hasActiveClass = null;

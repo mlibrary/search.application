@@ -1,5 +1,5 @@
 import toggleBanner from './_go-to.js';
-import toggleContainerClass from '../../record/layout.js';
+import { toggleContainerClass } from '../../record/layout.js';
 import { updateButtonUI } from './add-to/_button.js';
 
 const listName = 'temporaryList';

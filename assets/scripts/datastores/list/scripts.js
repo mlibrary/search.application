@@ -1,5 +1,6 @@
 import { shareForm, tabControl } from '../partials/_actions.js';
 import { downloadTemporaryListRIS } from '../partials/actions/action/_ris.js';
+import { emailAction } from '../partials/actions/action/_email.js';
 import { getTemporaryList } from './partials/_add-to.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
 import { removeSelected } from '../partials/actions/action/_remove-selected.js';
@@ -13,7 +14,7 @@ const list = getTemporaryList();
 tabControl('.actions');
 
 // Email
-shareForm('#actions__email--tabpanel');
+emailAction();
 
 // Text
 shareForm('#actions__text--tabpanel');
