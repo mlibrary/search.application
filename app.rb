@@ -86,7 +86,7 @@ class Search::Application < Sinatra::Base
       if @patron.logged_in?
         link_to(body: "Log out", url: "/logout", classes: ["underline__none"])
       else
-        erb :"partials/header/_login", locals: { text: "Log in" }
+        erb :"partials/header/_login", locals: {text: "Log in"}
       end
     end
   end
