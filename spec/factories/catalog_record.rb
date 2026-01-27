@@ -4,6 +4,7 @@ module Factories::CatalogRecord
 
     METADATA_FIELDS = {
       title: "paired_text_item",  # this is the only singular one
+
       access: "paired_text_items",
       arrangement: "paired_text_items",
       association: "paired_text_items",
@@ -53,6 +54,7 @@ module Factories::CatalogRecord
       source_of_description_note: "paired_text_items",
       summary: "paired_text_items",
       terms_of_use: "paired_text_items",
+
       contents: "plain_text_items",
       gov_doc_number: "plain_text_items",
       report_number: "plain_text_items",
@@ -64,17 +66,22 @@ module Factories::CatalogRecord
       previous_title_issn: "plain_text_items",
       oclc: "plain_text_items",
       other_subjects: "plain_text_items",
+
       new_title: "paired_linked_items",
       related_title: "paired_linked_items",
       preferred_title: "paired_linked_items",
       previous_title: "paired_linked_items",
       other_titles: "paired_linked_items",
+
       call_number: "browse_items",
       lc_subjects: "browse_items",
       remediated_lc_subjects: "browse_items",
+
       main_author: "author_browse_items",
       contributors: "author_browse_items",
+
       format: "format_items",
+
       academic_discipline: "academic_discipline_items"
 
     }
