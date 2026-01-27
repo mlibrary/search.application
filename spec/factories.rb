@@ -8,10 +8,8 @@ require_relative "factories/shelf_browse"
 module Factories
   def create(factory, opts = {})
     case factory
-    when :new_catalog_api_record
-      CatalogAPIRecord.new(**opts).to_h
     when :catalog_api_record
-      CatalogAPIRecord.new(**opts).old_to_h
+      CatalogAPIRecord.new(**opts).to_h
     when :catalog_record
       CatalogRecord.record(**opts)
     when :catalog_holdings

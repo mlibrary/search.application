@@ -15,7 +15,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   end
 
   def create_catalog_api_record(*fields)
-    create(:new_catalog_api_record, fields: fields)
+    create(:catalog_api_record, fields: fields)
   end
 
   context "#id" do

@@ -17,6 +17,9 @@ RSpec.describe "requests" do
     env "rack.session", @session
     get "/accessibility?something=other"
   }
+  def base_api_record
+    create(:catalog_api_record, fields: [:id, :call_number, :title, :citation, :holdings, :indexing_date])
+  end
   context "session setting" do
     context "Logged in User" do
       it "does not touch the session when unexpired" do
@@ -157,7 +160,7 @@ RSpec.describe "requests" do
   context "/catalog/record/:id" do
     it "shows the catalog record page" do
       bib_id = "9912345"
-      data = create(:catalog_api_record)
+      data = base_api_record
       call_number = data["call_number"][0]["text"]
       stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
         .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
@@ -203,7 +206,7 @@ RSpec.describe "requests" do
           }
         }
       }
-      data = create(:catalog_api_record)
+      data = base_api_record
       bib_id = data["id"]
       data["citation"] = citation["citation"]
       stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
