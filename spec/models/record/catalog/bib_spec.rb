@@ -1,6 +1,6 @@
 RSpec.describe Search::Models::Record::Catalog::Bib do
   before(:each) do
-    @data = create(:catalog_api_record)
+    @data = nil
   end
 
   def author_browse_item_expectations(subject)
@@ -14,20 +14,25 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     described_class.new(@data)
   end
 
+  def create_catalog_api_record(*fields)
+    create(:catalog_api_record, fields: fields)
+  end
+
   context "#id" do
     it "has an id" do
+      @data = create_catalog_api_record(:id)
       expect(subject.id).to eq(@data["id"])
     end
   end
 
-  [:title].each do |field|
-    context "##{field}" do
-      it "has transliterated and original text" do
-        expect(subject.public_send(field).transliterated.text).to eq(@data[field.to_s].first["transliterated"]["text"])
-        expect(subject.public_send(field).original.text).to eq(@data[field.to_s].first["original"]["text"])
-      end
+  context "#title" do
+    it "has only one transliterated and original text" do
+      @data = create_catalog_api_record(:title)
+      expect(subject.title.transliterated.text).to eq(@data["title"].first["transliterated"]["text"])
+      expect(subject.title.original.text).to eq(@data["title"].first["original"]["text"])
     end
   end
+
   # These return a structure like this:
   # [
   #   {
@@ -48,6 +53,9 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     :reproduction_note, :series, :series_statement,
     :source_of_acquisition, :source_of_description_note, :summary, :terms_of_use].each do |field|
     context "##{field}" do
+      before(:each) do
+        @data = create_catalog_api_record(field)
+      end
       it "has transliterated and original text" do
         expect(subject.public_send(field).first.transliterated.text).to eq(@data[field.to_s].first["transliterated"]["text"])
         expect(subject.public_send(field).first.original.text).to eq(@data[field.to_s].first["original"]["text"])
@@ -69,6 +77,9 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
 
   ["new_title", "other_titles", "preferred_title", "previous_title", "related_title"].each do |field|
     context "##{field}" do
+      before(:each) do
+        @data = create_catalog_api_record(field)
+      end
       it "has text and search" do
         expected = {
           transliterated:
@@ -99,6 +110,9 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   end
   ["main_author", "contributors"].each do |field|
     context "##{field}" do
+      before(:each) do
+        @data = create_catalog_api_record(field)
+      end
       it "has an author browse result" do
         expected = {
           transliterated:
@@ -147,6 +161,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
 
   context "#call_number" do
     it "is an array with objects of text, url, browse_url, and kind" do
+      @data = create_catalog_api_record(:call_number)
       cn = @data["call_number"][0]["text"]
       s = subject.call_number.first
       expect(s.paired?).to eq(false)
@@ -159,6 +174,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
 
   context "#lc_subjects" do
     it "is an array objects of text, url, browse_url, and kind" do
+      @data = create_catalog_api_record(:lc_subjects)
       lc = "Birds -- Japan -- Identification"
       @data["lc_subjects"][0]["text"] = lc
       lc_norm = "Birds Japan Identification"
@@ -171,6 +187,7 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   end
   context "#remediated_lc_subjects" do
     it "is an array objects of text, url, browse_url, and kind" do
+      @data = create_catalog_api_record(:remediated_lc_subjects)
       lc = "Birds -- Japan -- Identification"
       @data["remediated_lc_subjects"][0]["text"] = lc
       lc_norm = "Birds Japan Identification"
@@ -183,6 +200,8 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   end
   context "#format" do
     it "shows the icons for the formats in the marc" do
+      @data = create_catalog_api_record
+      @data["format"] = ["Book"]
       format = subject.format.first
       expect(format.paired?).to eq(false)
       expect(format.text).to eq("Book")
@@ -191,6 +210,9 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
   end
 
   context "#academic_discipline" do
+    before(:each) do
+      @data = create_catalog_api_record(:academic_discipline)
+    end
     it "is an array of arrays of strings" do
       ad = subject.academic_discipline.first.disciplines.first
       expect(ad.text).to eq("Science")
@@ -205,6 +227,9 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     :new_title_issn, :previous_title_issn,
     :report_number].each do |uid|
     context "##{uid}" do
+      before(:each) do
+        @data = create_catalog_api_record(uid)
+      end
       it "is an array of OpenStructs that respond to text" do
         expected = @data[uid.to_s].first["text"]
         expect(subject.public_send(uid)[0].text).to eq(expected)

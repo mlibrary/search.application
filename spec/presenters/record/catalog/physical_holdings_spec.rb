@@ -1,6 +1,6 @@
 RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical do
   let(:record) do
-    create(:catalog_record)
+    create(:catalog_record, other_fields: [:holdings])
   end
   let(:physical_holding) do
     record.holdings.physical.list.first
