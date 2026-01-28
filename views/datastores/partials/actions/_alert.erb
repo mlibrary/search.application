@@ -1,0 +1,3 @@
+<div class="alert alert__<%= (defined?(type) && type) ? type : "warning" %>">
+  <%= (defined?(message) && message) ? message : "We're sorry. Something went wrong. Please use #{link_to(url: "https://www.lib.umich.edu/ask-librarian", body: "Ask a Librarian")} for help." %>
+</div>
