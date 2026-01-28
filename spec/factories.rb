@@ -13,7 +13,7 @@ module Factories
     when :catalog_record
       CatalogRecord.record(**opts)
     when :catalog_holdings
-      CatalogRecord.holdings
+      CatalogRecord.holdings(**opts)
     when :catalog_bib
       CatalogRecord.bib(**opts)
     when :single_script_paired_text_item

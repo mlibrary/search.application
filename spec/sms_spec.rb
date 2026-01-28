@@ -1,6 +1,6 @@
 describe Search::SMS::Catalog do
   before(:each) do
-    @record = create(:catalog_record, bib_fields: [:title], other_fields: [:holdings])
+    @record = create(:catalog_record, bib_fields: [:title], holdings: [:physical])
   end
 
   subject do

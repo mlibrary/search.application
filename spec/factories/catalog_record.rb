@@ -86,8 +86,16 @@ module Factories::CatalogRecord
 
     }
 
-    def record(bib_fields: [], other_fields: [])
-      result = instance_double(Search::Models::Record::Catalog, bib: bib(fields: bib_fields))
+    HOLDINGS = {
+      hathi_trust: "hathi_trust_holdings",
+      alma_digital: "alma_digital_holdings",
+      electronic: "electronic_holdings",
+      finding_aids: "finding_aid_holding",
+      physical: "physical_holdings"
+    }
+
+    def record(bib_fields: [], other_fields: [], holdings: [])
+      result = instance_double(Search::Models::Record::Catalog, bib: bib(fields: bib_fields), holdings: holdings(kinds: holdings))
       other_fields.each do |f|
         allow(result).to receive(f).and_return(send(f))
       end
@@ -198,10 +206,25 @@ module Factories::CatalogRecord
       instance_double(Search::Models::Record::Catalog::Citation)
     end
 
-    def holdings
-      instance_double(Search::Models::Record::Catalog::Holdings, hathi_trust: hathi_trust_holdings,
-        alma_digital: alma_digital_holdings, electronic: electronic_holdings, finding_aids: finding_aid_holding,
-        physical: physical_holdings)
+    def holdings(kinds: nil)
+      kinds = [:alma_digital, :hathi_trust, :electronic, :finding_aids, :physical] if kinds.nil? || kinds == :all
+      included_holdings = HOLDINGS.map do |h, method|
+        holding = if kinds.include?(h)
+          send(method)
+        else
+          empty_holding
+        end
+        [h, holding]
+      end.to_h
+
+      # included_holdings = kinds.map { |h| [h, send(HOLDINGS[h])] }.to_h
+      instance_double(Search::Models::Record::Catalog::Holdings, **included_holdings)
+    end
+
+    def empty_holding
+      instance_double(Search::Models::Record::Catalog::Holdings::HathiTrust,
+        items: [], count: 0,
+        has_description?: false)
     end
 
     def hathi_trust_holdings

@@ -339,7 +339,13 @@ describe Search::Presenters::Record::Catalog::Full do
   end
 end
 describe Search::Presenters::Record::Catalog::Brief do
-  let(:record) { create(:catalog_record, bib_fields: [:title, :main_author, :published, :series], other_fields: [:citation, :holdings]) }
+  let(:record) {
+    create(:catalog_record,
+      bib_fields: [:title, :main_author, :published, :series],
+      other_fields: [:citation],
+      holdings: [:alma_digital, :hathi_trust, :electronic, :finding_aids,
+        :physical])
+  }
   subject do
     described_class.new(record)
   end
