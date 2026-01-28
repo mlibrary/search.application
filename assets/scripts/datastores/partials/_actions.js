@@ -1,5 +1,5 @@
 import { someCheckboxesChecked } from '../list/partials/list-item/_checkbox.js';
-import { viewingTemporaryList } from '../list/layout.js';
+import { viewingFullRecord } from '../record/layout.js';
 
 const isSelected = (tab) => {
   return tab.getAttribute('aria-selected') === 'true';
@@ -41,8 +41,8 @@ const tabControl = (element) => {
 };
 
 const disableActionTabs = () => {
-  // Only run if viewing the temporary list
-  if (!viewingTemporaryList()) {
+  // Only run if not viewing a full record
+  if (viewingFullRecord()) {
     return;
   }
 
@@ -56,6 +56,26 @@ const disableActionTabs = () => {
     }
     tab.disabled = !someChecked;
   });
+};
+
+const toggleTabDisplay = ({ showTab, tab }) => {
+  const getTab = document.querySelector(`#${tab}`);
+  const getTabpanel = document.querySelector(`#${getTab.getAttribute('aria-controls')}`);
+
+  // Show or hide the tab
+  if (showTab) {
+    getTab.removeAttribute('style');
+  } else {
+    getTab.style.display = 'none';
+  }
+
+  // If the tab is hidden...
+  if (getTab.style.display === 'none') {
+    // Set `aria-selected` to `false`
+    getTab.setAttribute('aria-selected', 'false');
+    // Hide the tabpanel
+    getTabpanel.style.display = 'none';
+  }
 };
 
 const fetchFormResults = async (form) => {
@@ -108,5 +128,6 @@ export {
   getTabPanel,
   isSelected,
   shareForm,
-  tabControl
+  tabControl,
+  toggleTabDisplay
 };

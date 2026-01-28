@@ -1,10 +1,25 @@
-import { toggleContainerClass, viewingFullRecord } from '../../../../assets/scripts/datastores/record/layout.js';
+import { getRecordData, toggleContainerClass, viewingFullRecord } from '../../../../assets/scripts/datastores/record/layout.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 
 const activeClass = 'record__container--active';
 
 describe('layout', function () {
+  let getRecordContainer = null;
+
+  beforeEach(function () {
+    // Apply HTML to the body
+    document.body.innerHTML = `<div class="record__container" data-record-id="1337" data-record-datastore="catalog"></div>`;
+
+    getRecordContainer = () => {
+      return document.querySelector('.record__container');
+    };
+  });
+
+  afterEach(function () {
+    getRecordContainer = null;
+  });
+
   describe('viewingFullRecord()', function () {
     beforeEach(function () {
       // Check that the current pathname does not include `/record/`
@@ -36,22 +51,31 @@ describe('layout', function () {
     });
   });
 
+  describe('getRecordData()', function () {
+    it('should return an object', function () {
+      expect(getRecordData()).to.be.an('object');
+    });
+
+    it('should return the correct record data', function () {
+      const { recordDatastore, recordId } = getRecordContainer().dataset;
+      expect(getRecordData()).to.deep.equal({ recordDatastore, recordId });
+    });
+  });
+
   describe('toggleContainerClass()', function () {
     let args = null;
     let hasActiveClass = null;
 
     beforeEach(function () {
+      const { recordDatastore, recordId } = getRecordContainer().dataset;
       args = {
         isAdded: true,
-        recordDatastore: 'catalog',
-        recordId: '1337'
+        recordDatastore,
+        recordId
       };
 
-      // Apply HTML to the body
-      document.body.innerHTML = `<div class="record__container" data-record-id="${args.recordId}" data-record-datastore="${args.recordDatastore}"></div>`;
-
       hasActiveClass = () => {
-        return document.querySelector('div').classList.contains(activeClass);
+        return getRecordContainer().classList.contains(activeClass);
       };
 
       // Check that the record does not have the class to begin with

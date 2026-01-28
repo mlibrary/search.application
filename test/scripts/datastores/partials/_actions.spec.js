@@ -1,11 +1,12 @@
-import { changeAlert, copyToClipboard, disableActionTabs, getTabPanel, isSelected, shareForm, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { changeAlert, copyToClipboard, disableActionTabs, getTabPanel, isSelected, shareForm, tabControl, toggleTabDisplay } from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
-import { viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
+import { viewingFullRecord } from '../../../../assets/scripts/datastores/record/layout.js';
 
 describe('actions', function () {
+  let tabContainer = null;
   let firstTab = null;
   let secondTab = null;
   let getAlert = null;
@@ -16,14 +17,14 @@ describe('actions', function () {
     document.body.innerHTML = `
       <div class="tabs">
         <div role="tablist">
-          <button type="button" role="tab" aria-selected="true" aria-controls="tabpanel1">
+          <button type="button" role="tab" aria-selected="true" id="tab1" aria-controls="tabpanel1">
             Tab 1
           </button>
-          <button type="button" role="tab" aria-selected="false" aria-controls="tabpanel2">
+          <button type="button" role="tab" aria-selected="false" id="tab2" aria-controls="tabpanel2">
             Tab 2
           </button>
         </div>
-        <div id="tabpanel1" role="tabpanel">
+        <div id="tabpanel1" role="tabpanel" style="display: block;">
           <div class="alert alert__warning">This is a warning.</div>
           <form class="action__record--form" action="/submit" method="post">
             <input type="email" id="record" name="record" required>
@@ -35,6 +36,10 @@ describe('actions', function () {
         </div>
       </div>
     `;
+
+    tabContainer = () => {
+      return document.querySelector('.tabs');
+    };
 
     firstTab = () => {
       return document.querySelector('[aria-controls="tabpanel1"]');
@@ -57,6 +62,7 @@ describe('actions', function () {
   });
 
   afterEach(function () {
+    tabContainer = null;
     firstTab = null;
     secondTab = null;
     getAlert = null;
@@ -76,7 +82,7 @@ describe('actions', function () {
   describe('getTabPanel()', function () {
     it('should return the appropriate `tabpanel`', function () {
       const tab = firstTab();
-      expect(getTabPanel({ tab, tabContainer: document.querySelector('.tabs') }), 'the appropriate `tabpanel` should have been returned').to.equal(document.querySelector(`#${tab.getAttribute('aria-controls')}`));
+      expect(getTabPanel({ tab, tabContainer: tabContainer() }), 'the appropriate `tabpanel` should have been returned').to.equal(document.querySelector(`#${tab.getAttribute('aria-controls')}`));
     });
   });
 
@@ -143,21 +149,7 @@ describe('actions', function () {
       };
     });
 
-    describe('when not viewing the temporary list', function () {
-      beforeEach(function () {
-        // Check that Temporary List is not being viewed
-        expect(viewingTemporaryList(), 'the current pathname should not be `/everything/list`').to.be.false;
-
-        // Call the function
-        disableActionTabs();
-      });
-
-      it('should not return anything', function () {
-        expect(disableActionTabs()).to.be.undefined;
-      });
-    });
-
-    describe('when viewing the temporary list', function () {
+    describe('when viewing a full record', function () {
       let originalWindow = null;
 
       beforeEach(function () {
@@ -166,19 +158,33 @@ describe('actions', function () {
 
         // Setup JSDOM with an updated URL
         const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
-          url: 'http://localhost/everything/list'
+          url: 'http://localhost/catalog/record/1337'
         });
 
         // Override the global window object
         global.window = dom.window;
 
-        // Check that Temporary List is being viewed
-        expect(viewingTemporaryList(), 'the current pathname should be `/everything/list`').to.be.true;
+        // Check that a full record is being viewed
+        expect(viewingFullRecord(), 'the current pathname should include `/record/`').to.be.true;
       });
 
       afterEach(function () {
         // Restore the original window object
         global.window = originalWindow;
+      });
+
+      it('should not return anything', function () {
+        expect(disableActionTabs()).to.be.undefined;
+      });
+    });
+
+    describe('when not viewing a full record', function () {
+      beforeEach(function () {
+        // Check that a full record is not being viewed
+        expect(viewingFullRecord(), 'the current pathname should not include `/record/`').to.be.false;
+
+        // Call the function
+        disableActionTabs();
       });
 
       it('should disable all action tabs if no checkboxes are checked', function () {
@@ -208,6 +214,64 @@ describe('actions', function () {
           expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
         });
       });
+    });
+  });
+
+  describe('toggleTabDisplay()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        showTab: true,
+        tab: 'tab1'
+      };
+
+      // Check that the tab has `aria-selected` set
+      expect(firstTab().getAttribute('aria-selected'), '`aria-selected` should be set').to.equal('true');
+
+      // Check that the tab does not have `style` set
+      expect(firstTab().getAttribute('style'), '`style` should not be set on the tab').to.equal(null);
+
+      // Check that the tabpanel has `display` set
+      expect(getTabPanel({ tab: firstTab(), tabContainer: tabContainer() }).style.display, '`display` should be set on the tabpanel').to.equal('block');
+
+      // Check that `tab` is set
+      expect(args.tab).to.not.be.undefined;
+    });
+
+    it('should show the tab', function () {
+      // Check that `showTab` is true
+      expect(args.showTab).to.be.true;
+
+      // Call the function
+      toggleTabDisplay(args);
+
+      // Check that the tab has `aria-selected` set to true
+      expect(firstTab().getAttribute('aria-selected'), '`aria-selected` should be set').to.equal('true');
+
+      // Check that the tab does not have `style` set
+      expect(firstTab().getAttribute('style'), '`style` should not be set on the tab').to.equal(null);
+
+      // Check that the tabpanel is displaying
+      expect(getTabPanel({ tab: firstTab(), tabContainer: tabContainer() }).style.display, '`display` should be set on the tabpanel').to.equal('block');
+    });
+
+    it('should not show the tab', function () {
+      // Check that `showTab` is false
+      args.showTab = false;
+      expect(args.showTab).to.be.false;
+
+      // Call the function
+      toggleTabDisplay(args);
+
+      // Check that the tab has `aria-selected` set to false
+      expect(firstTab().getAttribute('aria-selected'), '`aria-selected` should be set').to.equal('false');
+
+      // Check that the tab is not displaying
+      expect(firstTab().style.display, '`display` should be set on the tab').to.equal('none');
+
+      // Check that the tabpanel is not displaying
+      expect(getTabPanel({ tab: firstTab(), tabContainer: tabContainer() }).style.display, '`display` should be set on the tabpanel').to.equal('none');
     });
   });
 
