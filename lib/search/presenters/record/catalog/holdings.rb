@@ -12,8 +12,8 @@ class Search::Presenters::Record::Catalog::Holdings
   def list
     [
       # send the holding not the items
-      HathiTrust.new(@holdings.hathi_trust),
-      Online.new(@holdings),
+      hathi_trust,
+      online,
       finding_aids,
       * physical
     ].reject { |x| x.empty? }
@@ -27,6 +27,14 @@ class Search::Presenters::Record::Catalog::Holdings
     else
       []
     end
+  end
+
+  def hathi_trust
+    HathiTrust.new(@holdings.hathi_trust)
+  end
+
+  def online
+    Online.new(@holdings)
   end
 
   def finding_aids
