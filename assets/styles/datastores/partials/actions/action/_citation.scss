@@ -9,7 +9,7 @@
 // --------------------------------------------------
 //
 // # Actions
-//   Styles to apply directly to `views/datastores/partials/actions/_citation.erb`.
+//   Styles to apply directly to `views/datastores/partials/actions/action/_citation.erb`.
 //
 // ## Table of Contents
 //   1. Variables
@@ -108,4 +108,14 @@ body.no-javascript {
 #{$class} #{$class}__not-available {
   color: var(--search-color-grey-600);
   font-style: italic;
+}
+
+
+
+// *           * //
+// * 4.1 ALERT * //
+// *           * //
+
+#{$class}__tabpanel .alert {
+  margin-top: 1rem;
 }
