@@ -1,5 +1,5 @@
 RSpec.describe Search::Models::Record::Catalog do
-  let(:data) { create(:catalog_api_record) }
+  let(:data) { create(:catalog_api_record, fields: [:indexing_date]) }
 
   subject { described_class.new(data) }
 

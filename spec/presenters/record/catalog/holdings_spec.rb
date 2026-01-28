@@ -1,6 +1,6 @@
 RSpec.describe Search::Presenters::Record::Catalog::Holdings do
   let(:record) do
-    create(:catalog_record)
+    create(:catalog_record, other_fields: [:holdings])
   end
   let(:ht_holdings) do
     record.holdings.hathi_trust

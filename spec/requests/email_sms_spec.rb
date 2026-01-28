@@ -11,7 +11,7 @@ RSpec.describe "sms and email requests" do
     }
     Mail::TestMailer.deliveries.clear
   end
-  let(:catalog_api_record) { create(:catalog_api_record) }
+  let(:catalog_api_record) { create(:catalog_api_record, fields: [:call_number, :title, :citation, :holdings, :indexing_date]) }
   let(:stub_catalog_record_request) do
     stub_request(:get, "#{S.catalog_api_url}/records/some_id")
       .to_return(status: 200, body: catalog_api_record.to_json, headers: {content_type: "application/json"})
