@@ -1,3 +1,4 @@
+import { changeAlert } from './actions/_alert.js';
 import { someCheckboxesChecked } from '../list/partials/list-item/_checkbox.js';
 import { viewingTemporaryList } from '../list/layout.js';
 
@@ -72,14 +73,6 @@ const fetchFormResults = async (form) => {
   return response;
 };
 
-const changeAlert = async ({ element, response }) => {
-  const json = await response.json();
-  const alert = document.querySelector(element);
-  alert.classList.replace('alert__warning', `alert__${response.ok ? 'success' : 'error'}`);
-  alert.textContent = json.message;
-  alert.style.display = 'block';
-};
-
 const shareForm = (panel, formResults = fetchFormResults) => {
   const form = document.querySelector(`${panel} form:not(.login__form)`);
 
@@ -90,9 +83,10 @@ const shareForm = (panel, formResults = fetchFormResults) => {
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-
-    const response = await formResults(form);
-    changeAlert({ element: `${panel} .alert`, response });
+    changeAlert({
+      alert: document.querySelector(`${panel} .alert`),
+      response: await formResults(form)
+    });
   });
 };
 
