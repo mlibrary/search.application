@@ -16,6 +16,11 @@
 // *************** //
 
 @mixin flex($wrap: false, $align: center, $responsive: false) {
+  // Create $breakpoint variable to handle responsive flex
+  $breakpoint: $responsive;
+  @if $responsive == true {
+    $breakpoint: 'xs';
+  }
   align-items: $align;
   display: flex;
   gap: 0.5rem 1rem;
@@ -24,7 +29,7 @@
   }
   @if $responsive != false {
     flex-direction: column;
-    @include media.breakpoint(if($responsive == true, 'xs', $responsive)) {
+    @include media.breakpoint($breakpoint) {
       flex-direction: row;
     }
   }
