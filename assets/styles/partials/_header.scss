@@ -84,11 +84,16 @@ $component: "m-website-header";
 // * 3.2 LOGIN * //
 // *           * //
 
-#{$component} #login_form button {
+body.no-javascript #{$component} .utility__list--item-login {
+  display: none;
+}
+
+#{$component} .login__form button {
   all: unset;
   color: white;
   cursor: pointer;
   &:hover {
+    background: none;
     text-decoration: underline;
   }
 }
