@@ -1,7 +1,7 @@
 // --------------------------------------------------
 //
-// # Email
-//   Styles to apply directly to `views/datastores/partials/actions/action/_email.erb`.
+// # Add Selected
+//   Styles to apply directly to `views/datastores/partials/actions/action/_add-selected.erb`.
 //
 // ## Table of Contents
 //   1. Variables
@@ -13,7 +13,7 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: "email";
+$class: "add-selected";
 
 
 
@@ -23,6 +23,7 @@ $class: "email";
 // *** 2. TAB *** //
 // ************** //
 
+body, // Remove this line when JavaScript is enabled
 body.no-javascript {
   button#actions__#{$class},
   #actions__#{$class}--tabpanel {
