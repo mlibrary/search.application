@@ -1,0 +1,241 @@
+import {
+  emailAction,
+  fetchFormResponse,
+  responseBody
+} from '../../../../../../assets/scripts/datastores/partials/actions/action/_email.js';
+import { expect } from 'chai';
+import sinon from 'sinon';
+
+describe('email', function () {
+  let getAlert = null;
+  let getForm = null;
+  let getInput = null;
+
+  beforeEach(function () {
+    // Apply HTML to the body
+    document.body.innerHTML = `
+      <div id="actions__email--tabpanel">
+        <div class="alert"></div>
+        <form class="action__email--form" action="/catalog/record/1337/email" method="post">
+          <input type="email" id="action__email--input" name="email" value="test@umich.edu">
+          <button type="submit">Send Email</button>
+        </form>
+      </div>
+    `;
+
+    getAlert = () => {
+      return document.querySelector('.alert');
+    };
+
+    getForm = () => {
+      return document.querySelector('form');
+    };
+
+    getInput = () => {
+      return getForm().querySelector('input');
+    };
+  });
+
+  afterEach(function () {
+    getAlert = null;
+    getForm = null;
+    getInput = null;
+  });
+
+  describe('responseBody()', function () {
+    let response = null;
+
+    beforeEach(function () {
+      // Call the function
+      response = responseBody({ elements: getForm().elements });
+    });
+
+    afterEach(function () {
+      response = null;
+    });
+
+    it('should return a string', function () {
+      expect(response).to.be.a('string');
+    });
+
+    it('should return a URL-encoded string', function () {
+      expect(response).to.equal(`${getInput().name}=${encodeURIComponent(getInput().value)}`);
+    });
+  });
+
+  describe('fetchFormResponse()', function () {
+    let responseBodyStub = null;
+    let args = null;
+    let fetchStub = null;
+
+    beforeEach(function () {
+      responseBodyStub = sinon.stub().returns(responseBody({ elements: getForm().elements }));
+      args = {
+        body: responseBodyStub,
+        form: getForm(),
+        isFullRecord: false,
+        url: '/everything/list/email'
+      };
+      fetchStub = sinon.stub(global, 'fetch').resolves('mocked-fetch-response');
+    });
+
+    afterEach(function () {
+      responseBodyStub = null;
+      args = null;
+      fetchStub = null;
+    });
+
+    it('should call `fetch` once', async function () {
+      // Call the function
+      await fetchFormResponse(args);
+
+      // Check that `fetch` was called once
+      expect(fetchStub.calledOnce, '`fetch` was not called once').to.be.true;
+    });
+
+    describe('URL', function () {
+      it('should fetch the `url` argument when `isFullRecord` is `false`', async function () {
+        // Check that `isFullRecord` is `false`
+        expect(args.isFullRecord, '`isFullRecord` is not `false`').to.be.false;
+
+        // Call the function
+        await fetchFormResponse(args);
+
+        // Check that `fetch` was called with the `url` argument
+        expect(fetchStub.args[0][0], '`fetch` was not called with the `url` argument').to.equal(args.url);
+      });
+
+      it('should fetch the form `action` when `isFullRecord` is `true`', async function () {
+        // Check that `isFullRecord` is `true`
+        args.isFullRecord = true;
+        expect(args.isFullRecord, '`isFullRecord` is not `true`').to.be.true;
+
+        // Call the function
+        await fetchFormResponse(args);
+
+        // Check that `fetch` was called with the form `action`
+        expect(fetchStub.args[0][0], '`fetch` was not called with the form `action`').to.equal(getForm().action);
+      });
+    });
+
+    describe('fetch options', function () {
+      let fetchArgs = null;
+
+      beforeEach(async function () {
+        // Call the function
+        await fetchFormResponse(args);
+
+        [[, fetchArgs]] = fetchStub.args;
+      });
+
+      afterEach(function () {
+        fetchArgs = null;
+      });
+
+      it('should call `body` with the correct arguments', function () {
+        expect(responseBodyStub.args[0][0], '`body` was not called with the correct arguments').to.deep.equal({ elements: getForm().elements });
+      });
+
+      it('`body` should equal the result of `responseBody`', function () {
+        expect(fetchArgs.body, '`body` should equal the result of `responseBody`').to.deep.equal(responseBodyStub());
+      });
+
+      it('`headers` should equal the correct headers', function () {
+        expect(fetchArgs.headers, '`headers` should equal the correct headers').to.deep.equal({
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        });
+      });
+
+      it('`method` should equal the form `method`', function () {
+        expect(fetchArgs.method, '`method` should equal the form `method`').to.equal(getForm().method);
+      });
+    });
+  });
+
+  describe('emailAction()', function () {
+    let submitEvent = null;
+    let preventDefaultSpy = null;
+    let mockResponse = null;
+    let fetchFormResponseStub = null;
+    let changeAlertStub = null;
+    let args = null;
+
+    beforeEach(function () {
+      submitEvent = new window.Event('submit', {
+        bubbles: true,
+        cancelable: true
+      });
+      preventDefaultSpy = sinon.spy(submitEvent, 'preventDefault');
+      mockResponse = {
+        json: () => {
+          return { message: 'Sending your email.' };
+        },
+        ok: true
+      };
+      fetchFormResponseStub = sinon.stub().resolves(mockResponse);
+      changeAlertStub = sinon.stub();
+      args = {
+        emailResponse: fetchFormResponseStub,
+        showAlert: changeAlertStub
+      };
+    });
+
+    afterEach(function () {
+      submitEvent = null;
+      preventDefaultSpy = null;
+      fetchFormResponseStub = null;
+      changeAlertStub = null;
+      args = null;
+    });
+
+    describe('form not found', function () {
+      beforeEach(function () {
+        // Apply HTML to the body
+        document.body.innerHTML = ``;
+
+        // Check that the form does not exist
+        expect(getForm(), 'the form should not be found').to.be.null;
+
+        // Call the function
+        emailAction(args);
+      });
+
+      it('should not call `fetchFormResponse`', function () {
+        expect(fetchFormResponseStub.called, '`fetchFormResponse` should have not been called').to.be.false;
+      });
+
+      it('should not call `showAlert`', function () {
+        expect(changeAlertStub.called, '`showAlert` should have not been called').to.be.false;
+      });
+    });
+
+    describe('submit event handler', function () {
+      beforeEach(async function () {
+        // Call the function
+        emailAction(args);
+
+        // Submit the form
+        getForm().dispatchEvent(submitEvent);
+
+        // Wait for the event handler to complete
+        await Promise.resolve();
+      });
+
+      it('should call `preventDefault` on the submit event', function () {
+        expect(preventDefaultSpy.called, '`preventDefault` was not called').to.be.true;
+      });
+
+      it('should call `showAlert` with the correct arguments', function () {
+        expect(changeAlertStub.calledWithExactly({
+          alert: getAlert(),
+          response: mockResponse
+        }), '`showAlert` was not called with the correct arguments').to.be.true;
+      });
+
+      it('should call `fetchFormResponse` with the correct arguments', function () {
+        expect(fetchFormResponseStub.calledWithExactly({ form: getForm(), url: '/everything/list/email' }), '`fetchFormResponse` was not called with the correct arguments').to.be.true;
+      });
+    });
+  });
+});

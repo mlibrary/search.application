@@ -59,37 +59,6 @@ const disableActionTabs = () => {
   });
 };
 
-const fetchFormResults = async (form) => {
-  const formData = new FormData(form);
-
-  const response = await fetch(form.action, {
-    body: formData,
-    headers: {
-      Accept: 'application/json'
-    },
-    method: form.method
-  });
-
-  return response;
-};
-
-const shareForm = (panel, formResults = fetchFormResults) => {
-  const form = document.querySelector(`${panel} form:not(.login__form)`);
-
-  // Return if form not found because the user is not logged in
-  if (!form) {
-    return;
-  }
-
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    changeAlert({
-      alert: document.querySelector(`${panel} .alert`),
-      response: await formResults(form)
-    });
-  });
-};
-
 const copyToClipboard = ({ alert, text }) => {
   if (alert) {
     alert.style.display = 'block';
@@ -101,9 +70,7 @@ export {
   changeAlert,
   copyToClipboard,
   disableActionTabs,
-  fetchFormResults,
   getTabPanel,
   isSelected,
-  shareForm,
   tabControl
 };
