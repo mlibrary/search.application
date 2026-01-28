@@ -1,10 +1,9 @@
+import { getTemporaryList, temporaryList } from './layout.js';
 import { shareForm, tabControl } from '../partials/_actions.js';
 import { downloadTemporaryListRIS } from '../partials/actions/action/_ris.js';
-import { getTemporaryList } from './partials/_add-to.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
 import { removeSelected } from '../partials/actions/action/_remove-selected.js';
 import { selectAll } from './partials/_select-all.js';
-import { temporaryList } from './layout.js';
 
 // Get the temporary list from session storage
 const list = getTemporaryList();
