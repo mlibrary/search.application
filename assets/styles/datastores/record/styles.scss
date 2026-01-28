@@ -20,7 +20,8 @@
 //     2.1. Container
 //   3. Information
 //     3.1. Header
-//       3.1.1. Title
+//       3.1.1. Checkbox
+//       3.1.2. Title
 //   4. Date Last Indexed
 //
 // --------------------------------------------------
@@ -90,7 +91,15 @@ $class: 'record';
   }
 }
 
-// * 3.1.1. TITLE * //
+// * 3.1.1. CHECKBOX * //
+
+.#{$class} .#{$class}__information--header > .list__item--checkbox {
+  display: none;
+  flex-shrink: 0;
+  margin-top: 0.75rem;
+}
+
+// * 3.1.2. TITLE * //
 
 .#{$class} .#{$class}__information--header > .#{$class}__title {
   font-size: 1.75rem;
