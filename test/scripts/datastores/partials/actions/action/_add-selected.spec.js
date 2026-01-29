@@ -1,4 +1,8 @@
-import { fetchAndAddRecord, toggleAddedClass } from '../../../../../../assets/scripts/datastores/partials/actions/action/_add-selected.js';
+import {
+  fetchAndAddRecord,
+  getAddSelectedButton,
+  toggleAddedClass
+} from '../../../../../../assets/scripts/datastores/partials/actions/action/_add-selected.js';
 import { expect } from 'chai';
 import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
@@ -19,7 +23,18 @@ nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
 describe('add selected', function () {
   beforeEach(function () {
     // Apply HTML to the body
-    document.body.innerHTML = temporaryListHTML;
+    document.body.innerHTML = `
+      <div id="actions__add-selected--tabpanel">
+        <button class="action__add-selected">Add Selected</button>
+      </div>
+      ${temporaryListHTML}
+    `;
+  });
+
+  describe('getAddSelectedButton()', function () {
+    it('should return the add selected button element', function () {
+      expect(getAddSelectedButton()).to.deep.equal(document.querySelector('button'));
+    });
   });
 
   describe('toggleAddedClass()', function () {
@@ -66,30 +81,54 @@ describe('add selected', function () {
       // Check that the class was removed
       expect(hasActiveClass(), `the record should not have the \`${activeClass}\` class`).to.be.false;
     });
+
+    it('should return early if the container is not found', function () {
+      // Call the function
+      expect(() => {
+        return toggleAddedClass({ isAdded: true, recordDatastore: 'non-existent-datastore', recordId: 'non-existent-recordId' });
+      }).to.not.throw();
+    });
   });
 
   describe('fetchAndAddRecord()', function () {
     let fetchStub = null;
+    let mockResponse = null;
     let list = null;
     let recordDatastore = null;
     let recordId = null;
+    let toggleClassSpy = null;
     let args = null;
 
     beforeEach(function () {
       fetchStub = sinon.stub(global, 'fetch');
+      mockResponse = new Response(
+        JSON.stringify({ data: 'record data' }),
+        {
+          headers: { 'Content-type': 'application/json' },
+          status: 200
+        }
+      );
       list = { datastore: { recordId: {} } };
       [recordDatastore] = Object.keys(list);
       [recordId] = Object.keys(list[recordDatastore]);
+      toggleClassSpy = sinon.spy();
 
-      args = { list, recordDatastore, recordId };
+      args = {
+        list,
+        recordDatastore,
+        recordId,
+        toggleClass: toggleClassSpy
+      };
     });
 
     afterEach(function () {
       fetchStub.restore();
+      mockResponse = null;
       list = null;
       recordDatastore = null;
       recordId = null;
       args = null;
+      toggleClassSpy = null;
     });
 
     it('should try and fetch the record brief', async function () {
@@ -102,13 +141,6 @@ describe('add selected', function () {
 
     it('should fetch the record and add it to the list', async function () {
       // Mock a successful fetch response
-      const mockResponse = new Response(
-        JSON.stringify({ data: 'record data' }),
-        {
-          headers: { 'Content-type': 'application/json' },
-          status: 200
-        }
-      );
       fetchStub.resolves(mockResponse);
 
       // Call the function
@@ -118,9 +150,20 @@ describe('add selected', function () {
       expect(updatedList[recordDatastore][recordId], 'the record should have been added to the list').to.deep.equal({ data: 'record data' });
     });
 
+    it('should call the `toggleClass` function with the correct arguments', async function () {
+      // Mock a successful fetch response
+      fetchStub.resolves(mockResponse);
+
+      // Call the function
+      await fetchAndAddRecord(args);
+
+      // Check that the toggleClass function was called with the correct arguments
+      expect(toggleClassSpy.calledOnceWithExactly({ isAdded: true, recordDatastore, recordId }), 'toggleClass should be called with the correct arguments').to.be.true;
+    });
+
     it('should return the original list if the fetch fails', async function () {
       // Mock a failed fetch response
-      const mockResponse = new Response(null, { status: 404 });
+      mockResponse = new Response(null, { status: 404 });
       fetchStub.resolves(mockResponse);
 
       // Call the function
