@@ -23,7 +23,6 @@ $class: "add-selected";
 // *** 2. TAB *** //
 // ************** //
 
-body, // Remove this line when JavaScript is enabled
 body.no-javascript {
   button#actions__#{$class},
   #actions__#{$class}--tabpanel {
