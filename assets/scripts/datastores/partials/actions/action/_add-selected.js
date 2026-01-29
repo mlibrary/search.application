@@ -1,3 +1,9 @@
+const toggleAddedClass = ({ isAdded, recordDatastore, recordId }) => {
+  const className = 'record__container';
+  const container = document.querySelector(`.${className}[data-record-id="${recordId}"][data-record-datastore="${recordDatastore}"]`);
+  container.classList.toggle(`${className}--in-temporary-list`, isAdded);
+};
+
 const fetchAndAddRecord = async ({ list, recordDatastore, recordId }) => {
   const updatedList = { ...list };
 
@@ -18,4 +24,4 @@ const fetchAndAddRecord = async ({ list, recordDatastore, recordId }) => {
   return updatedList;
 };
 
-export { fetchAndAddRecord };
+export { fetchAndAddRecord, toggleAddedClass };

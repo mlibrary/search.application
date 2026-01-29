@@ -1,8 +1,73 @@
+import { fetchAndAddRecord, toggleAddedClass } from '../../../../../../assets/scripts/datastores/partials/actions/action/_add-selected.js';
 import { expect } from 'chai';
-import { fetchAndAddRecord } from '../../../../../../assets/scripts/datastores/partials/actions/action/_add-selected.js';
+import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
 
+const activeClass = 'record__container--in-temporary-list';
+let temporaryListHTML = '';
+nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
+  const recordIds = Object.keys(global.temporaryList[datastore]);
+  recordIds.forEach((recordId) => {
+    temporaryListHTML += `
+      <div class="record__container" data-record-id="${recordId}" data-record-datastore="${datastore}">
+        <input type="checkbox" class="list__item--checkbox" value="${datastore},${recordId}">
+      </div>
+    `;
+  });
+});
+
 describe('add selected', function () {
+  beforeEach(function () {
+    // Apply HTML to the body
+    document.body.innerHTML = temporaryListHTML;
+  });
+
+  describe('toggleAddedClass()', function () {
+    let args = null;
+    let getRecord = null;
+    let hasActiveClass = null;
+
+    beforeEach(function () {
+      getRecord = () => {
+        return document.querySelector('.record__container');
+      };
+
+      const { recordDatastore, recordId } = getRecord().dataset;
+
+      args = {
+        isAdded: true,
+        recordDatastore,
+        recordId
+      };
+
+      hasActiveClass = () => {
+        return getRecord().classList.contains(activeClass);
+      };
+
+      // Check that the record does not have the class to begin with
+      expect(hasActiveClass(), `the record should not have the \`${activeClass}\` class`).to.be.false;
+
+      // Call the function
+      toggleAddedClass(args);
+    });
+
+    afterEach(function () {
+      args = null;
+      hasActiveClass = null;
+    });
+
+    it(`should toggle the \`${activeClass}\` class`, function () {
+      // Check that the class was added
+      expect(hasActiveClass(), `the record should have the \`${activeClass}\` class`).to.be.true;
+
+      // Call the function again
+      toggleAddedClass({ ...args, isAdded: false });
+
+      // Check that the class was removed
+      expect(hasActiveClass(), `the record should not have the \`${activeClass}\` class`).to.be.false;
+    });
+  });
+
   describe('fetchAndAddRecord()', function () {
     let fetchStub = null;
     let list = null;
