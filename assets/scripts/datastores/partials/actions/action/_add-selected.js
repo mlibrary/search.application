@@ -1,3 +1,5 @@
+import { getCheckedCheckboxes, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
+
 const getAddSelectedButton = () => {
   return document.querySelector('#actions__add-selected--tabpanel .action__add-selected');
 };
@@ -38,8 +40,27 @@ const fetchAndAddRecord = async ({ list, recordDatastore, recordId, toggleClass 
   return updatedList;
 };
 
+const handleAddSelected = ({ addRecord = fetchAndAddRecord, checkboxes = getCheckedCheckboxes(), list, splitValue = splitCheckboxValue } = {}) => {
+  // Loop through the checked checkboxes
+  checkboxes.forEach(async (checkbox) => {
+    // Split the checkbox value to get the datastore and record ID
+    const { recordDatastore, recordId } = splitValue({ value: checkbox.value });
+
+    // Add the record to My Temporary List
+    await addRecord({ list, recordDatastore, recordId });
+  });
+};
+
+const addSelectedAction = ({ addSelectedButton = getAddSelectedButton, handleAdd = handleAddSelected, list } = {}) => {
+  addSelectedButton().addEventListener('click', () => {
+    return handleAdd({ list });
+  });
+};
+
 export {
+  addSelectedAction,
   fetchAndAddRecord,
   getAddSelectedButton,
+  handleAddSelected,
   toggleAddedClass
 };

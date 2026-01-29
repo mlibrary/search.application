@@ -1,8 +1,11 @@
 import {
+  addSelectedAction,
   fetchAndAddRecord,
   getAddSelectedButton,
+  handleAddSelected,
   toggleAddedClass
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_add-selected.js';
+import { getCheckedCheckboxes, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
@@ -11,10 +14,10 @@ const activeClass = 'record__container--in-temporary-list';
 let temporaryListHTML = '';
 nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
   const recordIds = Object.keys(global.temporaryList[datastore]);
-  recordIds.forEach((recordId) => {
+  recordIds.forEach((recordId, index) => {
     temporaryListHTML += `
       <div class="record__container" data-record-id="${recordId}" data-record-datastore="${datastore}">
-        <input type="checkbox" class="list__item--checkbox" value="${datastore},${recordId}">
+        <input type="checkbox" class="list__item--checkbox" value="${datastore},${recordId}" ${index === 0 ? 'checked' : ''}>
       </div>
     `;
   });
@@ -182,6 +185,100 @@ describe('add selected', function () {
 
       // Check that the list remains unchanged
       expect(updatedList, 'the list should remain unchanged').to.deep.equal(list);
+    });
+  });
+
+  describe('handleAddSelected()', function () {
+    let getCheckedCheckboxesStub = null;
+    let fetchAndAddRecordSpy = null;
+    let splitCheckboxValueStub = null;
+    let args = null;
+    let checkboxCount = null;
+
+    beforeEach(async function () {
+      getCheckedCheckboxesStub = sinon.stub().returns(getCheckedCheckboxes());
+      fetchAndAddRecordSpy = sinon.spy();
+      splitCheckboxValueStub = sinon.stub().callsFake(({ value }) => {
+        splitCheckboxValue({ value });
+      });
+      args = {
+        checkboxes: getCheckedCheckboxesStub(),
+        fetchAndAddRecord: fetchAndAddRecordSpy,
+        list: global.temporaryList,
+        splitValue: splitCheckboxValueStub
+      };
+      checkboxCount = getCheckedCheckboxes().length;
+
+      // Call the function
+      await handleAddSelected(args);
+    });
+
+    afterEach(function () {
+      fetchAndAddRecordSpy = null;
+      getCheckedCheckboxesStub = null;
+      splitCheckboxValueStub = null;
+      args = null;
+      checkboxCount = null;
+    });
+
+    it('should call `getCheckedCheckboxes` to get the list of checked checkboxes', function () {
+      expect(getCheckedCheckboxesStub.calledOnce, '`getCheckedCheckboxes` should be called once').to.be.true;
+    });
+
+    it('should call `splitCheckboxValue` for each checked checkbox', function () {
+      // Check that `splitCheckboxValue` was called the correct number of times
+      expect(splitCheckboxValueStub.callCount, '`splitCheckboxValue` should be called for each checked checkbox').to.equal(checkboxCount);
+
+      // Check that `splitCheckboxValue` was called with the correct arguments for each checked checkbox
+      getCheckedCheckboxes().forEach((checkbox) => {
+        expect(splitCheckboxValueStub.calledWithExactly({ value: checkbox.value }), '`splitCheckboxValue` should be called with the correct arguments').to.be.true;
+      });
+    });
+
+    it('should call `fetchAndAddRecord` for each checked checkbox', function () {
+      // Check that `fetchAndAddRecord` was called the correct number of times
+      expect(fetchAndAddRecordSpy.callCount, '`fetchAndAddRecord` should be called for each checked checkbox').to.equal(checkboxCount);
+
+      // Check that `fetchAndAddRecord` was called with the correct arguments for each checked checkbox
+      getCheckedCheckboxes().forEach((checkbox) => {
+        const { recordDatastore, recordId } = splitCheckboxValueStub({ value: checkbox.value });
+        expect(fetchAndAddRecordSpy.calledWithExactly({
+          list: args.list,
+          recordDatastore,
+          recordId
+        }), '`fetchAndAddRecord` should be called with the correct arguments').to.be.true;
+      });
+    });
+  });
+
+  describe('addSelectedAction()', function () {
+    let getAddSelectedButtonStub = null;
+    let handleAddSelectedSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      getAddSelectedButtonStub = sinon.stub().returns(getAddSelectedButton());
+      handleAddSelectedSpy = sinon.spy();
+      args = {
+        addSelectedButton: getAddSelectedButtonStub,
+        handleAdd: handleAddSelectedSpy,
+        list: global.temporaryList
+      };
+
+      // Call the function
+      addSelectedAction(args);
+    });
+
+    it('should call `getAddSelectedButton` to retrieve the add selected button', function () {
+      expect(getAddSelectedButtonStub.calledOnce, '`getAddSelectedButton` should be called once').to.be.true;
+    });
+
+    it('should call `handleAddSelected` with the correct arguments when the add selected button is clicked', function () {
+      // Click the add selected button
+      getAddSelectedButton().click();
+
+      // Check that `handleAddSelected` was called with the correct arguments
+      expect(handleAddSelectedSpy.calledWithExactly({ list: args.list }), '`handleAddSelected` should be called with the correct arguments').to.be.true;
     });
   });
 });
