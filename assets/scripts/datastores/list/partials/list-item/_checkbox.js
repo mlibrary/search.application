@@ -22,7 +22,12 @@ const someCheckboxesChecked = (checked = false) => {
   ));
 };
 
-const selectedCitations = ({ list, type }) => {
+const splitCheckboxValue = ({ value }) => {
+  const [recordDatastore, recordId] = value.split(',');
+  return { recordDatastore, recordId };
+};
+
+const selectedCitations = ({ list, splitValue = splitCheckboxValue, type }) => {
   // Make sure `type` is either `csl` or `ris`
   if (!type || !['csl', 'ris'].includes(type)) {
     return null;
@@ -30,9 +35,16 @@ const selectedCitations = ({ list, type }) => {
 
   // Create an array of the citation type of all selected records
   return filterSelectedRecords().map((record) => {
-    const [datastore, recordId] = record.split(',');
-    return list[datastore][recordId].citation[type];
+    const { recordDatastore, recordId } = splitValue({ value: record });
+    return list[recordDatastore][recordId].citation[type];
   });
 };
 
-export { filterSelectedRecords, getCheckboxes, getCheckedCheckboxes, selectedCitations, someCheckboxesChecked };
+export {
+  filterSelectedRecords,
+  getCheckboxes,
+  getCheckedCheckboxes,
+  selectedCitations,
+  someCheckboxesChecked,
+  splitCheckboxValue
+};
