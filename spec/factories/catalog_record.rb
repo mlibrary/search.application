@@ -211,6 +211,10 @@ module Factories::CatalogRecord
       included_holdings = HOLDINGS.map do |h, method|
         holding = if kinds.include?(h)
           send(method)
+        elsif h == :physical
+          empty_physical_holding
+        elsif h == :hathi_trust
+          empty_hathi_trust_holding
         else
           empty_holding
         end
@@ -221,15 +225,23 @@ module Factories::CatalogRecord
       instance_double(Search::Models::Record::Catalog::Holdings, **included_holdings)
     end
 
+    def empty_physical_holding
+      instance_double(Search::Models::Record::Catalog::Holdings::Physical, list: [])
+    end
+
+    def empty_hathi_trust_holding
+      instance_double(Search::Models::Record::Catalog::Holdings::HathiTrust, items: [], count: 0, has_description?: false, full_text_count: 0, search_only_count: 0)
+    end
+
     def empty_holding
-      instance_double(Search::Models::Record::Catalog::Holdings::HathiTrust,
+      instance_double(Search::Models::Record::Catalog::Holdings::Electronic,
         items: [], count: 0,
         has_description?: false)
     end
 
     def hathi_trust_holdings
       instance_double(Search::Models::Record::Catalog::Holdings::HathiTrust,
-        items: [hathi_trust_item], count: 1,
+        items: [hathi_trust_item], count: 1, full_text_count: 1, search_only_count: 0,
         has_description?: true)
     end
 
@@ -238,7 +250,8 @@ module Factories::CatalogRecord
         url: Faker::Internet.url,
         source: Faker::Educator.university,
         description: Faker::Lorem.sentence,
-        status: "Full text")
+        status: "Full text",
+        full_text?: true)
     end
 
     def alma_digital_holdings

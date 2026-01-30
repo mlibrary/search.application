@@ -24,11 +24,11 @@ class Search::Models::Record::Catalog::Holdings::HathiTrust
   end
 
   def full_text_items
-    @full_text_items ||= items.select { |item| item.status.match?("Full text") }
+    @full_text_items ||= items.select { |item| item.full_text? }
   end
 
   def search_only_items
-    @search_only_items ||= items.select { |item| !item.status.match?("Full text") }
+    @search_only_items ||= items.select { |item| !item.full_text? }
   end
 
   class Item
@@ -40,6 +40,10 @@ class Search::Models::Record::Catalog::Holdings::HathiTrust
       define_method(method) do
         @item.dig(method.to_s)
       end
+    end
+
+    def full_text?
+      status.match?("Full text")
     end
 
     def url

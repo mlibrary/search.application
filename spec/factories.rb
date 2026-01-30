@@ -20,6 +20,8 @@ module Factories
       CatalogRecord.single_script_paired_text_item
     when :hathi_trust_holdings
       CatalogRecord.hathi_trust_holdings
+    when :hathi_trust_item
+      CatalogRecord.hathi_trust_item
     when :physical_item
       CatalogRecord.physical_item
     when :shelf_browse_item

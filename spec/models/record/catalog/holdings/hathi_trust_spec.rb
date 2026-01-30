@@ -69,6 +69,23 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::HathiTrust do
       first_item = subject.items.first
       expect(first_item.url).to eq("http://hdl.handle.net/2027/#{item["id"]}")
     end
+
+    context "Item #full_text" do
+      it "generates appropriate urls based on the hathi trust id" do
+        item = search_only_item
+        data["holdings"]["hathi_trust_items"].push(item)
+
+        first_item = subject.items.first
+        expect(first_item.full_text?).to eq(false)
+      end
+      it "generates appropriate urls based on the hathi trust id" do
+        item = full_text_item
+        data["holdings"]["hathi_trust_items"].push(item)
+
+        first_item = subject.items.first
+        expect(first_item.full_text?).to eq(true)
+      end
+    end
   end
   context "#full_text_items" do
     it "returns only the full text items" do

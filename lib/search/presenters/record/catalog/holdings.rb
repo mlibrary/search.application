@@ -20,7 +20,7 @@ class Search::Presenters::Record::Catalog::Holdings
   end
 
   def physical
-    if finding_aids.empty?
+    @physical ||= if finding_aids.empty?
       @holdings.physical.list.map do |holding|
         Physical.new(holding: holding, bib: @data.bib)
       end
@@ -30,11 +30,11 @@ class Search::Presenters::Record::Catalog::Holdings
   end
 
   def hathi_trust
-    HathiTrust.new(@holdings.hathi_trust)
+    @hathi_trust ||= HathiTrust.new(@holdings.hathi_trust)
   end
 
   def online
-    Online.new(@holdings)
+    @online ||= Online.new(@holdings)
   end
 
   def finding_aids
@@ -49,15 +49,22 @@ class Search::Presenters::Record::Catalog::Holdings
     #
     def initialize(holding)
       @holding = holding
-      @items = holding.items
     end
 
     def count
-      @holding.count
+      items.count
     end
 
     def empty?
-      @holding.count == 0
+      count == 0
+    end
+
+    def full_text_count
+      @holding.full_text_count
+    end
+
+    def search_only_count
+      @holding.search_only_count
     end
 
     def heading
@@ -92,10 +99,22 @@ class Search::Presenters::Record::Catalog::Holdings
     end
 
     def items
-      @items.map do |item|
+      @items ||= map_items(@holding.items)
+    end
+
+    private
+
+    def map_items(items)
+      items.map do |item|
         ElectronicItem.new(url: item.url, availability_text: item.status,
           description: item.description, source: item.source)
       end
+    end
+  end
+
+  class HathiTrustFullText < HathiTrust
+    def items
+      @items ||= map_items(@holding.items.select { |x| x.full_text? })
     end
   end
 
@@ -282,3 +301,4 @@ end
 
 require_relative "physical_holdings"
 require_relative "finding_aids_holding"
+require_relative "email_holdings"

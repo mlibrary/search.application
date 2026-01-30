@@ -25,7 +25,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings do
       expect(subject.list.first.heading).to eq("HathiTrust Digital Library")
     end
     it "does not include HathiTrust when it does not have items" do
-      allow(ht_holdings).to receive(:count).and_return(0)
+      allow(ht_holdings).to receive(:items).and_return([])
       expect(subject.list.first&.heading).not_to eq("HathiTrust Digital Library")
     end
     it "includes Online when there are online items" do
@@ -73,7 +73,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::HathiTrust do
 
   context "#empty?" do
     it "is true when there are no items" do
-      allow(hathi_trust_holdings).to receive(:count).and_return(0)
+      allow(hathi_trust_holdings).to receive(:items).and_return([])
       expect(subject.empty?).to eq(true)
     end
     it "is false when there are items" do
