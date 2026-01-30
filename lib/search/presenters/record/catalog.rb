@@ -111,6 +111,10 @@ module Search
             @record.bib.id
           end
 
+          def url
+            "#{S.base_url}/catalog/record/#{id}"
+          end
+
           def title
             result = [
               OpenStruct.new(text: @record.bib.title.original.text, css_class: "title-primary")
@@ -367,7 +371,7 @@ module Search
                   transliterated: f.values&.first&.transliterated&.text
                 }
               end,
-              url: "#{S.base_url}/catalog/record/#{id}",
+              url: url,
               citation: {
                 ris: ris,
                 csl: csl
