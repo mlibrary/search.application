@@ -154,7 +154,7 @@ class Search::Application < Sinatra::Base
         if not_logged_in_user?
           [403, {code: 403, message: "User must be logged in"}.to_json]
         else
-          Search::SMS::Catalog.for(params["id"]).send(phone: params["phone"])
+          Search::SMS::Worker.perform_async(params["phone"], "something")
           [202, {code: 202, message: "SMS message has been sent"}.to_json]
         end
       rescue Twilio::REST::RestError => error
