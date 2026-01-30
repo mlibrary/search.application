@@ -1,4 +1,4 @@
 
-<%= erb :"/email/partials/list-item/title/_txt", locals: { show_index: show_index, title: record[:title], url: record[:url] } %>
-<%= erb :"/email/partials/list-item/metadata/_txt", locals: { metadata: record[:metadata] } %>
-<%= erb :"/email/partials/list-item/holdings/_txt", locals: { holdings: record[:holdings] } %>
+<%= erb :"/email/partials/list-item/title/_txt", locals: { show_index: show_index, title: record.title, url: record.url } %>
+<%= erb :"/email/partials/list-item/metadata/_txt", locals: { metadata: record.metadata } %>
+<%= erb :"/email/partials/list-item/holdings/_txt", locals: { holdings: record.holdings } %>

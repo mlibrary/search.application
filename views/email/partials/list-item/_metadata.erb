@@ -2,12 +2,30 @@
   <% metadata.each do |data| %>
     <tr>
       <th class="responsive-cell metadata-field" style="padding: 4px 16px 0px 0px; text-align: left; width: 176px; vertical-align: top; font-weight: 700;">
-        <%= data[:field] %>
+        <%= data.field %>
       </th>
       <td class="responsive-cell metadata-data" style="padding: 4px 0px 0px 0px; text-align: left; vertical-align: top;">
-        <%= data[:original]%>
-        <% if data[:transliterated] %>
-          <span style="color: #6e6e6e; font-size: 16px;">| <%= data[:transliterated]%></span>
+        <%#= data.original %>
+        <%# if data.transliterated %>
+          <span style="color: #6e6e6e; font-size: 16px;">| <%#= data.transliterated %></span>
+        <%# end %>
+
+        <% data.each do |value| %>
+          <li>
+            <% if value.paired? %>
+              <ul class="list__no-style metadata__list--parallel">
+                <li>
+                  <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { value: value.original } %>
+                </li>
+                <li>
+                  <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { value: value.transliterated } %>
+                </li>
+              </ul>
+            <% else %>
+              <% my_value = value.respond_to?(:original) ? value.original : value %>
+              <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: {value: my_value} %>
+            <% end %>
+          </li>
         <% end %>
       </td>
     </tr>
