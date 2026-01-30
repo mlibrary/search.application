@@ -13,8 +13,12 @@ class Search::Presenters::Record::Catalog::EmailHoldings
     non_ht_search_only_item_count > 3 || (non_ht_search_only_item_count == 0 && @holdings.hathi_trust.search_only_count > 3)
   end
 
+  def any?
+    list.any?
+  end
+
   def list
-    [
+    @list ||= [
       hathi_trust_list,
       @holdings.online,
       @holdings.finding_aids,
