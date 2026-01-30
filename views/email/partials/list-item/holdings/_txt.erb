@@ -1,6 +1,13 @@
+<% if holdings.too_many? %>
    [*There are multiple items, locations or volumes associated with this record; please see the catalog record for full details.*]
-
-   **Online Resources**
+<% else %>
+   <% holdings.list.each do |holding| %>
+   **<%= holding.heading %>**
+   <% holding.rows.each do |row| %>
+      * <% row.each do |cell| %>
+         <%= erb :"email/partials/list-item/holdings/#{cell.partial}/_txt", locals: {value: cell} %>
+      <% end %>
+   <% end %>
       * [Available Online](https://search.lib.umich.edu/everything/)
          
          Access requires institutional login. Authorized U-M users (no guest access).
@@ -9,3 +16,5 @@
          Available from 2001.
 
          Miscellaneous Ejournals. Miscellaneous Ejournals. Open access for all users. Authorized U-M users (+ guests in U-M Libraries)
+   <% end %>
+<% end %>
