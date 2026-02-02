@@ -1,0 +1,5 @@
+<ol style="list-style: none; margin: 0; padding: 0;">
+  <% value.disciplines.each_with_index do |discipline, index| %>
+    <li><%= index != 0 ? "<span style=\"color: #637381;\">&rsaquo;</span> " : "" %><%= link_to(body: discipline.text, url: discipline.url) %></li>
+  <% end %>
+</ol>
