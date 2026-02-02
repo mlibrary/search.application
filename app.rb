@@ -154,12 +154,13 @@ class Search::Application < Sinatra::Base
         if not_logged_in_user?
           [403, {code: 403, message: "User must be logged in"}.to_json]
         else
-          Search::SMS::Worker.perform_async(params["phone"], "something")
-          [202, {code: 202, message: "SMS message has been sent"}.to_json]
+          record_path = request.fullpath.sub(/\/sms$/, "")
+          Search::SMS::Worker.perform_async(params["phone"], "#{S.base_url}/#{record_path}")
+          [202, {code: 202, message: "We are sending your SMS message"}.to_json]
         end
-      rescue Twilio::REST::RestError => error
+      rescue => error
         S.logger.error(error.error_message, error_class: error.class)
-        [400, {code: 400, message: "Something went wrong"}.to_json]
+        [500, {code: 500, message: "Something went wrong"}.to_json]
       end
 
       post "/#{datastore.slug}/record/:id/email", provides: "html" do

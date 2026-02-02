@@ -21,11 +21,19 @@ class Search::SMS
   end
 
   def send(phone:, client: S.twilio_client)
-    client.messages.create(
+    response = client.messages.create(
       to: phone,
       body: message,
       messaging_service_sid: S.twilio_messaging_service_sid
     )
+    if response.status == "accepted"
+      S.logger.info("sms_accepted", sid: response.sid)
+    else
+      S.logger.warn("sms_not_accepted", sid: response.sid, status: response.status)
+    end
+    response
+  rescue Twilio::REST::RestError => e
+    S.logger.error("twilio_error", e.response.body)
   end
 
   class Worker
@@ -33,7 +41,7 @@ class Search::SMS
 
     def perform(phone, urls)
       total = urls.count
-      urls.each_with_index do |url, index|
+      urls.map.with_index do |url, index|
         Search::SMS.new(index: index + 1, total: total, url: url).send(phone: phone)
       end
     end

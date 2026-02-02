@@ -42,7 +42,7 @@ RSpec.describe "sms and email requests" do
       expect(Search::SMS::Worker.jobs.size).to eq(1)
       body = JSON.parse(last_response.body)
       expect(body["code"]).to eq(202)
-      expect(body["message"]).to eq("SMS message has been sent")
+      expect(body["message"]).to eq("We are sending your SMS message")
     end
 
     xit "returns error message when twilio client raises an error" do
