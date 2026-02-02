@@ -1,4 +1,9 @@
-<span class="intent__<%= value.intent %>">
-  <span class="material-symbols-rounded" aria-hidden="true"><%= value.icon %></span>
-  <%= value.text %>
-</span>
+<%
+  color = case value.intent
+    when 'success' then '#05a657'
+    when 'warning' then '#aa5600'
+    when 'danger' then '#c53b26'
+    else 'inherit'
+  end
+%>
+<img src="<%= S.base_url %>/images/email/<%= value.icon %>.png" alt="<%= value.icon.gsub('_', ' ') %> icon" style="height: 20px; vertical-align: middle; width: 20px;"> <span style="color: <%= color %>;"><%= value.text %></span>
