@@ -1,0 +1,3 @@
+<% value.disciplines.each_with_index do |discipline, index| %>
+ <%= index != 0 ? "> " : "" %>[<%= discipline.text %>](<%= discipline.url %>)
+<% end %>

@@ -1,19 +1,9 @@
 <% metadata.each do |data| %>
-   <% data.each do |value| %>
-      <li>
-         <% if value.paired? %>
-         <ul class="list__no-style metadata__list--parallel">
-            <li>
-               <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { value: value.original } %>
-            </li>
-            <li>
-               <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: { value: value.transliterated } %>
-            </li>
-         </ul>
-         <% else %>
-         <% my_value = value.respond_to?(:original) ? value.original : value %>
-         <%= erb :"datastores/partials/metadata/_#{data.partial}", locals: {value: my_value} %>
-         <% end %>
-      </li>
+   **<%= data.field %>:** <% data.each do |value| %><% if !value.paired? %>
+   <%= erb :"email/partials/list-item/metadata/#{data.partial}/_txt", locals: {value: value.respond_to?(:original) ? value.original : value} %>
+   <% else %>
+   <%= erb :"email/partials/list-item/metadata/#{data.partial}/_txt", locals: { value: value.original } %>
+   <%= erb :"email/partials/list-item/metadata/#{data.partial}/_txt", locals: { value: value.transliterated } %>
+   <% end %>
    <% end %>
 <% end %>
