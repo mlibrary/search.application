@@ -1,4 +1,6 @@
-import { getCheckedCheckboxes, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, getCheckboxes, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
+import { inTemporaryList, setTemporaryList, temporaryListCount } from '../../../list/layout.js';
+import { toggleBanner } from '../../../list/partials/_go-to.js';
 
 const getAddSelectedButton = () => {
   return document.querySelector('#actions__add-selected--tabpanel .action__add-selected');
@@ -17,50 +19,117 @@ const toggleAddedClass = ({ isAdded, recordDatastore, recordId }) => {
   container.classList.toggle(`${className}--in-temporary-list`, isAdded);
 };
 
-const fetchAndAddRecord = async ({ list, recordDatastore, recordId, toggleClass = toggleAddedClass }) => {
-  const updatedList = { ...list };
+const styleAddedRecords = ({ checkboxes = getCheckboxes(), inList = inTemporaryList, list, splitValue = splitCheckboxValue, toggleClass = toggleAddedClass }) => {
+  // Loop through records
+  checkboxes.forEach((checkbox) => {
+    const { recordDatastore, recordId } = splitValue({ value: checkbox.value });
+    const isAdded = inList({ list, recordDatastore, recordId });
 
+    // Add the class, if in list
+    toggleClass({ isAdded, recordDatastore, recordId });
+
+    // Check the checkbox, if in list
+    checkbox.checked = isAdded;
+  });
+};
+
+const fetchRecordData = async ({ recordDatastore, recordId }) => {
   try {
+    // Fetch the brief record information
     const response = await fetch(`/${recordDatastore}/record/${recordId}/brief`);
     if (!response.ok) {
-      // Return the original list if the fetch fails
-      return updatedList;
+      // Return an empty object on failure
+      return {};
     }
-    // Add the record information to the list
+    // Get the record data
     const data = await response.json();
-    updatedList[recordDatastore][recordId] = data;
-
-    // Toggle the class to visually indicate the record is in the temporary list
-    toggleClass({ isAdded: true, recordDatastore, recordId });
+    // Return the record data in an object keyed by record ID
+    return { [recordId]: data };
   } catch {
-    // Silent failure, so no action is needed
-    return updatedList;
+    // Return an empty object on failure
+    return {};
   }
+};
+
+const fetchAndAddRecords = async ({ addClass = toggleAddedClass, checkboxValues = filterSelectedRecords(), fetchRecord = fetchRecordData, list, splitValue = splitCheckboxValue }) => {
+  // Create a shallow copy of the list to update
+  const updatedList = { ...list };
+
+  // Run all fetches and collect their results
+  await Promise.all(
+    checkboxValues.map(async (value) => {
+      // Get the record's datastore and ID
+      const { recordDatastore, recordId } = splitValue({ value });
+
+      try {
+        // Fetch the record data
+        const recordData = await fetchRecord({ recordDatastore, recordId });
+
+        // Add the fetched record data to the datastore in the final list
+        updatedList[recordDatastore] = { ...(updatedList[recordDatastore] || {}), ...recordData };
+
+        // Add the class to visually indicate the record is in the temporary list
+        addClass({ isAdded: true, recordDatastore, recordId });
+      } catch {
+        // Silent failure, so no action is needed
+      }
+    })
+  );
 
   return updatedList;
 };
 
-const handleAddSelected = ({ addRecord = fetchAndAddRecord, checkboxes = getCheckedCheckboxes(), list, splitValue = splitCheckboxValue } = {}) => {
-  // Loop through the checked checkboxes
-  checkboxes.forEach(async (checkbox) => {
-    // Split the checkbox value to get the datastore and record ID
-    const { recordDatastore, recordId } = splitValue({ value: checkbox.value });
+const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton = getAddSelectedButton(), list, listCount = temporaryListCount, setList = setTemporaryList, showBanner = toggleBanner, styleRecords = styleAddedRecords } = {}) => {
+  const button = addSelectedButton;
+  const buttonText = button.textContent;
 
-    // Add the record to My Temporary List
-    await addRecord({ list, recordDatastore, recordId });
+  let updatedList = { ...list };
+
+  button.addEventListener('click', async () => {
+    // Disable the button while processing to prevent multiple clicks
+    button.disabled = true;
+    // Update button text to indicate processing
+    button.textContent = 'Adding...';
+    try {
+      // Fetch and add the selected records
+      const addedRecords = await addRecords({ list: updatedList });
+      // Merge added records into the updated list
+      updatedList = { ...updatedList, ...addedRecords };
+    } catch {
+      // Silent failure, so no action is needed
+    } finally {
+      // Re-enable the button
+      button.disabled = false;
+      // Restore original button text
+      button.textContent = buttonText;
+
+      // Set `sessionStorage`
+      setList(updatedList);
+
+      // Re-style records after adding
+      styleRecords({ list: updatedList });
+
+      // Toggle banner
+      const count = listCount(updatedList);
+      showBanner(count);
+    }
   });
 };
 
-const addSelectedAction = ({ addSelectedButton = getAddSelectedButton, handleAdd = handleAddSelected, list } = {}) => {
-  addSelectedButton().addEventListener('click', () => {
-    return handleAdd({ list });
-  });
+const addSelected = ({ addAction = addSelectedAction, list, styleRecords = styleAddedRecords } = {}) => {
+  // Style records on load
+  styleRecords({ list });
+
+  // Initialize the add selected action
+  addAction({ list });
 };
 
 export {
+  addSelected,
   addSelectedAction,
-  fetchAndAddRecord,
+  fetchAndAddRecords,
+  fetchRecordData,
   getAddSelectedButton,
-  handleAddSelected,
+  styleAddedRecords,
   toggleAddedClass
 };

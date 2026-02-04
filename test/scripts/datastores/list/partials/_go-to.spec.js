@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import toggleBanner from '../../../../../assets/scripts/datastores/list/partials/_go-to.js';
+import { toggleBanner } from '../../../../../assets/scripts/datastores/list/partials/_go-to.js';
 
 describe('toggleBanner', function () {
   const count = 1337;

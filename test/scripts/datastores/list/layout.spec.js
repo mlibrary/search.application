@@ -10,6 +10,7 @@ import {
   nonEmptyDatastores,
   setTemporaryList,
   temporaryList,
+  temporaryListCount,
   toggleListElements,
   viewingTemporaryList
 } from '../../../../assets/scripts/datastores/list/layout.js';
@@ -267,6 +268,20 @@ describe('layout', function () {
 
       // Check that the temporary list is empty
       expect(isTemporaryListEmpty(list), 'the temporary list should be empty').to.be.true;
+    });
+  });
+
+  describe('temporaryListCount()', function () {
+    it('should return a number', function () {
+      // Check that a number is always returned
+      expect(temporaryListCount(global.temporaryList), '`temporaryListCount()` should return a number').to.be.a('number');
+    });
+
+    it('should return the correct count of records in the temporary list', function () {
+      // Check that the correct count is returned
+      expect(temporaryListCount(global.temporaryList), '`temporaryListCount()` should return the correct count of records in the temporary list').to.equal(Object.values(global.temporaryList).reduce((sum, datastore) => {
+        return sum + Object.keys(datastore).length;
+      }, 0));
     });
   });
 

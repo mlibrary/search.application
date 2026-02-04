@@ -17,4 +17,4 @@ const toggleBanner = (count) => {
   banner.classList.toggle(`${className}--empty`, countNumber < 1);
 };
 
-export default toggleBanner;
+export { toggleBanner };

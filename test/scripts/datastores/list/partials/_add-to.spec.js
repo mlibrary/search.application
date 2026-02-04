@@ -128,8 +128,6 @@ describe('add to', function () {
       // Assign the result
       const updatedList = removeRecordFromList(args);
 
-      // eslint-disable-next-line no-console
-      console.log(updatedList, list);
       // Check that the record no longer exists in the udated list
       expect(updatedList[recordDatastore][recordId], 'the record should no longer exist in the list').to.be.undefined;
     });

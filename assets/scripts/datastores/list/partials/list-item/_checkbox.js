@@ -1,4 +1,4 @@
-const checkboxSelector = 'ol.list__items input[type="checkbox"].list__item--checkbox';
+const checkboxSelector = 'input[type="checkbox"].list__item--checkbox';
 
 const getCheckboxes = () => {
   return document.querySelectorAll(checkboxSelector);
