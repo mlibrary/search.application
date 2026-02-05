@@ -139,7 +139,7 @@ class Search::Application < Sinatra::Base
           [403, {code: 403, message: "User must be logged in"}.to_json]
         else
           record_path = request.fullpath.sub(/\/sms$/, "")
-          Search::SMS::Worker.perform_async(params["phone"], "#{S.base_url}/#{record_path}")
+          Search::SMS::Worker.perform_async(params["phone"], ["#{S.base_url}#{record_path}"])
           [202, {code: 202, message: "We are sending your SMS message"}.to_json]
         end
       rescue => error
