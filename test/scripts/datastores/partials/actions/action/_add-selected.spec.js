@@ -7,7 +7,7 @@ import {
   styleAddedRecords,
   toggleAddedClass
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_add-selected.js';
-import { defaultTemporaryList, inTemporaryList, nonEmptyDatastores, temporaryListCount } from '../../../../../../assets/scripts/datastores/list/layout.js';
+import { defaultTemporaryList, inTemporaryList, nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -364,7 +364,6 @@ describe('add selected', function () {
 
   describe('addSelectedAction()', function () {
     let fetchAndAddRecordsStub = null;
-    let temporaryListCountStub = null;
     let setTemporaryListStub = null;
     let toggleBannerStub = null;
     let styleAddedRecordsStub = null;
@@ -372,7 +371,6 @@ describe('add selected', function () {
 
     beforeEach(function () {
       fetchAndAddRecordsStub = sinon.stub().resolves(defaultTemporaryList);
-      temporaryListCountStub = sinon.stub().returns(5);
       setTemporaryListStub = sinon.stub();
       toggleBannerStub = sinon.stub();
       styleAddedRecordsStub = sinon.stub();
@@ -381,7 +379,6 @@ describe('add selected', function () {
         addRecords: fetchAndAddRecordsStub,
         addSelectedButton: getAddSelectedButton(),
         list: defaultTemporaryList,
-        listCount: temporaryListCountStub,
         setList: setTemporaryListStub,
         showBanner: toggleBannerStub,
         styleRecords: styleAddedRecordsStub
@@ -390,7 +387,6 @@ describe('add selected', function () {
 
     afterEach(function () {
       fetchAndAddRecordsStub = null;
-      temporaryListCountStub = null;
       setTemporaryListStub = null;
       toggleBannerStub = null;
       styleAddedRecordsStub = null;
@@ -494,20 +490,6 @@ describe('add selected', function () {
       expect(styleAddedRecordsStub.calledOnceWithExactly({ list: args.list }), '`styleAddedRecords` should be called once with the updated list').to.be.true;
     });
 
-    it('should call `temporaryListCount` and `toggleBanner` with the correct arguments', async function () {
-      // Call the function
-      const actionPromise = addSelectedAction(args);
-
-      // Click the button to trigger the action
-      args.addSelectedButton.click();
-
-      // Wait for the action to complete
-      await actionPromise;
-
-      // Check that `temporaryListCount` was called once with the updated list
-      expect(temporaryListCountStub.calledOnceWithExactly(args.list), '`temporaryListCount` should be called once with the updated list').to.be.true;
-    });
-
     it('should call `toggleBanner` with the correct count', async function () {
       // Call the function
       const actionPromise = addSelectedAction(args);
@@ -518,23 +500,26 @@ describe('add selected', function () {
       // Wait for the action to complete
       await actionPromise;
 
-      // Check that `toggleBanner` was called once with the correct count
-      expect(toggleBannerStub.calledOnceWithExactly(temporaryListCount(global.temporaryList)), '`toggleBanner` should be called once with the correct count').to.be.true;
+      // Check that `toggleBanner` was called once with the arguments
+      expect(toggleBannerStub.calledOnceWithExactly({ list: args.list }), '`toggleBanner` should be called once with the correct count').to.be.true;
     });
   });
 
   describe('addSelected()', function () {
     let addSelectedActionSpy = null;
+    let toggleBannerSpy = null;
     let styleAddedRecordsSpy = null;
     let args = null;
 
     beforeEach(function () {
       addSelectedActionSpy = sinon.spy();
+      toggleBannerSpy = sinon.spy();
       styleAddedRecordsSpy = sinon.spy();
 
       args = {
         addAction: addSelectedActionSpy,
         list: global.temporaryList,
+        showBanner: toggleBannerSpy,
         styleRecords: styleAddedRecordsSpy
       };
 
@@ -544,13 +529,19 @@ describe('add selected', function () {
 
     afterEach(function () {
       addSelectedActionSpy = null;
+      toggleBannerSpy = null;
       styleAddedRecordsSpy = null;
       args = null;
     });
 
-    it('should call `styleAddedRecords` on load', function () {
+    it('should call `styleAddedRecords` with the correct arguments', function () {
       // Check that `styleAddedRecords` was called once with the correct arguments
       expect(styleAddedRecordsSpy.calledOnceWithExactly({ list: args.list }), '`styleAddedRecords` should be called once with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleBanner` with the correct arguments', function () {
+      // Check that `toggleBanner` was called once with the correct count
+      expect(toggleBannerSpy.calledOnceWithExactly({ list: args.list }), '`toggleBanner` should be called once with the correct count').to.be.true;
     });
 
     it('should call `addSelectedAction` with the correct arguments', function () {

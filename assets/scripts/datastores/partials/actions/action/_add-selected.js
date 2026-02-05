@@ -1,5 +1,5 @@
 import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../list/partials/list-item/_checkbox.js';
-import { inTemporaryList, setTemporaryList, temporaryListCount } from '../../../list/layout.js';
+import { inTemporaryList, setTemporaryList } from '../../../list/layout.js';
 import { toggleBanner } from '../../../list/partials/_go-to.js';
 
 const getAddSelectedButton = () => {
@@ -79,7 +79,7 @@ const fetchAndAddRecords = async ({ addClass = toggleAddedClass, checkboxValues 
   return updatedList;
 };
 
-const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton = getAddSelectedButton(), list, listCount = temporaryListCount, setList = setTemporaryList, showBanner = toggleBanner, styleRecords = styleAddedRecords } = {}) => {
+const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton = getAddSelectedButton(), list, setList = setTemporaryList, showBanner = toggleBanner, styleRecords = styleAddedRecords } = {}) => {
   const button = addSelectedButton;
   const buttonText = button.textContent;
 
@@ -110,15 +110,17 @@ const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton 
       styleRecords({ list: updatedList });
 
       // Toggle banner
-      const count = listCount(updatedList);
-      showBanner(count);
+      showBanner({ list: updatedList });
     }
   });
 };
 
-const addSelected = ({ addAction = addSelectedAction, list, styleRecords = styleAddedRecords } = {}) => {
+const addSelected = ({ addAction = addSelectedAction, list, showBanner = toggleBanner, styleRecords = styleAddedRecords } = {}) => {
   // Style records on load
   styleRecords({ list });
+
+  // Show banner if there are items in the temporary list
+  showBanner({ list });
 
   // Initialize the add selected action
   addAction({ list });
