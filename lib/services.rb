@@ -3,12 +3,14 @@ require "alma_rest_client"
 require "semantic_logger"
 require "twilio-ruby"
 require "mail"
+require "sidekiq"
 
 Services = Canister.new
 
 S = Services
 
 S.register(:app_env) { ENV["APP_ENV"] || "development" }
+S.register(:app_name) { ENV["APP_NAME"] || "search" }
 
 AlmaRestClient.configure do |config|
   config.alma_api_key = ENV["ALMA_API_KEY"] || "your_alma_api_key"
@@ -47,7 +49,7 @@ S.register(:log_stream) do
 end
 
 S.register(:logger) do
-  SemanticLogger["search"]
+  SemanticLogger[S.app_name]
 end
 
 S.register(:log_level) do
@@ -85,6 +87,10 @@ class ProductionFormatter < SemanticLogger::Formatters::Json
   # Leave out application (This would be Semantic Logger, which isn't helpful)
   def application
   end
+end
+
+Sidekiq.configure_server do |config|
+  config.logger = S.logger
 end
 
 if S.app_env != "test"

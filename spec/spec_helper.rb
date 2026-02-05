@@ -94,3 +94,5 @@ S.register(:twilio_client) {
 Mail.defaults do
   delivery_method :test
 end
+
+Sidekiq.logger.level = Logger::WARN
