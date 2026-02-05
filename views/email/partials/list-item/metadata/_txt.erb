@@ -1,3 +1,9 @@
 <% metadata.each do |data| %>
-   * **<%= data[:field] %>:** <%= data[:original]%><% if data[:transliterated] %> | <%= data[:transliterated]%><% end %>
+   **<%= data.field %>:** <% data.each do |value| %><% if !value.paired? %>
+   <%= erb :"email/partials/list-item/metadata/#{data.partial}/_txt", locals: {value: value.respond_to?(:original) ? value.original : value} %>
+   <% else %>
+   <%= erb :"email/partials/list-item/metadata/#{data.partial}/_txt", locals: { value: value.original } %>
+   <%= erb :"email/partials/list-item/metadata/#{data.partial}/_txt", locals: { value: value.transliterated } %>
+   <% end %>
+   <% end %>
 <% end %>
