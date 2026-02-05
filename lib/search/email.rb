@@ -56,7 +56,7 @@ class Search::Email
     end
 
     def initialize(id)
-      @record = Search::Presenters::Record.for_datastore(datastore: "catalog", id: id, size: "brief")
+      @record = Search::Presenters::Record.for_datastore(datastore: "catalog", id: id, size: "email")
     end
 
     def subject

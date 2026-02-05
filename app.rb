@@ -246,7 +246,7 @@ class Search::Application < Sinatra::Base
       get "/email/record" do
         datastore, id = params["record"].split(",")
 
-        @record = Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "brief")
+        @record = Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "email")
 
         if params["content_type"] == "txt"
           content_type "text/plain"
@@ -259,7 +259,7 @@ class Search::Application < Sinatra::Base
         @records = Hash.new { |hash, key| hash[key] = [] }
         params["record"].map do |r|
           datastore, id = r.split(",")
-          @records[datastore.capitalize].push Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "brief")
+          @records[datastore.capitalize].push Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "email")
         end
 
         if params["content_type"] == "txt"

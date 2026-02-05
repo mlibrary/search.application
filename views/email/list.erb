@@ -12,7 +12,7 @@
           <%= datastore %>
         </h2>
         <% @records[datastore].each_with_index do |record, index| %>
-          <%= erb :"/email/partials/_list-item", locals: { show_index: index + 1, record: record.to_h } %>
+          <%= erb :"/email/partials/_list-item", locals: { show_index: index + 1, record: record } %>
         <% end %>
       <% end %>
     </td>
