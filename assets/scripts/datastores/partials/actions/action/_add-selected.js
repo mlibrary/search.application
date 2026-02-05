@@ -1,4 +1,4 @@
-import { filterSelectedRecords, getCheckboxes, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../list/partials/list-item/_checkbox.js';
 import { inTemporaryList, setTemporaryList, temporaryListCount } from '../../../list/layout.js';
 import { toggleBanner } from '../../../list/partials/_go-to.js';
 
@@ -19,7 +19,7 @@ const toggleAddedClass = ({ isAdded, recordDatastore, recordId }) => {
   container.classList.toggle(`${className}--in-temporary-list`, isAdded);
 };
 
-const styleAddedRecords = ({ checkboxes = getCheckboxes(), inList = inTemporaryList, list, splitValue = splitCheckboxValue, toggleClass = toggleAddedClass }) => {
+const styleAddedRecords = ({ checkboxes = getCheckboxes(), inList = inTemporaryList, list, splitValue = splitCheckboxValue, toggleClass = toggleAddedClass, toggleChecked = toggleCheckedState }) => {
   // Loop through records
   checkboxes.forEach((checkbox) => {
     const { recordDatastore, recordId } = splitValue({ value: checkbox.value });
@@ -29,7 +29,7 @@ const styleAddedRecords = ({ checkboxes = getCheckboxes(), inList = inTemporaryL
     toggleClass({ isAdded, recordDatastore, recordId });
 
     // Check the checkbox, if in list
-    checkbox.checked = isAdded;
+    toggleChecked({ checkbox, isAdded });
   });
 };
 

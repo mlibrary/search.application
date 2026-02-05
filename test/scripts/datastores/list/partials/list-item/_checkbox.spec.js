@@ -4,7 +4,8 @@ import {
   getCheckedCheckboxes,
   selectedCitations,
   someCheckboxesChecked,
-  splitCheckboxValue
+  splitCheckboxValue,
+  toggleCheckedState
 } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -33,10 +34,76 @@ describe('checkbox', function () {
     expect(someCheckboxesChecked(true), 'at least one checkbox should be checked for this test').to.be.true;
   });
 
-  describe('getCheckboxes', function () {
+  describe('getCheckboxes()', function () {
     it('should return all the checkboxes in the temporary list', function () {
       // Check that the correct elements are returned
       expect(getCheckboxes(), 'the correct elements should be returned').to.deep.equal(document.querySelectorAll('input[type="checkbox"]'));
+    });
+  });
+
+  describe('toggleCheckedState()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        checkbox: getCheckboxes()[0],
+        isAdded: true,
+        viewingRecord: false
+      };
+
+      // Check the checkbox is initially unchecked
+      args.checkbox.checked = false;
+      expect(args.checkbox.checked, 'the checkbox should be initially unchecked').to.be.false;
+
+      // Check that not viewing a full record
+      expect(args.viewingRecord, 'not viewing a full record for this test').to.be.false;
+
+      // Call the function
+      toggleCheckedState(args);
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should check the checkbox if `isAdded` is true and not viewing a full record', function () {
+      expect(args.checkbox.checked, 'the checkbox should be checked').to.be.true;
+    });
+
+    it('should uncheck the checkbox if `isAdded` is false and not viewing a full record', function () {
+      // Check the checkbox
+      args.checkbox.checked = true;
+      expect(args.checkbox.checked, 'the checkbox should be initially checked').to.be.true;
+
+      // Update the `isAdded` argument
+      args.isAdded = false;
+      expect(args.isAdded, 'the `isAdded` argument should be false').to.be.false;
+
+      // Call the function again
+      toggleCheckedState(args);
+
+      // Check that the checkbox is unchecked
+      expect(args.checkbox.checked, 'the checkbox should be unchecked').to.be.false;
+    });
+
+    it('should not change the checked state if viewing a full record', function () {
+      // Store the initial checked state
+      const initialCheckedState = args.checkbox.checked;
+      expect(initialCheckedState, 'the initial checked state should be true').to.be.true;
+
+      // Make sure `isAdded` is the opposite of the initial checked state
+      args.isAdded = !initialCheckedState;
+      expect(args.isAdded, 'the `isAdded` argument should be the opposite of the initial checked state').to.equal(!initialCheckedState);
+
+      // Update the `viewingRecord` argument
+      args.viewingRecord = true;
+      expect(args.viewingRecord, 'the `viewingRecord` argument should be true').to.be.true;
+
+      // Call the function again
+      toggleCheckedState(args);
+
+      // Check that the checked state has not changed
+      expect(args.checkbox.checked, 'the checked state should not change when viewing a full record').to.equal(initialCheckedState);
     });
   });
 
@@ -128,6 +195,7 @@ describe('checkbox', function () {
     beforeEach(function () {
       splitValueSpy = sinon.spy(splitCheckboxValue);
       args = {
+        filteredValues: filterSelectedRecords(),
         list: global.temporaryList,
         splitValue: splitValueSpy,
         type: 'csl'

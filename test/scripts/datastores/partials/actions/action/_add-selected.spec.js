@@ -1,4 +1,5 @@
 import {
+  addSelected,
   addSelectedAction,
   fetchAndAddRecords,
   fetchRecordData,
@@ -519,6 +520,42 @@ describe('add selected', function () {
 
       // Check that `toggleBanner` was called once with the correct count
       expect(toggleBannerStub.calledOnceWithExactly(temporaryListCount(global.temporaryList)), '`toggleBanner` should be called once with the correct count').to.be.true;
+    });
+  });
+
+  describe('addSelected()', function () {
+    let addSelectedActionSpy = null;
+    let styleAddedRecordsSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      addSelectedActionSpy = sinon.spy();
+      styleAddedRecordsSpy = sinon.spy();
+
+      args = {
+        addAction: addSelectedActionSpy,
+        list: global.temporaryList,
+        styleRecords: styleAddedRecordsSpy
+      };
+
+      // Call the function
+      addSelected(args);
+    });
+
+    afterEach(function () {
+      addSelectedActionSpy = null;
+      styleAddedRecordsSpy = null;
+      args = null;
+    });
+
+    it('should call `styleAddedRecords` on load', function () {
+      // Check that `styleAddedRecords` was called once with the correct arguments
+      expect(styleAddedRecordsSpy.calledOnceWithExactly({ list: args.list }), '`styleAddedRecords` should be called once with the correct arguments').to.be.true;
+    });
+
+    it('should call `addSelectedAction` with the correct arguments', function () {
+      // Check that `addSelectedAction` was called once with the correct arguments
+      expect(addSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`addSelectedAction` should be called once with the correct arguments').to.be.true;
     });
   });
 });

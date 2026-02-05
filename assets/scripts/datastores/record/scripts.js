@@ -1,5 +1,5 @@
 import { shareForm, tabControl } from '../partials/_actions.js';
-import { addToList } from '../list/partials/_add-to.js';
+import { addSelected } from '../partials/actions/action/_add-selected.js';
 import copyLink from '../partials/actions/action/_link.js';
 import { getTemporaryList } from '../list/layout.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
@@ -27,7 +27,7 @@ initializeCitations();
 copyLink();
 
 // Add to My Temporary List
-addToList({ list });
+addSelected({ list });
 
 // Record Title
 toggleTruncatedText();

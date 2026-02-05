@@ -16,7 +16,6 @@
             end.join,
           classes: ["record__title"]
         ) %>
-        <%= erb :'datastores/list/partials/_add-to', locals: { datastore: @presenter.current_datastore, record_id: @record.id, record_title: @record.title.first.text } %>
       </div>
       <h2 class="visually-hidden">Record info:</h2>
       <%= erb :'datastores/partials/_metadata', locals: { metadata: @record.metadata } %>
