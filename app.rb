@@ -143,7 +143,7 @@ class Search::Application < Sinatra::Base
           [202, {code: 202, message: "We are sending your SMS message"}.to_json]
         end
       rescue => error
-        S.logger.error(error.error_message, error_class: error.class)
+        S.logger.error("sms_error", datstore: datastore.slug, message: error.message, error_class: error.class)
         [500, {code: 500, message: "Something went wrong"}.to_json]
       end
 
@@ -151,12 +151,12 @@ class Search::Application < Sinatra::Base
         if not_logged_in_user?
           [403, {code: 403, message: "User must be logged in"}.to_json]
         else
-          raise unless params["email"].match?(URI::MailTo::EMAIL_REGEXP)
+          raise "invalid email address" unless params["email"].match?(URI::MailTo::EMAIL_REGEXP)
           Search::Email::Catalog::Worker.perform_async(params["email"], params["id"])
           [202, {code: 202, message: "We are sending your email"}.to_json]
         end
       rescue => error
-        S.logger.error(error, error_class: error.class)
+        S.logger.error("email_error", datstore: datastore.slug, message: error.message, error_class: error.class)
         [500, {code: 500, message: "Something went wrong"}.to_json]
       end
     end
