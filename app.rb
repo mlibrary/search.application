@@ -133,17 +133,17 @@ class Search::Application < Sinatra::Base
         redirect "/#{datastore.slug}/record/:id"
       end
 
-      post "/#{datastore.slug}/record/:id/sms", provides: "json" do
+      post "/#{datastore.slug}/record/:id/text", provides: "json" do
         content_type :json
         if not_logged_in_user?
           [403, {code: 403, message: "User must be logged in"}.to_json]
         else
-          record_path = request.fullpath.sub(/\/sms$/, "")
-          Search::Actions::SMS::Worker.perform_async(params["phone"], ["#{S.base_url}#{record_path}"])
-          [202, {code: 202, message: "We are sending your SMS message"}.to_json]
+          record_path = request.fullpath.sub(/\/text$/, "")
+          Search::Actions::Text::Worker.perform_async(params["phone"], ["#{S.base_url}#{record_path}"])
+          [202, {code: 202, message: "We are sending your text message"}.to_json]
         end
       rescue => error
-        S.logger.error("sms_error", datstore: datastore.slug, message: error.message, error_class: error.class)
+        S.logger.error("text_error", datstore: datastore.slug, message: error.message, error_class: error.class)
         [500, {code: 500, message: "Something went wrong"}.to_json]
       end
 

@@ -1,6 +1,6 @@
 module Search
   module Actions
-    class SMS
+    class Text
       def initialize(index:, total:, url:)
         @index = index
         @total = total
@@ -29,9 +29,9 @@ module Search
           messaging_service_sid: S.twilio_messaging_service_sid
         )
         if response.status == "accepted"
-          S.logger.info("sms_accepted", sid: response.sid)
+          S.logger.info("text_accepted", sid: response.sid)
         else
-          S.logger.warn("sms_not_accepted", sid: response.sid, status: response.status)
+          S.logger.warn("text_not_accepted", sid: response.sid, status: response.status)
         end
         response
       rescue Twilio::REST::RestError => e
@@ -44,7 +44,7 @@ module Search
         def perform(phone, urls)
           total = urls.count
           urls.map.with_index do |url, index|
-            Search::SMS.new(index: index + 1, total: total, url: url).send(phone: phone)
+            Search::Actions::Text.new(index: index + 1, total: total, url: url).send(phone: phone)
           end
         end
       end

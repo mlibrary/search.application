@@ -4,4 +4,4 @@ module Search
 end
 
 require_relative "actions/email"
-require_relative "actions/sms"
+require_relative "actions/text"
