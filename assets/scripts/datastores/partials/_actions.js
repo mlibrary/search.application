@@ -59,6 +59,14 @@ const disableActionTabs = () => {
   });
 };
 
+const toggleTabDisplay = ({ id, show }) => {
+  const tab = document.querySelector(`#${id}`);
+  const tabPanel = document.querySelector(`#${tab.getAttribute('aria-controls')}`);
+
+  tab.style.display = show ? 'flex' : 'none';
+  tabPanel.style.display = show ? 'block' : 'none';
+};
+
 const copyToClipboard = ({ alert, text }) => {
   if (alert) {
     alert.style.display = 'block';
@@ -72,5 +80,6 @@ export {
   disableActionTabs,
   getTabPanel,
   isSelected,
-  tabControl
+  tabControl,
+  toggleTabDisplay
 };

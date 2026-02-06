@@ -1,4 +1,4 @@
-import { copyToClipboard, disableActionTabs, getTabPanel, isSelected, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { copyToClipboard, disableActionTabs, getTabPanel, isSelected, tabControl, toggleTabDisplay } from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
@@ -7,6 +7,7 @@ import { viewingTemporaryList } from '../../../../assets/scripts/datastores/list
 
 describe('actions', function () {
   let firstTab = null;
+  let firstTabPanel = null;
   let secondTab = null;
   let getAlert = null;
 
@@ -15,10 +16,10 @@ describe('actions', function () {
     document.body.innerHTML = `
       <div class="tabs">
         <div role="tablist">
-          <button type="button" role="tab" aria-selected="true" aria-controls="tabpanel1">
+          <button type="button" role="tab" id="tab1" aria-selected="true" aria-controls="tabpanel1">
             Tab 1
           </button>
-          <button type="button" role="tab" aria-selected="false" aria-controls="tabpanel2">
+          <button type="button" role="tab" id="tab2" aria-selected="false" aria-controls="tabpanel2">
             Tab 2
           </button>
         </div>
@@ -35,6 +36,10 @@ describe('actions', function () {
       return document.querySelector('[aria-controls="tabpanel1"]');
     };
 
+    firstTabPanel = () => {
+      return document.querySelector('#tabpanel1');
+    };
+
     secondTab = () => {
       return document.querySelector('[aria-controls="tabpanel2"]');
     };
@@ -49,6 +54,7 @@ describe('actions', function () {
 
   afterEach(function () {
     firstTab = null;
+    firstTabPanel = null;
     secondTab = null;
     getAlert = null;
   });
@@ -250,6 +256,42 @@ describe('actions', function () {
       // Check that the clipboard should have been called with the correct value
       expect(clipboardSpy.calledOnce, 'should be called once').to.be.true;
       expect(clipboardSpy.calledWith(getText()), `should be called with ${getText()}`).to.be.true;
+    });
+  });
+
+  describe('toggleTabDisplay()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        id: 'tab1',
+        show: true
+      };
+
+      // Call the function
+      toggleTabDisplay(args);
+    });
+
+    it('should show the tab and its panel', function () {
+      // Check that `args.show` is `true`
+      expect(args.show, '`args.show` should be `true` for this test').to.be.true;
+
+      // Check that the tab and its panel are displayed
+      expect(firstTab().style.display, 'the tab should be displayed').to.equal('flex');
+      expect(firstTabPanel().style.display, 'the tab panel should be displayed').to.equal('block');
+    });
+
+    it('should hide the tab and its panel', function () {
+      // Update args to hide the tab and its panel
+      args.show = false;
+      expect(args.show, '`args.show` should be `false` for this test').to.be.false;
+
+      // Call the function again
+      toggleTabDisplay(args);
+
+      // Check that the tab and its panel are not displayed
+      expect(firstTab().style.display, 'the tab should not be displayed').to.equal('none');
+      expect(firstTabPanel().style.display, 'the tab panel should not be displayed').to.equal('none');
     });
   });
 });
