@@ -22,11 +22,11 @@ RSpec.describe "sms and email requests" do
       @session[:logged_in] = true
       env "rack.session", @session
 
-      expect(Search::SMS::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::SMS::Worker.jobs.size).to eq(0)
 
       post "/catalog/record/some_id/sms", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
 
-      expect(Search::SMS::Worker.jobs.size).to eq(1)
+      expect(Search::Actions::SMS::Worker.jobs.size).to eq(1)
       expect(body["code"]).to eq(202)
       expect(body["message"]).to eq("We are sending your SMS message")
     end
@@ -36,35 +36,35 @@ RSpec.describe "sms and email requests" do
     it "returns an error for a not logged in user" do
       env "rack.session", @session
 
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(0)
       post "/catalog/record/some_id/email", {email: "someone@umich.edu"}
       expect(body["code"]).to eq(403)
       expect(body["message"]).to eq("User must be logged in")
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(0)
     end
 
     it "returns success message when successful" do
       @session[:logged_in] = true
       env "rack.session", @session
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(0)
 
       post "/catalog/record/some_id/email", {email: "someone@umich.edu"}
       expect(body["code"]).to eq(202)
       expect(body["message"]).to eq("We are sending your email")
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(1)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(1)
     end
 
     it "returns error message when invalid email is given" do
       @session[:logged_in] = true
       env "rack.session", @session
 
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(0)
 
       post "/catalog/record/some_id/email", {email: "Something went wrong"}
 
       expect(body["code"]).to eq(500)
       expect(body["message"]).to eq("Something went wrong")
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(0)
     end
   end
 end

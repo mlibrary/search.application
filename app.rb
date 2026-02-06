@@ -139,7 +139,7 @@ class Search::Application < Sinatra::Base
           [403, {code: 403, message: "User must be logged in"}.to_json]
         else
           record_path = request.fullpath.sub(/\/sms$/, "")
-          Search::SMS::Worker.perform_async(params["phone"], ["#{S.base_url}#{record_path}"])
+          Search::Actions::SMS::Worker.perform_async(params["phone"], ["#{S.base_url}#{record_path}"])
           [202, {code: 202, message: "We are sending your SMS message"}.to_json]
         end
       rescue => error
@@ -152,7 +152,7 @@ class Search::Application < Sinatra::Base
           [403, {code: 403, message: "User must be logged in"}.to_json]
         else
           raise "invalid email address" unless params["email"].match?(URI::MailTo::EMAIL_REGEXP)
-          Search::Email::Catalog::Worker.perform_async(params["email"], params["id"])
+          Search::Actions::Email::Catalog::Worker.perform_async(params["email"], params["id"])
           [202, {code: 202, message: "We are sending your email"}.to_json]
         end
       rescue => error

@@ -1,4 +1,4 @@
-describe Search::Email::Catalog do
+describe Search::Actions::Email::Catalog do
   before(:each) do
     Mail::TestMailer.deliveries.clear
   end

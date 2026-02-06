@@ -1,4 +1,4 @@
-describe Search::SMS do
+describe Search::Actions::SMS do
   subject do
     # allow(@record).to receive(:bib).and_return(@bib)
     described_class.new(**@params)
