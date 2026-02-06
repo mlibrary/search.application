@@ -1,8 +1,7 @@
-import { copyToClipboard, disableActionTabs, getTabPanel, isSelected, tabControl, toggleTabDisplay } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { disableActionTabs, getTabPanel, isSelected, tabControl, toggleTabDisplay } from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
-import sinon from 'sinon';
 import { viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 
 describe('actions', function () {
@@ -204,58 +203,6 @@ describe('actions', function () {
           expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
         });
       });
-    });
-  });
-
-  describe('copyToClipboard()', function () {
-    let getText = null;
-    let clipboardSpy = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = `
-        <div class="alert" style="display: none;">This is an alert.</div>
-        <div class="copy-this">The text has been successfully copied.</div>
-      `;
-
-      getText = () => {
-        return document.querySelector('.copy-this').innerHTML;
-      };
-
-      clipboardSpy = sinon.spy();
-      Object.defineProperty(window.navigator, 'clipboard', {
-        configurable: true,
-        value: { writeText: clipboardSpy }
-      });
-      Object.defineProperty(global, 'navigator', {
-        configurable: true,
-        value: window.navigator
-      });
-    });
-
-    afterEach(function () {
-      getText = null;
-
-      // Clean up
-      delete global.navigator;
-    });
-
-    it('should show the alert', function () {
-      expect(getAlert().style.display, 'alert should not be displayed').to.equal('none');
-
-      // Call the function
-      copyToClipboard({ alert: getAlert(), text: getText() });
-
-      expect(getAlert().style.display, 'alert should be displayed').to.equal('block');
-    });
-
-    it('should copy the text', function () {
-      // Call the function
-      copyToClipboard({ alert: getAlert(), text: getText() });
-
-      // Check that the clipboard should have been called with the correct value
-      expect(clipboardSpy.calledOnce, 'should be called once').to.be.true;
-      expect(clipboardSpy.calledWith(getText()), `should be called with ${getText()}`).to.be.true;
     });
   });
 

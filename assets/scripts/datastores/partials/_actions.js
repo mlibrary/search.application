@@ -67,16 +67,8 @@ const toggleTabDisplay = ({ id, show }) => {
   tabPanel.style.display = show ? 'block' : 'none';
 };
 
-const copyToClipboard = ({ alert, text }) => {
-  if (alert) {
-    alert.style.display = 'block';
-  }
-  return navigator.clipboard.writeText(text);
-};
-
 export {
   changeAlert,
-  copyToClipboard,
   disableActionTabs,
   getTabPanel,
   isSelected,
