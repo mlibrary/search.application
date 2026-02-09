@@ -1,35 +1,49 @@
+import { filterSelectedRecords, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
 import { changeAlert } from '../_alert.js';
-import { viewingFullRecord } from '../../../record/layout.js';
 
 const responseBody = ({ elements }) => {
-  const params = new URLSearchParams();
-  // Convert form elements to URL-encoded string
+  const body = { data: {} };
+
+  // Convert form elements to key value pairs
   Array.from(elements).forEach((element) => {
     if (element.name && !element.disabled) {
-      params.append(element.name, element.value);
+      body[element.name] = element.value;
     }
   });
-  // Return the URL-encoded string
-  return params.toString();
+
+  // Loop through the selected records and add them to the body
+  filterSelectedRecords().forEach((value) => {
+    // Get the datastore and mmsid from the value
+    const { recordDatastore, recordId } = splitCheckboxValue({ value });
+    // If the datastore is not already in the body, add it
+    if (!body.data[recordDatastore]) {
+      body.data[recordDatastore] = [];
+    }
+    // Add the mmsid to the datastore array
+    body.data[recordDatastore].push(recordId);
+  });
+
+  // Return the object
+  return body;
 };
 
-const fetchFormResponse = async ({ body = responseBody, form, isFullRecord = viewingFullRecord(), url }) => {
+const fetchFormResponse = async ({ body = responseBody, form }) => {
   const { action, elements, method } = form;
   return await fetch(
-    isFullRecord ? action : url,
+    action,
     {
-      body: body({ elements }),
+      body: JSON.stringify(body({ elements })),
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
       method
     }
   );
 };
 
-const emailAction = ({ emailResponse = fetchFormResponse, showAlert = changeAlert } = {}) => {
-  const form = document.querySelector('form.action__email--form');
+const shareAction = ({ action, response = fetchFormResponse, showAlert = changeAlert } = {}) => {
+  const form = document.querySelector(`form.action__${action}--form`);
 
   // Return early if the form is not found because the user is not logged in
   if (!form) {
@@ -39,14 +53,20 @@ const emailAction = ({ emailResponse = fetchFormResponse, showAlert = changeAler
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     showAlert({
-      alert: document.querySelector('#actions__email--tabpanel .alert'),
-      response: await emailResponse({ form, url: '/everything/list/email' })
+      alert: document.querySelector(`#actions__${action}--tabpanel .alert`),
+      response: await response({ form })
     });
   });
+};
+
+const emailAction = ({ submitAction = shareAction } = {}) => {
+  // Initialize the share action with the appropriate action name
+  submitAction({ action: 'email' });
 };
 
 export {
   emailAction,
   fetchFormResponse,
-  responseBody
+  responseBody,
+  shareAction
 };
