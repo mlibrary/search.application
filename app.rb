@@ -133,20 +133,6 @@ class Search::Application < Sinatra::Base
         redirect "/#{datastore.slug}/record/:id"
       end
 
-      post "/#{datastore.slug}/record/:id/text", provides: "json" do
-        content_type :json
-        if not_logged_in_user?
-          [403, {code: 403, message: "User must be logged in"}.to_json]
-        else
-          record_path = request.fullpath.sub(/\/text$/, "")
-          Search::Actions::Text::Worker.perform_async(params["phone"], ["#{S.base_url}#{record_path}"])
-          [202, {code: 202, message: "We are sending your text message"}.to_json]
-        end
-      rescue => error
-        S.logger.error("text_error", datstore: datastore.slug, message: error.message, error_class: error.class)
-        [500, {code: 500, message: "Something went wrong"}.to_json]
-      end
-
       post "/#{datastore.slug}/record/:id/email", provides: "json" do
         if not_logged_in_user?
           [403, {code: 403, message: "User must be logged in"}.to_json]
@@ -178,6 +164,25 @@ class Search::Application < Sinatra::Base
       erb :"pages/layout", layout: :layout do
         erb :"pages/#{page[:slug]}"
       end
+    end
+  end
+
+  namespace "/actions" do
+    post "/text" do
+      content_type :json
+      if not_logged_in_user?
+        [403, {code: 403, message: "User must be logged in"}.to_json]
+      else
+        raise "Empty request body" unless request.body.size > 0
+        request.body.rewind
+        params = ActiveSupport::JSON.decode(request.body.read)
+        data = Search::Actions::RecordsData.new(params["data"])
+        Search::Actions::Text::Worker.perform_async(params["phone"], data.text_urls)
+        [202, {code: 202, message: "We are sending your text message"}.to_json]
+      end
+    rescue => error
+      S.logger.error("text_error", message: error.message, error_class: error.class)
+      [500, {code: 500, message: "Something went wrong"}.to_json]
     end
   end
 

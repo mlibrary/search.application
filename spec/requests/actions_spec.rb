@@ -10,10 +10,10 @@ RSpec.describe "text and email requests" do
   end
   let(:body) { JSON.parse(last_response.body) }
 
-  context "POST /catalog/record/:id/text accept json" do
+  context "POST /actions/text" do
     it "returns an error for a not logged in user" do
       env "rack.session", @session
-      post "/catalog/record/some_id/text", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
+      post "/actions/text", {phone: "999-999-9999", data: {}}, {"HTTP_ACCEPT" => "application/json"}
       expect(body["code"]).to eq(403)
       expect(body["message"]).to eq("User must be logged in")
     end
@@ -24,7 +24,8 @@ RSpec.describe "text and email requests" do
 
       expect(Search::Actions::Text::Worker.jobs.size).to eq(0)
 
-      post "/catalog/record/some_id/text", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
+      post "/actions/text", JSON.generate(phone: "999-999-9999", data: {catalog: ["some_id"]}), {"HTTP_ACCEPT" => "application/json", "CONTENT_TYPE" => "application/json"}
+      # post "/catalog/record/some_id/text", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
 
       expect(Search::Actions::Text::Worker.jobs.size).to eq(1)
       expect(body["code"]).to eq(202)
