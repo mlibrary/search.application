@@ -4,6 +4,15 @@ module Search
       include Sinatra::Templates
       include Search::ViewHelpers
 
+      def self.send(email:, data:)
+        records_data = Search::Actions::RecordsData.new(data)
+        if records_data.single?
+          Record::Worker.perform_async(email, data)
+        else
+          List::Worker.perform_async(email, data)
+        end
+      end
+
       def template_cache
         @template_cache ||= Sinatra::TemplateCache.new
       end
@@ -80,6 +89,70 @@ module Search
         class Worker < Search::Actions::Email::Worker
           def perform(to, id)
             Search::Actions::Email::Catalog.new(id).send(to: to)
+          end
+        end
+      end
+
+      class Record < self
+        def initialize(data)
+          datum = Search::Actions::RecordsData.new(data).first
+          @record = Search::Presenters::Record.for_datastore(datastore: datum.datastore, id: datum.id, size: "email")
+        end
+
+        def subject
+          "Library Search: #{@record.title.first.text}"
+        end
+
+        def template
+          :"email/record"
+        end
+
+        def html_layout
+          :"email/layout"
+        end
+
+        def text_layout
+          :"email/record/txt"
+        end
+
+        class Worker < Search::Actions::Email::Worker
+          def perform(to, data)
+            Search::Actions::Email::Record.new(data).send(to: to)
+          end
+        end
+      end
+
+      class List < self
+        def initialize(data)
+          @records = data.keys.map do |datastore|
+            [
+              datastore,
+              data[datastore].map do |id|
+                Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "email")
+              end
+            ]
+          end.to_h
+        end
+
+        def subject
+          "Library Search Records"
+        end
+
+        def template
+          :"email/list"
+        end
+
+        def html_layout
+          :"email/layout"
+        end
+
+        def text_layout
+          :"email/list/txt"
+        end
+
+        class Worker < Search::Actions::Email::Worker
+          def perform(to, data)
+            Search::Actions::Email::List.new(data).send(to: to)
           end
         end
       end

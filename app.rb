@@ -184,6 +184,22 @@ class Search::Application < Sinatra::Base
       S.logger.error("text_error", message: error.message, error_class: error.class)
       [500, {code: 500, message: "Something went wrong"}.to_json]
     end
+    post "/email" do
+      content_type :json
+      if not_logged_in_user?
+        [403, {code: 403, message: "User must be logged in"}.to_json]
+      else
+        raise "Empty request body" unless request.body.size > 0
+        request.body.rewind
+        params = ActiveSupport::JSON.decode(request.body.read)
+        raise "invalid email address" unless params["email"].match?(URI::MailTo::EMAIL_REGEXP)
+        Search::Actions::Email.send(email: params["email"], data: params["data"])
+        [202, {code: 202, message: "We are sending your email"}.to_json]
+      end
+    rescue => error
+      S.logger.error("email_error", message: error.message, error_class: error.class)
+      [500, {code: 500, message: "Something went wrong"}.to_json]
+    end
   end
 
   not_found do
@@ -235,7 +251,7 @@ class Search::Application < Sinatra::Base
         @records = Hash.new { |hash, key| hash[key] = [] }
         params["record"].map do |r|
           datastore, id = r.split(",")
-          @records[datastore.capitalize].push Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "email")
+          @records[datastore].push Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "email")
         end
 
         if params["content_type"] == "txt"
