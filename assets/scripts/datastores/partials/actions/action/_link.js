@@ -8,7 +8,7 @@ const copyToClipboard = ({ alert, text }) => {
   return navigator.clipboard.writeText(text);
 };
 
-const copyLink = ({ copy = copyToClipboard }) => {
+const copyLink = ({ copy = copyToClipboard } = {}) => {
   const link = document.querySelector('#actions__link--tabpanel');
   const urlInput = link.querySelector('#action__link--input');
   const copyLinkButton = link.querySelector('button[type="submit"]');

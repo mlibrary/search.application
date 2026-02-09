@@ -1,6 +1,7 @@
 import {
   addSelected,
   addSelectedAction,
+  displaySelectedActions,
   fetchAndAddRecords,
   fetchRecordData,
   getAddSelectedButton,
@@ -362,11 +363,79 @@ describe('add selected', function () {
     });
   });
 
+  describe('displaySelectedActions()', function () {
+    let inTemporaryListSpy = null;
+    let splitCheckboxValueStub = null;
+    let toggleTabDisplaySpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      inTemporaryListSpy = sinon.spy();
+      splitCheckboxValueStub = sinon.stub().returns((checkbox) => {
+        return splitCheckboxValue({ value: checkbox.value });
+      });
+      toggleTabDisplaySpy = sinon.spy();
+
+      args = {
+        checkedValues: filterSelectedRecords(),
+        inList: inTemporaryListSpy,
+        list: global.temporaryList,
+        splitValue: splitCheckboxValue,
+        toggleTab: toggleTabDisplaySpy
+      };
+
+      // Check that there is at least one checked checkbox value to test with
+      expect(args.checkedValues.length, 'there should be at least one checked checkbox value to test with').to.be.greaterThan(0);
+
+      // Call the function
+      displaySelectedActions(args);
+    });
+
+    afterEach(function () {
+      inTemporaryListSpy = null;
+      splitCheckboxValueStub = null;
+      toggleTabDisplaySpy = null;
+      args = null;
+    });
+
+    it('should call `splitCheckboxValue` at least once with the correct arguments', function () {
+      // Call the function with the stubbed `splitValue`
+      displaySelectedActions({ ...args, splitValue: splitCheckboxValueStub });
+
+      // Check that `splitCheckboxValue` was called at least once with the correct arguments
+      expect(splitCheckboxValueStub.calledWithExactly({ value: args.checkedValues[0] }), '`splitCheckboxValue` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `inTemporaryList` at least once with the correct arguments', function () {
+      // Get the expected arguments for the first checked checkbox value
+      const { recordDatastore, recordId } = splitCheckboxValue({ value: args.checkedValues[0] });
+
+      // Check that `inTemporaryList` was called at least once with the correct arguments
+      expect(inTemporaryListSpy.calledWithExactly({ list: args.list, recordDatastore, recordId }), '`inTemporaryList` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleTab` twice with the correct arguments', function () {
+      // Check that `toggleTab` was called twice
+      expect(toggleTabDisplaySpy.callCount, '`toggleTab` should be called twice').to.equal(2);
+
+      // Check if all checked values are already in the temporary list
+      const showTab = args.checkedValues.some((value) => {
+        const { recordDatastore, recordId } = splitCheckboxValue({ value });
+        return !inTemporaryListSpy({ list: args.list, recordDatastore, recordId });
+      });
+
+      // Check that `toggleTab` was called with the correct arguments
+      expect(toggleTabDisplaySpy.firstCall.calledWithExactly({ id: 'actions__add-selected', show: showTab }), '`toggleTab` should be called with the correct arguments for the `add-selected` tab').to.be.true;
+      expect(toggleTabDisplaySpy.secondCall.calledWithExactly({ id: 'actions__remove-selected', show: !showTab }), '`toggleTab` should be called with the correct arguments for the `remove-selected` tab').to.be.true;
+    });
+  });
+
   describe('addSelectedAction()', function () {
     let fetchAndAddRecordsStub = null;
     let setTemporaryListStub = null;
     let toggleBannerStub = null;
     let styleAddedRecordsStub = null;
+    let displaySelectedActionsStub = null;
     let args = null;
 
     beforeEach(function () {
@@ -374,6 +443,7 @@ describe('add selected', function () {
       setTemporaryListStub = sinon.stub();
       toggleBannerStub = sinon.stub();
       styleAddedRecordsStub = sinon.stub();
+      displaySelectedActionsStub = sinon.stub();
 
       args = {
         addRecords: fetchAndAddRecordsStub,
@@ -381,7 +451,8 @@ describe('add selected', function () {
         list: defaultTemporaryList,
         setList: setTemporaryListStub,
         showBanner: toggleBannerStub,
-        styleRecords: styleAddedRecordsStub
+        styleRecords: styleAddedRecordsStub,
+        toggleActions: displaySelectedActionsStub
       };
     });
 
@@ -390,6 +461,7 @@ describe('add selected', function () {
       setTemporaryListStub = null;
       toggleBannerStub = null;
       styleAddedRecordsStub = null;
+      displaySelectedActionsStub = null;
       args = null;
     });
 
@@ -503,24 +575,41 @@ describe('add selected', function () {
       // Check that `toggleBanner` was called once with the arguments
       expect(toggleBannerStub.calledOnceWithExactly({ list: args.list }), '`toggleBanner` should be called once with the correct count').to.be.true;
     });
+
+    it('should call `displaySelectedActions` with the correct count', async function () {
+      // Call the function
+      const actionPromise = addSelectedAction(args);
+
+      // Click the button to trigger the action
+      args.addSelectedButton.click();
+
+      // Wait for the action to complete
+      await actionPromise;
+
+      // Check that `displaySelectedActions` was called once with the arguments
+      expect(displaySelectedActionsStub.calledOnceWithExactly({ list: args.list }), '`displaySelectedActions` should be called once with the correct count').to.be.true;
+    });
   });
 
   describe('addSelected()', function () {
     let addSelectedActionSpy = null;
     let toggleBannerSpy = null;
     let styleAddedRecordsSpy = null;
+    let displaySelectedActionsSpy = null;
     let args = null;
 
     beforeEach(function () {
       addSelectedActionSpy = sinon.spy();
       toggleBannerSpy = sinon.spy();
       styleAddedRecordsSpy = sinon.spy();
+      displaySelectedActionsSpy = sinon.spy();
 
       args = {
         addAction: addSelectedActionSpy,
         list: global.temporaryList,
         showBanner: toggleBannerSpy,
-        styleRecords: styleAddedRecordsSpy
+        styleRecords: styleAddedRecordsSpy,
+        toggleActions: displaySelectedActionsSpy
       };
 
       // Call the function
@@ -531,7 +620,13 @@ describe('add selected', function () {
       addSelectedActionSpy = null;
       toggleBannerSpy = null;
       styleAddedRecordsSpy = null;
+      displaySelectedActionsSpy = null;
       args = null;
+    });
+
+    it('should call `displaySelectedActions` with the correct arguments', function () {
+      // Check that `displaySelectedActions` was called once with the correct arguments
+      expect(displaySelectedActionsSpy.calledOnceWithExactly({ list: args.list }), '`displaySelectedActions` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `styleAddedRecords` with the correct arguments', function () {
