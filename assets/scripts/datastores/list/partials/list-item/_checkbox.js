@@ -1,6 +1,6 @@
 import { viewingFullRecord } from '../../../record/layout.js';
 
-const checkboxSelector = 'input[type="checkbox"].list__item--checkbox';
+const checkboxSelector = 'input[type="checkbox"].list__item--checkbox:not([value=""])';
 
 const getCheckboxes = () => {
   return document.querySelectorAll(checkboxSelector);
