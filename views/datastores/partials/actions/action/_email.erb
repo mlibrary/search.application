@@ -1,6 +1,6 @@
 <% if @patron.logged_in? %>
   <%= erb :"datastores/partials/actions/_alert" %>
-  <form method="post" action="/<%= @presenter.current_datastore %>/record/<%= @record && @record.id %>/email" class="actions__form action__email--form">
+  <form method="post" action="/actions/email" class="actions__form action__email--form">
     <label for="action__email--input">Email address</label>
     <input type="email" id="action__email--input" name="email" required autocomplete="on" value="<%= @patron.email %>">
     <button type="submit">Send email</button>
