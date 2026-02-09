@@ -1,8 +1,8 @@
-RSpec.describe "sms and email requests" do
+RSpec.describe "text and email requests" do
   before(:each) do
     @session = {
       email: "emcard@umich.edu",
-      sms: "sms",
+      # sms: "sms",
       logged_in: false,
       expires_at: (Time.now + 1.hour).to_i,
       campus: nil
@@ -10,10 +10,10 @@ RSpec.describe "sms and email requests" do
   end
   let(:body) { JSON.parse(last_response.body) }
 
-  context "POST /catalog/record/:id/sms accept json" do
+  context "POST /catalog/record/:id/text accept json" do
     it "returns an error for a not logged in user" do
       env "rack.session", @session
-      post "/catalog/record/some_id/sms", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
+      post "/catalog/record/some_id/text", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
       expect(body["code"]).to eq(403)
       expect(body["message"]).to eq("User must be logged in")
     end
@@ -22,13 +22,13 @@ RSpec.describe "sms and email requests" do
       @session[:logged_in] = true
       env "rack.session", @session
 
-      expect(Search::SMS::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Text::Worker.jobs.size).to eq(0)
 
-      post "/catalog/record/some_id/sms", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
+      post "/catalog/record/some_id/text", {phone: "999-999-9999"}, {"HTTP_ACCEPT" => "application/json"}
 
-      expect(Search::SMS::Worker.jobs.size).to eq(1)
+      expect(Search::Actions::Text::Worker.jobs.size).to eq(1)
       expect(body["code"]).to eq(202)
-      expect(body["message"]).to eq("We are sending your SMS message")
+      expect(body["message"]).to eq("We are sending your text message")
     end
   end
 
@@ -36,35 +36,35 @@ RSpec.describe "sms and email requests" do
     it "returns an error for a not logged in user" do
       env "rack.session", @session
 
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(0)
       post "/catalog/record/some_id/email", {email: "someone@umich.edu"}
       expect(body["code"]).to eq(403)
       expect(body["message"]).to eq("User must be logged in")
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(0)
     end
 
     it "returns success message when successful" do
       @session[:logged_in] = true
       env "rack.session", @session
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(0)
 
       post "/catalog/record/some_id/email", {email: "someone@umich.edu"}
       expect(body["code"]).to eq(202)
       expect(body["message"]).to eq("We are sending your email")
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(1)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(1)
     end
 
     it "returns error message when invalid email is given" do
       @session[:logged_in] = true
       env "rack.session", @session
 
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(0)
 
       post "/catalog/record/some_id/email", {email: "Something went wrong"}
 
       expect(body["code"]).to eq(500)
       expect(body["message"]).to eq("Something went wrong")
-      expect(Search::Email::Catalog::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Catalog::Worker.jobs.size).to eq(0)
     end
   end
 end
