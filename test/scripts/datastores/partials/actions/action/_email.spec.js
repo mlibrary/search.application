@@ -1,10 +1,22 @@
 import {
   emailAction,
   fetchFormResponse,
-  responseBody
+  responseBody,
+  shareAction
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_email.js';
+import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
+import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
+
+const checkboxValues = Object.entries(nonEmptyDatastores(global.temporaryList)).flatMap(([recordDatastore, record]) => {
+  return Object.keys(record).map((recordId) => {
+    return `${recordDatastore},${recordId}`;
+  });
+});
+const temporaryListHTML = checkboxValues.map((value, index) => {
+  return `<input type="checkbox" class="list__item--checkbox" value="${value}" ${index === 0 ? 'checked' : ''}>`;
+}).join('');
 
 describe('email', function () {
   let getAlert = null;
@@ -16,11 +28,12 @@ describe('email', function () {
     document.body.innerHTML = `
       <div id="actions__email--tabpanel">
         <div class="alert"></div>
-        <form class="action__email--form" action="/catalog/record/1337/email" method="post">
+        <form class="action__email--form" action="/actions/email" method="post">
           <input type="email" id="action__email--input" name="email" value="test@umich.edu">
           <button type="submit">Send Email</button>
         </form>
       </div>
+      ${temporaryListHTML}
     `;
 
     getAlert = () => {
@@ -54,12 +67,42 @@ describe('email', function () {
       response = null;
     });
 
-    it('should return a string', function () {
-      expect(response).to.be.a('string');
+    it('should return an object', function () {
+      expect(response).to.be.an('object');
     });
 
-    it('should return a URL-encoded string', function () {
-      expect(response).to.equal(`${getInput().name}=${encodeURIComponent(getInput().value)}`);
+    it('should contain a property that matches the `name` of the input with the `value` of the input', function () {
+      // Get the attributes of the input
+      const { name, value } = getInput();
+
+      // Check that the object contains a property that matches the `name` of the input with the `value` of the input
+      expect(response[name], 'response should contain a property that matches the `name` of the input with the `value` of the input').to.deep.equal(value);
+    });
+
+    it('should contain a `data` property that is an object', function () {
+      expect(response.data, 'response should contain a `data` property that is an object').to.be.an('object');
+    });
+
+    it('the `data` property should contain the datastore of every selected record', function () {
+      // Loop through every selected record
+      filterSelectedRecords().forEach((value) => {
+        // Get the datastore
+        const { recordDatastore } = splitCheckboxValue({ value });
+
+        // Check that the `data` property contains the datastore
+        expect(response.data).to.have.property(recordDatastore);
+      });
+    });
+
+    it('the selected record IDs should be grouped by datastore within the `data` property', function () {
+      // Loop through every selected record
+      filterSelectedRecords().forEach((value) => {
+        // Get the datastore
+        const { recordDatastore, recordId } = splitCheckboxValue({ value });
+
+        // Check that the record ID exists within the datastore array
+        expect(response.data[recordDatastore], `the record ID ${recordId} should exist within the datastore array`).to.be.an('array').that.includes(recordId);
+      });
     });
   });
 
@@ -67,93 +110,59 @@ describe('email', function () {
     let responseBodyStub = null;
     let args = null;
     let fetchStub = null;
+    let fetchArgs = null;
 
-    beforeEach(function () {
+    beforeEach(async function () {
       responseBodyStub = sinon.stub().returns(responseBody({ elements: getForm().elements }));
       args = {
         body: responseBodyStub,
-        form: getForm(),
-        isFullRecord: false,
-        url: '/everything/list/email'
+        form: getForm()
       };
       fetchStub = sinon.stub(global, 'fetch').resolves('mocked-fetch-response');
+
+      // Call the function
+      await fetchFormResponse(args);
+
+      [[, fetchArgs]] = fetchStub.args;
     });
 
     afterEach(function () {
       responseBodyStub = null;
       args = null;
       fetchStub = null;
+      fetchArgs = null;
     });
 
-    it('should call `fetch` once', async function () {
-      // Call the function
-      await fetchFormResponse(args);
-
-      // Check that `fetch` was called once
+    it('should call `fetch` once', function () {
       expect(fetchStub.calledOnce, '`fetch` was not called once').to.be.true;
     });
 
-    describe('URL', function () {
-      it('should fetch the `url` argument when `isFullRecord` is `false`', async function () {
-        // Check that `isFullRecord` is `false`
-        expect(args.isFullRecord, '`isFullRecord` is not `false`').to.be.false;
+    it('should fetch the form `action`', function () {
+      // Check that `fetch` was called with the form `action`
+      expect(fetchStub.args[0][0], '`fetch` was not called with the form `action`').to.equal(getForm().action);
+    });
 
-        // Call the function
-        await fetchFormResponse(args);
+    it('should call `responseBody` with the correct arguments', function () {
+      expect(responseBodyStub.args[0][0], '`responseBody` was not called with the correct arguments').to.deep.equal({ elements: getForm().elements });
+    });
 
-        // Check that `fetch` was called with the `url` argument
-        expect(fetchStub.args[0][0], '`fetch` was not called with the `url` argument').to.equal(args.url);
-      });
+    it('`body` should equal the stringified JSON of the result of `responseBody`', function () {
+      expect(fetchArgs.body, '`body` should equal the result of `responseBody`').to.deep.equal(JSON.stringify(responseBodyStub()));
+    });
 
-      it('should fetch the form `action` when `isFullRecord` is `true`', async function () {
-        // Check that `isFullRecord` is `true`
-        args.isFullRecord = true;
-        expect(args.isFullRecord, '`isFullRecord` is not `true`').to.be.true;
-
-        // Call the function
-        await fetchFormResponse(args);
-
-        // Check that `fetch` was called with the form `action`
-        expect(fetchStub.args[0][0], '`fetch` was not called with the form `action`').to.equal(getForm().action);
+    it('`headers` should equal the correct headers', function () {
+      expect(fetchArgs.headers, '`headers` should equal the correct headers').to.deep.equal({
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       });
     });
 
-    describe('fetch options', function () {
-      let fetchArgs = null;
-
-      beforeEach(async function () {
-        // Call the function
-        await fetchFormResponse(args);
-
-        [[, fetchArgs]] = fetchStub.args;
-      });
-
-      afterEach(function () {
-        fetchArgs = null;
-      });
-
-      it('should call `body` with the correct arguments', function () {
-        expect(responseBodyStub.args[0][0], '`body` was not called with the correct arguments').to.deep.equal({ elements: getForm().elements });
-      });
-
-      it('`body` should equal the result of `responseBody`', function () {
-        expect(fetchArgs.body, '`body` should equal the result of `responseBody`').to.deep.equal(responseBodyStub());
-      });
-
-      it('`headers` should equal the correct headers', function () {
-        expect(fetchArgs.headers, '`headers` should equal the correct headers').to.deep.equal({
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        });
-      });
-
-      it('`method` should equal the form `method`', function () {
-        expect(fetchArgs.method, '`method` should equal the form `method`').to.equal(getForm().method);
-      });
+    it('`method` should equal the form `method`', function () {
+      expect(fetchArgs.method, '`method` should equal the form `method`').to.equal(getForm().method);
     });
   });
 
-  describe('emailAction()', function () {
+  describe('shareAction()', function () {
     let submitEvent = null;
     let preventDefaultSpy = null;
     let mockResponse = null;
@@ -176,7 +185,8 @@ describe('email', function () {
       fetchFormResponseStub = sinon.stub().resolves(mockResponse);
       changeAlertStub = sinon.stub();
       args = {
-        emailResponse: fetchFormResponseStub,
+        action: getInput().name,
+        response: fetchFormResponseStub,
         showAlert: changeAlertStub
       };
     });
@@ -198,7 +208,7 @@ describe('email', function () {
         expect(getForm(), 'the form should not be found').to.be.null;
 
         // Call the function
-        emailAction(args);
+        shareAction(args);
       });
 
       it('should not call `fetchFormResponse`', function () {
@@ -213,7 +223,7 @@ describe('email', function () {
     describe('submit event handler', function () {
       beforeEach(async function () {
         // Call the function
-        emailAction(args);
+        shareAction(args);
 
         // Submit the form
         getForm().dispatchEvent(submitEvent);
@@ -234,8 +244,32 @@ describe('email', function () {
       });
 
       it('should call `fetchFormResponse` with the correct arguments', function () {
-        expect(fetchFormResponseStub.calledWithExactly({ form: getForm(), url: '/everything/list/email' }), '`fetchFormResponse` was not called with the correct arguments').to.be.true;
+        expect(fetchFormResponseStub.calledWithExactly({ form: getForm() }), '`fetchFormResponse` was not called with the correct arguments').to.be.true;
       });
+    });
+  });
+
+  describe('emailAction()', function () {
+    let shareActionSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      shareActionSpy = sinon.spy();
+      args = {
+        submitAction: shareActionSpy
+      };
+
+      // Call the function
+      emailAction(args);
+    });
+
+    afterEach(function () {
+      shareActionSpy = null;
+      args = null;
+    });
+
+    it('should call `shareAction` with the correct arguments', function () {
+      expect(shareActionSpy.calledWithExactly({ action: 'email' }), 'the `shareAction` function should be called with the correct arguments').to.be.true;
     });
   });
 });

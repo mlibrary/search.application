@@ -1,7 +1,7 @@
 import { filterSelectedRecords, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
 import { changeAlert } from '../_alert.js';
 
-const responseBody = ({ elements }) => {
+const responseBody = ({ elements, selectedRecords = filterSelectedRecords() }) => {
   const body = { data: {} };
 
   // Convert form elements to key value pairs
@@ -12,7 +12,7 @@ const responseBody = ({ elements }) => {
   });
 
   // Loop through the selected records and add them to the body
-  filterSelectedRecords().forEach((value) => {
+  selectedRecords.forEach((value) => {
     // Get the datastore and mmsid from the value
     const { recordDatastore, recordId } = splitCheckboxValue({ value });
     // If the datastore is not already in the body, add it
