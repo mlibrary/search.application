@@ -1,4 +1,5 @@
 import {
+  checkboxChangeHandler,
   filterSelectedRecords,
   getCheckboxes,
   getCheckedCheckboxes,
@@ -7,6 +8,7 @@ import {
   toggleCheckedState
 } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
+import sinon from 'sinon';
 
 const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
   return Object.keys(global.temporaryList[datastore]).length > 0;
@@ -183,6 +185,35 @@ describe('checkbox', function () {
       const [expectedDatastore, expectedRecordId] = value.split(',');
       expect(recordDatastore, 'the recordDatastore should match the expected value').to.equal(expectedDatastore);
       expect(recordId, 'the recordId should match the expected value').to.equal(expectedRecordId);
+    });
+  });
+
+  describe('checkboxChangeHandler()', function () {
+    let checkboxes = null;
+    let func = null;
+    let args = null;
+
+    beforeEach(function () {
+      checkboxes = getCheckboxes();
+      func = sinon.spy();
+      args = { arg1: 'value1', arg2: 'value2' };
+
+      // Call the function
+      checkboxChangeHandler({ checkboxes, func, ...args });
+    });
+
+    afterEach(function () {
+      checkboxes = null;
+      func = null;
+      args = null;
+    });
+
+    it('should add a change event listener to each checkbox that calls the provided function with the provided arguments', function () {
+      // Simulate a change event on each checkbox and check that the function is called with the correct arguments
+      checkboxes.forEach((checkbox) => {
+        checkbox.dispatchEvent(new window.Event('change'));
+        expect(func.calledWithExactly(args), 'the provided function should be called with the correct arguments when a checkbox change event is triggered').to.be.true;
+      });
     });
   });
 });
