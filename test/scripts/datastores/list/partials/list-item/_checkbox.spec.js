@@ -2,13 +2,11 @@ import {
   filterSelectedRecords,
   getCheckboxes,
   getCheckedCheckboxes,
-  selectedCitations,
   someCheckboxesChecked,
   splitCheckboxValue,
   toggleCheckedState
 } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
-import sinon from 'sinon';
 
 const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
   return Object.keys(global.temporaryList[datastore]).length > 0;
@@ -185,53 +183,6 @@ describe('checkbox', function () {
       const [expectedDatastore, expectedRecordId] = value.split(',');
       expect(recordDatastore, 'the recordDatastore should match the expected value').to.equal(expectedDatastore);
       expect(recordId, 'the recordId should match the expected value').to.equal(expectedRecordId);
-    });
-  });
-
-  describe('selectedCitations()', function () {
-    let splitValueSpy = null;
-    let args = null;
-
-    beforeEach(function () {
-      splitValueSpy = sinon.spy(splitCheckboxValue);
-      args = {
-        filteredValues: filterSelectedRecords(),
-        list: global.temporaryList,
-        splitValue: splitValueSpy,
-        type: 'csl'
-      };
-    });
-
-    afterEach(function () {
-      splitValueSpy = null;
-      args = null;
-    });
-
-    it('should return `null` if no type is provided', function () {
-      expect(selectedCitations({ list: args.list }), 'the return should be `null` if no type is provided').to.be.null;
-    });
-
-    it('should return `null` if the incorrect type is provided', function () {
-      expect(selectedCitations({ ...args, type: 'wrong type' }), 'the return should be `null` if the incorrect type is provided').to.be.null;
-    });
-
-    it('should call `splitCheckboxValue` with the correct arguments', function () {
-      // Call the function
-      selectedCitations(args);
-
-      // Check that `splitCheckboxValue` was called with the correct arguments
-      expect(splitValueSpy.calledWithExactly({ value: getCheckedCheckboxes()[0].value }), '`splitCheckboxValue` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should return an array', function () {
-      expect(selectedCitations(args), '`selectedCitations(type)` should return an array').to.be.an('array');
-    });
-
-    it('should return the correct citation type', function () {
-      ['csl', 'ris'].forEach((type) => {
-        const { recordDatastore, recordId } = splitCheckboxValue({ value: getCheckedCheckboxes()[0].value });
-        expect(selectedCitations({ ...args, type })[0], `\`citation.${type}\` values should be returned for each selected record`).to.deep.equal(global.temporaryList[recordDatastore][recordId].citation[type]);
-      });
     });
   });
 });

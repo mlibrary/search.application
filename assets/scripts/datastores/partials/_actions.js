@@ -64,7 +64,8 @@ const toggleTabDisplay = ({ id, show }) => {
   const tabPanel = document.querySelector(`#${tab.getAttribute('aria-controls')}`);
 
   tab.style.display = show ? 'flex' : 'none';
-  tabPanel.style.display = show ? 'block' : 'none';
+  tab.setAttribute('aria-selected', show ? tab.getAttribute('aria-selected') : 'false');
+  tabPanel.style.display = tab.getAttribute('aria-selected') === 'true' ? 'block' : 'none';
 };
 
 export {
