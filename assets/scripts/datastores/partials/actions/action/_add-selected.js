@@ -99,19 +99,18 @@ const fetchAndAddRecords = async ({ addClass = toggleAddedClass, checkboxValues 
   return updatedList;
 };
 
-const displaySelectedActions = ({ checkedValues = filterSelectedRecords(), inList = inTemporaryList, list, splitValue = splitCheckboxValue, toggleTab = toggleTabDisplay } = {}) => {
+const displayAddSelectedAction = ({ checkedValues = filterSelectedRecords(), inList = inTemporaryList, list, splitValue = splitCheckboxValue, toggleTab = toggleTabDisplay } = {}) => {
   // Check if any of the selected records are not in the temporary list
   const showTab = checkedValues.some((value) => {
     const { recordDatastore, recordId } = splitValue({ value });
     return !inList({ list, recordDatastore, recordId });
   });
 
-  // If `Add selected` is shown, hide `Remove selected`, and vice versa
+  // Show `Add selected` if there are selected records not already in the temporary list
   toggleTab({ id: 'actions__add-selected', show: showTab });
-  toggleTab({ id: 'actions__remove-selected', show: !showTab });
 };
 
-const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton = getAddSelectedButton(), list, setList = setTemporaryList, showBanner = toggleBanner, styleRecords = styleAddedRecords, toggleActions = displaySelectedActions } = {}) => {
+const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton = getAddSelectedButton(), list, setList = setTemporaryList, showBanner = toggleBanner, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {
   const button = addSelectedButton;
   const buttonText = button.textContent;
 
@@ -145,14 +144,14 @@ const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton 
       showBanner({ list: updatedList });
 
       // Toggle actions based on current selection
-      toggleActions({ list: updatedList });
+      toggleAction({ list: updatedList });
     }
   });
 };
 
-const addSelected = ({ addAction = addSelectedAction, list, selectedTabText = toggleSelectedTabText, showBanner = toggleBanner, styleRecords = styleAddedRecords, toggleActions = displaySelectedActions } = {}) => {
-  // Toggle actions based on current selection
-  toggleActions({ list });
+const addSelected = ({ addAction = addSelectedAction, list, selectedTabText = toggleSelectedTabText, showBanner = toggleBanner, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {
+  // Toggle `Add selected` action based on current selection
+  toggleAction({ list });
 
   // Style records on load
   styleRecords({ list });
@@ -170,7 +169,7 @@ const addSelected = ({ addAction = addSelectedAction, list, selectedTabText = to
 export {
   addSelected,
   addSelectedAction,
-  displaySelectedActions,
+  displayAddSelectedAction,
   fetchAndAddRecords,
   fetchRecordData,
   getAddSelectedButton,

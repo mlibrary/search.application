@@ -1,7 +1,7 @@
 import {
   addSelected,
   addSelectedAction,
-  displaySelectedActions,
+  displayAddSelectedAction,
   fetchAndAddRecords,
   fetchRecordData,
   getAddSelectedButton,
@@ -438,7 +438,7 @@ describe('add selected', function () {
     });
   });
 
-  describe('displaySelectedActions()', function () {
+  describe('displayAddSelectedAction()', function () {
     let inTemporaryListSpy = null;
     let splitCheckboxValueStub = null;
     let toggleTabDisplaySpy = null;
@@ -463,7 +463,7 @@ describe('add selected', function () {
       expect(args.checkedValues.length, 'there should be at least one checked checkbox value to test with').to.be.greaterThan(0);
 
       // Call the function
-      displaySelectedActions(args);
+      displayAddSelectedAction(args);
     });
 
     afterEach(function () {
@@ -475,7 +475,7 @@ describe('add selected', function () {
 
     it('should call `splitCheckboxValue` at least once with the correct arguments', function () {
       // Call the function with the stubbed `splitValue`
-      displaySelectedActions({ ...args, splitValue: splitCheckboxValueStub });
+      displayAddSelectedAction({ ...args, splitValue: splitCheckboxValueStub });
 
       // Check that `splitCheckboxValue` was called at least once with the correct arguments
       expect(splitCheckboxValueStub.calledWithExactly({ value: args.checkedValues[0] }), '`splitCheckboxValue` should be called with the correct arguments').to.be.true;
@@ -489,10 +489,7 @@ describe('add selected', function () {
       expect(inTemporaryListSpy.calledWithExactly({ list: args.list, recordDatastore, recordId }), '`inTemporaryList` should be called with the correct arguments').to.be.true;
     });
 
-    it('should call `toggleTab` twice with the correct arguments', function () {
-      // Check that `toggleTab` was called twice
-      expect(toggleTabDisplaySpy.callCount, '`toggleTab` should be called twice').to.equal(2);
-
+    it('should call `toggleTab` with the correct arguments', function () {
       // Check if all checked values are already in the temporary list
       const showTab = args.checkedValues.some((value) => {
         const { recordDatastore, recordId } = splitCheckboxValue({ value });
@@ -500,8 +497,7 @@ describe('add selected', function () {
       });
 
       // Check that `toggleTab` was called with the correct arguments
-      expect(toggleTabDisplaySpy.firstCall.calledWithExactly({ id: 'actions__add-selected', show: showTab }), '`toggleTab` should be called with the correct arguments for the `add-selected` tab').to.be.true;
-      expect(toggleTabDisplaySpy.secondCall.calledWithExactly({ id: 'actions__remove-selected', show: !showTab }), '`toggleTab` should be called with the correct arguments for the `remove-selected` tab').to.be.true;
+      expect(toggleTabDisplaySpy.calledWithExactly({ id: 'actions__add-selected', show: showTab }), '`toggleTab` should be called with the correct arguments for the `add-selected` tab').to.be.true;
     });
   });
 
@@ -510,7 +506,7 @@ describe('add selected', function () {
     let setTemporaryListStub = null;
     let toggleBannerStub = null;
     let styleAddedRecordsStub = null;
-    let displaySelectedActionsStub = null;
+    let displayAddSelectedActionStub = null;
     let args = null;
 
     beforeEach(function () {
@@ -518,7 +514,7 @@ describe('add selected', function () {
       setTemporaryListStub = sinon.stub();
       toggleBannerStub = sinon.stub();
       styleAddedRecordsStub = sinon.stub();
-      displaySelectedActionsStub = sinon.stub();
+      displayAddSelectedActionStub = sinon.stub();
 
       args = {
         addRecords: fetchAndAddRecordsStub,
@@ -527,7 +523,7 @@ describe('add selected', function () {
         setList: setTemporaryListStub,
         showBanner: toggleBannerStub,
         styleRecords: styleAddedRecordsStub,
-        toggleActions: displaySelectedActionsStub
+        toggleAction: displayAddSelectedActionStub
       };
     });
 
@@ -536,7 +532,7 @@ describe('add selected', function () {
       setTemporaryListStub = null;
       toggleBannerStub = null;
       styleAddedRecordsStub = null;
-      displaySelectedActionsStub = null;
+      displayAddSelectedActionStub = null;
       args = null;
     });
 
@@ -637,7 +633,7 @@ describe('add selected', function () {
       expect(styleAddedRecordsStub.calledOnceWithExactly({ list: args.list }), '`styleAddedRecords` should be called once with the updated list').to.be.true;
     });
 
-    it('should call `toggleBanner` with the correct count', async function () {
+    it('should call `toggleBanner` with the correct arguments', async function () {
       // Call the function
       const actionPromise = addSelectedAction(args);
 
@@ -648,10 +644,10 @@ describe('add selected', function () {
       await actionPromise;
 
       // Check that `toggleBanner` was called once with the arguments
-      expect(toggleBannerStub.calledOnceWithExactly({ list: args.list }), '`toggleBanner` should be called once with the correct count').to.be.true;
+      expect(toggleBannerStub.calledOnceWithExactly({ list: args.list }), '`toggleBanner` should be called once with the correct arguments').to.be.true;
     });
 
-    it('should call `displaySelectedActions` with the correct count', async function () {
+    it('should call `displayAddSelectedAction` with the correct arguments', async function () {
       // Call the function
       const actionPromise = addSelectedAction(args);
 
@@ -661,8 +657,8 @@ describe('add selected', function () {
       // Wait for the action to complete
       await actionPromise;
 
-      // Check that `displaySelectedActions` was called once with the arguments
-      expect(displaySelectedActionsStub.calledOnceWithExactly({ list: args.list }), '`displaySelectedActions` should be called once with the correct count').to.be.true;
+      // Check that `displayAddSelectedAction` was called once with the arguments
+      expect(displayAddSelectedActionStub.calledOnceWithExactly({ list: args.list }), '`displayAddSelectedAction` should be called once with the correct arguments').to.be.true;
     });
   });
 
@@ -671,7 +667,7 @@ describe('add selected', function () {
     let toggleSelectedTabTextSpy = null;
     let toggleBannerSpy = null;
     let styleAddedRecordsSpy = null;
-    let displaySelectedActionsSpy = null;
+    let displayAddSelectedActionSpy = null;
     let args = null;
 
     beforeEach(function () {
@@ -679,7 +675,7 @@ describe('add selected', function () {
       toggleSelectedTabTextSpy = sinon.spy();
       toggleBannerSpy = sinon.spy();
       styleAddedRecordsSpy = sinon.spy();
-      displaySelectedActionsSpy = sinon.spy();
+      displayAddSelectedActionSpy = sinon.spy();
 
       args = {
         addAction: addSelectedActionSpy,
@@ -687,7 +683,7 @@ describe('add selected', function () {
         selectedTabText: toggleSelectedTabTextSpy,
         showBanner: toggleBannerSpy,
         styleRecords: styleAddedRecordsSpy,
-        toggleActions: displaySelectedActionsSpy
+        toggleAction: displayAddSelectedActionSpy
       };
 
       // Call the function
@@ -699,13 +695,13 @@ describe('add selected', function () {
       toggleSelectedTabTextSpy = null;
       toggleBannerSpy = null;
       styleAddedRecordsSpy = null;
-      displaySelectedActionsSpy = null;
+      displayAddSelectedActionSpy = null;
       args = null;
     });
 
-    it('should call `displaySelectedActions` with the correct arguments', function () {
-      // Check that `displaySelectedActions` was called once with the correct arguments
-      expect(displaySelectedActionsSpy.calledOnceWithExactly({ list: args.list }), '`displaySelectedActions` should be called once with the correct arguments').to.be.true;
+    it('should call `displayAddSelectedAction` with the correct arguments', function () {
+      // Check that `displayAddSelectedAction` was called once with the correct arguments
+      expect(displayAddSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`displayAddSelectedAction` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `styleAddedRecords` with the correct arguments', function () {
