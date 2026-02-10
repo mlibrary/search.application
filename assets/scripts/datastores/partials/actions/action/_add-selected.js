@@ -1,10 +1,29 @@
-import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, getCheckboxes, getCheckedCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../list/partials/list-item/_checkbox.js';
 import { inTemporaryList, setTemporaryList } from '../../../list/layout.js';
 import { toggleBanner } from '../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../_actions.js';
 
 const getAddSelectedButton = () => {
   return document.querySelector('#actions__add-selected--tabpanel .action__add-selected');
+};
+
+const toggleSelectedTabText = ({ checkedCheckboxes = getCheckedCheckboxes(), tabID = 'actions__add-selected' }) => {
+  // Get the tab element
+  const tab = document.getElementById(tabID);
+
+  // Return early if the tab is not found
+  if (!tab) {
+    return;
+  }
+
+  // Replace `selected` with `record` if there is only one checkbox selected, and vice versa
+  const updatedText = tab.textContent.replace(
+    /(?:selected|record)/u,
+    checkedCheckboxes.length === 1 ? 'record' : 'selected'
+  );
+
+  // Update the tab's text content
+  tab.textContent = updatedText;
 };
 
 const toggleAddedClass = ({ isAdded, recordDatastore, recordId }) => {
@@ -131,12 +150,15 @@ const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton 
   });
 };
 
-const addSelected = ({ addAction = addSelectedAction, list, showBanner = toggleBanner, styleRecords = styleAddedRecords, toggleActions = displaySelectedActions } = {}) => {
+const addSelected = ({ addAction = addSelectedAction, list, selectedTabText = toggleSelectedTabText, showBanner = toggleBanner, styleRecords = styleAddedRecords, toggleActions = displaySelectedActions } = {}) => {
   // Toggle actions based on current selection
   toggleActions({ list });
 
   // Style records on load
   styleRecords({ list });
+
+  // Update the "Add selected" tab text on load and whenever checkboxes are changed
+  selectedTabText();
 
   // Show banner if there are items in the temporary list
   showBanner({ list });
@@ -153,5 +175,6 @@ export {
   fetchRecordData,
   getAddSelectedButton,
   styleAddedRecords,
-  toggleAddedClass
+  toggleAddedClass,
+  toggleSelectedTabText
 };

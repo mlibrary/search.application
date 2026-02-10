@@ -6,10 +6,11 @@ import {
   fetchRecordData,
   getAddSelectedButton,
   styleAddedRecords,
-  toggleAddedClass
+  toggleAddedClass,
+  toggleSelectedTabText
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_add-selected.js';
 import { defaultTemporaryList, inTemporaryList, nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
-import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, getCheckedCheckboxes, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -27,17 +28,23 @@ nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
 });
 
 describe('add selected', function () {
+  let getTab = null;
   let checkboxes = null;
   let checkboxCount = null;
 
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
+      <button id="actions__add-selected">Add selected</button>
       <div id="actions__add-selected--tabpanel">
-        <button class="action__add-selected">Add Selected</button>
+        <button class="action__add-selected">Add to My Temporary List</button>
       </div>
       ${temporaryListHTML}
     `;
+
+    getTab = () => {
+      return document.getElementById('actions__add-selected');
+    };
 
     checkboxes = () => {
       return Array.from(document.querySelectorAll('input[type="checkbox"]'));
@@ -47,13 +54,81 @@ describe('add selected', function () {
   });
 
   afterEach(function () {
+    getTab = null;
     checkboxes = null;
     checkboxCount = null;
   });
 
   describe('getAddSelectedButton()', function () {
     it('should return the add selected button element', function () {
-      expect(getAddSelectedButton()).to.deep.equal(document.querySelector('button'));
+      expect(getAddSelectedButton()).to.deep.equal(document.querySelector('button.action__add-selected'));
+    });
+  });
+
+  describe('toggleSelectedTabText()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        checkedCheckboxes: getCheckedCheckboxes(),
+        tabID: 'actions__add-selected'
+      };
+
+      // Check that the tab element exists
+      expect(document.getElementById(args.tabID), `the tab with ID "${args.tabID}" should exist`).to.exist;
+
+      // Check that the tab text is "Add selected" to begin with
+      expect(getTab().textContent, 'the tab text should be "Add selected" to begin with').to.equal('Add selected');
+
+      // Check that there are multiple checkboxes selected to begin with
+      expect(args.checkedCheckboxes.length, 'there should be multiple checkboxes selected to begin with').to.be.greaterThan(1);
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should return early if the tab is not found', function () {
+      const tabID = 'non-existent-tab-id';
+
+      // Check that the non-existent tab ID does not exist
+      expect(document.getElementById(tabID), `the tab with ID "${tabID}" should not exist`).to.be.null;
+
+      // Call the function
+      expect(() => {
+        return toggleSelectedTabText({ ...args, tabID });
+      }, 'calling `toggleSelectedTabText` with a non-existent tab ID should not throw an error').to.not.throw();
+    });
+
+    it('should update the tab text to "Add record" if there is only one checkbox selected', function () {
+      // Uncheck all checkboxes except one
+      getCheckedCheckboxes().forEach((checkbox, index) => {
+        checkbox.checked = index === 0;
+      });
+      args.checkedCheckboxes = getCheckedCheckboxes();
+
+      // Check that one checkbox is selected
+      expect(args.checkedCheckboxes.length, 'there should be exactly one checkbox selected').to.equal(1);
+
+      // Call the function
+      toggleSelectedTabText(args);
+
+      // Check that the tab text is updated to "Add record"
+      expect(getTab().textContent, 'the tab text should be "Add record"').to.equal('Add record');
+    });
+
+    it('should update the tab text to "Add selected" if there are multiple checkboxes selected', function () {
+      // Update the tab text to "Add record"
+      getTab().textContent = 'Add record';
+
+      // Check that the tab text is "Add record" to begin with
+      expect(getTab().textContent, 'the tab text should be "Add record" to begin with').to.equal('Add record');
+
+      // Call the function
+      toggleSelectedTabText(args);
+
+      // Check that the tab text is updated to "Add selected"
+      expect(getTab().textContent, 'the tab text should be "Add selected"').to.equal('Add selected');
     });
   });
 
@@ -106,7 +181,7 @@ describe('add selected', function () {
       // Call the function
       expect(() => {
         return toggleAddedClass({ isAdded: true, recordDatastore: 'non-existent-datastore', recordId: 'non-existent-recordId' });
-      }).to.not.throw();
+      }, 'calling `toggleAddedClass` with a non-existent container should not throw an error').to.not.throw();
     });
   });
 
@@ -593,6 +668,7 @@ describe('add selected', function () {
 
   describe('addSelected()', function () {
     let addSelectedActionSpy = null;
+    let toggleSelectedTabTextSpy = null;
     let toggleBannerSpy = null;
     let styleAddedRecordsSpy = null;
     let displaySelectedActionsSpy = null;
@@ -600,6 +676,7 @@ describe('add selected', function () {
 
     beforeEach(function () {
       addSelectedActionSpy = sinon.spy();
+      toggleSelectedTabTextSpy = sinon.spy();
       toggleBannerSpy = sinon.spy();
       styleAddedRecordsSpy = sinon.spy();
       displaySelectedActionsSpy = sinon.spy();
@@ -607,6 +684,7 @@ describe('add selected', function () {
       args = {
         addAction: addSelectedActionSpy,
         list: global.temporaryList,
+        selectedTabText: toggleSelectedTabTextSpy,
         showBanner: toggleBannerSpy,
         styleRecords: styleAddedRecordsSpy,
         toggleActions: displaySelectedActionsSpy
@@ -618,6 +696,7 @@ describe('add selected', function () {
 
     afterEach(function () {
       addSelectedActionSpy = null;
+      toggleSelectedTabTextSpy = null;
       toggleBannerSpy = null;
       styleAddedRecordsSpy = null;
       displaySelectedActionsSpy = null;
@@ -632,6 +711,11 @@ describe('add selected', function () {
     it('should call `styleAddedRecords` with the correct arguments', function () {
       // Check that `styleAddedRecords` was called once with the correct arguments
       expect(styleAddedRecordsSpy.calledOnceWithExactly({ list: args.list }), '`styleAddedRecords` should be called once with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleSelectedTabText` with the correct arguments', function () {
+      // Check that `toggleSelectedTabText` was called once with the correct arguments
+      expect(toggleSelectedTabTextSpy.calledOnceWithExactly(), '`toggleSelectedTabText` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `toggleBanner` with the correct arguments', function () {
