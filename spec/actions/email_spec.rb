@@ -1,18 +1,50 @@
-describe Search::Actions::Email::Catalog do
+describe Search::Actions::Email::Record do
   before(:each) do
     Mail::TestMailer.deliveries.clear
   end
 
-  it "sends an email?" do
-    bib_id = "9912345"
-    data = create(:catalog_api_record, fields: [:title, :citation, :holdings])
-    stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
-      .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
-    # stub_request(:get, "#{S.catalog_browse_url}/carousel?query=#{call_number}")
-    # .to_return(status: 200, body: [], headers: {})
+  it "sends an email" do
+    api_resp_body = create(:catalog_api_record, fields: [:id, :title, :citation, :holdings])
+    bib_id = api_resp_body["id"]
+    title = api_resp_body["title"][0]["original"]["text"]
 
-    described_class.new(bib_id).send(to: "someone@default.invalid")
-    expect(Mail::TestMailer.deliveries.first.text_part.body.to_s).to include("Michigan")
-    expect(Mail::TestMailer.deliveries.first.html_part.body.to_s).to include("Michigan")
+    data = {
+      catalog: [bib_id]
+    }
+
+    stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
+      .to_return(status: 200, body: api_resp_body.to_json, headers: {content_type: "application/json"})
+
+    described_class.new(data).send(to: "someone@default.invalid")
+
+    first_delivery = Mail::TestMailer.deliveries.first
+    expect(first_delivery.text_part.body.to_s).to include(title)
+    expect(first_delivery.html_part.body.to_s).to include(title)
+    expect(first_delivery.html_part.body.to_s).not_to include("My Temporary List")
+  end
+end
+describe Search::Actions::Email::List do
+  before(:each) do
+    Mail::TestMailer.deliveries.clear
+  end
+
+  it "sends an email" do
+    api_resp_body = create(:catalog_api_record, fields: [:id, :title, :citation, :holdings])
+    bib_id = api_resp_body["id"]
+    title = api_resp_body["title"][0]["original"]["text"]
+
+    data = {
+      catalog: [bib_id]
+    }
+
+    stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
+      .to_return(status: 200, body: api_resp_body.to_json, headers: {content_type: "application/json"})
+
+    described_class.new(data).send(to: "someone@default.invalid")
+
+    first_delivery = Mail::TestMailer.deliveries.first
+    expect(first_delivery.text_part.body.to_s).to include(title)
+    expect(first_delivery.html_part.body.to_s).to include(title)
+    expect(first_delivery.html_part.body.to_s).to include("My Temporary List")
   end
 end
