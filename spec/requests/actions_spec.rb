@@ -37,45 +37,45 @@ RSpec.describe "text and email requests" do
     it "returns an error for a not logged in user" do
       env "rack.session", @session
 
-      expect(Search::Actions::Email::Record::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Worker::Record.jobs.size).to eq(0)
       post "/actions/email", JSON.generate(email: "someone@umich.edu", data: {catalog: ["some_id"]}), {"HTTP_ACCEPT" => "application/json", "CONTENT_TYPE" => "application/json"}
       expect(body["code"]).to eq(403)
       expect(body["message"]).to eq("User must be logged in")
-      expect(Search::Actions::Email::Record::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Worker::Record.jobs.size).to eq(0)
     end
 
     it "returns success message when record is successful" do
       @session[:logged_in] = true
       env "rack.session", @session
-      expect(Search::Actions::Email::Record::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Worker::Record.jobs.size).to eq(0)
 
       post "/actions/email", JSON.generate(email: "someone@umich.edu", data: {catalog: ["some_id"]}), {"HTTP_ACCEPT" => "application/json", "CONTENT_TYPE" => "application/json"}
       expect(body["code"]).to eq(202)
       expect(body["message"]).to eq("We are sending your email")
-      expect(Search::Actions::Email::Record::Worker.jobs.size).to eq(1)
+      expect(Search::Actions::Email::Worker::Record.jobs.size).to eq(1)
     end
 
     it "returns success message when list is successful" do
       @session[:logged_in] = true
       env "rack.session", @session
-      expect(Search::Actions::Email::List::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Worker::List.jobs.size).to eq(0)
 
       post "/actions/email", JSON.generate(email: "someone@umich.edu", data: {catalog: ["some_id", "some_other_id"]}), {"HTTP_ACCEPT" => "application/json", "CONTENT_TYPE" => "application/json"}
       expect(body["code"]).to eq(202)
       expect(body["message"]).to eq("We are sending your email")
-      expect(Search::Actions::Email::List::Worker.jobs.size).to eq(1)
+      expect(Search::Actions::Email::Worker::List.jobs.size).to eq(1)
     end
     it "returns error message when invalid email is given" do
       @session[:logged_in] = true
       env "rack.session", @session
 
-      expect(Search::Actions::Email::Record::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Worker::Record.jobs.size).to eq(0)
 
       post "/actions/email", JSON.generate(email: "invalid_address", data: {catalog: ["some_id"]}), {"HTTP_ACCEPT" => "application/json", "CONTENT_TYPE" => "application/json"}
 
       expect(body["code"]).to eq(500)
       expect(body["message"]).to eq("Something went wrong")
-      expect(Search::Actions::Email::Record::Worker.jobs.size).to eq(0)
+      expect(Search::Actions::Email::Worker::Record.jobs.size).to eq(0)
     end
   end
 end

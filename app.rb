@@ -184,7 +184,7 @@ class Search::Application < Sinatra::Base
         data = params["data"]
 
         raise "invalid email address" unless email.match?(URI::MailTo::EMAIL_REGEXP)
-        Search::Actions::Email.worker_klass(data).perform_async(email, data)
+        Search::Actions::Email::Worker.submit(email: email, data: data)
         [202, {code: 202, message: "We are sending your email"}.to_json]
       end
     rescue => error

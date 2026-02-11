@@ -1,4 +1,4 @@
-describe Search::Actions::Email::Record do
+describe Search::Actions::Email::Worker::Record do
   before(:each) do
     Mail::TestMailer.deliveries.clear
   end
@@ -15,7 +15,7 @@ describe Search::Actions::Email::Record do
     stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
       .to_return(status: 200, body: api_resp_body.to_json, headers: {content_type: "application/json"})
 
-    described_class.new(data).send(to: "someone@default.invalid")
+    described_class.new.perform("someone@default.invalid", data)
 
     first_delivery = Mail::TestMailer.deliveries.first
     expect(first_delivery.text_part.body.to_s).to include(title)
@@ -23,7 +23,7 @@ describe Search::Actions::Email::Record do
     expect(first_delivery.html_part.body.to_s).not_to include("My Temporary List")
   end
 end
-describe Search::Actions::Email::List do
+describe Search::Actions::Email::Worker::List do
   before(:each) do
     Mail::TestMailer.deliveries.clear
   end
@@ -40,7 +40,7 @@ describe Search::Actions::Email::List do
     stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
       .to_return(status: 200, body: api_resp_body.to_json, headers: {content_type: "application/json"})
 
-    described_class.new(data).send(to: "someone@default.invalid")
+    described_class.new.perform("someone@default.invalid", data)
 
     first_delivery = Mail::TestMailer.deliveries.first
     expect(first_delivery.text_part.body.to_s).to include(title)

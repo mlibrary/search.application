@@ -4,15 +4,6 @@ module Search
       include Sinatra::Templates
       include Search::ViewHelpers
 
-      def self.worker_klass(data)
-        records_data = Search::Actions::RecordsData.new(data)
-        if records_data.single?
-          Record::Worker
-        else
-          List::Worker
-        end
-      end
-
       def template_cache
         @template_cache ||= Sinatra::TemplateCache.new
       end
@@ -52,44 +43,30 @@ module Search
         mail.deliver!
       end
 
-      class Worker
-        include Sidekiq::Job
-
-        def perform
-          raise NotImplementedError
-        end
-      end
-
-      class Catalog < self
-        def self.for(id)
-          record = Search::Models::Record::Catalog.for(id)
-          new(record)
-        end
-
-        def initialize(id)
-          @record = Search::Presenters::Record.for_datastore(datastore: "catalog", id: id, size: "email")
-        end
-
-        def subject
-          "Library Search: #{@record.title.first.text}"
-        end
-
-        def template
-          :"email/record"
-        end
-
-        def html_layout
-          :"email/layout"
-        end
-
-        def text_layout
-          :"email/record/txt"
-        end
-
-        class Worker < Search::Actions::Email::Worker
-          def perform(to, id)
-            Search::Actions::Email::Catalog.new(id).send(to: to)
+      module Worker
+        def self.submit(email:, data:)
+          records_data = Search::Actions::RecordsData.new(data)
+          klass = if records_data.single?
+            Record
+          else
+            List
           end
+          klass.perform_async(email, data)
+        end
+
+        class BaseWorker
+          include Sidekiq::Job
+
+          def perform(to, data)
+            klass = "Search::Actions::Email::#{self.class.name.demodulize}".constantize
+            klass.new(data).send(to: to)
+          end
+        end
+
+        class List < BaseWorker
+        end
+
+        class Record < BaseWorker
         end
       end
 
@@ -113,12 +90,6 @@ module Search
 
         def text_layout
           :"email/record/txt"
-        end
-
-        class Worker < Search::Actions::Email::Worker
-          def perform(to, data)
-            Search::Actions::Email::Record.new(data).send(to: to)
-          end
         end
       end
 
@@ -148,12 +119,6 @@ module Search
 
         def text_layout
           :"email/list/txt"
-        end
-
-        class Worker < Search::Actions::Email::Worker
-          def perform(to, data)
-            Search::Actions::Email::List.new(data).send(to: to)
-          end
         end
       end
     end
