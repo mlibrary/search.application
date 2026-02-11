@@ -40,7 +40,14 @@ module Search
           end
         end
 
-        mail.deliver!
+        resp = mail.deliver!
+        if S.app_env == "production"
+          if resp.success?
+            S.logger.info "email_accepted", resp.as_json
+          else
+            S.logger.error "email_not_accepted", resp.as_json
+          end
+        end
       end
 
       module Worker
