@@ -1,45 +1,50 @@
-import { deleteSelectedRecords, removeSelected } from '../../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
+import {
+  deleteSelectedRecords,
+  getRemoveSelectedButton,
+  removeSelected
+} from '../../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
+import { getTemporaryList, nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { filterSelectedRecords } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
-import { getTemporaryList } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
 
-const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
-  return Object.keys(global.temporaryList[datastore]).length > 0;
+let temporaryListHTML = '';
+nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
+  const recordIds = Object.keys(global.temporaryList[datastore]);
+  recordIds.forEach((recordId, index) => {
+    temporaryListHTML += `
+      <div class="record__container" data-record-id="${recordId}" data-record-datastore="${datastore}">
+        <input type="checkbox" class="list__item--checkbox" value="${datastore},${recordId}" ${index === 0 ? 'checked' : ''}>
+      </div>
+    `;
+  });
 });
-const recordIds = Object.keys(global.temporaryList[nonEmptyDatastores[0]]);
-const temporaryListHTML = recordIds.map((recordId, index) => {
-  return `<li><input type="checkbox" class="list__item--checkbox" value="${nonEmptyDatastores[0]},${recordId}" ${index === 0 ? 'checked' : ''}></li>`;
-}).join('');
 
-describe('removeSelected', function () {
-  let getButton = null;
-
+describe('remove selected', function () {
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
-      <div class="actions">
-        <button class="action__remove-selected">Remove selected</button>
+      <button id="actions__remove-selected">Remove selected</button>
+      <div id="actions__remove-selected--tabpanel">
+        <button class="action__remove-selected">Remove from My Temporary List</button>
       </div>
-      <ol class="list__items">
-        ${temporaryListHTML}
-      </ol>
+      ${temporaryListHTML}
     `;
 
     // Set a temporary list in session storage
     global.sessionStorage = window.sessionStorage;
     global.sessionStorage.setItem('temporaryList', JSON.stringify(global.temporaryList));
-
-    getButton = () => {
-      return document.querySelector('.actions button.action__remove-selected');
-    };
   });
 
   afterEach(function () {
     // Clean up session storage
     delete global.sessionStorage;
+  });
 
-    getButton = null;
+  describe('getRemoveSelectedButton()', function () {
+    it('should return the remove selected button element', function () {
+      expect(getRemoveSelectedButton()).to.deep.equal(document.querySelector('#actions__remove-selected--tabpanel button.action__remove-selected'));
+    });
   });
 
   describe('deleteSelectedRecords()', function () {
@@ -81,7 +86,7 @@ describe('removeSelected', function () {
 
     it('should not delete unselected record(s) from session storage', function () {
       // Get unselected records
-      const unselectedRecords = Array.from(document.querySelectorAll('ol.list__items input[type="checkbox"].list__item--checkbox:not(:checked)')).map((checkbox) => {
+      const unselectedRecords = Array.from(document.querySelectorAll('input[type="checkbox"].list__item--checkbox:not(:checked)')).map((checkbox) => {
         return checkbox.value;
       });
 
@@ -122,6 +127,7 @@ describe('removeSelected', function () {
       deleteRecordsSpy = sinon.spy();
       reloadPageSpy = sinon.spy();
       args = {
+        button: getRemoveSelectedButton(),
         deleteRecords: deleteRecordsSpy,
         list: getTemporaryList(),
         reloadPage: reloadPageSpy
@@ -131,7 +137,7 @@ describe('removeSelected', function () {
       removeSelected(args);
 
       // Click the button
-      getButton().click();
+      args.button.click();
     });
 
     afterEach(function () {

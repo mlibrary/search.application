@@ -1,6 +1,12 @@
 import { filterSelectedRecords } from '../../../list/partials/list-item/_checkbox.js';
 import { setTemporaryList } from '../../../list/layout.js';
 
+const removeSelectedClass = 'actions__remove-selected';
+
+const getRemoveSelectedButton = () => {
+  return document.querySelector(`#${removeSelectedClass}--tabpanel .action__remove-selected`);
+};
+
 const deleteSelectedRecords = ({ list, setList = setTemporaryList }) => {
   // Remove all selected records from the temporary list
   filterSelectedRecords().forEach((record) => {
@@ -12,9 +18,9 @@ const deleteSelectedRecords = ({ list, setList = setTemporaryList }) => {
   setList(list);
 };
 
-const removeSelected = ({ deleteRecords = deleteSelectedRecords, list, reloadPage = window.location.reload.bind(window.location) } = {}) => {
+const removeSelected = ({ button = getRemoveSelectedButton(), deleteRecords = deleteSelectedRecords, list, reloadPage = window.location.reload.bind(window.location) } = {}) => {
   // Add event listener
-  document.querySelector('.actions button.action__remove-selected').addEventListener('click', () => {
+  button.addEventListener('click', () => {
     // Delete selected items from temporary list
     deleteRecords({ list });
 
@@ -23,4 +29,8 @@ const removeSelected = ({ deleteRecords = deleteSelectedRecords, list, reloadPag
   });
 };
 
-export { deleteSelectedRecords, removeSelected };
+export {
+  deleteSelectedRecords,
+  getRemoveSelectedButton,
+  removeSelected
+};
