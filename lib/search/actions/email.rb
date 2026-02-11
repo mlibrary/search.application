@@ -4,12 +4,12 @@ module Search
       include Sinatra::Templates
       include Search::ViewHelpers
 
-      def self.send(email:, data:)
+      def self.worker_klass(data)
         records_data = Search::Actions::RecordsData.new(data)
         if records_data.single?
-          Record::Worker.perform_async(email, data)
+          Record::Worker
         else
-          List::Worker.perform_async(email, data)
+          List::Worker
         end
       end
 

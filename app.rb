@@ -133,18 +133,6 @@ class Search::Application < Sinatra::Base
         redirect "/#{datastore.slug}/record/:id"
       end
 
-      post "/#{datastore.slug}/record/:id/email", provides: "json" do
-        if not_logged_in_user?
-          [403, {code: 403, message: "User must be logged in"}.to_json]
-        else
-          raise "invalid email address" unless params["email"].match?(URI::MailTo::EMAIL_REGEXP)
-          Search::Actions::Email::Catalog::Worker.perform_async(params["email"], params["id"])
-          [202, {code: 202, message: "We are sending your email"}.to_json]
-        end
-      rescue => error
-        S.logger.error("email_error", datstore: datastore.slug, message: error.message, error_class: error.class)
-        [500, {code: 500, message: "Something went wrong"}.to_json]
-      end
     end
     if datastore.slug == "everything"
       get "/#{datastore.slug}/list" do
@@ -192,8 +180,11 @@ class Search::Application < Sinatra::Base
         raise "Empty request body" unless request.body.size > 0
         request.body.rewind
         params = ActiveSupport::JSON.decode(request.body.read)
-        raise "invalid email address" unless params["email"].match?(URI::MailTo::EMAIL_REGEXP)
-        Search::Actions::Email.send(email: params["email"], data: params["data"])
+        email = params["email"]
+        data = params["data"]
+
+        raise "invalid email address" unless email.match?(URI::MailTo::EMAIL_REGEXP)
+        Search::Actions::Email.worker_klass(data).perform_async(email, data)
         [202, {code: 202, message: "We are sending your email"}.to_json]
       end
     rescue => error
