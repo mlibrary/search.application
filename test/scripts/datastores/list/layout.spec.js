@@ -81,9 +81,9 @@ describe('layout', function () {
         expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
       });
 
-      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "undefined"', function () {
-        // Assign "undefined"
-        getTemporaryListStub.withArgs(listName).returns('undefined');
+      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "null"', function () {
+        // Assign "null"
+        getTemporaryListStub.withArgs(listName).returns('null');
 
         // Assign the result
         const result = getTemporaryList();
@@ -92,9 +92,9 @@ describe('layout', function () {
         expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
       });
 
-      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "null"', function () {
-        // Assign "null"
-        getTemporaryListStub.withArgs(listName).returns('null');
+      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "undefined"', function () {
+        // Assign "undefined"
+        getTemporaryListStub.withArgs(listName).returns('undefined');
 
         // Assign the result
         const result = getTemporaryList();
@@ -117,6 +117,17 @@ describe('layout', function () {
       it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns invalid JSON', function () {
         // Assign invalid JSON
         getTemporaryListStub.withArgs(listName).returns('not valid json');
+
+        // Assign the result
+        const result = getTemporaryList();
+
+        // Check that the result returns `defaultTemporaryList`
+        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+      });
+
+      it('should return `defaultTemporaryList` if `sessionStorage` is not accessible', function () {
+        // Make `sessionStorage.getItem` throw an error
+        getTemporaryListStub.withArgs(listName).throws(new Error('`sessionStorage` is not accessible'));
 
         // Assign the result
         const result = getTemporaryList();

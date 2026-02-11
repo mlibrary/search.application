@@ -3,11 +3,13 @@ import { inTemporaryList, setTemporaryList } from '../../../list/layout.js';
 import { toggleBanner } from '../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../_actions.js';
 
+const addSelectedClass = 'actions__add-selected';
+
 const getAddSelectedButton = () => {
-  return document.querySelector('#actions__add-selected--tabpanel .action__add-selected');
+  return document.querySelector(`#${addSelectedClass}--tabpanel .action__add-selected`);
 };
 
-const toggleSelectedTabText = ({ checkedCheckboxes = getCheckedCheckboxes(), tabID = 'actions__add-selected' }) => {
+const toggleSelectedTabText = ({ checkedCheckboxes = getCheckedCheckboxes(), tabID = addSelectedClass } = {}) => {
   // Get the tab element
   const tab = document.getElementById(tabID);
 
@@ -107,7 +109,7 @@ const displayAddSelectedAction = ({ checkedValues = filterSelectedRecords(), inL
   });
 
   // Show `Add selected` if there are selected records not already in the temporary list
-  toggleTab({ id: 'actions__add-selected', show: showTab });
+  toggleTab({ id: addSelectedClass, show: showTab });
 };
 
 const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton = getAddSelectedButton(), list, setList = setTemporaryList, showBanner = toggleBanner, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {

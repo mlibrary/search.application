@@ -19,18 +19,17 @@ const defaultTemporaryList = {
 /* eslint-enable sort-keys */
 
 const getTemporaryList = () => {
-  // Get session storage
-  const item = sessionStorage.getItem(listName);
-
-  // Return the default list if `item` is falsy, or returned problematic string values
-  if (!item || item === 'undefined' || item === 'null') {
-    return defaultTemporaryList;
-  }
-
-  // If failing to parse, return the default list
   try {
+    // Get session storage
+    const item = sessionStorage.getItem(listName);
+    // Throw if `item` is falsy, or returned problematic string values
+    if (!item || ['undefined', 'null'].includes(item)) {
+      throw new Error('Invalid `sessionStorage` value');
+    }
+    // Parse and return the list
     return JSON.parse(item);
   } catch {
+    // Return the default list if there are any issues with session storage
     return defaultTemporaryList;
   }
 };
