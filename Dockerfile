@@ -14,6 +14,7 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   libyaml-dev \
   curl \
   gpg \
+  vim\
   git
 
 
@@ -50,7 +51,6 @@ CMD ["bundle", "exec", "puma", "-b", "tcp://0.0.0.0:4567"]
 FROM base AS development
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
-  vim-tiny\
   git
 
 

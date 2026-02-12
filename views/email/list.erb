@@ -9,7 +9,7 @@
       </h1>
       <% @records.keys.each do |datastore| %>
         <h2 style="font-size: 28px; font-weight: 700; margin: 16px 0px 0px 0px; <%= heading_text %>">
-          <%= datastore %>
+          <%= datastore.capitalize %>
         </h2>
         <% @records[datastore].each_with_index do |record, index| %>
           <%= erb :"/email/partials/_list-item", locals: { show_index: index + 1, record: record } %>
