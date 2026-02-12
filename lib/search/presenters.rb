@@ -73,6 +73,25 @@ module Search::Presenters
     )
   end
 
+  def self.for_datastore_results(slug:, uri:, patron: nil)
+    datastore = Search::Datastores.find(slug)
+    params = URI.decode_www_form(uri.query.to_s)&.to_h
+
+    OpenStruct.new(
+      title: title([datastore.title]),
+      current_datastore: slug,
+      description: datastore.description,
+      icons: Icons.new(["add", "delete", "mail", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error", "list", "arrow_back_ios", "arrow_forward_ios"]),
+      slug: datastore.slug,
+      styles: ["styles.css", "datastores/results/styles.css"],
+      scripts: ["scripts.js", "datastores/results/scripts.js"],
+      search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
+      affiliations: Affiliations.new(current_affiliation: patron.affiliation),
+      flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
+      page_title: datastore.title
+    )
+  end
+
   def self.for_datastore_list(slug:, uri:, patron: nil)
     datastore = Search::Datastores.find(slug)
     params = URI.decode_www_form(uri.query.to_s)&.to_h

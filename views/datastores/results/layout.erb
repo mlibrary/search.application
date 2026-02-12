@@ -9,14 +9,18 @@
   </div>
 </div>
 
-<aside>
-  <%= erb :'/datastores/results/partials/_scope' %>
-  <%= erb :'/datastores/results/partials/_filters' %>
-  <%= erb :'/datastores/results/partials/_browse' %>
-</aside>
+<% if @presenter.current_datastore != "everything" %>
+  <div class="results__container">
+    <aside class="results__sidebar">
+      <%= erb :'/datastores/results/partials/_scope' %>
+      <%= erb :'/datastores/results/partials/_filters' %>
+      <%= erb :'/datastores/results/partials/_browse', locals: { datastore: @presenter.page_title, slug: @presenter.current_datastore } %>
+    </aside>
 
-<section>
-  <%= erb :'/datastores/results/partials/_summary' %>
-  Results list
-  <%= erb :'/datastores/results/partials/_pagination' %>
-</section>
+    <section class="results__content">
+      <%= erb :'/datastores/results/partials/_summary' %>
+      Results list
+      <%= erb :'/datastores/results/partials/_pagination' %>
+    </section>
+  </div>
+<% end %>

@@ -1,0 +1,60 @@
+@use '../../media';
+@use '../../utilities';
+
+// --------------------------------------------------
+//
+// # Results
+//   Styling for datastore results pages.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Content
+//     2.1 Summary
+//     2.2 Libraries
+//
+// --------------------------------------------------
+
+
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: 'results';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+.#{$class}__container {
+  @include utilities.flex($align: start, $responsive: 'md');
+}
+
+
+
+
+
+// ****************** //
+// *** 2. SIDEBAR *** //
+// ****************** //
+
+.#{$class}__sidebar {
+  @include media.breakpoint('md') {
+    width: 18.5rem;
+  }
+}
+
+
+
+
+
+// ****************** //
+// *** 2. CONTENT *** //
+// ****************** //
+
+.#{$class}__content {
+}
