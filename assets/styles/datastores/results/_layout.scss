@@ -1,5 +1,6 @@
 @use '../../media';
 @use '../../utilities';
+@use './partials/info';
 
 // --------------------------------------------------
 //
@@ -8,9 +9,9 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Content
-//     2.1 Summary
-//     2.2 Libraries
+//   2. Container
+//     2.1. Sidebar
+//     2.2. Content
 //
 // --------------------------------------------------
 
@@ -32,15 +33,14 @@ $class: 'results';
 
 .#{$class}__container {
   @include utilities.flex($align: start, $responsive: 'md');
+  max-width: 75rem;
 }
 
 
 
-
-
-// ****************** //
-// *** 2. SIDEBAR *** //
-// ****************** //
+// *              * //
+// * 2.1. SIDEBAR * //
+// *              * //
 
 .#{$class}__sidebar {
   @include media.breakpoint('md') {
@@ -50,11 +50,9 @@ $class: 'results';
 
 
 
-
-
-// ****************** //
-// *** 2. CONTENT *** //
-// ****************** //
+// *              * //
+// * 2.2. CONTENT * //
+// *              * //
 
 .#{$class}__content {
 }

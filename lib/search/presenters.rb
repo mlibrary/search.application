@@ -84,7 +84,7 @@ module Search::Presenters
       icons: Icons.new(["add", "delete", "mail", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error", "list", "arrow_back_ios", "arrow_forward_ios"]),
       slug: datastore.slug,
       styles: ["styles.css", "datastores/results/styles.css"],
-      scripts: ["scripts.js", "datastores/results/scripts.js"],
+      scripts: ["scripts.js", "partials/scripts.js", "datastores/results/scripts.js"],
       search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
       affiliations: Affiliations.new(current_affiliation: patron.affiliation),
       flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),

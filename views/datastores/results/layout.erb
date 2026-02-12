@@ -1,16 +1,9 @@
 <%= h1(body: @presenter.page_title, classes: ["visually-hidden"]) %>
 
-<div class="results__info--container">
-  <div class="results__info">
-    <%= yield %>
-  </div>
-  <div class="results__info--hide">
-    Hide
-  </div>
-</div>
+<%= erb :'/datastores/results/partials/_info', locals: { info: yield } %>
 
 <% if @presenter.current_datastore != "everything" %>
-  <div class="results__container">
+  <div class="container results__container">
     <aside class="results__sidebar">
       <%= erb :'/datastores/results/partials/_scope' %>
       <%= erb :'/datastores/results/partials/_filters' %>

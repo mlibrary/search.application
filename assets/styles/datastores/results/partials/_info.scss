@@ -1,0 +1,52 @@
+@use '../../../utilities';
+
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/results/partials/_info.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Info
+//     2.1. Content
+//     2.2. Hide
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.results__info';
+
+
+
+
+
+// *************** //
+// *** 2. INFO *** //
+// *************** //
+
+#{$class} {
+  @include utilities.flex($align: start);
+}
+
+
+
+// *              * //
+// * 2.1. CONTENT * //
+// *              * //
+
+#{$class}--content > * {
+  margin: 0;
+}
+
+
+
+// *           * //
+// * 2.2. HIDE * //
+// *           * //
+
+body.no-javascript #{$class}--hide {
+  display: none;
+}
