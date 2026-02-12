@@ -13,7 +13,6 @@ module Search
       end
 
       def html
-        # ERB.new(File.read(File.join(S.project_root, "views", template))).result(binding)
         erb(template, layout: html_layout)
       end
 
@@ -27,7 +26,6 @@ module Search
 
       def send(from:, to:)
         mail = Mail.new do |m|
-          # This is wrong!!!! From can be different than to.
           m.from from
           m.to to
           m.subject subject
@@ -49,8 +47,7 @@ module Search
           from: from,
           subject: subject
         }
-        #
-        # Maybe put the from and to in here?
+
         if S.app_env == "production"
           payload[:status] = resp.status
           payload[:message] = resp.message
