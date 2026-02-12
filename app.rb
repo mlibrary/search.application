@@ -126,7 +126,10 @@ class Search::Application < Sinatra::Base
       end
       get "/catalog" do
         if params["query"]
-          "Catalog results"
+          @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+          erb :"datastores/results/layout", layout: :layout do
+            erb :"datastores/results/#{datastore.slug}"
+          end
         else
           headers "metrics.datastore" => datastore.slug, "metrics.route" => "static_page"
           Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
