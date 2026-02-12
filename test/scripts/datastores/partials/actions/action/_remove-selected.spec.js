@@ -1,7 +1,8 @@
 import {
   deleteSelectedRecords,
   getRemoveSelectedButton,
-  removeSelected
+  removeSelected,
+  removeSelectedAction
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
 import { getTemporaryList, nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
@@ -118,7 +119,7 @@ describe('remove selected', function () {
     });
   });
 
-  describe('removeSelected()', function () {
+  describe('removeSelectedAction()', function () {
     let deleteRecordsSpy = null;
     let reloadPageSpy = null;
     let args = null;
@@ -134,7 +135,7 @@ describe('remove selected', function () {
       };
 
       // Call the function
-      removeSelected(args);
+      removeSelectedAction(args);
 
       // Click the button
       args.button.click();
@@ -154,6 +155,32 @@ describe('remove selected', function () {
     it('should call `reloadPage` function when the button is clicked', function () {
       // Check that the spy was called
       expect(reloadPageSpy.calledOnce, 'reloadPage function should be called once').to.be.true;
+    });
+  });
+
+  describe('removeSelected()', function () {
+    let removeSelectedActionSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      removeSelectedActionSpy = sinon.spy();
+      args = {
+        list: getTemporaryList(),
+        removeAction: removeSelectedActionSpy
+      };
+
+      // Call the function
+      removeSelected(args);
+    });
+
+    afterEach(function () {
+      removeSelectedActionSpy = null;
+      args = null;
+    });
+
+    it('should call `removeSelectedAction` function with the correct arguments', function () {
+      // Check that the spy was called with the correct argument
+      expect(removeSelectedActionSpy.calledWithExactly({ list: args.list }), '`removeSelectedAction` function should be called with the correct arguments').to.be.true;
     });
   });
 });

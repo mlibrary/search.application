@@ -1,5 +1,5 @@
+import { setTemporaryList, viewingTemporaryList } from '../../../list/layout.js';
 import { filterSelectedRecords } from '../../../list/partials/list-item/_checkbox.js';
-import { setTemporaryList } from '../../../list/layout.js';
 
 const removeSelectedClass = 'actions__remove-selected';
 
@@ -18,19 +18,27 @@ const deleteSelectedRecords = ({ list, setList = setTemporaryList }) => {
   setList(list);
 };
 
-const removeSelected = ({ button = getRemoveSelectedButton(), deleteRecords = deleteSelectedRecords, list, reloadPage = window.location.reload.bind(window.location) } = {}) => {
+const removeSelectedAction = ({ button = getRemoveSelectedButton(), deleteRecords = deleteSelectedRecords, list, reloadPage = window.location.reload.bind(window.location), viewingList = viewingTemporaryList() } = {}) => {
   // Add event listener
   button.addEventListener('click', () => {
     // Delete selected items from temporary list
     deleteRecords({ list });
 
-    // Reload page to reflect changes
-    reloadPage();
+    // Reload page to reflect changes if currently viewing My Temporary List
+    if (viewingList) {
+      reloadPage();
+    }
   });
+};
+
+const removeSelected = ({ list, removeAction = removeSelectedAction } = {}) => {
+  // Initialize the add selected action
+  removeAction({ list });
 };
 
 export {
   deleteSelectedRecords,
   getRemoveSelectedButton,
-  removeSelected
+  removeSelected,
+  removeSelectedAction
 };
