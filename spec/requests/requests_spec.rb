@@ -96,6 +96,12 @@ RSpec.describe "requests" do
       end
     end
   end
+  context "catalog search results" do
+    it "shows the results page when there is a query parameter" do
+      get "/catalog?query=title:(test)"
+      expect(last_response.body).to include("Catalog results")
+    end
+  end
   context "post /search" do
     context "searching with `keyword` selected" do
       it "redirects to the default datastore landing page" do
@@ -103,11 +109,7 @@ RSpec.describe "requests" do
         post "/search", @params
         expect(last_response.location).to end_with("/everything")
       end
-      it "redirects to the current datastore's landing page" do
-        get "/catalog?query=title:(test)"
-        post "/search", @params.merge(search_datastore: "catalog")
-        expect(last_response.location).to end_with("/catalog")
-      end
+
       it "redirects to `search.lib.umich.edu` with the query not wrapped" do
         search_text = "search text"
         search_datastore = "catalog"
