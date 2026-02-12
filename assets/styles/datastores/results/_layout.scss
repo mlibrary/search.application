@@ -1,6 +1,7 @@
 @use '../../media';
 @use '../../utilities';
 @use './partials/info';
+@use './partials/library-scope';
 
 // --------------------------------------------------
 //
@@ -43,8 +44,15 @@ $class: 'results';
 // *              * //
 
 .#{$class}__sidebar {
+  width: 100%;
   @include media.breakpoint('md') {
     width: 18.5rem;
+  }
+  & > * + * {
+    margin-top: 1rem;
+  }
+  .container__rounded--no-shadow {
+    background-color: var(--search-color-grey-100);
   }
 }
 
@@ -55,4 +63,7 @@ $class: 'results';
 // *              * //
 
 .#{$class}__content {
+  & > * + * {
+    margin-top: 1rem;
+  }
 }

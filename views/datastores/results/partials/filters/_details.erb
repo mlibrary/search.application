@@ -1,0 +1,41 @@
+<%
+  filter_options = [
+    {
+      label: "Availability",
+      value: "availability",
+      options: [
+        { label: "Available Online", count: 15762 },
+        { label: "Physical", count: 8421 },
+        { label: "HathiTrust", count: 3245 }
+      ]
+    },
+    {
+      label: "Format",
+      value: "format",
+      options: [
+        { label: "Book", count: 11826 },
+        { label: "Journal", count: 7398 },
+        { label: "Music", count: 1234 }
+      ]
+    }
+  ]
+%>
+
+<% filter_options.each_with_index do |filter, index| %>
+  <details <%= "open" if index < 5 %>>
+    <summary><%= filter[:label] %></summary>
+    <ul>
+      <% filter[:options].each do |option| %>
+        <%
+          uri = URI.parse(request.fullpath)
+          params_hash = CGI.parse(uri.query.to_s)
+          params_hash["filter.#{filter[:value]}"] = [option[:label]]
+          new_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
+        %>
+        <li>
+          <%= link_to(body: "<span>#{option[:label]}</span> <span>#{option[:count]}</span>", url: new_url) %>
+        </li>
+      <% end %>
+    </ul>
+  </details>
+<% end %>

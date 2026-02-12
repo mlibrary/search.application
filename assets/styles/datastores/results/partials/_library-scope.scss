@@ -1,0 +1,30 @@
+@use '../../../utilities';
+
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/results/partials/_library-scope.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.library-scope';
+
+
+
+
+
+// *************** //
+// *** 2. CONTAINER *** //
+// *************** //
+
+#{$class} {
+  padding: 1rem;
+}
