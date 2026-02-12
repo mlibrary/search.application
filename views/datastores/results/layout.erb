@@ -1,0 +1,22 @@
+<%= h1(body: @presenter.page_title, classes: ["visually-hidden"]) %>
+
+<div class="results__info--container">
+  <div class="results__info">
+    <%= yield %>
+  </div>
+  <div class="results__info--hide">
+    Hide
+  </div>
+</div>
+
+<aside>
+  <%= erb :'/datastores/results/partials/_scope' %>
+  <%= erb :'/datastores/results/partials/_filters' %>
+  <%= erb :'/datastores/results/partials/_browse' %>
+</aside>
+
+<section>
+  <%= erb :'/datastores/results/partials/_summary' %>
+  Results list
+  <%= erb :'/datastores/results/partials/_pagination' %>
+</section>
