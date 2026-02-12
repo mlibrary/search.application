@@ -15,9 +15,11 @@ describe Search::Actions::Email::Worker::Record do
     stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
       .to_return(status: 200, body: api_resp_body.to_json, headers: {content_type: "application/json"})
 
-    described_class.new.perform("someone@default.invalid", data)
+    described_class.new.perform("from@default.invalid", "to@default.invalid", data)
 
     first_delivery = Mail::TestMailer.deliveries.first
+    expect(first_delivery.to).to contain_exactly "to@default.invalid"
+    expect(first_delivery.from).to contain_exactly "from@default.invalid"
     expect(first_delivery.text_part.body.to_s).to include(title)
     expect(first_delivery.html_part.body.to_s).to include(title)
     expect(first_delivery.html_part.body.to_s).not_to include("My Temporary List")
@@ -40,9 +42,11 @@ describe Search::Actions::Email::Worker::List do
     stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
       .to_return(status: 200, body: api_resp_body.to_json, headers: {content_type: "application/json"})
 
-    described_class.new.perform("someone@default.invalid", data)
+    described_class.new.perform("from@default.invalid", "to@default.invalid", data)
 
     first_delivery = Mail::TestMailer.deliveries.first
+    expect(first_delivery.to).to contain_exactly "to@default.invalid"
+    expect(first_delivery.from).to contain_exactly "from@default.invalid"
     expect(first_delivery.text_part.body.to_s).to include(title)
     expect(first_delivery.html_part.body.to_s).to include(title)
     expect(first_delivery.html_part.body.to_s).to include("My Temporary List")

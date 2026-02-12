@@ -25,9 +25,10 @@ module Search
         @settings ||= OpenStruct.new(views: File.join(S.project_root, "views"), templates: {})
       end
 
-      def send(to:)
+      def send(from:, to:)
         mail = Mail.new do |m|
-          m.from to
+          # This is wrong!!!! From can be different than to.
+          m.from from
           m.to to
           m.subject subject
           m.text_part do |t|
@@ -41,32 +42,46 @@ module Search
         end
 
         resp = mail.deliver!
+
+        payload = {
+          message_id: mail.message_id,
+          to: to,
+          from: from,
+          subject: subject
+        }
+        #
+        # Maybe put the from and to in here?
         if S.app_env == "production"
+          payload[:status] = resp.status
+          payload[:message] = resp.message
+
           if resp.success?
-            S.logger.info "email_accepted", resp.as_json
+            S.logger.info "email_accepted", payload
           else
-            S.logger.error "email_not_accepted", resp.as_json
+            S.logger.error "email_not_accepted", payload
           end
+        else
+          S.logger.info "email_sent", payload
         end
       end
 
       module Worker
-        def self.submit(email:, data:)
+        def self.submit(from:, to:, data:)
           records_data = Search::Actions::RecordsData.new(data)
           klass = if records_data.single?
             Record
           else
             List
           end
-          klass.perform_async(email, data)
+          klass.perform_async(from, to, data)
         end
 
         class BaseWorker
           include Sidekiq::Job
 
-          def perform(to, data)
+          def perform(from, to, data)
             klass = "Search::Actions::Email::#{self.class.name.demodulize}".constantize
-            klass.new(data).send(to: to)
+            klass.new(data).send(from: from, to: to)
           end
         end
 

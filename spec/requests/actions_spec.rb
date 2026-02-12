@@ -53,6 +53,8 @@ RSpec.describe "text and email requests" do
       expect(body["code"]).to eq(202)
       expect(body["message"]).to eq("We are sending your email")
       expect(Search::Actions::Email::Worker::Record.jobs.size).to eq(1)
+      job = Search::Actions::Email::Worker::Record.jobs.first
+      expect(job["args"]).to eq(["emcard@umich.edu", "someone@umich.edu", {"catalog" => ["some_id"]}])
     end
 
     it "returns success message when list is successful" do
@@ -64,6 +66,8 @@ RSpec.describe "text and email requests" do
       expect(body["code"]).to eq(202)
       expect(body["message"]).to eq("We are sending your email")
       expect(Search::Actions::Email::Worker::List.jobs.size).to eq(1)
+      job = Search::Actions::Email::Worker::List.jobs.first
+      expect(job["args"]).to eq(["emcard@umich.edu", "someone@umich.edu", {"catalog" => ["some_id", "some_other_id"]}])
     end
     it "returns error message when invalid email is given" do
       @session[:logged_in] = true

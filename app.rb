@@ -180,11 +180,14 @@ class Search::Application < Sinatra::Base
         raise "Empty request body" unless request.body.size > 0
         request.body.rewind
         params = ActiveSupport::JSON.decode(request.body.read)
-        email = params["email"]
-        data = params["data"]
+        email_params = {
+          from: session["email"],
+          to: params["email"],
+          data: params["data"]
+        }
 
-        raise "invalid email address" unless email.match?(URI::MailTo::EMAIL_REGEXP)
-        Search::Actions::Email::Worker.submit(email: email, data: data)
+        raise "invalid email address" unless email_params[:to].match?(URI::MailTo::EMAIL_REGEXP)
+        Search::Actions::Email::Worker.submit(**email_params)
         [202, {code: 202, message: "We are sending your email"}.to_json]
       end
     rescue => error
