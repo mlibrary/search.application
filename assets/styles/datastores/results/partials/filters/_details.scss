@@ -45,18 +45,23 @@ $class: '.filter__details';
 // * 3.1. OPTION * //
 // *             * //
 
-#{$class}--option > a {
-  @include utilities.flex($align: baseline);
-  justify-content: space-between;
-  &:hover {
-    text-decoration: none;
-    #{$class}--option-label {
-      text-decoration: underline;
-    }
+#{$class}--option {
+  & + & {
+    margin-top: 0.5rem;
   }
-  #{$class}--option-count {
-    color: colors.$color-text;
-    text-decoration: none;
+  & > a {
+    @include utilities.flex($align: baseline);
+    justify-content: space-between;
+    &:hover {
+      text-decoration: none;
+      #{$class}--option-label {
+        text-decoration: underline;
+      }
+    }
+    #{$class}--option-count {
+      color: colors.$color-text;
+      text-decoration: none;
+    }
   }
 }
 

@@ -1,17 +1,23 @@
+const attribute = 'data-toggle';
+
+const getToggleButtons = () => {
+  return document.querySelectorAll(`button[${attribute}]`);
+};
+
 // Hide all items beyond the count
-const hideItems = ({ count, items }) => {
+const toggleDisplayedItems = ({ count, isExpanded, items }) => {
   items.forEach((item, index) => {
     if (index > (count - 1)) {
-      item.style.display = 'none';
+      if (isExpanded) {
+        item.removeAttribute('style');
+      } else {
+        item.style.display = 'none';
+      }
     }
   });
 };
 
-const toggleItems = () => {
-  // Get all toggle buttons
-  const attribute = 'data-toggle';
-  const buttons = document.querySelectorAll(`button[${attribute}]`);
-
+const toggleItems = ({ buttons = getToggleButtons(), displayItems = toggleDisplayedItems } = {}) => {
   buttons.forEach((button) => {
     // Convert to a number, or default to 5 if NaN
     const count = Number(button.getAttribute(attribute)) || 5;
@@ -31,7 +37,7 @@ const toggleItems = () => {
     const textShowItems = button.textContent.replace('fewer', `all ${items.length}`);
 
     // Hide all items except the first count
-    hideItems({ count, items });
+    displayItems({ count, isExpanded: false, items });
     button.textContent = textShowItems;
     button.setAttribute('aria-expanded', 'false');
 
@@ -40,15 +46,13 @@ const toggleItems = () => {
       const isExpanded = button.getAttribute('aria-expanded') === 'true';
       button.setAttribute('aria-expanded', !isExpanded);
       button.textContent = isExpanded ? textShowItems : textHideItems;
-      if (isExpanded) {
-        hideItems({ count, items });
-      } else {
-        items.forEach((item) => {
-          item.removeAttribute('style');
-        });
-      }
+      displayItems({ count, isExpanded: !isExpanded, items });
     });
   });
 };
 
-export default toggleItems;
+export {
+  getToggleButtons,
+  toggleDisplayedItems,
+  toggleItems
+};

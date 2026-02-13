@@ -1,4 +1,4 @@
-import toggleItems from '../partials/_toggle.js';
+import { toggleItems } from '../partials/_toggle.js';
 
 // Toggle filters
 toggleItems();
