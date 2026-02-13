@@ -15,27 +15,95 @@
       options: [
         { label: "Book", count: 11826 },
         { label: "Journal", count: 7398 },
-        { label: "Music", count: 1234 }
+        { label: "Music", count: 1234 },
+        { label: "Video", count: 987 },
+        { label: "Map", count: 456 },
+        { label: "Manuscript", count: 321 }
+      ]
+    },
+    {
+      label: "Subject",
+      value: "subject",
+      options: [
+        { label: "History", count: 6789 },
+        { label: "Science", count: 5678 },
+        { label: "Literature", count: 4567 },
+        { label: "Art", count: 3456 },
+        { label: "Technology", count: 2345 }
+      ]
+    },
+    {
+      label: "Date of Publication",
+      value: "date_of_publication",
+      options: [
+        { label: "2020-2024", count: 3456 },
+        { label: "2010-2019", count: 5678 },
+        { label: "2000-2009", count: 4567 },
+        { label: "1990-1999", count: 2345 },
+        { label: "1980-1989", count: 1234 },
+        { label: "1970-1979", count: 1234 },
+        { label: "1960-1969", count: 1234 },
+        { label: "Before 1960", count: 6789 }
+      ]
+    },
+    {
+      label: "Language",
+      value: "language",
+      options: [
+        { label: "English", count: 14567 },
+        { label: "Spanish", count: 2345 },
+        { label: "French", count: 1234 },
+        { label: "German", count: 987 },
+        { label: "Chinese", count: 876 },
+        { label: "Japanese", count: 765 },
+        { label: "Russian", count: 654 }
+      ]
+    },
+    {
+      label: "Author",
+      value: "author",
+      options: [
+        { label: "Smith, John", count: 123 },
+        { label: "Doe, Jane", count: 98 },
+        { label: "Brown, Bob", count: 76 },
+        { label: "Johnson, Alice", count: 54 },
+        { label: "Davis, Charlie", count: 32 }
+      ]
+    },
+    {
+      label: "Publisher",
+      value: "publisher",
+      options: [
+        { label: "Penguin Random House", count: 456 },
+        { label: "HarperCollins", count: 345 },
+        { label: "Simon & Schuster", count: 234 },
+        { label: "Macmillan Publishers", count: 123 },
+        { label: "Hachette Livre", count: 98 }
       ]
     }
   ]
 %>
 
 <% filter_options.each_with_index do |filter, index| %>
-  <details <%= "open" if index < 5 %>>
-    <summary><%= filter[:label] %></summary>
-    <ul>
-      <% filter[:options].each do |option| %>
-        <%
-          uri = URI.parse(request.fullpath)
-          params_hash = CGI.parse(uri.query.to_s)
-          params_hash["filter.#{filter[:value]}"] = [option[:label]]
-          new_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
-        %>
-        <li>
-          <%= link_to(body: "<span>#{option[:label]}</span> <span>#{option[:count]}</span>", url: new_url) %>
-        </li>
-      <% end %>
-    </ul>
+  <details <%= "open" if index < 5 %> class="filter__details">
+    <summary class="filter__details--category">
+      <span class="strong"><%= filter[:label] %></span>
+    </summary>
+    <div class="filter__details--content">
+      <ul id="filter__toggle--<%= filter[:value] %>" class="list__no-style filter__details--options">
+        <% filter[:options].each do |option| %>
+          <%
+            uri = URI.parse(request.fullpath)
+            params_hash = CGI.parse(uri.query.to_s)
+            params_hash["filter.#{filter[:value]}"] = [option[:label]]
+            new_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
+          %>
+          <li class="filter__details--option">
+            <%= link_to(body: "<span class=\"filter__details--option-label\">#{option[:label]}</span> <span class=\"filter__details--option-count\">#{option[:count]}</span>", url: new_url, classes: ["underline__none"]) %>
+          </li>
+        <% end %>
+      </ul>
+      <%= erb :"datastores/partials/_toggle", locals: {classes: ["filter__details--toggle"], id: "filter__toggle--#{filter[:value]}", count: 5, postfix: "#{filter[:label]} filters"} %>
+    </div>
   </details>
 <% end %>

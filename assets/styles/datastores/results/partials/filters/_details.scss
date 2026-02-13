@@ -1,0 +1,73 @@
+@use '../../../../utilities';
+@use '../../../../colors';
+
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/results/partials/filters/_details.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Content
+//   3. Options
+//     3.1. Option
+//   4. Toggle
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.filter__details';
+
+
+
+
+
+// ****************** //
+// *** 2. CONTENT *** //
+// ****************** //
+
+#{$class}--content {
+  padding-top: 0;
+}
+
+
+
+
+
+// ****************** //
+// *** 3. OPTIONS *** //
+// ****************** //
+
+// *             * //
+// * 3.1. OPTION * //
+// *             * //
+
+#{$class}--option > a {
+  @include utilities.flex($align: baseline);
+  justify-content: space-between;
+  &:hover {
+    text-decoration: none;
+    #{$class}--option-label {
+      text-decoration: underline;
+    }
+  }
+  #{$class}--option-count {
+    color: colors.$color-text;
+    text-decoration: none;
+  }
+}
+
+
+
+
+
+// ***************** //
+// *** 4. TOGGLE *** //
+// ***************** //
+
+#{$class}--toggle {
+  margin-top: 0.5rem;
+}
