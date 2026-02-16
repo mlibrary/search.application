@@ -95,7 +95,18 @@
           <%
             uri = URI.parse(request.fullpath)
             params_hash = CGI.parse(uri.query.to_s)
-            params_hash["filter.#{filter[:value]}"] = [option[:label]]
+            param_key = "filter.#{filter[:value]}"
+
+            # Start with the existing values (or empty array)
+            existing_values = params_hash[param_key] || []
+
+            # Add the new option label (for multi-select you may want to check for duplicates)
+            new_values = existing_values + [option[:label]]
+
+            # Update the params hash; this will include all current values plus the new one
+            params_hash[param_key] = new_values
+
+            # Apply changes to the URL
             new_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
           %>
           <li class="filter__details--option">
