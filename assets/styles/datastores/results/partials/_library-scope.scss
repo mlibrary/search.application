@@ -21,10 +21,23 @@ $class: '.library-scope';
 
 
 
-// *************** //
+// ******************** //
 // *** 2. CONTAINER *** //
-// *************** //
+// ******************** //
 
 #{$class} {
   padding: 1rem;
+  & > * + * {
+    margin-top: 0.5rem;
+  }
+}
+
+
+
+// *             * //
+// * 2.1. SUBMIT * //
+// *             * //
+
+body:not(.no-javascript) #{$class}__submit {
+  display: none;
 }
