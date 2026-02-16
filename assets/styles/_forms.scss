@@ -13,6 +13,7 @@
 //     1.2. Mixins
 //   2. Inputs
 //     2.1. Checkboxes
+//       2.1.1. Label Wrapped
 //     2.2. Radio Buttons
 //   3. Select
 //   4. Textarea
@@ -146,6 +147,20 @@ input[type="checkbox"] {
   }
   &:disabled:checked {
     filter: $filter;
+  }
+}
+
+// * 2.1.1. LABEL WRAPPED * //
+
+.checkbox {
+  @include utilities.flex($align: baseline);
+  gap: 0.5rem;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  & > input[type="checkbox"] {
+    flex-shrink: 0;
   }
 }
 

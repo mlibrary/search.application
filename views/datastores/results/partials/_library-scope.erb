@@ -1,17 +1,17 @@
 <%
-  libraries = [
-    "All libraries",
-    "U-M Ann Arbor Libraries",
-    "Flint Thompson Library",
-    "Bentley Historical Library",
-    "William L. Clements Library"
-  ]
-  uri = URI.parse(request.fullpath)
-  params_hash = CGI.parse(uri.query.to_s)
-  # Default to "U-M Ann Arbor Libraries" if no library is selected
-  selected_library = params_hash["library"]&.first || libraries[1]
+  if @presenter.current_datastore == "catalog"
+    libraries = [
+      "All libraries",
+      "U-M Ann Arbor Libraries",
+      "Flint Thompson Library",
+      "Bentley Historical Library",
+      "William L. Clements Library"
+    ]
+    uri = URI.parse(request.fullpath)
+    params_hash = CGI.parse(uri.query.to_s)
+    # Default to "U-M Ann Arbor Libraries" if no library is selected
+    selected_library = params_hash["library"]&.first || libraries[1]
 %>
-<% if @presenter.current_datastore == "catalog" %>
   <form class="library-scope container__rounded--no-shadow" method="get" action="/<%= @presenter.current_datastore %>">
     <% params.each do |key, value| %>
       <% unless key == "library" %>
@@ -30,6 +30,6 @@
         <option value="<%= library %>" <%= "selected" if (selected_library == library) %>><%= library %></option>
       <% end %>
     </select>
-    <button type="submit" class="library-scope__submit">Apply</button>
+    <button type="submit" class="library-scope__submit hide__javascript">Apply</button>
   </form>
 <% end %>

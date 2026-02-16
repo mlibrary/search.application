@@ -125,7 +125,7 @@ class Search::Application < Sinatra::Base
         redirect "/#{datastore.slug}/record/:id"
       end
       get "/catalog" do
-        if params["query"]
+        if params.any?
           @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
           erb :"datastores/results/layout", layout: :layout do
             erb :"datastores/results/#{datastore.slug}"

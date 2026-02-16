@@ -16,6 +16,7 @@
 //     2.1. Rounded containers
 //       2.1.1. No shadow
 //   3. Content
+//   4. JavaScript
 //
 // --------------------------------------------------
 
@@ -91,5 +92,25 @@ $class: "container";
   }
   & > *:last-child {
     margin-bottom: 0;
+  }
+}
+
+
+
+
+
+// ********************* //
+// *** 4. JAVASCRIPT *** //
+// ********************* //
+
+.hide__javascript {
+  body:not(.no-javascript) & {
+    display: none;
+  }
+}
+
+.hide__no-javascript {
+  body.no-javascript & {
+    display: none;
   }
 }

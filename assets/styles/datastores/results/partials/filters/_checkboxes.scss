@@ -1,9 +1,9 @@
-@use '../../../utilities';
+@use '../../../../utilities';
 
 // --------------------------------------------------
 //
-// # Library Scope
-//   Styles to apply directly to `views/datastores/results/partials/_library-scope.erb`.
+// # Checkboxes
+//   Styles to apply directly to `views/datastores/results/partials/_checkboxes.erb`.
 //
 // ## Table of Contents
 //   1. Variables
@@ -15,7 +15,7 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: '.library-scope';
+$class: '.filter__checkboxes';
 
 
 

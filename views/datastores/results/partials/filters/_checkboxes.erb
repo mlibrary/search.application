@@ -1,7 +1,72 @@
-<form>
-  <label>
-    <input type="checkbox" id="hathiTrustMaterials" name="hathiTrustMaterials" value="true" style="display: block;">
-    <span>View HathiTrust search-only materials</span>
-  </label>
-  <button type="submit">Apply</button>
-</form>
+<%
+  filters = {
+    catalog: [
+      {
+        label: "View HathiTrust search-only materials",
+        value: "search_only",
+        checked: true
+      }
+    ],
+    articles: [
+      {
+        label: "Articles from scholarly journals only",
+        value: "is_scholarly",
+        checked: true
+      },
+      {
+        label: "Exclude newspaper articles",
+        value: "exclude_newspapers",
+        checked: true
+      },
+      {
+        label: "Available online",
+        value: "available_online",
+        checked: true
+      },
+      {
+        label: "Show open access only",
+        value: "is_open_access",
+        checked: true
+      },
+      {
+        label: "U-M library materials only",
+        value: "holdings_only",
+        checked: false
+      }
+    ]
+  }
+  filter_datastores = filters.keys
+  if filter_datastores.include?(@presenter.current_datastore.to_sym)
+    uri = URI.parse(request.fullpath)
+    params_hash = CGI.parse(uri.query.to_s)
+    checkbox_values = filters[@presenter.current_datastore.to_sym].map { |filter| "filter.#{filter[:value]}" }
+%>
+  <form class="filter__checkboxes" method="get" action="/<%= @presenter.current_datastore %>">
+    <% params.each do |key, value| %>
+      <% unless checkbox_values.include?(key) %>
+        <% if value.is_a?(Array) %>
+          <% value.each do |v| %>
+            <input type="hidden" name="<%= key %>[]" value="<%= v %>">
+          <% end %>
+        <% else %>
+          <input type="hidden" name="<%= key %>" value="<%= value %>">
+        <% end %>
+      <% end %>
+    <% end %>
+    <% filters[@presenter.current_datastore.to_sym].each do |filter| %>
+      <%
+        # Set default checked status based on opposite value of filter[:checked]
+        checked = !filter[:checked]
+        # If param is present, define checked status based on its value
+        if params_hash["filter.#{filter[:value]}"].present?
+          checked = params_hash["filter.#{filter[:value]}"].first == "true"
+        end
+      %>
+      <label class="checkbox filter__checkbox">
+        <input type="checkbox" name="filter.<%= filter[:value] %>" value="<%= filter[:checked] %>" <%= "checked" if checked %>>
+        <%= filter[:label] %>
+      </label>
+    <% end %>
+    <button type="submit" class="hide__javascript filter__checkboxes--submit">Apply</button>
+  </form>
+<% end %>

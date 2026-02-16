@@ -9,7 +9,6 @@
 //   1. Variables
 //   2. Info
 //     2.1. Content
-//     2.2. Hide
 //
 // --------------------------------------------------
 
@@ -40,14 +39,4 @@ $class: '.results__info';
 
 #{$class}--content > * {
   margin: 0;
-}
-
-
-
-// *           * //
-// * 2.2. HIDE * //
-// *           * //
-
-body.no-javascript #{$class}--hide {
-  display: none;
 }
