@@ -18,6 +18,7 @@ gem "activesupport"
 gem "semantic_logger"
 gem "twilio-ruby"
 gem "mail"
+gem "debug"
 
 group :metrics do
   gem "yabeda-puma-plugin"
@@ -26,7 +27,6 @@ group :metrics do
 end
 
 group :development, :test do
-  gem "debug"
   gem "faker"
   gem "ruby-prof"
 end

@@ -13,7 +13,6 @@ module Search
       end
 
       def html
-        # ERB.new(File.read(File.join(S.project_root, "views", template))).result(binding)
         erb(template, layout: html_layout)
       end
 
@@ -25,9 +24,9 @@ module Search
         @settings ||= OpenStruct.new(views: File.join(S.project_root, "views"), templates: {})
       end
 
-      def send(to:)
+      def send(from:, to:)
         mail = Mail.new do |m|
-          m.from to
+          m.from from
           m.to to
           m.subject subject
           m.text_part do |t|
@@ -40,25 +39,60 @@ module Search
           end
         end
 
-        mail.deliver!
-      end
+        resp = mail.deliver!
 
-      class Worker
-        include Sidekiq::Job
+        payload = {
+          message_id: mail.message_id,
+          to: to,
+          from: from,
+          subject: subject
+        }
 
-        def perform
-          raise NotImplementedError
+        if S.app_env == "production"
+          payload[:status] = resp.status
+          payload[:message] = resp.message
+
+          if resp.success?
+            S.logger.info "email_accepted", payload
+          else
+            S.logger.error "email_not_accepted", payload
+          end
+        else
+          S.logger.info "email_sent", payload
         end
       end
 
-      class Catalog < self
-        def self.for(id)
-          record = Search::Models::Record::Catalog.for(id)
-          new(record)
+      module Worker
+        def self.submit(from:, to:, data:)
+          records_data = Search::Actions::RecordsData.new(data)
+          klass = if records_data.single?
+            Record
+          else
+            List
+          end
+          klass.perform_async(from, to, data)
         end
 
-        def initialize(id)
-          @record = Search::Presenters::Record.for_datastore(datastore: "catalog", id: id, size: "email")
+        class BaseWorker
+          include Sidekiq::Job
+
+          def perform(from, to, data)
+            klass = "Search::Actions::Email::#{self.class.name.demodulize}".constantize
+            klass.new(data).send(from: from, to: to)
+          end
+        end
+
+        class List < BaseWorker
+        end
+
+        class Record < BaseWorker
+        end
+      end
+
+      class Record < self
+        def initialize(data)
+          datum = Search::Actions::RecordsData.new(data).first
+          @record = Search::Presenters::Record.for_datastore(datastore: datum.datastore, id: datum.id, size: "email")
         end
 
         def subject
@@ -76,11 +110,34 @@ module Search
         def text_layout
           :"email/record/txt"
         end
+      end
 
-        class Worker < Search::Actions::Email::Worker
-          def perform(to, id)
-            Search::Actions::Email::Catalog.new(id).send(to: to)
-          end
+      class List < self
+        def initialize(data)
+          @records = data.keys.map do |datastore|
+            [
+              datastore,
+              data[datastore].map do |id|
+                Search::Presenters::Record.for_datastore(datastore: datastore, id: id, size: "email")
+              end
+            ]
+          end.to_h
+        end
+
+        def subject
+          "Library Search Records"
+        end
+
+        def template
+          :"email/list"
+        end
+
+        def html_layout
+          :"email/layout"
+        end
+
+        def text_layout
+          :"email/list/txt"
         end
       end
     end
