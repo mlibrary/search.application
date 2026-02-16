@@ -1,6 +1,6 @@
 <%= h1(body: @presenter.page_title, classes: ["visually-hidden"]) %>
 
-<%= erb :'/datastores/results/partials/_info', locals: { info: yield } %>
+<%= erb :'/datastores/results/partials/_info', locals: { datastore: @presenter.page_title, info: yield, slug: @presenter.current_datastore } %>
 
 <% if @presenter.current_datastore != "everything" %>
   <div class="container results__container">

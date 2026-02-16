@@ -31,6 +31,10 @@ $class: '.results__info';
   margin-bottom: 1rem;
 }
 
+#{$class}--hidden {
+  background: yellow;
+}
+
 
 
 // *              * //
