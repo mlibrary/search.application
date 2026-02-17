@@ -9,18 +9,18 @@
     ]
     uri = URI.parse(request.fullpath)
     params_hash = CGI.parse(uri.query.to_s)
+
+    # Remove "page" param to avoid issues with pagination when applying filters
+    params_hash.delete("page")
+
     # Default to "U-M Ann Arbor Libraries" if no library is selected
     selected_library = params_hash["library"]&.first || libraries[1]
 %>
   <form class="library-scope container__rounded--no-shadow" method="get" action="/<%= @presenter.current_datastore %>">
-    <% params.each do |key, value| %>
+    <% params_hash.each do |key, value| %>
       <% unless key == "library" %>
-        <% if value.is_a?(Array) %>
-          <% value.each do |v| %>
-            <input type="hidden" name="<%= key %>[]" value="<%= v %>">
-          <% end %>
-        <% else %>
-          <input type="hidden" name="<%= key %>" value="<%= value %>">
+        <% value.each do |v| %>
+          <input type="hidden" name="<%= key %>" value="<%= v %>">
         <% end %>
       <% end %>
     <% end %>

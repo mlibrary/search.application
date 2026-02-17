@@ -3,6 +3,7 @@
 @use './partials/info';
 @use './partials/library-scope';
 @use './partials/filters';
+@use './partials/pagination';
 
 // --------------------------------------------------
 //
@@ -34,8 +35,11 @@ $class: 'results';
 // ******************** //
 
 .#{$class}__container {
-  @include utilities.flex($align: start, $responsive: 'md');
+  @include utilities.flex($align: start, $responsive: 'lg');
   max-width: 75rem;
+  & > * {
+    width: 100%;
+  }
 }
 
 
@@ -45,8 +49,8 @@ $class: 'results';
 // *              * //
 
 .#{$class}__sidebar {
-  width: 100%;
-  @include media.breakpoint('md') {
+  @include media.breakpoint('lg') {
+    flex-shrink: 0;
     width: 18.5rem;
   }
   & > * + * {

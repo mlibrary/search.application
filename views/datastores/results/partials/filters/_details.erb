@@ -20,7 +20,7 @@
       ]
     },
     "subject": {
-      value: "subject",
+      label: "Subject",
       options: [
         { label: "History", count: 6789 },
         { label: "Science", count: 5678 },
@@ -88,6 +88,10 @@
           <%
             uri = URI.parse(request.fullpath)
             params_hash = CGI.parse(uri.query.to_s)
+
+            # Remove "page" param to avoid issues with pagination when applying filters
+            params_hash.delete("page")
+
             param_key = "filter.#{key}"
 
             # Start with the existing values (or empty array)

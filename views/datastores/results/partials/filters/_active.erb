@@ -26,9 +26,15 @@
   # Map current URL params
   uri = URI.parse(request.fullpath)
   params_hash = CGI.parse(uri.query.to_s)
+  # Get all filter params from URL that start with "filter."
   filter_params = params_hash.keys.select { |key| key.start_with?("filter.") }
+  # Remove any filter params that have only boolean values
+  filter_params = filter_params.select { |key| params_hash[key].any? { |value| value.strip != "true" && value.strip != "false" } }
 
   count = 0
+
+  # Remove "page" param to avoid issues with pagination when clearing filters
+  params_hash.delete("page")
 %>
 
 <% if filter_params.any? %>

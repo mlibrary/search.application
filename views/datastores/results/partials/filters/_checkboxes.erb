@@ -1,69 +1,63 @@
 <%
   filters = {
-    catalog: [
-      {
+    catalog: {
+      "search_only": {
         label: "View HathiTrust search-only materials",
-        value: "search_only",
-        checked: true
+        value: true
       }
-    ],
-    articles: [
-      {
+    },
+    articles: {
+      "is_scholarly": {
         label: "Articles from scholarly journals only",
-        value: "is_scholarly",
-        checked: true
+        value: true
       },
-      {
+      "exclude_newspapers": {
         label: "Exclude newspaper articles",
-        value: "exclude_newspapers",
-        checked: true
+        value: true
       },
-      {
+      "available_online": {
         label: "Available online",
-        value: "available_online",
-        checked: true
+        value: true
       },
-      {
+      "is_open_access": {
         label: "Show open access only",
-        value: "is_open_access",
-        checked: true
+        value: true
       },
-      {
+      "holdings_only": {
         label: "U-M library materials only",
-        value: "holdings_only",
-        checked: false
+        value: false
       }
-    ]
+    }
   }
   filter_datastores = filters.keys
   if filter_datastores.include?(@presenter.current_datastore.to_sym)
     uri = URI.parse(request.fullpath)
     params_hash = CGI.parse(uri.query.to_s)
-    checkbox_values = filters[@presenter.current_datastore.to_sym].map { |filter| "filter.#{filter[:value]}" }
+
+    # Remove "page" param to avoid issues with pagination when applying filters
+    params_hash.delete("page")
+
+    checkbox_values = filters[@presenter.current_datastore.to_sym].map { |key, filter| "filter.#{key}" }
 %>
   <form class="filter__checkboxes" method="get" action="/<%= @presenter.current_datastore %>">
-    <% params.each do |key, value| %>
+    <% params_hash.each do |key, value| %>
       <% unless checkbox_values.include?(key) %>
-        <% if value.is_a?(Array) %>
-          <% value.each do |v| %>
-            <input type="hidden" name="<%= key %>[]" value="<%= v %>">
-          <% end %>
-        <% else %>
-          <input type="hidden" name="<%= key %>" value="<%= value %>">
+        <% value.each do |v| %>
+          <input type="hidden" name="<%= key %>" value="<%= v %>">
         <% end %>
       <% end %>
     <% end %>
-    <% filters[@presenter.current_datastore.to_sym].each do |filter| %>
+    <% filters[@presenter.current_datastore.to_sym].each do |key, filter| %>
       <%
         # Set default checked status based on opposite value of filter[:checked]
-        checked = !filter[:checked]
+        checked = !filter[:value]
         # If param is present, define checked status based on its value
-        if params_hash["filter.#{filter[:value]}"].present?
-          checked = params_hash["filter.#{filter[:value]}"].first == "true"
+        if params_hash["filter.#{key}"].present?
+          checked = params_hash["filter.#{key}"].first == "true"
         end
       %>
       <label class="checkbox filter__checkbox">
-        <input type="checkbox" name="filter.<%= filter[:value] %>" value="<%= filter[:checked] %>" <%= "checked" if checked %>>
+        <input type="checkbox" name="filter.<%= key %>" value="<%= filter[:value] %>" <%= "checked" if checked %>>
         <%= filter[:label] %>
       </label>
     <% end %>
