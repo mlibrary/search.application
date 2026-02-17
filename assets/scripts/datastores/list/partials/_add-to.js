@@ -1,4 +1,4 @@
-import { inTemporaryList, setTemporaryList } from '../layout.js';
+import { inTemporaryList, setSessionStorage } from '../layout.js';
 import toggleBanner from './_go-to.js';
 import { toggleContainerClass } from '../../record/layout.js';
 import { updateButtonUI } from './add-to/_button.js';
@@ -60,7 +60,7 @@ const formSubmitFuncs = {
   fetchAndAddRecord,
   inTemporaryList,
   removeRecordFromList,
-  setTemporaryList,
+  setSessionStorage,
   updateResultUI
 };
 
@@ -78,7 +78,7 @@ const handleFormSubmit = async ({ form, list, submitFuncs = formSubmitFuncs }) =
   }
 
   // Set `sessionStorage`
-  submitFuncs.setTemporaryList(updatedList);
+  submitFuncs.setSessionStorage({ itemName: 'temporaryList', value: updatedList });
 
   // Update the UI
   submitFuncs.updateResultUI({ form, list: updatedList });

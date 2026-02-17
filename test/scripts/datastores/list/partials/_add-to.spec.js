@@ -231,7 +231,7 @@ describe('add to', function () {
         fetchAndAddRecord: sinon.stub().resolves({}),
         inTemporaryList: sinon.stub().returns(true),
         removeRecordFromList: sinon.stub().returns({}),
-        setTemporaryList: sinon.stub(),
+        setSessionStorage: sinon.stub(),
         updateResultUI: sinon.stub()
       };
 
@@ -250,7 +250,7 @@ describe('add to', function () {
       await handleFormSubmit(args);
 
       // Check that the appropriate functions were called
-      ['inTemporaryList', 'setTemporaryList', 'updateResultUI'].forEach((func) => {
+      ['inTemporaryList', 'setSessionStorage', 'updateResultUI'].forEach((func) => {
         expect(submitFuncs[func].calledOnce, `\`${func}\` should have been called once`).to.be.true;
       });
     });

@@ -1,7 +1,7 @@
+import { defaultTemporaryList, getSessionStorage } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import { deleteSelectedRecords, removeSelected } from '../../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
 import { expect } from 'chai';
 import { filterSelectedRecords } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
-import { getTemporaryList } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
 
 const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
@@ -49,7 +49,7 @@ describe('removeSelected', function () {
     beforeEach(function () {
       setListSpy = sinon.spy();
       args = {
-        list: getTemporaryList(),
+        list: getSessionStorage({ defaultValue: defaultTemporaryList, itemName: 'temporaryList' }),
         setList: setListSpy
       };
     });
@@ -123,7 +123,7 @@ describe('removeSelected', function () {
       reloadPageSpy = sinon.spy();
       args = {
         deleteRecords: deleteRecordsSpy,
-        list: getTemporaryList(),
+        list: getSessionStorage({ defaultValue: defaultTemporaryList, itemName: 'temporaryList' }),
         reloadPage: reloadPageSpy
       };
 

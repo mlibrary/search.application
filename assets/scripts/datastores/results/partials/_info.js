@@ -1,6 +1,8 @@
-const storageName = 'datastoreInfo';
+import { getSessionStorage, setSessionStorage } from '../../list/layout.js';
 
-const defaultDatastoreInfo = {
+const itemName = 'datastoreInfo';
+
+const defaultValue = {
   articles: false,
   catalog: false,
   databases: false,
@@ -9,45 +11,44 @@ const defaultDatastoreInfo = {
   onlinejournals: false
 };
 
-const getInfoStorage = () => {
-  try {
-    // Get session storage
-    const item = sessionStorage.getItem(storageName);
-    // Throw if `item` is falsy, or returned problematic string values
-    if (!item || ['undefined', 'null'].includes(item)) {
-      throw new Error('Invalid `sessionStorage` value');
-    }
-    // Parse and return the list
-    return JSON.parse(item);
-  } catch {
-    // Return the default list if there are any issues with session storage
-    return defaultDatastoreInfo;
-  }
-};
-
-const setInfoStorage = (infoList) => {
-  sessionStorage.setItem(storageName, JSON.stringify(infoList));
-};
-
-
-const toggleInfoSection = ({ infoSection, isAdded }) => {
-  infoSection.classList.toggle('results__info--hidden', isAdded);
-};
-
-const hideButton = () => {
+const hideInfoButton = () => {
   return document.querySelector('.results__info--hide');
 };
 
-const hideInfo = ({ button = hideButton(), list = getInfoStorage() } = {}) => {
-  const infoSection = document.getElementById(button.getAttribute('aria-controls'));
-  const datastore = infoSection.dataset.datastore;
+const toggleInfoSectionClass = ({ infoSection, isAdded }) => {
+  infoSection.classList.toggle('results__info--hidden', isAdded);
+};
+
+const hideInfo = ({
+  button = hideInfoButton(),
+  list = getSessionStorage({ defaultValue, itemName }),
+  setInfoSection = setSessionStorage,
+  toggleInfoSection = toggleInfoSectionClass
+} = {}) => {
+  // Get the parent info section
+  const infoSection = button.parentElement;
+  // Get the datastore from the data attribute
+  const { datastore } = infoSection.dataset;
+  // Create a copy of the list to modify
   const updatedList = { ...list };
+
+  // Toggle the info section visibility based on stored value
   toggleInfoSection({ infoSection, isAdded: updatedList[datastore] });
+
+  // Add event listener to the button to toggle the info section
   button.addEventListener('click', () => {
+    // Toggle the value for the datastore
     updatedList[datastore] = !updatedList[datastore];
-    setInfoStorage(updatedList);
+
+    // Save the updated list to session storage
+    setInfoSection({ itemName, value: updatedList });
+    // Toggle the info section visibility
     toggleInfoSection({ infoSection, isAdded: updatedList[datastore] });
   });
 };
 
-export { hideInfo };
+export {
+  hideInfoButton,
+  hideInfo,
+  toggleInfoSectionClass
+};

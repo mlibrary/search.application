@@ -2,13 +2,13 @@ import {
   createDatastoreList,
   datastoreHeading,
   defaultTemporaryList,
-  getTemporaryList,
+  getSessionStorage,
   handleSelectionChange,
   initializeNonEmptyListFunctions,
   inTemporaryList,
   isTemporaryListEmpty,
   nonEmptyDatastores,
-  setTemporaryList,
+  setSessionStorage,
   temporaryList,
   toggleListElements,
   viewingTemporaryList
@@ -17,39 +17,52 @@ import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
 
-const listName = 'temporaryList';
-
 describe('layout', function () {
-  describe('getTemporaryList()', function () {
-    let getTemporaryListStub = null;
+  describe('getSessionStorage()', function () {
+    let getSessionStorageStub = null;
+
+    const defaultValue = defaultTemporaryList;
+    const itemName = 'exampleItem';
 
     beforeEach(function () {
       global.sessionStorage = { getItem: sinon.stub() };
-      getTemporaryListStub = global.sessionStorage.getItem;
+      getSessionStorageStub = global.sessionStorage.getItem;
 
       // Reset the stub before each test
-      getTemporaryListStub.reset();
+      getSessionStorageStub.reset();
     });
 
-    it(`should call \`sessionStorage.getItem\` with \`${listName}\``, function () {
+    it(`should throw an error if \`defaultValue\` is not provided`, function () {
+      expect(() => {
+        getSessionStorage({ itemName });
+      }, '`getSessionStorage` should have thrown an error if `defaultValue` is not provided').to.throw('`defaultValue` is required');
+    });
+
+    it(`should throw an error if \`itemName\` is not provided`, function () {
+      expect(() => {
+        getSessionStorage({ defaultValue });
+      }, '`getSessionStorage` should have thrown an error if `itemName` is not provided').to.throw('`itemName` is required');
+    });
+
+    it(`should call \`sessionStorage.getItem\` with \`${itemName}\``, function () {
       // Make sure `sessionStorage` is defined
-      getTemporaryListStub.returns('');
+      getSessionStorageStub.returns('');
 
       // Call the function
-      getTemporaryList();
+      getSessionStorage({ defaultValue, itemName });
 
-      // Check that `temporaryList` was called
-      expect(getTemporaryListStub.calledOnceWithExactly(listName), `\`${listName}\` should have been called`).to.be.true;
+      // Check that `sessionStorage.getItem` was called with `itemName`
+      expect(getSessionStorageStub.calledOnceWithExactly(itemName), `\`${itemName}\` should have been called`).to.be.true;
     });
 
     describe('returning valid data', function () {
       it('should parse and return a string value from `sessionStorage.getItem`', function () {
         // Create and assign a string value
         const string = 'example';
-        getTemporaryListStub.withArgs(listName).returns(`"${string}"`);
+        getSessionStorageStub.withArgs(itemName).returns(`"${string}"`);
 
         // Assign the result
-        const result = getTemporaryList();
+        const result = getSessionStorage({ defaultValue, itemName });
 
         // Check that the result returns the string value
         expect(result, `the result should have returned ${string}`).to.equal(string);
@@ -58,91 +71,106 @@ describe('layout', function () {
       it('should parse and return an object from `sessionStorage.getItem`', function () {
         // Create and assign an object value
         const obj = { abc: 1, def: 'c' };
-        getTemporaryListStub.withArgs(listName).returns(JSON.stringify(obj));
+        getSessionStorageStub.withArgs(itemName).returns(JSON.stringify(obj));
 
         // Assign the result
-        const result = getTemporaryList();
+        const result = getSessionStorage({ defaultValue, itemName });
 
         // Check that the result returns the object value
         expect(result, 'the result should have returned the object value').to.deep.equal(obj);
       });
     });
 
-    describe('returning `defaultTemporaryList`', function () {
-      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns `null`', function () {
+    describe('returning `defaultValue`', function () {
+      it('should return `defaultValue` if `sessionStorage.getItem` returns `null`', function () {
         // Assign `null`
-        getTemporaryListStub.withArgs(listName).returns(null);
+        getSessionStorageStub.withArgs(itemName).returns(null);
 
         // Assign the result
-        const result = getTemporaryList();
+        const result = getSessionStorage({ defaultValue, itemName });
 
-        // Check that the result returns `defaultTemporaryList`
-        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+        // Check that the result returns `defaultValue`
+        expect(result, 'the result should have returned `defaultValue`').to.deep.equal(defaultValue);
       });
 
-      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "undefined"', function () {
+      it('should return `defaultValue` if `sessionStorage.getItem` returns "undefined"', function () {
         // Assign "undefined"
-        getTemporaryListStub.withArgs(listName).returns('undefined');
+        getSessionStorageStub.withArgs(itemName).returns('undefined');
 
         // Assign the result
-        const result = getTemporaryList();
+        const result = getSessionStorage({ defaultValue, itemName });
 
-        // Check that the result returns `defaultTemporaryList`
-        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+        // Check that the result returns `defaultValue`
+        expect(result, 'the result should have returned `defaultValue`').to.deep.equal(defaultValue);
       });
 
-      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "null"', function () {
+      it('should return `defaultValue` if `sessionStorage.getItem` returns "null"', function () {
         // Assign "null"
-        getTemporaryListStub.withArgs(listName).returns('null');
+        getSessionStorageStub.withArgs(itemName).returns('null');
 
         // Assign the result
-        const result = getTemporaryList();
+        const result = getSessionStorage({ defaultValue, itemName });
 
-        // Check that the result returns `defaultTemporaryList`
-        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+        // Check that the result returns `defaultValue`
+        expect(result, 'the result should have returned `defaultValue`').to.deep.equal(defaultValue);
       });
 
-      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns an empty string', function () {
+      it('should return `defaultValue` if `sessionStorage.getItem` returns an empty string', function () {
         // Assign an empty string
-        getTemporaryListStub.withArgs(listName).returns('');
+        getSessionStorageStub.withArgs(itemName).returns('');
 
         // Assign the result
-        const result = getTemporaryList();
+        const result = getSessionStorage({ defaultValue, itemName });
 
-        // Check that the result returns `defaultTemporaryList`
-        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+        // Check that the result returns `defaultValue`
+        expect(result, 'the result should have returned `defaultValue`').to.deep.equal(defaultValue);
       });
 
-      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns invalid JSON', function () {
+      it('should return `defaultValue` if `sessionStorage.getItem` returns invalid JSON', function () {
         // Assign invalid JSON
-        getTemporaryListStub.withArgs(listName).returns('not valid json');
+        getSessionStorageStub.withArgs(itemName).returns('not valid json');
 
         // Assign the result
-        const result = getTemporaryList();
+        const result = getSessionStorage({ defaultValue, itemName });
 
-        // Check that the result returns `defaultTemporaryList`
-        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+        // Check that the result returns `defaultValue`
+        expect(result, 'the result should have returned `defaultValue`').to.deep.equal(defaultValue);
       });
     });
   });
 
-  describe('setTemporaryList()', function () {
-    let setTemporaryListStub = null;
+  describe('setSessionStorage()', function () {
+    let setSessionStorageStub = null;
+
+    const itemName = 'exampleItem';
+    const value = { example: true };
 
     beforeEach(function () {
       global.sessionStorage = { setItem: sinon.stub() };
-      setTemporaryListStub = global.sessionStorage.setItem;
+      setSessionStorageStub = global.sessionStorage.setItem;
 
       // Reset the stub before each test
-      setTemporaryListStub.reset();
+      setSessionStorageStub.reset();
     });
 
-    it(`should stringify and set the value in \`sessionStorage\` under \`${listName}\``, function () {
+    it(`should throw an error if \`itemName\` is not provided`, function () {
+      expect(() => {
+        setSessionStorage({ value });
+      }, '`setSessionStorage` should have thrown an error if `itemName` is not provided').to.throw('`itemName` is required');
+    });
+
+    it(`should throw an error if \`value\` is not provided`, function () {
+      expect(() => {
+        setSessionStorage({ itemName });
+      }, '`setSessionStorage` should have thrown an error if `value` is not provided').to.throw('`value` is required');
+    });
+
+    it(`should stringify and set the value in \`sessionStorage\` under \`${itemName}\``, function () {
       // Call the function
-      setTemporaryList(global.temporaryList);
+      setSessionStorage({ itemName, value });
 
       // Check that a stringified value was set under `temporaryList`
-      expect(setTemporaryListStub.calledOnceWithExactly(listName, JSON.stringify(global.temporaryList)), `the value should have been stringified under \`${listName}\``).to.be.true;
+      expect(setSessionStorageStub.calledOnceWithExactly(itemName, JSON.stringify(value)), `the value should have been stringified under \`${itemName}\``).to.be.true;
     });
 
     it('should handle string values too', function () {
@@ -151,10 +179,10 @@ describe('layout', function () {
       expect(string, 'the example should be a string').to.be.a('string');
 
       // Call the function
-      setTemporaryList(string);
+      setSessionStorage({ itemName, value: string });
 
       // Check that a stringified value was set under `temporaryList`
-      expect(setTemporaryListStub.calledOnceWithExactly(listName, JSON.stringify(string)), `the string value should have returned under \`${listName}\``).to.be.true;
+      expect(setSessionStorageStub.calledOnceWithExactly(itemName, JSON.stringify(string)), `the string value should have returned under \`${itemName}\``).to.be.true;
     });
   });
 

@@ -1,7 +1,7 @@
 import { filterSelectedRecords } from '../../../list/partials/list-item/_checkbox.js';
-import { setTemporaryList } from '../../../list/layout.js';
+import { setSessionStorage } from '../../../list/layout.js';
 
-const deleteSelectedRecords = ({ list, setList = setTemporaryList }) => {
+const deleteSelectedRecords = ({ list, setList = setSessionStorage }) => {
   // Remove all selected records from the temporary list
   filterSelectedRecords().forEach((record) => {
     const [datastore, recordId] = record.split(',');
@@ -9,7 +9,7 @@ const deleteSelectedRecords = ({ list, setList = setTemporaryList }) => {
   });
 
   // Update temporary list
-  setList(list);
+  setList({ itemName: 'temporaryList', value: list });
 };
 
 const removeSelected = ({ deleteRecords = deleteSelectedRecords, list, reloadPage = window.location.reload.bind(window.location) } = {}) => {

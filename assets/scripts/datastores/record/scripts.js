@@ -1,7 +1,7 @@
+import { defaultTemporaryList, getSessionStorage } from '../list/layout.js';
 import { addToList } from '../list/partials/_add-to.js';
 import copyLink from '../partials/actions/action/_link.js';
 import { emailAction } from '../partials/actions/action/_email.js';
-import { getTemporaryList } from '../list/layout.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
 import shelfBrowse from './partials/_shelf-browse.js';
 import { tabControl } from '../partials/_actions.js';
@@ -11,7 +11,7 @@ import toggleMARCData from './partials/_marc.js';
 import toggleTruncatedText from './partials/_title.js';
 
 // Get the temporary list from session storage
-const list = getTemporaryList();
+const list = getSessionStorage({ defaultValue: defaultTemporaryList, itemName: 'temporaryList' });
 
 // Actions panel
 tabControl('.actions');

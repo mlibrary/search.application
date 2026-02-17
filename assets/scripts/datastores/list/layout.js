@@ -6,8 +6,6 @@ import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { selectAllState } from './partials/_select-all.js';
 import { selectedText } from './partials/_in-list.js';
 
-const listName = 'temporaryList';
-
 /* eslint-disable sort-keys */
 const defaultTemporaryList = {
   catalog: {},
@@ -18,25 +16,45 @@ const defaultTemporaryList = {
 };
 /* eslint-enable sort-keys */
 
-const getTemporaryList = () => {
-  // Get session storage
-  const item = sessionStorage.getItem(listName);
+const getSessionStorage = ({ defaultValue, itemName }) => {
+  // Check if a default value was provided
+  if (!defaultValue) {
+    throw new Error('`defaultValue` is required');
+  };
 
-  // Return the default list if `item` is falsy, or returned problematic string values
-  if (!item || item === 'undefined' || item === 'null') {
-    return defaultTemporaryList;
-  }
+  // Check if an item name was provided
+  if (!itemName) {
+    throw new Error('`itemName` is required');
+  };
 
-  // If failing to parse, return the default list
   try {
+    // Get session storage
+    const item = sessionStorage.getItem(itemName);
+    // Throw if `item` is falsy, or returned problematic string values
+    if (!item || ['undefined', 'null'].includes(item)) {
+      throw new Error('Invalid `sessionStorage` value');
+    }
+    // Parse and return the list
     return JSON.parse(item);
   } catch {
-    return defaultTemporaryList;
+    // Return the default list if there are any issues with session storage
+    return defaultValue;
   }
 };
 
-const setTemporaryList = (list) => {
-  sessionStorage.setItem(listName, JSON.stringify(list));
+const setSessionStorage = ({ itemName, value }) => {
+  // Check if an item name was provided
+  if (!itemName) {
+    throw new Error('`itemName` is required');
+  }
+
+  // Check if a value was provided
+  if (!value) {
+    throw new Error('`value` is required');
+  }
+
+  // Set session storage
+  sessionStorage.setItem(itemName, JSON.stringify(value));
 };
 
 const inTemporaryList = ({ list, recordDatastore, recordId }) => {
@@ -180,13 +198,13 @@ export {
   createDatastoreList,
   datastoreHeading,
   defaultTemporaryList,
-  getTemporaryList,
+  getSessionStorage,
   handleSelectionChange,
   initializeNonEmptyListFunctions,
   inTemporaryList,
   isTemporaryListEmpty,
   nonEmptyDatastores,
-  setTemporaryList,
+  setSessionStorage,
   temporaryList,
   toggleListElements,
   viewingTemporaryList
