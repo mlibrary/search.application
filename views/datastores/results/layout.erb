@@ -4,12 +4,14 @@
 
 <% if @presenter.current_datastore != "everything" %>
   <div class="container results__container">
+    <h2 class="visually-hidden"><%= @presenter.page_title %> Filter Options</h2>
     <aside class="results__sidebar">
       <%= erb :'/datastores/results/partials/_library-scope' %>
       <%= erb :'/datastores/results/partials/_filters' %>
       <%= erb :'/datastores/results/partials/_browse', locals: { datastore: @presenter.page_title, slug: @presenter.current_datastore } %>
     </aside>
 
+    <h2 class="visually-hidden"><%= @presenter.page_title %> Filter Results</h2>
     <section class="results__content">
       <%= erb :'/datastores/results/partials/_summary' %>
       <p>Results list</p>

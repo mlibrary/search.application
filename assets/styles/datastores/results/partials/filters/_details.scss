@@ -8,10 +8,11 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Content
-//   3. Options
-//     3.1. Option
-//   4. Toggle
+//   2. Summary
+//   3. Content
+//   4. Options
+//     4.1. Option
+//   5. Toggle
 //
 // --------------------------------------------------
 
@@ -26,7 +27,19 @@ $class: '.filter__details';
 
 
 // ****************** //
-// *** 2. CONTENT *** //
+// *** 2. SUMMARY *** //
+// ****************** //
+
+#{$class}--category > * {
+  margin: 0;
+}
+
+
+
+
+
+// ****************** //
+// *** 3. CONTENT *** //
 // ****************** //
 
 #{$class}--content {
@@ -38,11 +51,11 @@ $class: '.filter__details';
 
 
 // ****************** //
-// *** 3. OPTIONS *** //
+// *** 4. OPTIONS *** //
 // ****************** //
 
 // *             * //
-// * 3.1. OPTION * //
+// * 4.1. OPTION * //
 // *             * //
 
 #{$class}--option {
@@ -70,7 +83,7 @@ $class: '.filter__details';
 
 
 // ***************** //
-// *** 4. TOGGLE *** //
+// *** 5. TOGGLE *** //
 // ***************** //
 
 #{$class}--toggle {

@@ -1,0 +1,81 @@
+<%
+  filter_options = {
+    "availability": {
+      label: "Availability"
+    },
+    "format": {
+      label: "Format"
+    },
+    "subject": {
+      label: "Subject"
+    },
+    "date_of_publication": {
+      label: "Date of Publication"
+    },
+    "language": {
+      label: "Language"
+    },
+    "author": {
+      label: "Author"
+    },
+    "publisher": {
+      label: "Publisher"
+    }
+  }
+
+  # Map current URL params
+  uri = URI.parse(request.fullpath)
+  params_hash = CGI.parse(uri.query.to_s)
+  filter_params = params_hash.keys.select { |key| key.start_with?("filter.") }
+
+  count = 0
+%>
+
+<% if filter_params.any? %>
+  <div class="content filters__active">
+    <h3 class="h5">Active filters</h3>
+    <ul class="filters__active--list list__no-style">
+      <% filter_params.each do |filter| %>
+        <% filter_name = filter.sub("filter.", "") %>
+        <% params_hash[filter].each do |value| %>
+          <% count += 1 %>
+          <li class="filters__active--item">
+            <%
+              # Create a new params hash without the current filter value
+              new_params_hash = params_hash.dup
+              new_values = new_params_hash[filter] - [value]
+              if new_values.empty?
+                new_params_hash.delete(filter)
+              else
+                new_params_hash[filter] = new_values
+              end
+
+              # Build the new query string
+              new_query = URI.encode_www_form(new_params_hash.flat_map { |k, v| v.map { |val| [k, val] } })
+
+              # Construct the new URL
+              uri.query = new_query
+              new_url = uri.to_s
+            %>
+            <%= link_to(body: "<span class=\"filters__active--link-text\">#{filter_options[filter_name.to_sym][:label]}: #{value}</span>", url: new_url, classes: ["filters__active--link"]) %>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+    <% if count > 1 %>
+      <%
+        # Create a new params hash without any filter parameters
+        new_params_hash = params_hash.dup
+        filter_params.each { |filter| new_params_hash.delete(filter) }
+
+        # Build the new query string
+        new_query = URI.encode_www_form(new_params_hash.flat_map { |k, v| v.map { |val| [k, val] } })
+
+        # Construct the new URL
+        uri.query = new_query
+        clear_url = uri.to_s
+      %>
+      <p><%= link_to(body: "Clear all active filters", url: clear_url, classes: ["filters__active--clear"]) %></p>
+    <% end %>
+  </div>
+<% end %>

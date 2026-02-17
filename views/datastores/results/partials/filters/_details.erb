@@ -1,17 +1,15 @@
 <%
-  filter_options = [
-    {
+  filter_options = {
+    "availability": {
       label: "Availability",
-      value: "availability",
       options: [
         { label: "Available Online", count: 15762 },
         { label: "Physical", count: 8421 },
         { label: "HathiTrust", count: 3245 }
       ]
     },
-    {
+    "format": {
       label: "Format",
-      value: "format",
       options: [
         { label: "Book", count: 11826 },
         { label: "Journal", count: 7398 },
@@ -21,8 +19,7 @@
         { label: "Manuscript", count: 321 }
       ]
     },
-    {
-      label: "Subject",
+    "subject": {
       value: "subject",
       options: [
         { label: "History", count: 6789 },
@@ -32,9 +29,8 @@
         { label: "Technology", count: 2345 }
       ]
     },
-    {
+    "date_of_publication": {
       label: "Date of Publication",
-      value: "date_of_publication",
       options: [
         { label: "2020-2024", count: 3456 },
         { label: "2010-2019", count: 5678 },
@@ -46,9 +42,8 @@
         { label: "Before 1960", count: 6789 }
       ]
     },
-    {
+    "language": {
       label: "Language",
-      value: "language",
       options: [
         { label: "English", count: 14567 },
         { label: "Spanish", count: 2345 },
@@ -59,9 +54,8 @@
         { label: "Russian", count: 654 }
       ]
     },
-    {
+    "author": {
       label: "Author",
-      value: "author",
       options: [
         { label: "Smith, John", count: 123 },
         { label: "Doe, Jane", count: 98 },
@@ -70,9 +64,8 @@
         { label: "Davis, Charlie", count: 32 }
       ]
     },
-    {
+    "publisher": {
       label: "Publisher",
-      value: "publisher",
       options: [
         { label: "Penguin Random House", count: 456 },
         { label: "HarperCollins", count: 345 },
@@ -81,21 +74,21 @@
         { label: "Hachette Livre", count: 98 }
       ]
     }
-  ]
+  }
 %>
 
-<% filter_options.each_with_index do |filter, index| %>
+<% filter_options.each_with_index do |(key, filter), index| %>
   <details <%= "open" if index < 5 %> class="filter__details">
     <summary class="filter__details--category">
-      <span class="strong"><%= filter[:label] %></span>
+      <h3 class="h5"><%= filter[:label] %></h3>
     </summary>
     <div class="filter__details--content">
-      <ul id="filter__toggle--<%= filter[:value] %>" class="list__no-style filter__details--options">
+      <ul id="filter__toggle--<%= key %>" class="list__no-style filter__details--options">
         <% filter[:options].each do |option| %>
           <%
             uri = URI.parse(request.fullpath)
             params_hash = CGI.parse(uri.query.to_s)
-            param_key = "filter.#{filter[:value]}"
+            param_key = "filter.#{key}"
 
             # Start with the existing values (or empty array)
             existing_values = params_hash[param_key] || []
@@ -114,7 +107,7 @@
           </li>
         <% end %>
       </ul>
-      <%= erb :"datastores/partials/_toggle", locals: {classes: ["filter__details--toggle"], id: "filter__toggle--#{filter[:value]}", count: 5, postfix: "#{filter[:label]} filters"} %>
+      <%= erb :"datastores/partials/_toggle", locals: {classes: ["filter__details--toggle"], id: "filter__toggle--#{key}", count: 5, postfix: "#{filter[:label]} filters"} %>
     </div>
   </details>
 <% end %>

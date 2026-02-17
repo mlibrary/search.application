@@ -1,6 +1,7 @@
 @use '../../partials/toggle';
-@use './filters/details';
+@use './filters/active';
 @use './filters/checkboxes';
+@use './filters/details';
 
 // --------------------------------------------------
 //
@@ -17,3 +18,17 @@
 // ******************** //
 
 $class: '.filters';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} {
+  & > * + * {
+    border-top: 1px solid var(--color-neutral-100);
+  }
+}
