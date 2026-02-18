@@ -1,5 +1,18 @@
 <% search_options = @presenter.search_options %>
 
+<%
+  # Get the current query and strip it of leading/trailing whitespace.
+  current_query = params[:query].to_s.strip
+  # Check if the query contains any boolean operators.
+  if !["AND", "OR", "NOT"].any? { |x| current_query.match?(x) }
+    # If the query starts with the selected search option followed by ":(", remove that part from the query.
+    if current_query.start_with?("#{search_options.selected_option_value}:(")
+      current_query = current_query.sub("#{search_options.selected_option_value}:(", "")
+      current_query = current_query[0..-2] if current_query.end_with?(")")
+    end
+  end
+%>
+
 <form class="search-form" role="search" method="post" action="/search">
   <div class="search-form__inputs viewport-container">
     <select aria-label="Select an option" class="search-form__inputs--select" name="search_option" autocomplete="off">
@@ -13,7 +26,7 @@
         <% search_options.each do |optgroup|%>
           <optgroup label="<%= optgroup.optgroup.capitalize %> by">
             <% optgroup.options.each do |option| %>
-              <option value="<%= option.value %>" <%=  search_options.selected_attribute(option) %>>
+              <option value="<%= option.value %>" <%=  search_options.selected_attribute(option.value) %>>
                 <%= option.text %>
               </option>
             <% end %>
@@ -21,7 +34,7 @@
         <% end %>
       <% end %>
     </select>
-    <input type="search" aria-label="Search for" class="search-form__inputs--text" name="search_text" autocomplete="on" name="query" value="">
+    <input type="search" aria-label="Search for" class="search-form__inputs--text" name="search_text" autocomplete="on" name="query" value="<%= current_query %>">
     <input type="hidden" name="search_datastore" value="<%= @presenter.current_datastore %>" />
     <button type="submit" class="search-form__inputs--submit button__primary">
       <span class="material-symbols-rounded" aria-hidden="true">search</span>

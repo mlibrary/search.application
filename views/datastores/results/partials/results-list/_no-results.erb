@@ -1,0 +1,12 @@
+<div class="container__rounded--no-shadow content results__none">
+  <h3>Other suggestions</h3>
+  <ul>
+    <li>Try looking at the other search categories linked below the search box.</li>
+    <li>Place an <%= link_to(body: "Interlibrary Loan request", url: "https://ill.lib.umich.edu/") %> if you need something we don't have. We'll get it from another institution.</li>
+    <li>Check your spelling.</li>
+    <li>Try more general keywords.</li>
+    <li>Try different keywords that mean the same thing.</li>
+    <li>Try using <%= link_to(body: "Advanced Search", url: "/#{@presenter.current_datastore}/advanced") %> to construct a targeted query.</li>
+    <li>Use <%= link_to(body: "Ask a Librarian", url: "https://www.lib.umich.edu/ask-librarian") %> and we will help you find what you're looking for.</li>
+  </ul>
+</div>

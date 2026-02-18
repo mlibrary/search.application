@@ -1,0 +1,18 @@
+@use './results-list/specialists';
+@use './results-list/no-results';
+
+// --------------------------------------------------
+//
+// # Results List
+//   Styles to apply directly to `views/datastores/results/partials/_results-list.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.results__list';
