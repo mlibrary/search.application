@@ -4,6 +4,8 @@
 @use './partials/library-scope';
 @use './partials/filters';
 @use './partials/summary';
+@use '../list/partials/go-to';
+@use '../partials/actions';
 @use './partials/results-list';
 @use './partials/pagination';
 

@@ -1,3 +1,37 @@
+<%
+  results = {
+    "1": {},
+    "2": {},
+    "3": {},
+    "4": {},
+    "5": {},
+    "6": {},
+    "7": {},
+    "8": {},
+    "9": {},
+    "10": {},
+    "11": {},
+    "12": {},
+    "13": {},
+    "14": {},
+    "15": {},
+    "16": {},
+    "17": {},
+    "18": {},
+    "19": {},
+    "20": {},
+    "21": {},
+    "22": {},
+    "23": {},
+    "24": {}
+  }
+  total_results = results.size
+  current_page = params[:page].to_i || 1
+  per_page = 10
+  start_result = current_page > 1 ? ((current_page - 1) * per_page) + 1 : 1
+  end_result = [(start_result + per_page) - 1, total_results].min
+%>
+
 <%= h1(body: @presenter.page_title, classes: ["visually-hidden"]) %>
 
 <%= erb :'/datastores/results/partials/_info', locals: { datastore: @presenter.page_title, info: yield, slug: @presenter.current_datastore } %>
@@ -13,9 +47,9 @@
 
     <h2 class="visually-hidden"><%= @presenter.page_title %> Filter Results</h2>
     <section class="results__content">
-      <%= erb :'/datastores/results/partials/_summary' %>
-      <%= erb :'/datastores/results/partials/_results-list' %>
-      <%= erb :'/datastores/results/partials/_pagination' %>
+      <%= erb :'/datastores/results/partials/_summary', locals: { total_results: total_results, start_result: start_result, end_result: end_result } %>
+      <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: results, start_result: start_result, end_result: end_result } %>
+      <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: current_page, per_page: per_page, total_results: total_results } %>
     </section>
   </div>
 <% end %>

@@ -1,8 +1,18 @@
+import { defaultTemporaryList, getSessionStorage } from '../list/layout.js';
 import { checkboxFilters } from './partials/_checkboxes.js';
+import { downloadTemporaryListRIS } from '../partials/actions/action/_ris.js';
+import { emailAction } from '../partials/actions/action/_email.js';
 import { hideInfo } from './partials/_info.js';
+import { initializeCitations } from '../partials/actions/action/_citation.js';
 import { libraryScope } from './partials/_library-scope.js';
+import { removeSelected } from '../partials/actions/action/_remove-selected.js';
 import { sortResults } from './partials/summary/_sort.js';
 import { toggleItems } from '../partials/_toggle.js';
+import { tabControl } from '../partials/_actions.js';
+import { textAction } from '../partials/actions/action/_text.js';
+
+// Get the temporary list from session storage
+const list = getSessionStorage({ defaultValue: defaultTemporaryList, itemName: 'temporaryList' });
 
 // Hide datastore info
 hideInfo();
@@ -18,3 +28,21 @@ toggleItems();
 
 // Sort results
 sortResults();
+
+// Actions panel
+tabControl('.actions');
+
+// Email
+emailAction();
+
+// Text
+textAction();
+
+// Citations
+initializeCitations();
+
+// RIS
+downloadTemporaryListRIS({ list });
+
+// Remove selected
+removeSelected({ list });
