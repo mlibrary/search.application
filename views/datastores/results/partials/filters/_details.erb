@@ -84,8 +84,10 @@
     </summary>
     <div class="filter__details--content">
       <ul id="filter__toggle--<%= key %>" class="list__no-style filter__details--options">
-        <% filter[:options].each do |option| %>
-          <%
+        <%
+          # Sort filters by count in descending order
+          sorted_filters = filter[:options].sort_by { |option| -option[:count] }
+          sorted_filters.each do |option|
             uri = URI.parse(request.fullpath)
             params_hash = CGI.parse(uri.query.to_s)
 

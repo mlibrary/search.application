@@ -1,3 +1,33 @@
-<p>Results list</p>
-<%= erb :'/datastores/results/partials/results-list/_no-results' %>
-<%= erb :'/datastores/results/partials/results-list/_specialists' %>
+<%
+  results = {
+    "990038939650106381": {
+
+    },
+    "990052871530106381": {
+
+    },
+    "990006758990106381": {
+
+    },
+    "99187335971706381": {
+
+    }
+  }
+  total_results = results.size
+  current_page = params[:page].to_i || 1
+  per_page = 10
+  start_result = current_page > 1 ? ((current_page - 1) * per_page) + 1 : 1
+  end_result = [(start_result + per_page) - 1, total_results].min
+%>
+<% if total_results > 0 %>
+  <p>ACTIONS BAR</p>
+  <p>Results list</p>
+  <%
+    # Show specialists only on the first page
+    if current_page == 1
+  %>
+    <%= erb :'/datastores/results/partials/results-list/_specialists' %>
+  <% end %>
+<% else %>
+  <%= erb :'/datastores/results/partials/results-list/_no-results' %>
+<% end %>

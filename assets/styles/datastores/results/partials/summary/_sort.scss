@@ -1,0 +1,34 @@
+@use '../../../../utilities';
+
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/results/partials/summary/_sort.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Sort
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.sort';
+
+
+
+
+
+// *************** //
+// *** 2. SORT *** //
+// *************** //
+
+#{$class} {
+  @include utilities.flex();
+  gap: 0.5rem;
+  &__label {
+    flex-shrink: 0;
+  }
+}

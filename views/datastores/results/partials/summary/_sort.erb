@@ -1,0 +1,33 @@
+<%
+  sort_options = {
+    "relevance" => "Relevance",
+    "date_asc" => "Published/Created Date (oldest first)",
+    "date_desc" => "Published/Created Date (newest first)",
+    "author_asc" => "Author (A-Z)",
+    "author_desc" => "Author (Z-A)",
+    "date_added" => "Date added (Newest First)",
+    "title_asc" => "Title (A-Z)",
+    "title_desc" => "Title (Z-A)"
+  }
+  uri = URI.parse(request.fullpath)
+  params_hash = CGI.parse(uri.query.to_s)
+
+  # Default to "U-M Ann Arbor Libraries" if no library is selected
+  selected_library = params_hash["library"]&.first || libraries[1]
+%>
+<form method="get" action="/<%= @presenter.current_datastore %>" class="sort">
+  <% params_hash.each do |key, value| %>
+    <% unless key == "sort" %>
+      <% value.each do |v| %>
+        <input type="hidden" name="<%= key %>" value="<%= v %>">
+      <% end %>
+    <% end %>
+  <% end %>
+  <label for="sort__select" class="sort__label">Sort by</label>
+  <select name="sort" class="sort__select" id="sort__select" autocomplete="off">
+    <% sort_options.each do |key, value| %>
+      <option value="<%= key %>" <%= "selected" if (params_hash["sort"]&.first == key) %>><%= value %></option>
+    <% end %>
+  </select>
+  <button type="submit" class="sort__submit hide__javascript">Apply</button>
+</form>

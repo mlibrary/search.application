@@ -1,0 +1,58 @@
+@use '../../../utilities';
+@use '../../../media';
+@use './summary/sort';
+
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/results/partials/_summary.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Info
+//     2.1. Content
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.results__summary';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} {
+  @include utilities.flex($align: start);
+  flex-direction: column;
+  padding: 1rem;
+  & > * {
+    width: 100%;
+  }
+  p {
+    margin: 0;
+  }
+}
+
+
+
+// *              * //
+// * 2.1. CONTENT * //
+// *              * //
+
+#{$class}--content {
+  @include utilities.flex($align: baseline, $responsive: 'md');
+  gap: 0.5rem;
+  @include media.breakpoint('md') {
+    justify-content: space-between;
+    & > * {
+      flex: 1 1 50%;
+    }
+  }
+}
