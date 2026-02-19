@@ -8,8 +8,8 @@ import { libraryScope } from './partials/_library-scope.js';
 import { removeSelected } from '../partials/actions/action/_remove-selected.js';
 import { sortResults } from './partials/summary/_sort.js';
 import { tabControl } from '../partials/_actions.js';
-import { toggleItems } from '../partials/_toggle.js';
 import { textAction } from '../partials/actions/action/_text.js';
+import { toggleItems } from '../partials/_toggle.js';
 
 // Get the temporary list from session storage
 const list = getSessionStorage({ defaultValue: defaultTemporaryList, itemName: 'temporaryList' });
