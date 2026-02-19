@@ -1,106 +1,27 @@
-<%
-  filter_options = {
-    "availability": {
-      label: "Availability",
-      options: [
-        { label: "Available Online", count: 15762 },
-        { label: "Physical", count: 8421 },
-        { label: "HathiTrust", count: 3245 }
-      ]
-    },
-    "format": {
-      label: "Format",
-      options: [
-        { label: "Book", count: 11826 },
-        { label: "Journal", count: 7398 },
-        { label: "Music", count: 1234 },
-        { label: "Video", count: 987 },
-        { label: "Map", count: 456 },
-        { label: "Manuscript", count: 321 }
-      ]
-    },
-    "subject": {
-      label: "Subject",
-      options: [
-        { label: "History", count: 6789 },
-        { label: "Science", count: 5678 },
-        { label: "Literature", count: 4567 },
-        { label: "Art", count: 3456 },
-        { label: "Technology", count: 2345 }
-      ]
-    },
-    "date_of_publication": {
-      label: "Date of Publication",
-      options: [
-        { label: "2020-2024", count: 3456 },
-        { label: "2010-2019", count: 5678 },
-        { label: "2000-2009", count: 4567 },
-        { label: "1990-1999", count: 2345 },
-        { label: "1980-1989", count: 1234 },
-        { label: "1970-1979", count: 1234 },
-        { label: "1960-1969", count: 1234 },
-        { label: "Before 1960", count: 6789 }
-      ]
-    },
-    "language": {
-      label: "Language",
-      options: [
-        { label: "English", count: 14567 },
-        { label: "Spanish", count: 2345 },
-        { label: "French", count: 1234 },
-        { label: "German", count: 987 },
-        { label: "Chinese", count: 876 },
-        { label: "Japanese", count: 765 },
-        { label: "Russian", count: 654 }
-      ]
-    },
-    "author": {
-      label: "Author",
-      options: [
-        { label: "Smith, John", count: 123 },
-        { label: "Doe, Jane", count: 98 },
-        { label: "Brown, Bob", count: 76 },
-        { label: "Johnson, Alice", count: 54 },
-        { label: "Davis, Charlie", count: 32 }
-      ]
-    },
-    "publisher": {
-      label: "Publisher",
-      options: [
-        { label: "Penguin Random House", count: 456 },
-        { label: "HarperCollins", count: 345 },
-        { label: "Simon & Schuster", count: 234 },
-        { label: "Macmillan Publishers", count: 123 },
-        { label: "Hachette Livre", count: 98 }
-      ]
-    }
-  }
-%>
-
-<% filter_options.each_with_index do |(key, filter), index| %>
+<% @presenter.filters.each_with_index do |filter, index| %>
   <details <%= "open" if index < 5 %> class="filter__details">
     <summary class="filter__details--category">
-      <h3 class="h5"><%= filter[:label] %></h3>
+      <h3 class="h5"><%= filter[:name] %></h3>
     </summary>
     <div class="filter__details--content">
-      <ul id="filter__toggle--<%= key %>" class="list__no-style filter__details--options">
+      <ul id="filter__toggle--<%= filter[:uid] %>" class="list__no-style filter__details--options">
         <%
           # Sort filters by count in descending order
-          sorted_filters = filter[:options].sort_by { |option| -option[:count] }
-          sorted_filters.each do |option|
+          options = filter[:options].sort_by { |option| -option[:count] }
+          options.each do |option|
             uri = URI.parse(request.fullpath)
             params_hash = CGI.parse(uri.query.to_s)
 
             # Remove "page" param to avoid issues with pagination when applying filters
             params_hash.delete("page")
 
-            param_key = "filter.#{key}"
+            param_key = "filter.#{filter[:uid]}"
 
             # Start with the existing values (or empty array)
             existing_values = params_hash[param_key] || []
 
-            # Add the new option label (for multi-select you may want to check for duplicates)
-            new_values = existing_values + [option[:label]]
+            # Add the new option value (for multi-select you may want to check for duplicates)
+            new_values = existing_values + [option[:value]]
 
             # Update the params hash; this will include all current values plus the new one
             params_hash[param_key] = new_values
@@ -109,11 +30,11 @@
             new_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
           %>
           <li class="filter__details--option">
-            <%= link_to(body: "<span class=\"filter__details--option-label\">#{option[:label]}</span> <span class=\"filter__details--option-count\">#{option[:count]}</span>", url: new_url, classes: ["underline__none"]) %>
+            <%= link_to(body: "<span class=\"filter__details--option-value\">#{option[:value]}</span> <span class=\"filter__details--option-count\">#{option[:count]}</span>", url: new_url, classes: ["underline__none"]) %>
           </li>
         <% end %>
       </ul>
-      <%= erb :"datastores/partials/_toggle", locals: {classes: ["filter__details--toggle"], id: "filter__toggle--#{key}", count: 5, postfix: "#{filter[:label]} filters"} %>
+      <%= erb :"datastores/partials/_toggle", locals: {classes: ["filter__details--toggle"], id: "filter__toggle--#{filter[:uid]}", count: 5, postfix: "#{filter[:name]} filters"} %>
     </div>
   </details>
 <% end %>

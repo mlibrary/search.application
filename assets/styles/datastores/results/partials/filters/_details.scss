@@ -67,7 +67,7 @@ $class: '.filter__details';
     justify-content: space-between;
     &:hover {
       text-decoration: none;
-      #{$class}--option-label {
+      #{$class}--option-value {
         text-decoration: underline;
       }
     }
