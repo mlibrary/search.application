@@ -151,7 +151,7 @@ const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton 
   });
 };
 
-const addSelected = ({ addAction = addSelectedAction, list, selectedTabText = toggleSelectedTabText, showBanner = toggleBanner, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {
+const addSelected = ({ addAction = addSelectedAction, list, selectedTabText = toggleSelectedTabText, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {
   // Toggle `Add selected` action based on current selection
   toggleAction({ list });
 
@@ -160,9 +160,6 @@ const addSelected = ({ addAction = addSelectedAction, list, selectedTabText = to
 
   // Update the "Add selected" tab text on load and whenever checkboxes are changed
   selectedTabText();
-
-  // Show banner if there are items in the temporary list
-  showBanner({ list });
 
   // Initialize the add selected action
   addAction({ list });

@@ -6,6 +6,7 @@ import { initializeCitations } from '../partials/actions/action/_citation.js';
 import shelfBrowse from './partials/_shelf-browse.js';
 import { tabControl } from '../partials/_actions.js';
 import { textAction } from '../partials/actions/action/_text.js';
+import { toggleBanner } from '../list/partials/_go-to.js';
 import toggleItems from '../partials/_toggle.js';
 import toggleMARCData from './partials/_marc.js';
 import toggleTruncatedText from './partials/_title.js';
@@ -30,6 +31,9 @@ copyLink();
 
 // Add to My Temporary List
 addSelected({ list });
+
+// Show My Temporary List banner
+toggleBanner({ list });
 
 // Record Title
 toggleTruncatedText();

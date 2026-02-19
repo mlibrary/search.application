@@ -665,7 +665,6 @@ describe('add selected', function () {
   describe('addSelected()', function () {
     let addSelectedActionSpy = null;
     let toggleSelectedTabTextSpy = null;
-    let toggleBannerSpy = null;
     let styleAddedRecordsSpy = null;
     let displayAddSelectedActionSpy = null;
     let args = null;
@@ -673,7 +672,6 @@ describe('add selected', function () {
     beforeEach(function () {
       addSelectedActionSpy = sinon.spy();
       toggleSelectedTabTextSpy = sinon.spy();
-      toggleBannerSpy = sinon.spy();
       styleAddedRecordsSpy = sinon.spy();
       displayAddSelectedActionSpy = sinon.spy();
 
@@ -681,7 +679,6 @@ describe('add selected', function () {
         addAction: addSelectedActionSpy,
         list: global.temporaryList,
         selectedTabText: toggleSelectedTabTextSpy,
-        showBanner: toggleBannerSpy,
         styleRecords: styleAddedRecordsSpy,
         toggleAction: displayAddSelectedActionSpy
       };
@@ -693,7 +690,6 @@ describe('add selected', function () {
     afterEach(function () {
       addSelectedActionSpy = null;
       toggleSelectedTabTextSpy = null;
-      toggleBannerSpy = null;
       styleAddedRecordsSpy = null;
       displayAddSelectedActionSpy = null;
       args = null;
@@ -712,11 +708,6 @@ describe('add selected', function () {
     it('should call `toggleSelectedTabText` with the correct arguments', function () {
       // Check that `toggleSelectedTabText` was called once with the correct arguments
       expect(toggleSelectedTabTextSpy.calledOnceWithExactly(), '`toggleSelectedTabText` should be called once with the correct arguments').to.be.true;
-    });
-
-    it('should call `toggleBanner` with the correct arguments', function () {
-      // Check that `toggleBanner` was called once with the correct count
-      expect(toggleBannerSpy.calledOnceWithExactly({ list: args.list }), '`toggleBanner` should be called once with the correct count').to.be.true;
     });
 
     it('should call `addSelectedAction` with the correct arguments', function () {
