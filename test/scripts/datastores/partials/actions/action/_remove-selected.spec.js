@@ -4,9 +4,10 @@ import {
   removeSelected,
   removeSelectedAction
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
-import { getTemporaryList, nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
+import { getTemporaryList, nonEmptyDatastores, viewingTemporaryList } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
 import { filterSelectedRecords } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
 
 let temporaryListHTML = '';
@@ -152,9 +153,42 @@ describe('remove selected', function () {
       expect(deleteRecordsSpy.calledWithExactly({ list: args.list }), '`deleteRecords` function should be called with the correct arguments').to.be.true;
     });
 
-    it('should call `reloadPage` function when the button is clicked', function () {
-      // Check that the spy was called
-      expect(reloadPageSpy.calledOnce, 'reloadPage function should be called once').to.be.true;
+    describe('reloadPage', function () {
+      it('should not call `reloadPage` function if not currently viewing My Temporary List', function () {
+        // Check that Temporary List is not being viewed
+        expect(viewingTemporaryList(), 'the current pathname should not be `/everything/list`').to.be.false;
+
+        // Check that the spy was not called
+        expect(reloadPageSpy.notCalled, '`reloadPage` function should not be called if not currently viewing My Temporary List').to.be.true;
+      });
+
+      it('should call `reloadPage` function when the button is clicked if currently viewing My Temporary List', function () {
+        // Save the original window object
+        const originalWindow = global.window;
+
+        // Setup JSDOM with an updated URL
+        const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+          url: 'http://localhost/everything/list'
+        });
+
+        // Override the global window object
+        global.window = dom.window;
+
+        // Check that Temporary List is being viewed
+        expect(viewingTemporaryList(), 'the current pathname should be `/everything/list`').to.be.true;
+
+        // Call the function again
+        removeSelectedAction(args);
+
+        // Click the button again
+        args.button.click();
+
+        // Check that the spy was called
+        expect(reloadPageSpy.calledOnce, 'reloadPage function should be called once').to.be.true;
+
+        // Restore the original window object
+        global.window = originalWindow;
+      });
     });
   });
 
