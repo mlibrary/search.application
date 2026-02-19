@@ -163,8 +163,28 @@ module Search::Presenters
       options = filter[:options].map do |option|
         OpenStruct.new(**option)
       end
-      OpenStruct.new(uid: filter[:uid], name: filter[:name], options: options)
+      OpenStruct.new(uid: filter[:uid], name: filter[:name], options: options, url: uri)
     end
+
+    active_filters = [
+      {
+        text: "Availability: Physical",
+        url: uri # this needs to remove the filter param and the page if it's there
+      },
+      {
+        text: "Format: Book",
+        url: uri # this needs to remove the filter param and the page if it's there
+      }
+    ].map { |x| OpenStruct.new(**x) }
+
+    # These will submit a form.
+    boolean_filters = [
+      {
+        uid: "search_only",
+        label: "View HathiTrust search-only materials",
+        value: false
+      }
+    ]
 
     OpenStruct.new(
       title: title([datastore.title]),
@@ -178,6 +198,8 @@ module Search::Presenters
       affiliations: Affiliations.new(current_affiliation: patron.affiliation),
       flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
       page_title: datastore.title,
+      active_filters: active_filters,
+      boolean_filters: boolean_filters,
       filters: filters
     )
   end

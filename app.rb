@@ -238,7 +238,7 @@ class Search::Application < Sinatra::Base
       redirect "/#{params[:search_datastore]}"
     end
     # Make a search in the current site
-    redirect "https://search.lib.umich.edu/#{params[:search_datastore]}?query=#{query}"
+    redirect "/#{params[:search_datastore]}?query=#{query}"
   end
 
   if S.workshop?
