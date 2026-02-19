@@ -64,7 +64,10 @@ const removeSelectedAction = ({ button = getRemoveSelectedButton(), deleteRecord
   });
 };
 
-const removeSelected = ({ list, removeAction = removeSelectedAction } = {}) => {
+const removeSelected = ({ list, removeAction = removeSelectedAction, toggleAction = displayRemoveSelectedAction } = {}) => {
+  // Toggle `Add selected` action based on current selection
+  toggleAction({ list });
+
   // Initialize the add selected action
   removeAction({ list });
 };

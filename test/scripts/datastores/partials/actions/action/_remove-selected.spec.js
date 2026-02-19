@@ -332,13 +332,16 @@ describe('remove selected', function () {
 
   describe('removeSelected()', function () {
     let removeSelectedActionSpy = null;
+    let displayRemoveSelectedActionSpy = null;
     let args = null;
 
     beforeEach(function () {
       removeSelectedActionSpy = sinon.spy();
+      displayRemoveSelectedActionSpy = sinon.spy();
       args = {
         list: getTemporaryList(),
-        removeAction: removeSelectedActionSpy
+        removeAction: removeSelectedActionSpy,
+        toggleAction: displayRemoveSelectedActionSpy
       };
 
       // Call the function
@@ -347,7 +350,13 @@ describe('remove selected', function () {
 
     afterEach(function () {
       removeSelectedActionSpy = null;
+      displayRemoveSelectedActionSpy = null;
       args = null;
+    });
+
+    it('should call `displayRemoveSelectedAction` function with the correct arguments', function () {
+      // Check that the spy was called with the correct argument
+      expect(displayRemoveSelectedActionSpy.calledWithExactly({ list: args.list }), '`displayRemoveSelectedAction` function should be called with the correct arguments').to.be.true;
     });
 
     it('should call `removeSelectedAction` function with the correct arguments', function () {

@@ -3,6 +3,7 @@ import { copyLink } from '../partials/actions/action/_link.js';
 import { emailAction } from '../partials/actions/action/_email.js';
 import { getTemporaryList } from '../list/layout.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
+import { removeSelected } from '../partials/actions/action/_remove-selected.js';
 import shelfBrowse from './partials/_shelf-browse.js';
 import { tabControl } from '../partials/_actions.js';
 import { textAction } from '../partials/actions/action/_text.js';
@@ -31,6 +32,9 @@ copyLink();
 
 // Add to My Temporary List
 addSelected({ list });
+
+// Remove from My Temporary List
+removeSelected({ list });
 
 // Show My Temporary List banner
 toggleBanner({ list });
