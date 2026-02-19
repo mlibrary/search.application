@@ -11,9 +11,6 @@
   }
   uri = URI.parse(request.fullpath)
   params_hash = CGI.parse(uri.query.to_s)
-
-  # Default to "U-M Ann Arbor Libraries" if no library is selected
-  selected_library = params_hash["library"]&.first || libraries[1]
 %>
 <form method="get" action="/<%= @presenter.current_datastore %>" class="sort">
   <% params_hash.each do |key, value| %>
