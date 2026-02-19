@@ -30,6 +30,7 @@ module Search::Presenters
     ]
   end
 
+  # is this for langing pages?
   def self.for_datastore(slug:, uri:, patron: nil)
     datastore = Search::Datastores.find(slug)
     params = URI.decode_www_form(uri.query.to_s)&.to_h
@@ -76,6 +77,94 @@ module Search::Presenters
   def self.for_datastore_results(slug:, uri:, patron: nil)
     datastore = Search::Datastores.find(slug)
     params = URI.decode_www_form(uri.query.to_s)&.to_h
+    filters = [
+      {
+        uid: "availability",
+        name: "Availability",
+        options: [
+          {value: "Available Online", count: 15762},
+          {value: "Physical", count: 8421},
+          {value: "HathiTrust", count: 3245}
+        ]
+      },
+      {
+        uid: "format",
+        name: "Format",
+        options: [
+          {value: "Book", count: 11826},
+          {value: "Journal", count: 7398},
+          {value: "Music", count: 1234},
+          {value: "Video", count: 987},
+          {value: "Map", count: 456},
+          {value: "Manuscript", count: 321}
+        ]
+      },
+      {
+        uid: "subject",
+        name: "Subject",
+        options: [
+          {value: "History", count: 6789},
+          {value: "Science", count: 5678},
+          {value: "Literature", count: 4567},
+          {value: "Art", count: 3456},
+          {value: "Technology", count: 2345}
+        ]
+      },
+      {
+        uid: "date_of_publication",
+        name: "Date of Publication",
+        options: [
+          {value: "2020-2024", count: 3456},
+          {value: "2010-2019", count: 5678},
+          {value: "2000-2009", count: 4567},
+          {value: "1990-1999", count: 2345},
+          {value: "1980-1989", count: 1234},
+          {value: "1970-1979", count: 1234},
+          {value: "1960-1969", count: 1234},
+          {value: "Before 1960", count: 6789}
+        ]
+      },
+      {
+        uid: "language",
+        name: "Language",
+        options: [
+          {value: "English", count: 14567},
+          {value: "Spanish", count: 2345},
+          {value: "French", count: 1234},
+          {value: "German", count: 987},
+          {value: "Chinese", count: 876},
+          {value: "Japanese", count: 765},
+          {value: "Russian", count: 654}
+        ]
+      },
+      {
+        uid: "author",
+        name: "Author",
+        options: [
+          {value: "Smith, John", count: 123},
+          {value: "Doe, Jane", count: 98},
+          {value: "Brown, Bob", count: 76},
+          {value: "Johnson, Alice", count: 54},
+          {value: "Davis, Charlie", count: 32}
+        ]
+      },
+      {
+        uid: "publisher",
+        name: "Publisher",
+        options: [
+          {value: "Penguin Random House", count: 456},
+          {value: "HarperCollins", count: 345},
+          {value: "Simon & Schuster", count: 234},
+          {value: "Macmillan Publishers", count: 123},
+          {value: "Hachette Livre", count: 98}
+        ]
+      }
+    ].map do |filter|
+      options = filter[:options].map do |option|
+        OpenStruct.new(**option)
+      end
+      OpenStruct.new(uid: filter[:uid], name: filter[:name], options: options)
+    end
 
     OpenStruct.new(
       title: title([datastore.title]),
@@ -88,7 +177,8 @@ module Search::Presenters
       search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
       affiliations: Affiliations.new(current_affiliation: patron.affiliation),
       flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
-      page_title: datastore.title
+      page_title: datastore.title,
+      filters: filters
     )
   end
 
