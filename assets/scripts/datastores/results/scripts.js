@@ -7,8 +7,8 @@ import { initializeCitations } from '../partials/actions/action/_citation.js';
 import { libraryScope } from './partials/_library-scope.js';
 import { removeSelected } from '../partials/actions/action/_remove-selected.js';
 import { sortResults } from './partials/summary/_sort.js';
-import { toggleItems } from '../partials/_toggle.js';
 import { tabControl } from '../partials/_actions.js';
+import { toggleItems } from '../partials/_toggle.js';
 import { textAction } from '../partials/actions/action/_text.js';
 
 // Get the temporary list from session storage
