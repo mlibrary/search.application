@@ -41,9 +41,6 @@ $class: 'results';
 .#{$class}__container {
   @include utilities.flex($align: start, $responsive: 'lg');
   max-width: 75rem;
-  & > * {
-    width: 100%;
-  }
 }
 
 
@@ -53,6 +50,7 @@ $class: 'results';
 // *              * //
 
 .#{$class}__sidebar {
+  width: 100%;
   @include media.breakpoint('lg') {
     flex-shrink: 0;
     width: 18.5rem;
@@ -72,6 +70,7 @@ $class: 'results';
 // *              * //
 
 .#{$class}__content {
+  width: 100%;
   & > * + * {
     margin-top: 1rem;
   }

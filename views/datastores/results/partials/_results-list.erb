@@ -1,12 +1,31 @@
 <% if results.size > 0 %>
+  <%
+    # Filter results to the start_result to the end_result for pagination
+    page_results = results.map.with_index do |result, index|
+      result if index + 1 >= start_result && index + 1 <= end_result
+    end.compact
+  %>
   <%= erb :'/datastores/list/partials/_go-to' %>
   <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
-  <p>Results list</p>
-  <%
-    # Show specialists only on the first page
-    if current_page == 1
-  %>
-    <%= erb :'/datastores/results/partials/results-list/_specialists' %>
+  <p>SELECT ALL</p>
+  <% page_results.each_with_index do |result, index| %>
+    <p>Result <%= start_result + index %></p>
+    <%
+      # Show specialists only on the first page
+      if current_page == 1
+        if page_results.size < 3
+          # Show specialists after the last result if there are less than 3 results
+          show_specialists = index == page_results.size - 1
+        else
+          # Show specialists after the third result
+          show_specialists = index == 2
+        end
+
+        if show_specialists
+    %>
+        <%= erb :'/datastores/results/partials/results-list/_specialists' %>
+      <% end %>
+    <% end %>
   <% end %>
 <% else %>
   <%= erb :'/datastores/results/partials/results-list/_no-results' %>
