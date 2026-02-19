@@ -252,4 +252,21 @@ module Search::Presenters
       affiliations: Affiliations.new(current_affiliation: patron.affiliation)
     )
   end
+
+  def self.add_filter_param(uri:, uid:, value:)
+    result = Addressable::URI.parse(uri)
+    query_values = result.query_values(Array) || []
+    query_values.push(["filter.#{uid}", value])
+    result.query_values = query_values
+    result.to_s
+  end
+
+  def self.remove_filter_param(uri:, uid:, value:)
+    result = Addressable::URI.parse(uri)
+    query_values = result.query_values(Array) || []
+    to_be_removed = ["filter.#{uid}", value]
+    query_values.reject! { |x| x == to_be_removed }
+    result.query_values = query_values
+    result.to_s
+  end
 end
