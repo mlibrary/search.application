@@ -45,7 +45,7 @@
       <%= erb :'/datastores/results/partials/_browse', locals: { datastore: @presenter.page_title, slug: @presenter.current_datastore } %>
     </aside>
 
-    <h2 class="visually-hidden"><%= @presenter.page_title %> Filter Results</h2>
+    <h2 class="visually-hidden"><%= @presenter.page_title %> Results</h2>
     <section class="results__content">
       <%= erb :'/datastores/results/partials/_summary', locals: { total_results: total_results, start_result: start_result, end_result: end_result } %>
       <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: results, start_result: start_result, end_result: end_result } %>
