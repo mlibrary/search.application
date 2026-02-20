@@ -364,15 +364,18 @@ describe('remove selected', function () {
   describe('removeSelected()', function () {
     let displayRemoveSelectedActionSpy = null;
     let removeSelectedActionSpy = null;
+    let toggleSelectedTabTextSpy = null;
     let args = null;
 
     beforeEach(function () {
       displayRemoveSelectedActionSpy = sinon.spy();
       removeSelectedActionSpy = sinon.spy();
+      toggleSelectedTabTextSpy = sinon.spy();
       args = {
         displayRemoveAction: displayRemoveSelectedActionSpy,
         list: global.temporaryList,
-        removeAction: removeSelectedActionSpy
+        removeAction: removeSelectedActionSpy,
+        selectedTabText: toggleSelectedTabTextSpy
       };
 
       // Call the function
@@ -382,11 +385,16 @@ describe('remove selected', function () {
     afterEach(function () {
       displayRemoveSelectedActionSpy = null;
       removeSelectedActionSpy = null;
+      toggleSelectedTabTextSpy = null;
       args = null;
     });
 
     it('should call `displayRemoveSelectedAction` with the correct arguments', function () {
       expect(displayRemoveSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`displayRemoveSelectedAction` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleSelectedTabText` with the correct arguments', function () {
+      expect(toggleSelectedTabTextSpy.calledOnceWithExactly({ tabID: 'actions__remove-selected' }), '`toggleSelectedTabText` should be called with the correct arguments').to.be.true;
     });
 
     it('should call `removeSelectedAction` with the correct arguments', function () {

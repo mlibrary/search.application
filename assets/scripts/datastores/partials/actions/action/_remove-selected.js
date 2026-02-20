@@ -1,4 +1,4 @@
-import { displayAddSelectedAction, toggleAddedClass } from './_add-selected.js';
+import { displayAddSelectedAction, toggleAddedClass, toggleSelectedTabText } from './_add-selected.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
 import { inTemporaryList, setTemporaryList, viewingTemporaryList } from '../../../list/layout.js';
 import { toggleBanner } from '../../../list/partials/_go-to.js';
@@ -113,9 +113,12 @@ const removeSelectedAction = ({
   });
 };
 
-const removeSelected = ({ displayRemoveAction = displayRemoveSelectedAction, list, removeAction = removeSelectedAction } = {}) => {
+const removeSelected = ({ displayRemoveAction = displayRemoveSelectedAction, list, removeAction = removeSelectedAction, selectedTabText = toggleSelectedTabText } = {}) => {
   // Toggle `Remove selected` action display on load
   displayRemoveAction({ list });
+
+  // Update the "Remove selected" tab text on load and whenever checkboxes are changed
+  selectedTabText({ tabID: removeSelectedClass });
 
   // Initialize the remove selected action
   removeAction({ list });
