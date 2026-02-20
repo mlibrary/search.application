@@ -253,20 +253,28 @@ module Search::Presenters
     )
   end
 
-  def self.add_filter_param(uri:, uid:, value:)
+  def self.add_param(uri:, uid:, value:, prefix: nil)
     result = Addressable::URI.parse(uri)
     query_values = result.query_values(Array) || []
-    query_values.push(["filter.#{uid}", value])
+    query_values.push([make_key(prefix, uid), value])
     result.query_values = query_values
-    result.to_s
+    result.display_uri.to_s
   end
 
-  def self.remove_filter_param(uri:, uid:, value:)
+  def self.remove_param(uri:, uid:, value:, prefix: nil)
     result = Addressable::URI.parse(uri)
     query_values = result.query_values(Array) || []
-    to_be_removed = ["filter.#{uid}", value]
+    to_be_removed = [make_key(prefix, uid), value]
     query_values.reject! { |x| x == to_be_removed }
     result.query_values = query_values
-    result.to_s
+    result.display_uri.to_s
+  end
+
+  def self.make_key(prefix, uid)
+    if prefix
+      "#{prefix}.#{uid}"
+    else
+      uid
+    end
   end
 end
