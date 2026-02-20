@@ -229,6 +229,7 @@ describe('remove selected', function () {
     let displayRemoveSelectedActionSpy = null;
     let reloadPageSpy = null;
     let setTemporaryListSpy = null;
+    let toggleBannerSpy = null;
     let toggleRemoveSelectedButtonSpy = null;
     let args = null;
     let originalText = null;
@@ -238,6 +239,7 @@ describe('remove selected', function () {
       displayRemoveSelectedActionSpy = sinon.spy();
       reloadPageSpy = sinon.spy();
       setTemporaryListSpy = sinon.spy();
+      toggleBannerSpy = sinon.spy();
       toggleRemoveSelectedButtonSpy = sinon.spy();
       args = {
         deleteRecords: deleteSelectedRecordsStub,
@@ -247,6 +249,7 @@ describe('remove selected', function () {
         reloadPage: reloadPageSpy,
         removeSelectedButton: getRemoveSelectedButton(),
         setList: setTemporaryListSpy,
+        showBanner: toggleBannerSpy,
         toggleRemoveButton: toggleRemoveSelectedButtonSpy,
         viewingList: false
       };
@@ -265,6 +268,7 @@ describe('remove selected', function () {
       displayRemoveSelectedActionSpy = null;
       reloadPageSpy = null;
       setTemporaryListSpy = null;
+      toggleBannerSpy = null;
       toggleRemoveSelectedButtonSpy = null;
       args = null;
       originalText = null;
@@ -284,6 +288,10 @@ describe('remove selected', function () {
 
     it('should call `setTemporaryList` with the correct arguments', function () {
       expect(setTemporaryListSpy.calledWith(deleteSelectedRecordsStub.returnValues[0]), '`setTemporaryList` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleBanner` with the correct arguments', function () {
+      expect(toggleBannerSpy.calledWith({ list: deleteSelectedRecordsStub.returnValues[0] }), '`toggleBanner` should be called with the correct arguments').to.be.true;
     });
 
     it('should call `displayRemoveSelectedAction` with the correct arguments', function () {

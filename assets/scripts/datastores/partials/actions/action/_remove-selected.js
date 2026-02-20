@@ -1,6 +1,7 @@
 import { filterSelectedRecords, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
 import { inTemporaryList, setTemporaryList, viewingTemporaryList } from '../../../list/layout.js';
 import { toggleAddedClass } from './_add-selected.js';
+import { toggleBanner } from '../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../_actions.js';
 
 const removeSelectedClass = 'actions__remove-selected';
@@ -63,6 +64,7 @@ const handleRemoveSelectedClick = ({
   list,
   reloadPage = window.location.reload.bind(window.location),
   setList = setTemporaryList,
+  showBanner = toggleBanner,
   toggleRemoveButton = toggleRemoveSelectedButton,
   viewingList = viewingTemporaryList()
 }) => {
@@ -78,6 +80,9 @@ const handleRemoveSelectedClick = ({
 
   // Set the updated list
   setList(updatedList);
+
+  // Update the banner to reflect the new count of items in the list
+  showBanner({ list: updatedList });
 
   // Toggle the display of the `Remove selected` action based on the updated list
   displayRemoveAction({ list: updatedList });
