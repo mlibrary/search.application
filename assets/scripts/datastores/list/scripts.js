@@ -1,4 +1,5 @@
 import { getTemporaryList, temporaryList } from './layout.js';
+import { addSelected } from '../partials/actions/action/_add-selected.js';
 import { downloadTemporaryListRIS } from '../partials/actions/action/_ris.js';
 import { emailAction } from '../partials/actions/action/_email.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
@@ -24,6 +25,9 @@ initializeCitations();
 
 // RIS
 downloadTemporaryListRIS({ list });
+
+// Add selected
+addSelected({ list });
 
 // Remove selected
 removeSelected({ list });
