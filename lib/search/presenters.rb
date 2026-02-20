@@ -6,6 +6,7 @@ require "search/presenters/affiliations"
 require "search/presenters/breadcrumbs"
 require "search/presenters/icons"
 require "search/presenters/record"
+require "search/presenters/results"
 require "search/presenters/search_options"
 
 module Search::Presenters
@@ -161,16 +162,23 @@ module Search::Presenters
         ]
       }
     ].map do |filter|
-      options = filter[:options].map do |option|
-        url = add_param(uri: uri, uid: filter[:uid], value: option[:value], prefix: "filter")
-        OpenStruct.new(**option, url: url)
+      filter.options.map do |option|
+        Search::Presenters::Results::Filter.for(
+          uri: uri, uid: filter[:uid], value: option[:value], count: option[:count]
+        )
       end
-      OpenStruct.new(
-        uid: filter[:uid],
-        name: filter[:name],
-        options: options
-      )
     end
+    # ].map do |filter|
+    # options = filter[:options].map do |option|
+    # url = add_param(uri: uri, uid: filter[:uid], value: option[:value], prefix: "filter")
+    # OpenStruct.new(**option, url: url)
+    # end
+    # OpenStruct.new(
+    # uid: filter[:uid],
+    # name: filter[:name],
+    # options: options
+    # )
+    # end
 
     active_filters = [
       {
