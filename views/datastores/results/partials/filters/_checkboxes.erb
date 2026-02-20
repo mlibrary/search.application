@@ -1,64 +1,9 @@
-<%
-  filters = {
-    catalog: {
-      "search_only": {
-        label: "View HathiTrust search-only materials",
-        value: true
-      }
-    },
-    articles: {
-      "is_scholarly": {
-        label: "Articles from scholarly journals only",
-        value: true
-      },
-      "exclude_newspapers": {
-        label: "Exclude newspaper articles",
-        value: true
-      },
-      "available_online": {
-        label: "Available online",
-        value: true
-      },
-      "is_open_access": {
-        label: "Show open access only",
-        value: true
-      },
-      "holdings_only": {
-        label: "U-M library materials only",
-        value: false
-      }
-    }
-  }
-  filter_datastores = filters.keys
-  if filter_datastores.include?(@presenter.current_datastore.to_sym)
-    uri = URI.parse(request.fullpath)
-    params_hash = CGI.parse(uri.query.to_s)
-
-    # Remove "page" param to avoid issues with pagination when applying filters
-    params_hash.delete("page")
-
-    checkbox_values = filters[@presenter.current_datastore.to_sym].map { |key, filter| "filter.#{key}" }
-%>
+<% if @presenter.boolean_filters.any? %>
   <form class="filter__checkboxes" method="get" action="/<%= @presenter.current_datastore %>">
-    <% params_hash.each do |key, value| %>
-      <% unless checkbox_values.include?(key) %>
-        <% value.each do |v| %>
-          <input type="hidden" name="<%= key %>" value="<%= v %>">
-        <% end %>
-      <% end %>
-    <% end %>
-    <% filters[@presenter.current_datastore.to_sym].each do |key, filter| %>
-      <%
-        # Set default checked status based on opposite value of filter[:checked]
-        checked = !filter[:value]
-        # If param is present, define checked status based on its value
-        if params_hash["filter.#{key}"].present?
-          checked = params_hash["filter.#{key}"].first == "true"
-        end
-      %>
+    <% @presenter.boolean_filters.each do |key, filter| %>
       <label class="checkbox filter__checkbox">
-        <input type="checkbox" name="filter.<%= key %>" value="<%= filter[:value] %>" <%= "checked" if checked %>>
-        <%= filter[:label] %>
+        <input type="checkbox" name="<%= filter.uid %>" value="<%= filter.value %>" <%= "checked" if filter.checked? %>>
+        <%= filter.label %>
       </label>
     <% end %>
     <button type="submit" class="hide__javascript filter__checkboxes--submit">Apply</button>
