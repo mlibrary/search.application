@@ -1,5 +1,6 @@
 import { filterSelectedRecords, getCheckboxes, getCheckedCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../list/partials/list-item/_checkbox.js';
 import { inTemporaryList, setTemporaryList } from '../../../list/layout.js';
+import { displayRemoveSelectedAction } from './_remove-selected.js';
 import { toggleBanner } from '../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../_actions.js';
 
@@ -112,7 +113,16 @@ const displayAddSelectedAction = ({ checkedValues = filterSelectedRecords(), inL
   toggleTab({ id: addSelectedClass, show: showTab });
 };
 
-const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton = getAddSelectedButton(), list, setList = setTemporaryList, showBanner = toggleBanner, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {
+const addSelectedAction = ({
+  addRecords = fetchAndAddRecords,
+  addSelectedButton = getAddSelectedButton(),
+  displayAddAction = displayAddSelectedAction,
+  displayRemoveAction = displayRemoveSelectedAction,
+  list,
+  setList = setTemporaryList,
+  showBanner = toggleBanner,
+  styleRecords = styleAddedRecords
+} = {}) => {
   const button = addSelectedButton;
   const buttonText = button.textContent;
 
@@ -131,22 +141,25 @@ const addSelectedAction = ({ addRecords = fetchAndAddRecords, addSelectedButton 
     } catch {
       // Silent failure, so no action is needed
     } finally {
-      // Re-enable the button
-      button.disabled = false;
-      // Restore original button text
-      button.textContent = buttonText;
-
-      // Set `sessionStorage`
+      // Set the updated list
       setList(updatedList);
 
       // Re-style records after adding
       styleRecords({ list: updatedList });
 
-      // Toggle banner
+      // Update the banner to reflect the new count of items in the list
       showBanner({ list: updatedList });
 
-      // Toggle actions based on current selection
-      toggleAction({ list: updatedList });
+      // Toggle the display of the `Add selected` action based on the updated list
+      displayAddAction({ list: updatedList });
+
+      // Toggle the display of the `Remove selected` action based on the updated list
+      displayRemoveAction({ list: updatedList });
+
+      // Restore original button text
+      button.textContent = buttonText;
+      // Re-enable the button
+      button.disabled = false;
     }
   });
 };

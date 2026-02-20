@@ -1,6 +1,6 @@
+import { displayAddSelectedAction, toggleAddedClass } from './_add-selected.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
 import { inTemporaryList, setTemporaryList, viewingTemporaryList } from '../../../list/layout.js';
-import { toggleAddedClass } from './_add-selected.js';
 import { toggleBanner } from '../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../_actions.js';
 
@@ -59,6 +59,7 @@ const displayRemoveSelectedAction = ({
 
 const handleRemoveSelectedClick = ({
   deleteRecords = deleteSelectedRecords,
+  displayAddAction = displayAddSelectedAction,
   displayRemoveAction = displayRemoveSelectedAction,
   event,
   list,
@@ -86,6 +87,9 @@ const handleRemoveSelectedClick = ({
 
   // Toggle the display of the `Remove selected` action based on the updated list
   displayRemoveAction({ list: updatedList });
+
+  // Toggle the display of the `Add selected` action based on the updated list
+  displayAddAction({ list: updatedList });
 
   // Enable the button and change the text back to the original text after the removal is complete
   toggleRemoveButton({ button, disabled: false, text });

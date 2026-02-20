@@ -503,48 +503,40 @@ describe('add selected', function () {
 
   describe('addSelectedAction()', function () {
     let fetchAndAddRecordsStub = null;
+    let displayAddSelectedActionSpy = null;
+    let displayRemoveSelectedActionSpy = null;
     let setTemporaryListStub = null;
-    let toggleBannerStub = null;
+    let toggleBannerSpy = null;
     let styleAddedRecordsStub = null;
-    let displayAddSelectedActionStub = null;
     let args = null;
 
     beforeEach(function () {
       fetchAndAddRecordsStub = sinon.stub().resolves(defaultTemporaryList);
+      displayAddSelectedActionSpy = sinon.spy();
+      displayRemoveSelectedActionSpy = sinon.spy();
       setTemporaryListStub = sinon.stub();
-      toggleBannerStub = sinon.stub();
+      toggleBannerSpy = sinon.spy();
       styleAddedRecordsStub = sinon.stub();
-      displayAddSelectedActionStub = sinon.stub();
-
       args = {
         addRecords: fetchAndAddRecordsStub,
         addSelectedButton: getAddSelectedButton(),
+        displayAddAction: displayAddSelectedActionSpy,
+        displayRemoveAction: displayRemoveSelectedActionSpy,
         list: defaultTemporaryList,
         setList: setTemporaryListStub,
-        showBanner: toggleBannerStub,
-        styleRecords: styleAddedRecordsStub,
-        toggleAction: displayAddSelectedActionStub
+        showBanner: toggleBannerSpy,
+        styleRecords: styleAddedRecordsStub
       };
     });
 
     afterEach(function () {
       fetchAndAddRecordsStub = null;
+      displayAddSelectedActionSpy = null;
+      displayRemoveSelectedActionSpy = null;
       setTemporaryListStub = null;
-      toggleBannerStub = null;
+      toggleBannerSpy = null;
       styleAddedRecordsStub = null;
-      displayAddSelectedActionStub = null;
       args = null;
-    });
-
-    it('should call `fetchAndAddRecords` with the correct arguments', async function () {
-      // Call the function
-      await addSelectedAction(args);
-
-      // Click the button to trigger the action
-      args.addSelectedButton.click();
-
-      // Check that `fetchAndAddRecords` was called once with the correct arguments
-      expect(fetchAndAddRecordsStub.calledOnceWithExactly({ list: args.list }), '`fetchAndAddRecords` should be called once with the correct arguments').to.be.true;
     });
 
     it('should disable the `Add selected` button while processing', async function () {
@@ -575,34 +567,15 @@ describe('add selected', function () {
       await actionPromise;
     });
 
-    it('should re-enable the `Add selected` button after processing', async function () {
+    it('should call `fetchAndAddRecords` with the correct arguments', async function () {
       // Call the function
-      const actionPromise = addSelectedAction(args);
+      await addSelectedAction(args);
 
       // Click the button to trigger the action
       args.addSelectedButton.click();
 
-      // Wait for the action to complete
-      await actionPromise;
-
-      // Check that the button is re-enabled
-      expect(args.addSelectedButton.disabled, 'the `Add selected` button should be re-enabled after processing').to.be.false;
-    });
-
-    it('should restore the `Add selected` button text after processing', async function () {
-      const originalText = args.addSelectedButton.textContent;
-
-      // Call the function
-      const actionPromise = addSelectedAction(args);
-
-      // Click the button to trigger the action
-      args.addSelectedButton.click();
-
-      // Wait for the action to complete
-      await actionPromise;
-
-      // Check that the button text is restored
-      expect(args.addSelectedButton.textContent, 'the `Add selected` button text should be restored after processing').to.equal(originalText);
+      // Check that `fetchAndAddRecords` was called once with the correct arguments
+      expect(fetchAndAddRecordsStub.calledOnceWithExactly({ list: args.list }), '`fetchAndAddRecords` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `setTemporaryList` with the updated list', async function () {
@@ -644,7 +617,7 @@ describe('add selected', function () {
       await actionPromise;
 
       // Check that `toggleBanner` was called once with the arguments
-      expect(toggleBannerStub.calledOnceWithExactly({ list: args.list }), '`toggleBanner` should be called once with the correct arguments').to.be.true;
+      expect(toggleBannerSpy.calledOnceWithExactly({ list: args.list }), '`toggleBanner` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `displayAddSelectedAction` with the correct arguments', async function () {
@@ -658,7 +631,51 @@ describe('add selected', function () {
       await actionPromise;
 
       // Check that `displayAddSelectedAction` was called once with the arguments
-      expect(displayAddSelectedActionStub.calledOnceWithExactly({ list: args.list }), '`displayAddSelectedAction` should be called once with the correct arguments').to.be.true;
+      expect(displayAddSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`displayAddSelectedAction` should be called once with the correct arguments').to.be.true;
+    });
+
+    it('should call `displayRemoveSelectedAction` with the correct arguments', async function () {
+      // Call the function
+      const actionPromise = addSelectedAction(args);
+
+      // Click the button to trigger the action
+      args.addSelectedButton.click();
+
+      // Wait for the action to complete
+      await actionPromise;
+
+      // Check that `displayRemoveSelectedAction` was called once with the arguments
+      expect(displayRemoveSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`displayRemoveSelectedAction` should be called once with the correct arguments').to.be.true;
+    });
+
+    it('should restore the `Add selected` button text after processing', async function () {
+      const originalText = args.addSelectedButton.textContent;
+
+      // Call the function
+      const actionPromise = addSelectedAction(args);
+
+      // Click the button to trigger the action
+      args.addSelectedButton.click();
+
+      // Wait for the action to complete
+      await actionPromise;
+
+      // Check that the button text is restored
+      expect(args.addSelectedButton.textContent, 'the `Add selected` button text should be restored after processing').to.equal(originalText);
+    });
+
+    it('should re-enable the `Add selected` button after processing', async function () {
+      // Call the function
+      const actionPromise = addSelectedAction(args);
+
+      // Click the button to trigger the action
+      args.addSelectedButton.click();
+
+      // Wait for the action to complete
+      await actionPromise;
+
+      // Check that the button is re-enabled
+      expect(args.addSelectedButton.disabled, 'the `Add selected` button should be re-enabled after processing').to.be.false;
     });
   });
 

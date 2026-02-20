@@ -226,6 +226,7 @@ describe('remove selected', function () {
 
   describe('handleRemoveSelectedClick()', function () {
     let deleteSelectedRecordsStub = null;
+    let displayAddSelectedActionSpy = null;
     let displayRemoveSelectedActionSpy = null;
     let reloadPageSpy = null;
     let setTemporaryListSpy = null;
@@ -236,6 +237,7 @@ describe('remove selected', function () {
 
     beforeEach(function () {
       deleteSelectedRecordsStub = sinon.stub().returns({});
+      displayAddSelectedActionSpy = sinon.spy();
       displayRemoveSelectedActionSpy = sinon.spy();
       reloadPageSpy = sinon.spy();
       setTemporaryListSpy = sinon.spy();
@@ -243,6 +245,7 @@ describe('remove selected', function () {
       toggleRemoveSelectedButtonSpy = sinon.spy();
       args = {
         deleteRecords: deleteSelectedRecordsStub,
+        displayAddAction: displayAddSelectedActionSpy,
         displayRemoveAction: displayRemoveSelectedActionSpy,
         event: { target: getRemoveSelectedButton() },
         list: global.temporaryList,
@@ -265,6 +268,7 @@ describe('remove selected', function () {
 
     afterEach(function () {
       deleteSelectedRecordsStub = null;
+      displayAddSelectedActionSpy = null;
       displayRemoveSelectedActionSpy = null;
       reloadPageSpy = null;
       setTemporaryListSpy = null;
@@ -296,6 +300,10 @@ describe('remove selected', function () {
 
     it('should call `displayRemoveSelectedAction` with the correct arguments', function () {
       expect(displayRemoveSelectedActionSpy.calledWith({ list: deleteSelectedRecordsStub.returnValues[0] }), '`displayRemoveSelectedAction` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `displayAddSelectedAction` with the correct arguments', function () {
+      expect(displayAddSelectedActionSpy.calledWith({ list: deleteSelectedRecordsStub.returnValues[0] }), '`displayAddSelectedAction` should be called with the correct arguments').to.be.true;
     });
 
     it('should not call `reloadPage` if `viewingList` is `false`', function () {
