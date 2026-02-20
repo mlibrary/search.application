@@ -9,7 +9,17 @@ const getRemoveSelectedButton = () => {
   return document.querySelector(`#${removeSelectedClass}--tabpanel .action__remove-selected`);
 };
 
-const deleteSelectedRecordsTest = ({ checkboxValues = filterSelectedRecords(), list, removeClass = toggleAddedClass, splitValue = splitCheckboxValue }) => {
+const toggleRemoveSelectedButton = ({ button, disabled = false, text }) => {
+  button.textContent = disabled ? 'Removing...' : text;
+  button.disabled = disabled;
+};
+
+const deleteSelectedRecords = ({
+  checkboxValues = filterSelectedRecords(),
+  list,
+  removeClass = toggleAddedClass,
+  splitValue = splitCheckboxValue
+}) => {
   // Create a deep copy of the list to prevent mutating the original list
   const updatedList = JSON.parse(JSON.stringify(list));
 
@@ -29,7 +39,13 @@ const deleteSelectedRecordsTest = ({ checkboxValues = filterSelectedRecords(), l
   return updatedList;
 };
 
-const displayRemoveSelectedAction = ({ checkedValues = filterSelectedRecords(), inList = inTemporaryList, list, splitValue = splitCheckboxValue, toggleTab = toggleTabDisplay } = {}) => {
+const displayRemoveSelectedAction = ({
+  checkedValues = filterSelectedRecords(),
+  inList = inTemporaryList,
+  list,
+  splitValue = splitCheckboxValue,
+  toggleTab = toggleTabDisplay
+} = {}) => {
   // Check if all of the selected records are in the temporary list
   const showTab = checkedValues.every((value) => {
     const { recordDatastore, recordId } = splitValue({ value });
@@ -40,43 +56,68 @@ const displayRemoveSelectedAction = ({ checkedValues = filterSelectedRecords(), 
   toggleTab({ id: removeSelectedClass, show: showTab });
 };
 
-const deleteSelectedRecords = ({ list, setList = setTemporaryList }) => {
-  // Remove all selected records from the temporary list
-  filterSelectedRecords().forEach((record) => {
-    const [datastore, recordId] = record.split(',');
-    delete list[datastore][recordId];
-  });
+const handleRemoveSelectedClick = ({
+  deleteRecords = deleteSelectedRecords,
+  displayRemoveAction = displayRemoveSelectedAction,
+  event,
+  list,
+  reloadPage = window.location.reload.bind(window.location),
+  setList = setTemporaryList,
+  toggleRemoveButton = toggleRemoveSelectedButton,
+  viewingList = viewingTemporaryList()
+}) => {
+  // Get the button that was clicked and its original text
+  const button = event.target;
+  const text = button.textContent;
 
-  // Update temporary list
-  setList(list);
+  // Disable the button and change the text to indicate that the removal is in progress
+  toggleRemoveButton({ button, disabled: true });
+
+  // Update the list by deleting the selected records
+  const updatedList = deleteRecords({ list });
+
+  // Set the updated list
+  setList(updatedList);
+
+  // Toggle the display of the `Remove selected` action based on the updated list
+  displayRemoveAction({ list: updatedList });
+
+  // Enable the button and change the text back to the original text after the removal is complete
+  toggleRemoveButton({ button, disabled: false, text });
+
+  // Check if the user is currently viewing My Temporary List
+  if (viewingList) {
+    // Reload the page to reflect the changes
+    reloadPage();
+  }
 };
 
-const removeSelectedAction = ({ button = getRemoveSelectedButton(), deleteRecords = deleteSelectedRecords, list, reloadPage = window.location.reload.bind(window.location), viewingList = viewingTemporaryList() } = {}) => {
-  // Add event listener
-  button.addEventListener('click', () => {
-    // Delete selected items from temporary list
-    deleteRecords({ list });
-
-    // Reload page to reflect changes if currently viewing My Temporary List
-    if (viewingList) {
-      reloadPage();
-    }
+const removeSelectedAction = ({
+  button = getRemoveSelectedButton(),
+  handleRemoveSelected = handleRemoveSelectedClick,
+  list
+}) => {
+  // Add click event listener to the remove selected button
+  button.addEventListener('click', (event) => {
+    // Handle the remove selected action
+    handleRemoveSelected({ event, list });
   });
 };
 
-const removeSelected = ({ list, removeAction = removeSelectedAction, toggleAction = displayRemoveSelectedAction } = {}) => {
-  // Toggle `Add selected` action based on current selection
-  toggleAction({ list });
+const removeSelected = ({ displayRemoveAction = displayRemoveSelectedAction, list, removeAction = removeSelectedAction } = {}) => {
+  // Toggle `Remove selected` action display on load
+  displayRemoveAction({ list });
 
-  // Initialize the add selected action
+  // Initialize the remove selected action
   removeAction({ list });
 };
 
 export {
   deleteSelectedRecords,
-  deleteSelectedRecordsTest,
   displayRemoveSelectedAction,
   getRemoveSelectedButton,
+  handleRemoveSelectedClick,
   removeSelected,
-  removeSelectedAction
+  removeSelectedAction,
+  toggleRemoveSelectedButton
 };

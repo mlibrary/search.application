@@ -1,15 +1,15 @@
 import {
   deleteSelectedRecords,
-  deleteSelectedRecordsTest,
   displayRemoveSelectedAction,
   getRemoveSelectedButton,
+  handleRemoveSelectedClick,
   removeSelected,
-  removeSelectedAction
+  removeSelectedAction,
+  toggleRemoveSelectedButton
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
-import { getTemporaryList, nonEmptyDatastores, viewingTemporaryList } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import { expect } from 'chai';
-import { JSDOM } from 'jsdom';
+import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
 
 let temporaryListHTML = '';
@@ -34,27 +34,72 @@ describe('remove selected', function () {
       </div>
       ${temporaryListHTML}
     `;
-
-    // Set a temporary list in session storage
-    global.sessionStorage = window.sessionStorage;
-    global.sessionStorage.setItem('temporaryList', JSON.stringify(global.temporaryList));
-  });
-
-  afterEach(function () {
-    // Clean up session storage
-    delete global.sessionStorage;
   });
 
   describe('getRemoveSelectedButton()', function () {
     it('should return the remove selected button element', function () {
-      expect(getRemoveSelectedButton()).to.deep.equal(document.querySelector('#actions__remove-selected--tabpanel button.action__remove-selected'));
+      expect(getRemoveSelectedButton(), 'getRemoveSelectedButton() should return the correct button').to.deep.equal(document.querySelector('#actions__remove-selected--tabpanel button.action__remove-selected'));
     });
   });
 
-  describe('deleteSelectedRecordsTest()', function () {
+  describe('toggleRemoveSelectedButton()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        button: getRemoveSelectedButton(),
+        disabled: false,
+        text: 'Remove from My Temporary List'
+      };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    describe('when `disabled` is `false`', function () {
+      beforeEach(function () {
+        // Check that `disabled` is `false`
+        expect(args.disabled, '`disabled` should be `false`').to.be.false;
+
+        // Call the function
+        toggleRemoveSelectedButton(args);
+      });
+
+      it('should change the button text to the original text', function () {
+        expect(args.button.textContent, 'Button text should be the original text').to.equal(args.text);
+      });
+
+      it('should enable the button', function () {
+        expect(args.button.hasAttribute('disabled'), 'Button should not have the `disabled` attribute').to.be.false;
+      });
+    });
+
+    describe('when `disabled` is `true`', function () {
+      beforeEach(function () {
+        // Check that `disabled` is `true`
+        args.disabled = true;
+        expect(args.disabled, '`disabled` should be `true`').to.be.true;
+
+        // Call the function
+        toggleRemoveSelectedButton(args);
+      });
+
+      it('should change the button text to "Removing..."', function () {
+        expect(args.button.textContent, 'Button text should be "Removing..."').to.equal('Removing...');
+      });
+
+      it('should disable the button', function () {
+        expect(args.button.hasAttribute('disabled'), 'Button should have the `disabled` attribute').to.be.true;
+      });
+    });
+  });
+
+  describe('deleteSelectedRecords()', function () {
     let toggleAddedClassSpy = null;
     let splitCheckboxValueStub = null;
     let args = null;
+    let updatedList = null;
 
     beforeEach(function () {
       toggleAddedClassSpy = sinon.spy();
@@ -71,49 +116,41 @@ describe('remove selected', function () {
 
       // Check that there are selected records to test
       expect(args.checkboxValues.length, 'there should be selected records to test').to.be.greaterThan(0);
+
+      // Call the function
+      updatedList = deleteSelectedRecords(args);
     });
 
     afterEach(function () {
       toggleAddedClassSpy = null;
       splitCheckboxValueStub = null;
       args = null;
+      updatedList = null;
     });
 
     it('should call `splitCheckboxValue` function with the correct arguments for each selected record', function () {
-      // Call the function
-      deleteSelectedRecordsTest({ ...args, splitValue: splitCheckboxValueStub });
-
-      // Check that the spy was called with the correct arguments for each selected record
+      // Loop through the selected record values
       args.checkboxValues.forEach((value) => {
-        expect(splitCheckboxValueStub.calledWithExactly({ value }), `splitCheckboxValue should be called with the correct arguments for record value: ${value}`).to.be.true;
+        // Check that `splitCheckboxValue` was called with the correct arguments
+        expect(splitCheckboxValueStub.calledWithExactly({ value }), `\`splitCheckboxValue\` should be called with the correct arguments for record value: ${value}`).to.be.true;
       });
     });
 
     it('should call `toggleAddedClass` function with the correct arguments for each selected record', function () {
-      // Call the function
-      deleteSelectedRecordsTest(args);
-
-      // Check that the spy was called with the correct arguments for each selected record
+      // Loop through the selected record values
       args.checkboxValues.forEach((value) => {
         // Get the record's datastore and ID
         const { recordDatastore, recordId } = splitCheckboxValue({ value });
-        // Checl that `toggleAddedClass` was called with the correct arguments
-        expect(toggleAddedClassSpy.calledWithExactly({ isAdded: false, recordDatastore, recordId }), `toggleAddedClass should be called with the correct arguments for record value: ${value}`).to.be.true;
+        // Check that `toggleAddedClass` was called with the correct arguments
+        expect(toggleAddedClassSpy.calledWithExactly({ isAdded: false, recordDatastore, recordId }), `\`toggleAddedClass\` should be called with the correct arguments for record value: ${value}`).to.be.true;
       });
     });
 
     it('should return an object', function () {
-      // Call the function
-      const result = deleteSelectedRecordsTest(args);
-
-      // Check that the result is an object
-      expect(result).to.be.an('object');
+      expect(updatedList).to.be.an('object');
     });
 
     it('should return an updated list object with the selected records removed', function () {
-      // Call the function
-      const updatedList = deleteSelectedRecordsTest(args);
-
       // Loop through the selected record values
       args.checkboxValues.forEach((value) => {
         // Get the record's datastore and ID
@@ -187,161 +224,139 @@ describe('remove selected', function () {
     });
   });
 
-  describe('deleteSelectedRecords()', function () {
-    let setListSpy = null;
+  describe('handleRemoveSelectedClick()', function () {
+    let deleteSelectedRecordsStub = null;
+    let displayRemoveSelectedActionSpy = null;
+    let reloadPageSpy = null;
+    let setTemporaryListSpy = null;
+    let toggleRemoveSelectedButtonSpy = null;
     let args = null;
+    let originalText = null;
 
     beforeEach(function () {
-      setListSpy = sinon.spy();
+      deleteSelectedRecordsStub = sinon.stub().returns({});
+      displayRemoveSelectedActionSpy = sinon.spy();
+      reloadPageSpy = sinon.spy();
+      setTemporaryListSpy = sinon.spy();
+      toggleRemoveSelectedButtonSpy = sinon.spy();
       args = {
-        list: getTemporaryList(),
-        setList: setListSpy
+        deleteRecords: deleteSelectedRecordsStub,
+        displayRemoveAction: displayRemoveSelectedActionSpy,
+        event: { target: getRemoveSelectedButton() },
+        list: global.temporaryList,
+        reloadPage: reloadPageSpy,
+        removeSelectedButton: getRemoveSelectedButton(),
+        setList: setTemporaryListSpy,
+        toggleRemoveButton: toggleRemoveSelectedButtonSpy,
+        viewingList: false
       };
+
+      originalText = args.removeSelectedButton.textContent;
+
+      // Call the function
+      handleRemoveSelectedClick(args);
+
+      // Click the button
+      args.removeSelectedButton.click();
     });
 
     afterEach(function () {
-      setListSpy = null;
+      deleteSelectedRecordsStub = null;
+      displayRemoveSelectedActionSpy = null;
+      reloadPageSpy = null;
+      setTemporaryListSpy = null;
+      toggleRemoveSelectedButtonSpy = null;
       args = null;
+      originalText = null;
     });
 
-    it('should delete the selected record(s) from session storage', function () {
-      // Check that there are selected records to test
-      expect(filterSelectedRecords().length, 'there should be selected records to test').to.be.greaterThan(0);
-
-      // Check that the temporary list contains the record(s) that are checked
-      filterSelectedRecords().forEach((record) => {
-        const [datastore, recordId] = record.split(',');
-        expect(Object.keys(args.list[datastore]).includes(recordId), 'the `temporaryList` in session storage should contain the record that is checked').to.be.true;
-      });
-
-      // Call the function
-      deleteSelectedRecords(args);
-
-      // Check that the temporary list no longer contains the removed record(s)
-      filterSelectedRecords().forEach((record) => {
-        const [datastore, recordId] = record.split(',');
-        expect(Object.keys(args.list[datastore]).includes(recordId), 'the `temporaryList` in session storage should no longer contain the record that is checked').to.be.false;
-      });
+    it('should call `toggleRemoveSelectedButton` with `disabled` set to `true`', function () {
+      expect(toggleRemoveSelectedButtonSpy.calledWith({ button: args.removeSelectedButton, disabled: true }), '`toggleRemoveSelectedButton` should be called with `disabled` set to `true`').to.be.true;
     });
 
-    it('should not delete unselected record(s) from session storage', function () {
-      // Get unselected records
-      const unselectedRecords = Array.from(document.querySelectorAll('input[type="checkbox"].list__item--checkbox:not(:checked)')).map((checkbox) => {
-        return checkbox.value;
-      });
-
-      // Check that there are unselected records to test
-      expect(unselectedRecords.length, 'there should be unselected records to test').to.be.greaterThan(0);
-
-      // Check that the temporary list contains the unselected record(s)
-      unselectedRecords.forEach((record) => {
-        const [datastore, recordId] = record.split(',');
-        expect(Object.keys(args.list[datastore]).includes(recordId), 'the `temporaryList` in session storage should contain the unselected record').to.be.true;
-      });
-
-      // Call the function
-      deleteSelectedRecords(args);
-
-      // Check that the temporary list still contains the unselected record(s)
-      unselectedRecords.forEach((record) => {
-        const [datastore, recordId] = record.split(',');
-        expect(Object.keys(args.list[datastore]).includes(recordId), 'the `temporaryList` in session storage should still contain the unselected record').to.be.true;
-      });
+    it('should call `toggleRemoveSelectedButton` with `disabled` set to `false` and the original text', function () {
+      expect(toggleRemoveSelectedButtonSpy.calledWith({ button: args.removeSelectedButton, disabled: false, text: originalText }), '`toggleRemoveSelectedButton` should be called with `disabled` set to `false` and the original text').to.be.true;
     });
 
-    it('should call `setList` function to update session storage', function () {
-      // Call the function
-      deleteSelectedRecords(args);
+    it('should call `deleteSelectedRecords` with the correct arguments', function () {
+      expect(deleteSelectedRecordsStub.calledWith({ list: args.list }), '`deleteSelectedRecords` should be called with the correct arguments').to.be.true;
+    });
 
-      // Check that the spy was called
-      expect(setListSpy.calledOnce, '`setList` function should be called once').to.be.true;
+    it('should call `setTemporaryList` with the correct arguments', function () {
+      expect(setTemporaryListSpy.calledWith(deleteSelectedRecordsStub.returnValues[0]), '`setTemporaryList` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `displayRemoveSelectedAction` with the correct arguments', function () {
+      expect(displayRemoveSelectedActionSpy.calledWith({ list: deleteSelectedRecordsStub.returnValues[0] }), '`displayRemoveSelectedAction` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should not call `reloadPage` if `viewingList` is `false`', function () {
+      // Check that `viewingList` is `false`
+      expect(args.viewingList, '`viewingList` should be `false`').to.be.false;
+
+      // Check that `reloadPage` was not called
+      expect(reloadPageSpy.notCalled, '`reloadPage` should not be called').to.be.true;
+    });
+
+    it('should call `reloadPage` if `viewingList` is `true`', function () {
+      // Check that `viewingList` is `true`
+      args.viewingList = true;
+      expect(args.viewingList, '`viewingList` should be `true`').to.be.true;
+
+      // Call the function again
+      handleRemoveSelectedClick(args);
+
+      // Click the button again
+      args.removeSelectedButton.click();
+
+      // Check that `reloadPage` was called
+      expect(reloadPageSpy.calledOnce, '`reloadPage` should be called once').to.be.true;
     });
   });
 
   describe('removeSelectedAction()', function () {
-    let deleteRecordsSpy = null;
-    let reloadPageSpy = null;
+    let handleRemoveSelectedClickSpy = null;
     let args = null;
 
     beforeEach(function () {
-      deleteRecordsSpy = sinon.spy();
-      reloadPageSpy = sinon.spy();
+      handleRemoveSelectedClickSpy = sinon.spy();
       args = {
         button: getRemoveSelectedButton(),
-        deleteRecords: deleteRecordsSpy,
-        list: getTemporaryList(),
-        reloadPage: reloadPageSpy
+        handleRemoveSelected: handleRemoveSelectedClickSpy,
+        list: global.temporaryList
       };
 
       // Call the function
       removeSelectedAction(args);
-
-      // Click the button
-      args.button.click();
     });
 
     afterEach(function () {
-      deleteRecordsSpy = null;
-      reloadPageSpy = null;
+      handleRemoveSelectedClickSpy = null;
       args = null;
     });
 
-    it('should call `deleteRecords` function with the correct arguments when the button is clicked', function () {
-      // Check that the spy was called with the correct argument
-      expect(deleteRecordsSpy.calledWithExactly({ list: args.list }), '`deleteRecords` function should be called with the correct arguments').to.be.true;
-    });
+    it('should add a click event listener to the button that calls `handleRemoveSelectedClick` with the correct arguments', function () {
+      // Simulate a click event on the button
+      const event = new window.Event('click');
+      args.button.dispatchEvent(event);
 
-    describe('reloadPage', function () {
-      it('should not call `reloadPage` function if not currently viewing My Temporary List', function () {
-        // Check that Temporary List is not being viewed
-        expect(viewingTemporaryList(), 'the current pathname should not be `/everything/list`').to.be.false;
-
-        // Check that the spy was not called
-        expect(reloadPageSpy.notCalled, '`reloadPage` function should not be called if not currently viewing My Temporary List').to.be.true;
-      });
-
-      it('should call `reloadPage` function when the button is clicked if currently viewing My Temporary List', function () {
-        // Save the original window object
-        const originalWindow = global.window;
-
-        // Setup JSDOM with an updated URL
-        const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
-          url: 'http://localhost/everything/list'
-        });
-
-        // Override the global window object
-        global.window = dom.window;
-
-        // Check that Temporary List is being viewed
-        expect(viewingTemporaryList(), 'the current pathname should be `/everything/list`').to.be.true;
-
-        // Call the function again
-        removeSelectedAction(args);
-
-        // Click the button again
-        args.button.click();
-
-        // Check that the spy was called
-        expect(reloadPageSpy.calledOnce, 'reloadPage function should be called once').to.be.true;
-
-        // Restore the original window object
-        global.window = originalWindow;
-      });
+      // Check that `handleRemoveSelectedClick` was called with the correct arguments
+      expect(handleRemoveSelectedClickSpy.calledWith({ event, list: args.list }), '`handleRemoveSelectedClick` should be called with the correct arguments').to.be.true;
     });
   });
 
   describe('removeSelected()', function () {
-    let removeSelectedActionSpy = null;
     let displayRemoveSelectedActionSpy = null;
+    let removeSelectedActionSpy = null;
     let args = null;
 
     beforeEach(function () {
-      removeSelectedActionSpy = sinon.spy();
       displayRemoveSelectedActionSpy = sinon.spy();
+      removeSelectedActionSpy = sinon.spy();
       args = {
-        list: getTemporaryList(),
-        removeAction: removeSelectedActionSpy,
-        toggleAction: displayRemoveSelectedActionSpy
+        displayRemoveAction: displayRemoveSelectedActionSpy,
+        list: global.temporaryList,
+        removeAction: removeSelectedActionSpy
       };
 
       // Call the function
@@ -349,19 +364,17 @@ describe('remove selected', function () {
     });
 
     afterEach(function () {
-      removeSelectedActionSpy = null;
       displayRemoveSelectedActionSpy = null;
+      removeSelectedActionSpy = null;
       args = null;
     });
 
-    it('should call `displayRemoveSelectedAction` function with the correct arguments', function () {
-      // Check that the spy was called with the correct argument
-      expect(displayRemoveSelectedActionSpy.calledWithExactly({ list: args.list }), '`displayRemoveSelectedAction` function should be called with the correct arguments').to.be.true;
+    it('should call `displayRemoveSelectedAction` with the correct arguments', function () {
+      expect(displayRemoveSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`displayRemoveSelectedAction` should be called with the correct arguments').to.be.true;
     });
 
-    it('should call `removeSelectedAction` function with the correct arguments', function () {
-      // Check that the spy was called with the correct argument
-      expect(removeSelectedActionSpy.calledWithExactly({ list: args.list }), '`removeSelectedAction` function should be called with the correct arguments').to.be.true;
+    it('should call `removeSelectedAction` with the correct arguments', function () {
+      expect(removeSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`removeSelectedAction` should be called with the correct arguments').to.be.true;
     });
   });
 });
