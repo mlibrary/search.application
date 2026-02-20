@@ -4,7 +4,7 @@
     <ul class="filters__active--list list__no-style">
       <% @presenter.active_filters.each do |filter| %>
         <li class="filters__active--item">
-          <%= link_to(body: "<span class=\"filters__active--link-text\">#{filter.text}</span>", url: filter.url, classes: ["filters__active--link"]) %>
+          <%= link_to(body: "<span class=\"filters__active--link-text\">#{filter}</span>", url: filter.url, classes: ["filters__active--link"]) %>
         </li>
       <% end %>
     </ul>

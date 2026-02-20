@@ -78,7 +78,7 @@ module Search::Presenters
   def self.for_datastore_results(slug:, uri:, patron: nil)
     datastore = Search::Datastores.find(slug)
     params = URI.decode_www_form(uri.query.to_s)&.to_h
-    filters = [
+    all_filters = [
       {
         uid: "availability",
         name: "Availability",
@@ -162,42 +162,21 @@ module Search::Presenters
         ]
       }
     ].map do |filter|
-      filter.options.map do |option|
+      filter[:options].map do |option|
         Search::Presenters::Results::Filter.for(
           uri: uri, uid: filter[:uid], value: option[:value], count: option[:count]
         )
       end
     end
-    # ].map do |filter|
-    # options = filter[:options].map do |option|
-    # url = add_param(uri: uri, uid: filter[:uid], value: option[:value], prefix: "filter")
-    # OpenStruct.new(**option, url: url)
-    # end
-    # OpenStruct.new(
-    # uid: filter[:uid],
-    # name: filter[:name],
-    # options: options
-    # )
-    # end
+    active_filters = all_filters.flatten.select { |x| x.active? }
 
-    active_filters = [
-      {
-        text: "Availability: Physical",
-        url: remove_param(uri: uri, uid: "availability", value: "Physical", prefix: "filter") # this needs to remove the filter param and the page if it's there
-      },
-      {
-        text: "Format: Book",
-        url: remove_param(uri: uri, uid: "format", value: "Book", prefix: "filter") # this needs to remove the filter param and the page if it's there
-      }
-    ].map { |x| OpenStruct.new(**x) }
+    filters = all_filters.map do |group|
+      first = group.first
+      OpenStruct.new(uid: first.uid, name: first.group_name, options: group.reject { |x| x.active? })
+    end
 
-    # These will submit a form.
     boolean_filters = [
-      {
-        uid: "search_only",
-        label: "View HathiTrust search-only materials",
-        value: false
-      }
+      OpenStruct.new(uid: "search_only", label: "View HathiTrust search-only materials", checked?: false)
     ]
 
     OpenStruct.new(

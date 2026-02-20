@@ -1,6 +1,6 @@
 <% if @presenter.boolean_filters.any? %>
   <form class="filter__checkboxes" method="get" action="/<%= @presenter.current_datastore %>">
-    <% @presenter.boolean_filters.each do |key, filter| %>
+    <% @presenter.boolean_filters.each do | filter| %>
       <label class="checkbox filter__checkbox">
         <input type="checkbox" name="<%= filter.uid %>" value="<%= filter.value %>" <%= "checked" if filter.checked? %>>
         <%= filter.label %>
