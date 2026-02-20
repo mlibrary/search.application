@@ -163,17 +163,22 @@ module Search::Presenters
       options = filter[:options].map do |option|
         OpenStruct.new(**option)
       end
-      OpenStruct.new(uid: filter[:uid], name: filter[:name], options: options, url: uri)
+      OpenStruct.new(
+        uid: filter[:uid],
+        name: filter[:name],
+        options: options,
+        url: add_param(uri: uri, uid: filter[:uid], value: filter[:name], prefix: "filter")
+      )
     end
 
     active_filters = [
       {
         text: "Availability: Physical",
-        url: uri # this needs to remove the filter param and the page if it's there
+        url: remove_param(uri: uri, uid: "availability", value: "Physical", prefix: "filter") # this needs to remove the filter param and the page if it's there
       },
       {
         text: "Format: Book",
-        url: uri # this needs to remove the filter param and the page if it's there
+        url: remove_param(uri: uri, uid: "format", value: "Book", prefix: "filter") # this needs to remove the filter param and the page if it's there
       }
     ].map { |x| OpenStruct.new(**x) }
 
