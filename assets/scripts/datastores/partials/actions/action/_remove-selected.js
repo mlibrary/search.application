@@ -10,8 +10,8 @@ const getRemoveSelectedButton = () => {
 };
 
 const deleteSelectedRecordsTest = ({ checkboxValues = filterSelectedRecords(), list, removeClass = toggleAddedClass, splitValue = splitCheckboxValue }) => {
-  // Create a shallow copy of the list to update
-  const updatedList = { ...list };
+  // Create a deep copy of the list to prevent mutating the original list
+  const updatedList = JSON.parse(JSON.stringify(list));
 
   // Loop through the selected record values
   checkboxValues.forEach((value) => {
