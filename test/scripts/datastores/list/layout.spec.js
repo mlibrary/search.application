@@ -10,6 +10,7 @@ import {
   nonEmptyDatastores,
   setTemporaryList,
   temporaryList,
+  temporaryListCount,
   toggleListElements,
   viewingTemporaryList
 } from '../../../../assets/scripts/datastores/list/layout.js';
@@ -80,9 +81,9 @@ describe('layout', function () {
         expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
       });
 
-      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "undefined"', function () {
-        // Assign "undefined"
-        getTemporaryListStub.withArgs(listName).returns('undefined');
+      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "null"', function () {
+        // Assign "null"
+        getTemporaryListStub.withArgs(listName).returns('null');
 
         // Assign the result
         const result = getTemporaryList();
@@ -91,9 +92,9 @@ describe('layout', function () {
         expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
       });
 
-      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "null"', function () {
-        // Assign "null"
-        getTemporaryListStub.withArgs(listName).returns('null');
+      it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns "undefined"', function () {
+        // Assign "undefined"
+        getTemporaryListStub.withArgs(listName).returns('undefined');
 
         // Assign the result
         const result = getTemporaryList();
@@ -116,6 +117,17 @@ describe('layout', function () {
       it('should return `defaultTemporaryList` if `sessionStorage.getItem` returns invalid JSON', function () {
         // Assign invalid JSON
         getTemporaryListStub.withArgs(listName).returns('not valid json');
+
+        // Assign the result
+        const result = getTemporaryList();
+
+        // Check that the result returns `defaultTemporaryList`
+        expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
+      });
+
+      it('should return `defaultTemporaryList` if `sessionStorage` is not accessible', function () {
+        // Make `sessionStorage.getItem` throw an error
+        getTemporaryListStub.withArgs(listName).throws(new Error('`sessionStorage` is not accessible'));
 
         // Assign the result
         const result = getTemporaryList();
@@ -267,6 +279,20 @@ describe('layout', function () {
 
       // Check that the temporary list is empty
       expect(isTemporaryListEmpty(list), 'the temporary list should be empty').to.be.true;
+    });
+  });
+
+  describe('temporaryListCount()', function () {
+    it('should return a number', function () {
+      // Check that a number is always returned
+      expect(temporaryListCount(global.temporaryList), '`temporaryListCount()` should return a number').to.be.a('number');
+    });
+
+    it('should return the correct count of records in the temporary list', function () {
+      // Check that the correct count is returned
+      expect(temporaryListCount(global.temporaryList), '`temporaryListCount()` should return the correct count of records in the temporary list').to.equal(Object.values(global.temporaryList).reduce((sum, datastore) => {
+        return sum + Object.keys(datastore).length;
+      }, 0));
     });
   });
 

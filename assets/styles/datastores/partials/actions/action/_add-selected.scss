@@ -6,6 +6,7 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Tab
+//   3. Record
 //
 // --------------------------------------------------
 
@@ -23,10 +24,21 @@ $class: "add-selected";
 // *** 2. TAB *** //
 // ************** //
 
-body, // Remove this line when JavaScript is enabled
 body.no-javascript {
   button#actions__#{$class},
   #actions__#{$class}--tabpanel {
     display: none;
   }
+}
+
+
+
+
+
+// ***************** //
+// *** 3. RECORD *** //
+// ***************** //
+
+.record__container--in-temporary-list {
+  outline: 2px solid var(--search-color-blue-300);
 }

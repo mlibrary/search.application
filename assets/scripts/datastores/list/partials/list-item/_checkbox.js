@@ -39,24 +39,19 @@ const splitCheckboxValue = ({ value }) => {
   return { recordDatastore, recordId };
 };
 
-const selectedCitations = ({ filteredValues = filterSelectedRecords(), list, splitValue = splitCheckboxValue, type }) => {
-  // Make sure `type` is either `csl` or `ris`
-  if (!type || !['csl', 'ris'].includes(type)) {
-    return null;
-  }
-
-  // Create an array of the citation type of all selected records
-  return filteredValues.map((value) => {
-    const { recordDatastore, recordId } = splitValue({ value });
-    return list[recordDatastore][recordId].citation[type];
+const checkboxChangeHandler = ({ checkboxes = getCheckboxes(), func, ...args }) => {
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', () => {
+      func({ ...args });
+    });
   });
 };
 
 export {
+  checkboxChangeHandler,
   filterSelectedRecords,
   getCheckboxes,
   getCheckedCheckboxes,
-  selectedCitations,
   someCheckboxesChecked,
   splitCheckboxValue,
   toggleCheckedState
