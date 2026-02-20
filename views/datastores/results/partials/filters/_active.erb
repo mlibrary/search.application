@@ -9,7 +9,7 @@
       <% end %>
     </ul>
     <% if @presenter.active_filters.size > 1 %>
-      <p><%= link_to(body: "Clear all active filters", url: @presenter.active_filters.clear_url, classes: ["filters__active--clear"]) %></p>
+      <p><%= link_to(body: "Clear all active filters", url: @presenter.clear_filters_url, classes: ["filters__active--clear"]) %></p>
     <% end %>
   </div>
 <% end %>

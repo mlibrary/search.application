@@ -96,7 +96,8 @@ module Search::Presenters
           {value: "Music", count: 1234},
           {value: "Video", count: 987},
           {value: "Map", count: 456},
-          {value: "Manuscript", count: 321}
+          {value: "Manuscript", count: 321},
+          {value: "Audio (music)", count: 321}
         ]
       },
       {
@@ -205,7 +206,8 @@ module Search::Presenters
       page_title: datastore.title,
       active_filters: active_filters,
       boolean_filters: boolean_filters,
-      filters: filters
+      filters: filters,
+      clear_filters_url: uri # this is wrong
     )
   end
 
