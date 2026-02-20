@@ -1,40 +1,17 @@
 <% @presenter.filters.each_with_index do |filter, index| %>
   <details <%= "open" if index < 5 %> class="filter__details">
     <summary class="filter__details--category">
-      <h3 class="h5"><%= filter[:name] %></h3>
+      <h3 class="h5"><%= filter.name %></h3>
     </summary>
     <div class="filter__details--content">
-      <ul id="filter__toggle--<%= filter[:uid] %>" class="list__no-style filter__details--options">
-        <%
-          # Sort filters by count in descending order
-          options = filter[:options].sort_by { |option| -option[:count] }
-          options.each do |option|
-            uri = URI.parse(request.fullpath)
-            params_hash = CGI.parse(uri.query.to_s)
-
-            # Remove "page" param to avoid issues with pagination when applying filters
-            params_hash.delete("page")
-
-            param_key = "filter.#{filter[:uid]}"
-
-            # Start with the existing values (or empty array)
-            existing_values = params_hash[param_key] || []
-
-            # Add the new option value (for multi-select you may want to check for duplicates)
-            new_values = existing_values + [option[:value]]
-
-            # Update the params hash; this will include all current values plus the new one
-            params_hash[param_key] = new_values
-
-            # Apply changes to the URL
-            new_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
-          %>
+      <ul id="filter__toggle--<%= filter.uid %>" class="list__no-style filter__details--options">
+        <% filter.options.each do |option| %>
           <li class="filter__details--option">
-            <%= link_to(body: "<span class=\"filter__details--option-value\">#{option[:value]}</span> <span class=\"filter__details--option-count\">#{option[:count]}</span>", url: new_url, classes: ["underline__none"]) %>
+            <%= link_to(body: "<span class=\"filter__details--option-value\">#{option.value}</span> <span class=\"filter__details--option-count\">#{option.count}</span>", url: option.url, classes: ["underline__none"]) %>
           </li>
         <% end %>
       </ul>
-      <%= erb :"datastores/partials/_toggle", locals: {classes: ["filter__details--toggle"], id: "filter__toggle--#{filter[:uid]}", count: 5, postfix: "#{filter[:name]} filters"} %>
+      <%= erb :"datastores/partials/_toggle", locals: {classes: ["filter__details--toggle"], id: "filter__toggle--#{filter.uid}", count: 5, postfix: "#{filter.name} filters"} %>
     </div>
   </details>
 <% end %>
