@@ -1,7 +1,7 @@
 import { cslData, displayCSLData, getCSLTextarea } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
 import { expect } from 'chai';
 import { nonEmptyDatastores } from '../../../../../../../assets/scripts/datastores/list/layout.js';
-import { selectedCitations } from '../../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { selectedCitations } from '../../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import sinon from 'sinon';
 
 let temporaryListHTML = '';

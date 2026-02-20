@@ -59,18 +59,20 @@ const disableActionTabs = () => {
   });
 };
 
-const copyToClipboard = ({ alert, text }) => {
-  if (alert) {
-    alert.style.display = 'block';
-  }
-  return navigator.clipboard.writeText(text);
+const toggleTabDisplay = ({ id, show }) => {
+  const tab = document.querySelector(`#${id}`);
+  const tabPanel = document.querySelector(`#${tab.getAttribute('aria-controls')}`);
+
+  tab.style.display = show ? 'flex' : 'none';
+  tab.setAttribute('aria-selected', show ? tab.getAttribute('aria-selected') : 'false');
+  tabPanel.style.display = tab.getAttribute('aria-selected') === 'true' ? 'block' : 'none';
 };
 
 export {
   changeAlert,
-  copyToClipboard,
   disableActionTabs,
   getTabPanel,
   isSelected,
-  tabControl
+  tabControl,
+  toggleTabDisplay
 };

@@ -1,3 +1,4 @@
+import { filterSelectedRecords, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
 import { attachTheCitations } from './citation/tabpanel/_textbox.js';
 import { copyCitation } from './citation/_copy-citation.js';
 import CSL from 'citeproc';
@@ -6,6 +7,19 @@ import { getActiveCitationTab } from './citation/_tablist.js';
 import { tabControl } from '../../_actions.js';
 
 const citationFileCache = {};
+
+const selectedCitations = ({ filteredValues = filterSelectedRecords(), list, splitValue = splitCheckboxValue, type }) => {
+  // Make sure `type` is either `csl` or `ris`
+  if (!type || !['csl', 'ris'].includes(type)) {
+    return null;
+  }
+
+  // Create an array of the citation type of all selected records
+  return filteredValues.map((value) => {
+    const { recordDatastore, recordId } = splitValue({ value });
+    return list[recordDatastore][recordId].citation[type];
+  });
+};
 
 const fetchCitationFileText = (style, fileCache = citationFileCache) => {
   const filePath = `/citations/${style ? `${style}.csl` : 'locales-en-US.xml'}`;
@@ -194,6 +208,7 @@ export {
   initializeCitations,
   regenerateCitations,
   retrieveItem,
+  selectedCitations,
   systemObject,
   updateAndAttachCitations,
   updateCitations

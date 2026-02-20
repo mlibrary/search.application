@@ -11,18 +11,33 @@ import {
   initializeCitations,
   regenerateCitations,
   retrieveItem,
+  selectedCitations,
   systemObject,
   updateAndAttachCitations,
   updateCitations
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
+import { filterSelectedRecords, getCheckedCheckboxes, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
 import { getActiveCitationTab } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
+import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
 
 const cslExample = `[{"id":"990052871530106381","type":"song","title":"The Da Vinci code /","edition":"Abridged.","ISBN":["9780739339787","0739339788","9780307879257","0307879259"],"call-number":"PS 3552 .R792 D2 2003b","publisher-place":"New York :","publisher":"Random House Audio,","issued":{"literal":"2003"},"author":[{"family":"Brown","given":"Dan,"},{"family":"Michael","given":"Paul."}]},{"id":"990006758990106381","type":"article-journal","title":"Birds.","ISSN":["0006-3665"],"call-number":"QL671 .B678","publisher-place":"Sandy, Bedfordshire, Eng. :","publisher":"Royal Society for the Protection of Birds","issued":{"literal":"1966-2013"},"author":[{"literal":"Royal Society for the Protection of Birds."}],"number":"v. 1- Jan./Feb. 1966-"},{"id":"990038939650106381","type":"motion_picture","title":"Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /","call-number":"VIDEO-D 36841-D","publisher-place":"New York, NY :","publisher":"Kino on Video,","issued":{"literal":"2003"},"author":[{"family":"Miike","given":"Takashi,"},{"family":"Nakamura","given":"Masa."},{"family":"Masuda","given":"Yoshihiro."},{"family":"Okada","given":"Makoto."},{"family":"Kimura","given":"Toshiki."},{"family":"Aikawa","given":"Shō,"},{"family":"Takeuchi","given":"Riki."},{"family":"Chen","given":"Guanxi,"},{"family":"Endō","given":"Ken'ichi,"},{"literal":"Teah."},{"literal":"Daiē, Kabushiki Kaisha."},{"literal":"Tōei Bideo Kabushiki Kaisha."},{"literal":"Kino International Corporation."}]}]`;
 const parsedCSL = JSON.parse(cslExample);
 const cslIDs = parsedCSL.map((csl) => {
   return csl.id;
+});
+
+let temporaryListHTML = '';
+nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
+  const recordIds = Object.keys(global.temporaryList[datastore]);
+  recordIds.forEach((recordId, index) => {
+    temporaryListHTML += `
+      <div class="record__container" data-record-id="${recordId}" data-record-datastore="${datastore}">
+        <input type="checkbox" class="list__item--checkbox" value="${datastore},${recordId}" ${index === 0 ? 'checked' : ''}>
+      </div>
+    `;
+  });
 });
 
 describe('citation', function () {
@@ -52,6 +67,9 @@ describe('citation', function () {
       <div id="citation__apa--tabpanel" role="tabpanel">
         <div role="textbox"></div>
       </div>
+      <ol class="list__items">
+        ${temporaryListHTML}
+      </ol>
     `;
 
     citationSpy = sinon.spy();
@@ -69,6 +87,53 @@ describe('citation', function () {
     citationSpy = null;
     getTabList = null;
     getTab = null;
+  });
+
+  describe('selectedCitations()', function () {
+    let splitValueSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      splitValueSpy = sinon.spy(splitCheckboxValue);
+      args = {
+        filteredValues: filterSelectedRecords(),
+        list: global.temporaryList,
+        splitValue: splitValueSpy,
+        type: 'csl'
+      };
+    });
+
+    afterEach(function () {
+      splitValueSpy = null;
+      args = null;
+    });
+
+    it('should return `null` if no type is provided', function () {
+      expect(selectedCitations({ list: args.list }), 'the return should be `null` if no type is provided').to.be.null;
+    });
+
+    it('should return `null` if the incorrect type is provided', function () {
+      expect(selectedCitations({ ...args, type: 'wrong type' }), 'the return should be `null` if the incorrect type is provided').to.be.null;
+    });
+
+    it('should call `splitCheckboxValue` with the correct arguments', function () {
+      // Call the function
+      selectedCitations(args);
+
+      // Check that `splitCheckboxValue` was called with the correct arguments
+      expect(splitValueSpy.calledWithExactly({ value: getCheckedCheckboxes()[0].value }), '`splitCheckboxValue` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should return an array', function () {
+      expect(selectedCitations(args), '`selectedCitations(type)` should return an array').to.be.an('array');
+    });
+
+    it('should return the correct citation type', function () {
+      ['csl', 'ris'].forEach((type) => {
+        const { recordDatastore, recordId } = splitCheckboxValue({ value: getCheckedCheckboxes()[0].value });
+        expect(selectedCitations({ ...args, type })[0], `\`citation.${type}\` values should be returned for each selected record`).to.deep.equal(global.temporaryList[recordDatastore][recordId].citation[type]);
+      });
+    });
   });
 
   describe('fetchCitationFileText()', function () {

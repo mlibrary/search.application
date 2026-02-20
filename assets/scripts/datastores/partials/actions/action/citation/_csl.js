@@ -1,4 +1,4 @@
-import { selectedCitations } from '../../../../list/partials/list-item/_checkbox.js';
+import { selectedCitations } from '../_citation.js';
 
 const getCSLTextarea = () => {
   return document.querySelector('.citation textarea.citation__csl');

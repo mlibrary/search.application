@@ -1,4 +1,4 @@
-import { selectedCitations } from '../../../list/partials/list-item/_checkbox.js';
+import { selectedCitations } from './_citation.js';
 import { viewingTemporaryList } from '../../../list/layout.js';
 
 const generateRISFileName = () => {

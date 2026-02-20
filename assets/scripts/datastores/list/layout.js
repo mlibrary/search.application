@@ -79,6 +79,12 @@ const isTemporaryListEmpty = (list) => {
   return true;
 };
 
+const temporaryListCount = (list) => {
+  return Object.values(list).reduce((sum, datastore) => {
+    return sum + Object.keys(datastore).length;
+  }, 0);
+};
+
 const nonEmptyDatastores = (list) => {
   return Object.keys(list).filter((datastore) => {
     return Object.keys(list[datastore]).length > 0;
@@ -206,6 +212,7 @@ export {
   nonEmptyDatastores,
   setSessionStorage,
   temporaryList,
+  temporaryListCount,
   toggleListElements,
   viewingTemporaryList
 };
