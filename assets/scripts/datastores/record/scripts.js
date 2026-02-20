@@ -15,6 +15,9 @@ import toggleTruncatedText from './partials/_title.js';
 // Get the temporary list from session storage
 const list = getSessionStorage({ defaultValue: defaultTemporaryList, itemName: 'temporaryList' });
 
+// Show My Temporary List banner
+toggleBanner({ list });
+
 // Actions panel
 tabControl('.actions');
 
@@ -35,9 +38,6 @@ addSelected({ list });
 
 // Remove from My Temporary List
 removeSelected({ list });
-
-// Show My Temporary List banner
-toggleBanner({ list });
 
 // Record Title
 toggleTruncatedText();
