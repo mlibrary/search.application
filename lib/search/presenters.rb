@@ -199,15 +199,7 @@ module Search::Presenters
   end
 
   def self.for_404_page(uri:, patron:)
-    OpenStruct.new(
-      title: title(["404", "Page not found"]),
-      description: "Page not found (404) at University of Michigan Library. Return to the homepage, search by title/keyword, browse all Databases or Online Journals, or ask a librarian for assistance in locating resources.",
-      icons: Icons.new,
-      styles: ["styles.css", "pages/styles.css"],
-      scripts: ["scripts.js", "partials/scripts.js"],
-      search_options: SearchOptions.new(datastore_slug: "everything", uri: uri),
-      affiliations: Affiliations.new(current_affiliation: patron.affiliation)
-    )
+    Presenter::StaticPage.for(slug: "404", uri: uri, patron: patron)
   end
 
   def self.add_param(uri:, uid:, value:, prefix: nil)
