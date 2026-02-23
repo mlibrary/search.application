@@ -152,7 +152,7 @@ class Search::Application < Sinatra::Base
     if datastore.slug == "everything"
       get "/#{datastore.slug}/list" do
         # headers "metrics.datastore" => datastore.slug, "metrics.route" => "list"
-        @presenter = Search::Presenters.for_datastore_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+        @presenter = Search::Presenters.for_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
         erb :"datastores/list/layout", layout: :layout do
           erb :"datastores/list/#{datastore.slug}"
         end

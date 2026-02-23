@@ -27,7 +27,7 @@ module Search::Presenters
     Page::DatastoreResultsPage.for(slug: slug, uri: uri, patron: patron)
   end
 
-  def self.for_datastore_list(slug:, uri:, patron: nil)
+  def self.for_list(slug:, uri:, patron: nil)
     Page::List.for(uri: uri, patron: patron)
   end
 

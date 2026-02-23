@@ -116,7 +116,8 @@ class Search::Presenters::Page
     CURRENT_PAGE = "My Temporary List"
     EXTRA_ICONS = ["mail", "chat", "format_quote", "draft", "add", "delete"]
     def self.for(uri:, patron:)
-      self.for(slug: "everything", uri: uri, patron: patron)
+      datastore = Search::Datastores.find("everything")
+      new(datastore: datastore, uri: uri, patron: patron)
     end
 
     def styles
