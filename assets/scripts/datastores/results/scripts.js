@@ -11,8 +11,8 @@ import { removeSelected } from '../partials/actions/action/_remove-selected.js';
 import { selectAll } from '../partials/_select-all.js';
 import { sortResults } from './partials/summary/_sort.js';
 import { tabControl } from '../partials/_actions.js';
+import { temporaryListBanner } from '../list/partials/_go-to.js';
 import { textAction } from '../partials/actions/action/_text.js';
-import { toggleBanner } from '../list/partials/_go-to.js';
 import { toggleItems } from '../partials/_toggle.js';
 
 // Get the temporary list from session storage
@@ -34,7 +34,7 @@ toggleItems();
 sortResults();
 
 // Show My Temporary List banner
-toggleBanner({ list });
+temporaryListBanner({ list });
 
 // Actions panel
 tabControl('.actions');
