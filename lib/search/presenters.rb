@@ -11,12 +11,6 @@ require "search/presenters/search_options"
 require "search/presenters/presenter"
 
 module Search::Presenters
-  def self.title(titles = [])
-    @titles = titles
-    @titles.push("Library Search")
-    @titles.join(" - ")
-  end
-
   def self.static_page_slugs
     Presenter::StaticPage.slugs
   end
