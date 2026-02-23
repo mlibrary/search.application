@@ -5,14 +5,13 @@ require "webmock/rspec"
 require "httpx/adapters/webmock"
 require "simplecov"
 require "faker"
-require "sidekiq/testing"
-Sidekiq::Testing.fake!
 SimpleCov.start
 
 ENV["APP_ENV"] = "test"
 require_relative "factories"
 require_relative "../app"
 OmniAuth.config.test_mode = true
+Sidekiq.testing!(:fake)
 
 module RSpecMixin
   include Rack::Test::Methods
