@@ -1,6 +1,6 @@
 class Search::Presenters::Presenter
   attr_reader :slug, :description
-  def initialize(title:, description:, slug:, datastore:, uri:, patron:)
+  def initialize(slug:, datastore:, uri:, patron:, title: nil, description: nil)
     @title = title
     @description = description
     @slug = slug
@@ -55,6 +55,35 @@ class Search::Presenters::Presenter
     def self.for(slug:, uri:, patron:)
       STATIC_PAGES.find { |x| x[:slug] == slug }
       new(**page, datastore: :everything, uri: uri, patron: patron)
+    end
+  end
+
+  class DatastoreStaticPage < self
+    def initialize(slug:, datastore:, uri:, patron:, title: nil, description: nil)
+      super
+      @title = self.datastore.title
+      @description = self.datastore.description
+    end
+
+    def styles
+      ["styles.css", "datastores/styles.css"]
+    end
+
+    def datastore
+      Search::Datastores.find(@datastore)
+    end
+
+    def flint_message
+      datastore.flint_message(campus: @patron.campus, page_param: params["page"])
+    end
+
+    def page_title
+    end
+
+    private
+
+    def params
+      Addressable::URI.parse(@uri).query_values || {}
     end
   end
 end

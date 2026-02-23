@@ -23,22 +23,7 @@ module Search::Presenters
 
   # is this for langing pages?
   def self.for_datastore(slug:, uri:, patron: nil)
-    datastore = Search::Datastores.find(slug)
-    params = URI.decode_www_form(uri.query.to_s)&.to_h
-
-    OpenStruct.new(
-      title: title([datastore.title]),
-      current_datastore: slug,
-      description: datastore.description,
-      icons: Icons.new,
-      slug: datastore.slug,
-      styles: ["styles.css", "datastores/styles.css"],
-      scripts: ["scripts.js", "partials/scripts.js"],
-      search_options: SearchOptions.new(datastore_slug: slug, uri: uri),
-      affiliations: Affiliations.new(current_affiliation: patron.affiliation),
-      flint_message: datastore.flint_message(campus: patron.campus, page_param: params["page"]),
-      page_title: datastore.title
-    )
+    Presenter::DatastoreStaticPage.new(slug: slug, uri: uri, patron: patron, datastore: slug)
   end
 
   def self.for_datastore_record(slug:, uri:, patron:, record_id:)
