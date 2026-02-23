@@ -15,7 +15,7 @@ const checkboxValues = Object.entries(nonEmptyDatastores(global.temporaryList)).
   });
 });
 const temporaryListHTML = checkboxValues.map((value, index) => {
-  return `<input type="checkbox" class="list__item--checkbox" value="${value}" ${index === 0 ? 'checked' : ''}>`;
+  return `<input type="checkbox" class="record__checkbox" value="${value}" ${index === 0 ? 'checked' : ''}>`;
 }).join('');
 
 describe('email', function () {

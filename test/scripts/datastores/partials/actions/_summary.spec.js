@@ -15,11 +15,11 @@ describe('summary', function () {
         <small>Select what to do with this record.</small>
       </div>
       <ol class="list__items">
-        <li><input type="checkbox" class="list__item--checkbox" value="rec1" checked></li>
-        <li><input type="checkbox" class="list__item--checkbox" value="rec2"></li>
-        <li><input type="checkbox" class="list__item--checkbox" value="rec3"></li>
-        <li><input type="checkbox" class="list__item--checkbox" value="rec4" checked></li>
-        <li><input type="checkbox" class="list__item--checkbox" value="rec5"></li>
+        <li><input type="checkbox" class="record__checkbox" value="rec1" checked></li>
+        <li><input type="checkbox" class="record__checkbox" value="rec2"></li>
+        <li><input type="checkbox" class="record__checkbox" value="rec3"></li>
+        <li><input type="checkbox" class="record__checkbox" value="rec4" checked></li>
+        <li><input type="checkbox" class="record__checkbox" value="rec5"></li>
       </ol>
     `;
 
@@ -84,7 +84,7 @@ describe('summary', function () {
 
       it('should use singular text when one record is selected', function () {
         // Uncheck all but one checkbox
-        document.querySelectorAll('input[type="checkbox"].list__item--checkbox').forEach((checkbox, index) => {
+        document.querySelectorAll('input[type="checkbox"].record__checkbox').forEach((checkbox, index) => {
           // Only check the first checkbox
           checkbox.checked = index === 0;
         });
@@ -101,7 +101,7 @@ describe('summary', function () {
 
       it('should use default text when no records are selected', function () {
         // Uncheck all checkboxes
-        document.querySelectorAll('input[type="checkbox"].list__item--checkbox').forEach((checkbox) => {
+        document.querySelectorAll('input[type="checkbox"].record__checkbox').forEach((checkbox) => {
           checkbox.checked = false;
         });
 

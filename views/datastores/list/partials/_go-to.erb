@@ -1,6 +1,10 @@
-<div class="list__go-to list__go-to--empty">
-  <p>
-    Go to <%= link_to(body: "My Temporary List", url: "/everything/list") %> to email, text, and export citations.
-  </p>
-  <%= erb :'datastores/list/partials/_in-list' %>
+<div class="hide__no-javascript list__go-to list__go-to--empty">
+  <div class="content">
+    <p>
+      Go to <%= link_to(body: "My Temporary List", url: "/everything/list") %> to email, text, and export citations.
+    </p>
+  </div>
+  <div class="list__go-to--count">
+    <span class="strong">0</span> in list
+  </div>
 </div>

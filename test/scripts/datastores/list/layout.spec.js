@@ -472,7 +472,7 @@ describe('layout', function () {
         <div class="list"></div>
         <li class="container__rounded list__item list__item--clone">
           <div class="list__item--header">
-            <input type="checkbox" class="list__item--checkbox" value="" aria-label="Select record">
+            <input type="checkbox" class="record__checkbox" value="" aria-label="Select record">
             <h3 class="list__item--title">
               <span class="list__item--title-number">0.</span>
               <a href="http://example.com/" class="list__item--title-original">
@@ -538,10 +538,8 @@ describe('layout', function () {
     beforeEach(function () {
       document.body.innerHTML = `
         <div class="list">
-          <input type="checkbox" class="list__item--checkbox" />
-          <div class="select-all">
-            <input type="checkbox" />
-          </div>
+          <input type="checkbox" class="record__checkbox" />
+          <input type="checkbox" class="select-all__checkbox" />
         </div>
       `;
 
@@ -551,8 +549,7 @@ describe('layout', function () {
         disableActionTabs: sinon.spy(),
         displayCSLData: sinon.spy(),
         regenerateCitations: sinon.spy(),
-        selectAllState: sinon.spy(),
-        selectedText: sinon.spy()
+        selectAllCheckboxState: sinon.spy()
       };
 
       args = { actions, list: global.temporaryList };
@@ -565,11 +562,11 @@ describe('layout', function () {
       };
 
       checkbox = () => {
-        return document.querySelector('.list__item--checkbox');
+        return document.querySelector('.record__checkbox');
       };
 
       selectAll = () => {
-        return document.querySelector('.select-all > input[type="checkbox"]');
+        return document.querySelector('input[type="checkbox"].select-all__checkbox');
       };
     });
 
@@ -634,8 +631,7 @@ describe('layout', function () {
       // Create spies
       actions = {
         actionsPanelText: sinon.stub(),
-        displayCSLData: sinon.stub(),
-        selectedText: sinon.stub()
+        displayCSLData: sinon.stub()
       };
       handleChange = sinon.spy();
       args = { actions, handleChange, list: global.temporaryList };

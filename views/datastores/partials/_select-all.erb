@@ -1,0 +1,13 @@
+<%
+  item_count = defined?(count) ? count : 1
+  items_text = item_count == 1 ? "item" : "items"
+%>
+<div class="hide__no-javascript select-all">
+  <label class="select-all__label">
+    <input type="checkbox" class="select-all__checkbox">
+    Select all
+  </label>
+  <div class="select-all__count">
+    <span class="strong select-all__count--checked">0</span> out of <span class="strong select-all__count--total"><%= item_count %></span> <%= items_text %> selected.
+  </div>
+</div>

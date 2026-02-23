@@ -3,8 +3,7 @@ import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { listItem } from './partials/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
-import { selectAllState } from './partials/_select-all.js';
-import { selectedText } from './partials/_in-list.js';
+import { selectAllCheckboxState } from '../partials/_select-all.js';
 
 /* eslint-disable sort-keys */
 const defaultTemporaryList = {
@@ -149,19 +148,15 @@ const defaultActions = {
   },
   displayCSLData,
   regenerateCitations,
-  selectAllState,
-  selectedText: () => {
-    return selectedText();
-  }
+  selectAllCheckboxState
 };
 
 const handleSelectionChange = ({ actions, list }) => {
   // Watch for changes to the list and update accordingly
   document.querySelector('.list').addEventListener('change', (event) => {
-    if (event.target.matches(`input[type="checkbox"].list__item--checkbox, .select-all > input[type="checkbox"]`)) {
-      actions.selectedText();
+    if (event.target.matches(`input[type="checkbox"].record__checkbox, input[type="checkbox"].select-all__checkbox`)) {
       actions.actionsPanelText();
-      actions.selectAllState();
+      actions.selectAllCheckboxState();
       actions.disableActionTabs();
       actions.displayCSLData({ list });
       actions.regenerateCitations();
@@ -171,7 +166,6 @@ const handleSelectionChange = ({ actions, list }) => {
 
 const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChange = handleSelectionChange, list } = {}) => {
   // Update Actions panel
-  actions.selectedText();
   actions.actionsPanelText();
   actions.displayCSLData({ list });
 

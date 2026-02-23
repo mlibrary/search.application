@@ -17,11 +17,11 @@ describe('in-list', function () {
         <span class="strong">0</span> in list
       </div>
       <ol class="list__items">
-        <li><input type="checkbox" class="list__item--checkbox" value="rec1" checked></li>
-        <li><input type="checkbox" class="list__item--checkbox" value="rec2"></li>
-        <li><input type="checkbox" class="list__item--checkbox" value="rec3"></li>
-        <li><input type="checkbox" class="list__item--checkbox" value="rec4" checked></li>
-        <li><input type="checkbox" class="list__item--checkbox" value="rec5"></li>
+        <li><input type="checkbox" class="record__checkbox" value="rec1" checked></li>
+        <li><input type="checkbox" class="record__checkbox" value="rec2"></li>
+        <li><input type="checkbox" class="record__checkbox" value="rec3"></li>
+        <li><input type="checkbox" class="record__checkbox" value="rec4" checked></li>
+        <li><input type="checkbox" class="record__checkbox" value="rec5"></li>
       </ol>
     `;
 
@@ -142,7 +142,7 @@ describe('in-list', function () {
 
       it('should use singular text when one record is selected', function () {
         // Remove all but one checkbox
-        document.querySelectorAll('input[type="checkbox"].list__item--checkbox').forEach((checkbox, index) => {
+        document.querySelectorAll('input[type="checkbox"].record__checkbox').forEach((checkbox, index) => {
           if (index > 0) {
             checkbox.remove();
           }

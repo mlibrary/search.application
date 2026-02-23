@@ -125,11 +125,11 @@ describe('actions', function () {
       // Apply HTML to the body
       document.body.innerHTML += `
         <ol class="list__items">
-          <li><input type="checkbox" class="list__item--checkbox" value="rec1" checked></li>
-          <li><input type="checkbox" class="list__item--checkbox" value="rec2"></li>
-          <li><input type="checkbox" class="list__item--checkbox" value="rec3"></li>
-          <li><input type="checkbox" class="list__item--checkbox" value="rec4"></li>
-          <li><input type="checkbox" class="list__item--checkbox" value="rec5"></li>
+          <li><input type="checkbox" class="record__checkbox" value="rec1" checked></li>
+          <li><input type="checkbox" class="record__checkbox" value="rec2"></li>
+          <li><input type="checkbox" class="record__checkbox" value="rec3"></li>
+          <li><input type="checkbox" class="record__checkbox" value="rec4"></li>
+          <li><input type="checkbox" class="record__checkbox" value="rec5"></li>
         </ol>
       `;
 
