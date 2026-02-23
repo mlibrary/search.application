@@ -17,19 +17,8 @@ module Search::Presenters
     @titles.join(" - ")
   end
 
-  def self.static_pages
-    [
-      {
-        description: "Experience the University of Michigan Library Search, a discovery interface offering seamless access to physical and electronic resources. Since 2018, it provides a unified user experience with comprehensive search capabilities across Catalogs, Articles, Databases, Online Journals, and Guides & More.",
-        slug: "about-library-search",
-        title: "About Library Search"
-      },
-      {
-        description: "Committed to inclusivity, University of Michigan Library strives to make Library Search accessible and user-friendly for everyone, adhering to WCAG 2.1 AA standards to ensure optimal usability.",
-        slug: "accessibility",
-        title: "Accessibility"
-      }
-    ]
+  def self.static_page_slugs
+    Presenter::StaticPage.slugs
   end
 
   # is this for langing pages?
@@ -221,8 +210,7 @@ module Search::Presenters
   end
 
   def self.for_static_page(slug:, uri:, patron:)
-    page = static_pages.find { |x| x[:slug] == slug }
-    Presenter.new(title: page[:title], description: page[:description], slug: page[:slug], datastore: :everything, uri: uri, patron: patron)
+    Presenter::StaticPage.for(slug: slug, uri: uri, patron: patron)
   end
 
   def self.for_404_page(uri:, patron:)

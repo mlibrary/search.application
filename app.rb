@@ -160,12 +160,12 @@ class Search::Application < Sinatra::Base
     end
   end
 
-  Search::Presenters.static_pages.each do |page|
-    get "/#{page[:slug]}" do
+  Search::Presenters.static_page_slugs.each do |slug|
+    get "/#{slug}" do
       headers "metrics.route" => "static_page"
-      @presenter = Search::Presenters.for_static_page(slug: page[:slug], uri: URI.parse(request.fullpath), patron: @patron)
+      @presenter = Search::Presenters.for_static_page(slug: slug, uri: URI.parse(request.fullpath), patron: @patron)
       erb :"pages/layout", layout: :layout do
-        erb :"pages/#{page[:slug]}"
+        erb :"pages/#{slug}"
       end
     end
   end

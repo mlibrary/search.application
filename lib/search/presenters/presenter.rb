@@ -45,4 +45,16 @@ class Search::Presenters::Presenter
 
   def breadcrumbs
   end
+
+  class StaticPage < self
+    STATIC_PAGES = YAML.load_file(File.join(S.config_path, "static_pages.yaml"))
+    def self.slugs
+      STATIC_PAGES.pluck(:slug)
+    end
+
+    def self.for(slug:, uri:, patron:)
+      STATIC_PAGES.find { |x| x[:slug] == slug }
+      new(**page, datastore: :everything, uri: uri, patron: patron)
+    end
+  end
 end
