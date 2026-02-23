@@ -23,7 +23,7 @@ module Search::Presenters
 
   # is this for langing pages?
   def self.for_datastore(slug:, uri:, patron: nil)
-    Presenter::DatastoreStaticPage.new(slug: slug, uri: uri, patron: patron, datastore: slug)
+    Presenter::DatastoreStaticPage.for(slug: slug, uri: uri, patron: patron)
   end
 
   def self.for_datastore_record(slug:, uri:, patron:, record_id:)

@@ -4,7 +4,7 @@ class Search::Presenters::Presenter
     @title = title
     @description = description
     @slug = slug
-    @datastore = datastore
+    @datastore = datastore # symbol. Should it be? Maybe not.
     @uri = uri
     @patron = patron
   end
@@ -30,7 +30,7 @@ class Search::Presenters::Presenter
   end
 
   def search_options
-    Search::Presenters::SearchOptions.new(datastore_slug: @datastore.to_s, uri: @uri)
+    Search::Presenters::SearchOptions.new(datastore_slug: current_datastore.to_s, uri: @uri)
   end
 
   def affiliations
@@ -61,22 +61,30 @@ class Search::Presenters::Presenter
   end
 
   class DatastoreStaticPage < self
-    def initialize(slug:, datastore:, uri:, patron:, title: nil, description: nil)
-      super
-      @title = self.datastore.title
-      @description = self.datastore.description
+    def self.for(slug:, uri:, patron:)
+      datastore = Search::Datastores.find(slug)
+      new(datastore: datastore, uri: uri, patron: patron)
+    end
+
+    def initialize(datastore:, uri:, patron:)
+      @title = datastore.title
+      @description = description
+      @slug = datastore.slug
+      @datastore = datastore # datastore object
+      @uri = uri
+      @patron = patron
     end
 
     def styles
       ["styles.css", "datastores/styles.css"]
     end
 
-    def datastore
-      Search::Datastores.find(@datastore)
+    def current_datastore
+      @datastore.slug
     end
 
     def flint_message
-      datastore.flint_message(campus: @patron.campus, page_param: params["page"])
+      @datastore.flint_message(campus: @patron.campus, page_param: params["page"])
     end
 
     def page_title
