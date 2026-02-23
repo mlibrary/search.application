@@ -8,6 +8,7 @@ require "search/presenters/icons"
 require "search/presenters/record"
 require "search/presenters/results"
 require "search/presenters/search_options"
+require "search/presenters/presenter"
 
 module Search::Presenters
   def self.title(titles = [])
@@ -221,18 +222,7 @@ module Search::Presenters
 
   def self.for_static_page(slug:, uri:, patron:)
     page = static_pages.find { |x| x[:slug] == slug }
-
-    OpenStruct.new(
-      title: title([page[:title]]),
-      current_datastore: "everything",
-      description: page[:description],
-      icons: Icons.new,
-      slug: page[:slug],
-      styles: ["styles.css", "pages/styles.css"],
-      scripts: ["scripts.js", "partials/scripts.js"],
-      search_options: SearchOptions.new(datastore_slug: "everything", uri: uri),
-      affiliations: Affiliations.new(current_affiliation: patron.affiliation)
-    )
+    Presenter.new(title: page[:title], description: page[:description], slug: page[:slug], datastore: :everything, uri: uri, patron: patron)
   end
 
   def self.for_404_page(uri:, patron:)
