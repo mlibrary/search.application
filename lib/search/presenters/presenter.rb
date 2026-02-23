@@ -10,7 +10,7 @@ class Search::Presenters::Presenter
   end
 
   def title
-    [@title, "Library Search"].join(" - ")
+    title_parts.push("Library Search").join(" - ")
   end
 
   def current_datastore
@@ -46,6 +46,14 @@ class Search::Presenters::Presenter
   def breadcrumbs
   end
 
+  private
+
+  def title_parts
+    [@title]
+  end
+end
+
+class Search::Presenters::Presenter
   class StaticPage < self
     STATIC_PAGES = YAML.load_file(File.join(S.config_path, "static_pages.yaml"))
     ERROR_PAGES = YAML.load_file(File.join(S.config_path, "error_pages.yaml"))
@@ -67,7 +75,6 @@ class Search::Presenters::Presenter
     end
 
     def initialize(datastore:, uri:, patron:)
-      @title = datastore.title
       @description = description
       @slug = datastore.slug
       @datastore = datastore # datastore object
@@ -92,8 +99,66 @@ class Search::Presenters::Presenter
 
     private
 
+    def title_parts
+      [@datastore.title]
+    end
+
     def params
       Addressable::URI.parse(@uri).query_values || {}
+    end
+  end
+
+  class DatastoreRecordPage < DatastoreStaticPage
+    CURRENT_PAGE = "Record"
+    attr_reader :record
+    def self.for(slug:, uri:, patron:, record_id:)
+      datastore = Search::Datastores.find(slug)
+      record = Search::Presenters::Record.for_datastore(datastore: slug, id: record_id)
+      new(datastore: datastore, uri: uri, patron: patron, record: record)
+    end
+
+    def initialize(datastore:, uri:, patron:, record:)
+      @description = description
+      @slug = datastore.slug
+      @datastore = datastore # datastore object
+      @patron = patron
+      @uri = uri
+      @record = record
+    end
+
+    def icons
+      Search::Presenters::Icons.new(record.icons + [
+        "add", "delete", "mail", "chat", "format_quote", "draft", "link",
+        "collections_bookmark", "devices", "keyboard_arrow_right",
+        "location_on", "check_circle", "warning", "error", "list",
+        "arrow_back_ios", "arrow_forward_ios"
+      ])
+    end
+
+    def styles
+      super.push("datastores/record/styles.css")
+    end
+
+    def scripts
+      super.push("datastores/record/scripts.js")
+    end
+
+    def breadcrumbs
+      Search::Presenters::Breadcrumbs.new(current_page: CURRENT_PAGE, uri: @uri)
+    end
+
+    def meta_tags
+      record.meta_tags
+    end
+
+    def ris_action_url
+      "#{@uri}/ris"
+    end
+
+    private
+
+    def title_parts
+      [record.title.first.text, CURRENT_PAGE, @datastore.title]
     end
   end
 end
