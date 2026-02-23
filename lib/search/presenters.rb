@@ -8,34 +8,34 @@ require "search/presenters/icons"
 require "search/presenters/record"
 require "search/presenters/results"
 require "search/presenters/search_options"
-require "search/presenters/presenter"
+require "search/presenters/page"
 
 module Search::Presenters
   def self.static_page_slugs
-    Presenter::StaticPage.slugs
+    Page::StaticPage.slugs
   end
 
   def self.for_datastore(slug:, uri:, patron: nil)
-    Presenter::DatastoreStaticPage.for(slug: slug, uri: uri, patron: patron)
+    Page::DatastoreStaticPage.for(slug: slug, uri: uri, patron: patron)
   end
 
   def self.for_datastore_record(slug:, uri:, patron:, record_id:)
-    Presenter::DatastoreRecordPage.for(slug: slug, uri: uri, patron: patron, record_id: record_id)
+    Page::DatastoreRecordPage.for(slug: slug, uri: uri, patron: patron, record_id: record_id)
   end
 
   def self.for_datastore_results(slug:, uri:, patron: nil)
-    Presenter::DatastoreResultsPage.for(slug: slug, uri: uri, patron: patron)
+    Page::DatastoreResultsPage.for(slug: slug, uri: uri, patron: patron)
   end
 
   def self.for_datastore_list(slug:, uri:, patron: nil)
-    Presenter::List.for(uri: uri, patron: patron)
+    Page::List.for(uri: uri, patron: patron)
   end
 
   def self.for_static_page(slug:, uri:, patron:)
-    Presenter::StaticPage.for(slug: slug, uri: uri, patron: patron)
+    Page::StaticPage.for(slug: slug, uri: uri, patron: patron)
   end
 
   def self.for_404_page(uri:, patron:)
-    Presenter::StaticPage.for(slug: "404", uri: uri, patron: patron)
+    Page::StaticPage.for(slug: "404", uri: uri, patron: patron)
   end
 end

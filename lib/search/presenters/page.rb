@@ -1,4 +1,4 @@
-class Search::Presenters::Presenter
+class Search::Presenters::Page
   attr_reader :slug, :description
   def initialize(slug:, datastore:, uri:, patron:, title: nil, description: nil)
     @title = title
@@ -57,7 +57,7 @@ class Search::Presenters::Presenter
   end
 end
 
-class Search::Presenters::Presenter
+class Search::Presenters::Page
   class StaticPage < self
     STATIC_PAGES = YAML.load_file(File.join(S.config_path, "static_pages.yaml"))
     ERROR_PAGES = YAML.load_file(File.join(S.config_path, "error_pages.yaml"))
@@ -115,7 +115,7 @@ class Search::Presenters::Presenter
   class List < DatastoreStaticPage
     CURRENT_PAGE = "My Temporary List"
     EXTRA_ICONS = ["mail", "chat", "format_quote", "draft", "add", "delete"]
-    def self.get(uri:, patron:)
+    def self.for(uri:, patron:)
       self.for(slug: "everything", uri: uri, patron: patron)
     end
 
@@ -198,7 +198,11 @@ class Search::Presenters::Presenter
   end
 
   class DatastoreResultsPage < DatastoreStaticPage
-    EXTRA_ICONS = ["add", "delete", "mail", "close", "chat", "format_quote", "draft", "link", "collections_bookmark", "devices", "keyboard_arrow_right", "location_on", "check_circle", "warning", "error", "list", "arrow_back_ios", "arrow_forward_ios"]
+    EXTRA_ICONS =
+      ["add", "delete", "mail", "close", "chat", "format_quote", "draft",
+        "link", "collections_bookmark", "devices", "keyboard_arrow_right",
+        "location_on", "check_circle", "warning", "error", "list",
+        "arrow_back_ios", "arrow_forward_ios"]
 
     def self.for(slug:, uri:, patron:)
       datastore = Search::Datastores.find(slug)
