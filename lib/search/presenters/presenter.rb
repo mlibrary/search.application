@@ -18,7 +18,7 @@ class Search::Presenters::Presenter
   end
 
   def icons
-    Search::Presenters::Icons.new
+    Search::Presenters::Icons.new(extra_icons)
   end
 
   def styles
@@ -50,6 +50,10 @@ class Search::Presenters::Presenter
 
   def title_parts
     [@title]
+  end
+
+  def extra_icons
+    []
   end
 end
 
@@ -110,6 +114,12 @@ class Search::Presenters::Presenter
 
   class DatastoreRecordPage < DatastoreStaticPage
     CURRENT_PAGE = "Record"
+    EXTRA_ICONS = [
+      "add", "delete", "mail", "chat", "format_quote", "draft", "link",
+      "collections_bookmark", "devices", "keyboard_arrow_right",
+      "location_on", "check_circle", "warning", "error", "list",
+      "arrow_back_ios", "arrow_forward_ios"
+    ]
     attr_reader :record
     def self.for(slug:, uri:, patron:, record_id:)
       datastore = Search::Datastores.find(slug)
@@ -124,15 +134,6 @@ class Search::Presenters::Presenter
       @patron = patron
       @uri = uri
       @record = record
-    end
-
-    def icons
-      Search::Presenters::Icons.new(record.icons + [
-        "add", "delete", "mail", "chat", "format_quote", "draft", "link",
-        "collections_bookmark", "devices", "keyboard_arrow_right",
-        "location_on", "check_circle", "warning", "error", "list",
-        "arrow_back_ios", "arrow_forward_ios"
-      ])
     end
 
     def styles
@@ -159,6 +160,40 @@ class Search::Presenters::Presenter
 
     def title_parts
       [record.title.first.text, CURRENT_PAGE, @datastore.title]
+    end
+
+    def extra_icons
+      record.icons + EXTRA_ICONS
+    end
+  end
+
+  class List < DatastoreStaticPage
+    CURRENT_PAGE = "My Temporary List"
+    EXTRA_ICONS = ["mail", "chat", "format_quote", "draft", "add", "delete"]
+    def self.get(uri:, patron:)
+      self.for(slug: "everything", uri: uri, patron: patron)
+    end
+
+    def styles
+      super.push("datastores/list/styles.css")
+    end
+
+    def scripts
+      super.push("datastores/list/scripts.js")
+    end
+
+    def breadcrumbs
+      Search::Presenters::Breadcrumbs.new(current_page: CURRENT_PAGE, uri: @uri)
+    end
+
+    def ris_action_url
+      "#{@uri}/ris"
+    end
+
+    private
+
+    def extra_icons
+      EXTRA_ICONS
     end
   end
 end
