@@ -81,7 +81,7 @@ describe Search::Presenters::Results::Filter::Active do
     end
   end
   context "url" do
-    it "adds the param to given url" do
+    it "removes the param to given url" do
       expect(subject.url).to eq(catalog_url)
     end
   end
