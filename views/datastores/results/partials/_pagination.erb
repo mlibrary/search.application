@@ -1,40 +1,38 @@
 <%
-  if total_results > 0
-    total_pages = (total_results / per_page.to_f).ceil
+  total_pages = (total_results / per_page.to_f).ceil
 
-    previous_url = ""
-    next_url = ""
+  previous_url = ""
+  next_url = ""
 
-    uri = URI.parse(request.fullpath)
-    params_hash = CGI.parse(uri.query.to_s)
-    params_hash["page"] = [current_page - 1]
-    previous_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
-    params_hash["page"] = [current_page + 1]
-    next_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
+  uri = URI.parse(request.fullpath)
+  params_hash = CGI.parse(uri.query.to_s)
+  params_hash["page"] = [current_page - 1]
+  previous_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
+  params_hash["page"] = [current_page + 1]
+  next_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
 %>
-  <div class="container__rounded--no-shadow pagination">
-    <div class="pagination__link pagination__link--previous">
-      <% if current_page > 1 %>
-        <%= link_to(body: "Previous page", url: previous_url) %>
-      <% end %>
-    </div>
-    <form class="pagination__form" method="get" action="/<%= @presenter.current_datastore %>">
-      <% params_hash.each do |key, value| %>
-        <% unless key == "page" %>
-          <% value.each do |v| %>
-            <input type="hidden" name="<%= key %>" value="<%= v %>">
-          <% end %>
+<div class="container__rounded--no-shadow pagination">
+  <div class="pagination__link pagination__link--previous">
+    <% if current_page > 1 %>
+      <%= link_to(body: "Previous page", url: previous_url) %>
+    <% end %>
+  </div>
+  <form class="pagination__form" method="get" action="/<%= @presenter.current_datastore %>">
+    <% params_hash.each do |key, value| %>
+      <% unless key == "page" %>
+        <% value.each do |v| %>
+          <input type="hidden" name="<%= key %>" value="<%= v %>">
         <% end %>
       <% end %>
-      <label for="pagination__form--input">Page</label>
-      <input id="pagination__form--input" aria-describedby="pagination__form--description" type="number" value="<%= current_page %>" min="1" max="<%= total_pages %>" name="page">
-      <span id="pagination__form--description">of <%= total_pages %></span>
-      <button type="submit" class="pagination__form--submit hide__javascript">Apply</button>
-    </form>
-    <div class="pagination__link pagination__link--next">
-      <% if current_page < total_pages %>
-        <%= link_to(body: "Next page", url: next_url) %>
-      <% end %>
-    </div>
+    <% end %>
+    <label for="pagination__form--input">Page</label>
+    <input id="pagination__form--input" aria-describedby="pagination__form--description" type="number" value="<%= current_page %>" min="1" max="<%= total_pages %>" name="page">
+    <span id="pagination__form--description">of <%= total_pages %></span>
+    <button type="submit" class="pagination__form--submit hide__javascript">Apply</button>
+  </form>
+  <div class="pagination__link pagination__link--next">
+    <% if current_page < total_pages %>
+      <%= link_to(body: "Next page", url: next_url) %>
+    <% end %>
   </div>
-<% end %>
+</div>

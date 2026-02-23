@@ -28,7 +28,7 @@
   results = record_ids.map do |id|
     Search::Presenters::Record.for_datastore(datastore: "catalog", id: id, size: "brief")
   end
-  total_results = results.size
+  total_results = record_ids.size
   current_page = params[:page].to_i && params[:page].to_i > 0 ? params[:page].to_i : 1
   per_page = 10
   start_result = current_page > 1 ? ((current_page - 1) * per_page) + 1 : 1
@@ -51,8 +51,15 @@
     <h2 class="visually-hidden"><%= @presenter.page_title %> Results</h2>
     <section class="results__content">
       <%= erb :'/datastores/results/partials/_summary', locals: { total_results: total_results, start_result: start_result, end_result: end_result } %>
-      <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: results, start_result: start_result, end_result: end_result } %>
-      <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: current_page, per_page: per_page, total_results: total_results } %>
+      <% if results.any? %>
+        <%= erb :'/datastores/list/partials/_go-to' %>
+        <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
+        <%#= erb :'/datastores/results/partials/_select-all' %>
+        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: results, start_result: start_result, end_result: end_result } %>
+        <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: current_page, per_page: per_page, total_results: total_results } %>
+      <% else %>
+        <%= erb :'/datastores/results/partials/results-list/_no-results' %>
+      <% end %>
     </section>
   </div>
 <% end %>

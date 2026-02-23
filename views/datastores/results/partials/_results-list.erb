@@ -1,50 +1,31 @@
-<% if results.size > 0 %>
-  <%
-    # Filter results to the start_result to the end_result for pagination
-    page_results = results.map.with_index do |result, index|
-      result if index + 1 >= start_result && index + 1 <= end_result
-    end.compact
-  %>
-  <%= erb :'/datastores/list/partials/_go-to' %>
-  <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
-  <p>SELECT ALL</p>
-  <ol start="<%= start_result %>" class="list__items list__no-style">
-    <% page_results.each_with_index do |result, index| %>
-      <li class="container__rounded list__item">
-        <div class="list__item--header">
-          <%= erb :'datastores/list/partials/list-item/_checkbox', locals: { checked: false, datastore: @presenter.current_datastore, record_id: result.id, record_title: result.title.first.text } %>
-          <h3 class="list__item--title h4">
-            <span class="list__item--title-number"><%= start_result + index %>.</span>
-            <%= link_to(body: result.title.first.text, url: "#{@presenter.current_datastore}/record/#{result.id}", classes: ["list__item--title-original"]) %>
-            <% if result.title.second %>
-              <span class="list__item--title-transliterated h5">
-                <%= result.title.second.text %>
-              </span>
-            <% end %>
-          </h3>
-        </div>
-        <%= erb :'/datastores/partials/_metadata', locals: { metadata: results[index].metadata } %>
-      </li>
-      <%
-        # Show specialists only on the first page
-        if current_page == 1
-          if page_results.size < 3
-            # Show specialists after the last result if there are less than 3 results
-            show_specialists = index == page_results.size - 1
-          else
-            # Show specialists after the third result
-            show_specialists = index == 2
-          end
-
-          if show_specialists
-      %>
-        <%= erb :'/datastores/results/partials/results-list/_specialists' %>
-      <% 
-          end
+<%
+  # Filter results to the start_result to the end_result for pagination
+  page_results = results.map.with_index do |result, index|
+    result if index + 1 >= start_result && index + 1 <= end_result
+  end.compact
+%>
+<ol start="<%= start_result %>" class="results__list list__no-style">
+  <% page_results.each_with_index do |result, index| %>
+    <%= erb :'datastores/results/partials/results-list/_result', locals: { result: result, index: index, start_result: start_result } %>
+    <%
+      # Show specialists only on the first page
+      if current_page == 1
+        if page_results.size < 3
+          # Show specialists after the last result if there are less than 3 results
+          show_specialists = index == page_results.size - 1
+        else
+          # Show specialists after the third result
+          show_specialists = index == 2
         end
-      %>
-    <% end %>
-  </ol>
-<% else %>
-  <%= erb :'/datastores/results/partials/results-list/_no-results' %>
-<% end %>
+
+        if show_specialists
+    %>
+      <li class="container__rounded">
+        <%= erb :'/datastores/results/partials/results-list/_specialists' %>
+      </li>
+    <% 
+        end
+      end
+    %>
+  <% end %>
+</ol>
