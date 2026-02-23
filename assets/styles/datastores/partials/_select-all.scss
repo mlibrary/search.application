@@ -1,13 +1,16 @@
-@use '../../../utilities';
+@use '../../utilities';
+@use '../../forms';
 
 // --------------------------------------------------
 //
 // # Add To
-//   Styles to apply directly to `views/datastores/list/_toggle-all.erb`.
+//   Styles to apply directly to `views/datastores/partials/_select-all.erb`.
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Button
+//   2. Select All
+//     2.1. Label
+//     2.2. Count
 //
 // --------------------------------------------------
 
@@ -28,4 +31,36 @@ $class: '.select-all';
 
 #{$class} {
   @include utilities.flex();
+  background-color: var(--search-color-blue-200);
+  border: 2px solid var(--search-color-blue-300);
+  border-radius: forms.$radius;
+  justify-content: space-between;
+  padding: .5rem 1rem;
+  .results__content > & {
+    margin-top: 0;
+  }
+}
+
+
+
+// *            * //
+// * 2.1. LABEL * //
+// *            * //
+
+#{$class}__label {
+  @include utilities.flex();
+  gap: 0.5rem;
+}
+
+
+
+// *            * //
+// * 2.2. COUNT * //
+// *            * //
+
+#{$class}__count {
+  background-color: var(--search-color-blue-500);
+  border-radius: forms.$radius;
+  color: white;
+  padding: 0 .25rem;
 }

@@ -1,6 +1,5 @@
 @use '../partials/breadcrumbs';
-@use './partials/select-all';
-@use './partials/in-list';
+@use '../partials//select-all';
 @use '../partials/actions';
 @use './partials/list-item';
 @use '../../utilities';
