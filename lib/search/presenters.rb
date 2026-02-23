@@ -13,19 +13,19 @@ require "search/presenters/page"
 module Search::Presenters
   class << self
     def static_page_slugs
-      Page::StaticPage.slugs
+      Page::Static.slugs
     end
 
     def for_static_page(slug:, uri:, patron:)
-      Page::StaticPage.for(slug: slug, uri: uri, patron: patron)
+      Page::Static.for(slug: slug, uri: uri, patron: patron)
     end
 
     def for_404_page(uri:, patron:)
-      Page::StaticPage.for(slug: "404", uri: uri, patron: patron)
+      Page::Static.for(slug: "404", uri: uri, patron: patron)
     end
 
     def for_datastore(slug:, uri:, patron: nil)
-      Page::DatastoreStaticPage.for(slug: slug, uri: uri, patron: patron)
+      Page::DatastoreStatic.for(slug: slug, uri: uri, patron: patron)
     end
 
     def for_list(slug:, uri:, patron: nil)
@@ -33,11 +33,11 @@ module Search::Presenters
     end
 
     def for_datastore_record(slug:, uri:, patron:, record_id:)
-      Page::DatastoreRecordPage.for(slug: slug, uri: uri, patron: patron, record_id: record_id)
+      Page::Record.for(slug: slug, uri: uri, patron: patron, record_id: record_id)
     end
 
     def for_datastore_results(slug:, uri:, patron: nil)
-      Page::DatastoreResultsPage.for(slug: slug, uri: uri, patron: patron)
+      Page::Results.for(slug: slug, uri: uri, patron: patron)
     end
   end
 end
