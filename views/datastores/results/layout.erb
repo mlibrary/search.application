@@ -26,7 +26,10 @@
     990024357620106381
   ]
   results = record_ids.map do |id|
-    Search::Presenters::Record.for_datastore(datastore: "catalog", id: id, size: "brief")
+    record_data = JSON.parse(File.read("#{File.dirname(__FILE__)}/../../../spec/fixtures/results/#{id}.json"))
+    Search::Presenters::Record::Catalog::Brief.new(
+      Search::Models::Record::Catalog.new(record_data)
+    )
   end
   total_results = record_ids.size
   current_page = params[:page].to_i && params[:page].to_i > 0 ? params[:page].to_i : 1
