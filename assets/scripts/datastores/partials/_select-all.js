@@ -4,7 +4,7 @@ const getSelectAllCheckbox = () => {
   return document.querySelector('input[type="checkbox"].select-all__checkbox');
 };
 
-const selectAllCheckboxState = ({ checkbox = getSelectAllCheckbox(), someChecked = someCheckboxesChecked }) => {
+const selectAllCheckboxState = ({ checkbox, someChecked = someCheckboxesChecked }) => {
   checkbox.indeterminate = someChecked(true) && someChecked(false);
   checkbox.checked = someChecked(true) && !someChecked(false);
 };
@@ -15,18 +15,18 @@ const selectAll = ({
   selectCheckboxState = selectAllCheckboxState
 } = {}) => {
   // Initialize the state of the checkbox
-  selectCheckboxState();
+  selectCheckboxState({ checkbox });
 
   // Add event listener
   checkbox.addEventListener('change', () => {
-    // Check all checkboxes if `Select all` checkbox is indeterminate or unchecked
-    const checked = checkbox.indeterminate || !checkbox.checked;
+    // Check all checkboxes if `Select all` checkbox is checked
+    const checked = checkbox.checked === true;
     checkboxes.forEach((recordCheckbox) => {
       recordCheckbox.checked = checked;
     });
 
     // Update the state of the select all checkbox
-    selectCheckboxState();
+    selectCheckboxState({ checkbox });
   });
 };
 

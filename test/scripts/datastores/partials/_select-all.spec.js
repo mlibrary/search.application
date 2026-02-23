@@ -198,54 +198,45 @@ describe('select all', function () {
       args = null;
     });
 
-    it('should call `selectAllCheckboxState` once during initialization', function () {
-      expect(selectAllCheckboxStateSpy.calledOnce, '`selectAllCheckboxState` should be called once during initialization').to.be.true;
+    it('should call `selectAllCheckboxState` once during initialization with the correct arguments', function () {
+      expect(selectAllCheckboxStateSpy.calledOnceWithExactly({ checkbox: args.checkbox }), '`selectAllCheckboxState` should be called once during initialization').to.be.true;
     });
 
-    it('should call `selectAllCheckboxState` again when the `Select all` checkbox is changed', function () {
+    it('should call `selectAllCheckboxState` again when the `Select all` checkbox is changed with the correct arguments', function () {
       // Simulate a change event on the `Select all` checkbox
       args.checkbox.dispatchEvent(new window.Event('change'));
 
-      // Check that `selectAllCheckboxState` was called
+      // Check that `selectAllCheckboxState` was called again
       expect(selectAllCheckboxStateSpy.calledTwice, '`selectAllCheckboxState` should be called when the `Select all` checkbox is changed').to.be.true;
+      expect(selectAllCheckboxStateSpy.calledWithExactly({ checkbox: args.checkbox }), '`selectAllCheckboxState` should be called when the `Select all` checkbox is changed').to.be.true;
     });
 
-    it('should check all record checkboxes when the `Select all` checkbox is initially unchecked on change', function () {
-      // Simulate a change event on the `Select all` checkbox
-      args.checkbox.dispatchEvent(new window.Event('change'));
-
-      // Check that all record checkboxes are checked
-      expect(Array.from(args.checkboxes).every((checkbox) => {
-        return checkbox.checked;
-      }), 'all record checkboxes should be checked').to.be.true;
-    });
-
-    it('should check all record checkboxes when the `Select all` checkbox is initially indeterminate on change', function () {
-      // Set the `Select all` checkbox to indeterminate
-      args.checkbox.indeterminate = true;
-      expect(args.checkbox.indeterminate, 'the `Select all` checkbox should be indeterminate before the change event').to.be.true;
-
-      // Simulate a change event on the `Select all` checkbox
-      args.checkbox.dispatchEvent(new window.Event('change'));
-
-      // Check that all record checkboxes are checked
-      expect(Array.from(args.checkboxes).every((checkbox) => {
-        return checkbox.checked;
-      }), 'all record checkboxes should be checked').to.be.true;
-    });
-
-    it('should uncheck all record checkboxes when the `Select all` checkbox is initially checked on change', function () {
-      // Set the `Select all` checkbox to checked
+    it('should check all record checkboxes when the `Select all` checkbox is initially checked on change', function () {
+      // Check the `Select all` checkbox
       args.checkbox.checked = true;
       expect(args.checkbox.checked, 'the `Select all` checkbox should be checked before the change event').to.be.true;
 
-      // Check all the record checkboxes
+      // Simulate a change event on the `Select all` checkbox
+      args.checkbox.dispatchEvent(new window.Event('change'));
+
+      // Check that all record checkboxes are checked
+      expect(Array.from(args.checkboxes).every((checkbox) => {
+        return checkbox.checked;
+      }), 'all record checkboxes should be checked').to.be.true;
+    });
+
+    it('should uncheck all record checkboxes when the `Select all` checkbox is initially unchecked on change', function () {
+      // Make sure all the records are checked
       args.checkboxes.forEach((checkbox) => {
         checkbox.checked = true;
       });
       expect(Array.from(args.checkboxes).every((checkbox) => {
         return checkbox.checked;
       }), 'all record checkboxes should be checked before the change event').to.be.true;
+
+      // Uncheck the `Select all` checkbox
+      args.checkbox.checked = false;
+      expect(args.checkbox.checked, 'the `Select all` checkbox should be unchecked before the change event').to.be.false;
 
       // Simulate a change event on the `Select all` checkbox
       args.checkbox.dispatchEvent(new window.Event('change'));

@@ -36,6 +36,9 @@ $class: '.select-all';
   border-radius: forms.$radius;
   justify-content: space-between;
   padding: .5rem 1rem;
+  @media print {
+    display: none;
+  }
   .results__content > & {
     margin-top: 0;
   }
