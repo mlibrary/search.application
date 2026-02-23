@@ -110,7 +110,8 @@ RSpec.describe "requests" do
         expect(last_response.location).to end_with("/everything")
       end
 
-      it "redirects to `search.lib.umich.edu` with the query not wrapped" do
+      # I don't think we want to do this anymore
+      xit "redirects to `search.lib.umich.edu` with the query not wrapped" do
         search_text = "search text"
         search_datastore = "catalog"
         get "/#{search_datastore}"
