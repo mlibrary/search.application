@@ -1,0 +1,18 @@
+<div
+  class="container results__info text__small"
+  id="results__info--<%= slug %>"
+  aria-live="polite"
+  data-datastore="<%= slug %>"
+>
+  <div class="results__info--content">
+    <%= info %>
+  </div>
+  <button
+    class="hide__no-javascript button__link results__info--hide"
+    type="button"
+    aria-label="Hide <%= datastore %> information"
+    aria-controls="results__info--<%= slug %>"
+  >
+    Hide
+  </button>
+</div>

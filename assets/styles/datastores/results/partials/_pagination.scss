@@ -1,0 +1,68 @@
+@use '../../../utilities';
+
+// --------------------------------------------------
+//
+// # Pagination
+//   Styles to apply directly to `views/datastores/results/partials/_pagination.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//   3. Link
+//   4. Form
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.pagination';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} {
+  @include utilities.flex($responsive: 'xs');
+  background-color: var(--search-color-grey-100);
+  justify-content: space-between;
+  padding: 1rem;
+  width: 100%;
+}
+
+
+
+
+
+// *************** //
+// *** 3. LINK *** //
+// *************** //
+
+#{$class}__link {
+  flex: 1 1 0;
+  &#{$class}__link--next {
+    text-align: right;
+  }
+}
+
+
+
+
+
+// *************** //
+// *** 4. FORM *** //
+// *************** //
+
+#{$class}__form {
+  @include utilities.flex($align: center);
+  flex-grow: 0;
+  gap: 0.5rem;
+  & > * {
+    flex-shrink: 0;
+  }
+}

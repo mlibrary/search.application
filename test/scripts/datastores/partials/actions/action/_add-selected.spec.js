@@ -505,7 +505,7 @@ describe('add selected', function () {
     let fetchAndAddRecordsStub = null;
     let displayAddSelectedActionSpy = null;
     let displayRemoveSelectedActionSpy = null;
-    let setTemporaryListStub = null;
+    let setSessionStorageSpy = null;
     let toggleBannerSpy = null;
     let styleAddedRecordsStub = null;
     let args = null;
@@ -514,7 +514,7 @@ describe('add selected', function () {
       fetchAndAddRecordsStub = sinon.stub().resolves(defaultTemporaryList);
       displayAddSelectedActionSpy = sinon.spy();
       displayRemoveSelectedActionSpy = sinon.spy();
-      setTemporaryListStub = sinon.stub();
+      setSessionStorageSpy = sinon.spy();
       toggleBannerSpy = sinon.spy();
       styleAddedRecordsStub = sinon.stub();
       args = {
@@ -523,7 +523,7 @@ describe('add selected', function () {
         displayAddAction: displayAddSelectedActionSpy,
         displayRemoveAction: displayRemoveSelectedActionSpy,
         list: defaultTemporaryList,
-        setList: setTemporaryListStub,
+        setList: setSessionStorageSpy,
         showBanner: toggleBannerSpy,
         styleRecords: styleAddedRecordsStub
       };
@@ -533,7 +533,7 @@ describe('add selected', function () {
       fetchAndAddRecordsStub = null;
       displayAddSelectedActionSpy = null;
       displayRemoveSelectedActionSpy = null;
-      setTemporaryListStub = null;
+      setSessionStorageSpy = null;
       toggleBannerSpy = null;
       styleAddedRecordsStub = null;
       args = null;
@@ -578,7 +578,7 @@ describe('add selected', function () {
       expect(fetchAndAddRecordsStub.calledOnceWithExactly({ list: args.list }), '`fetchAndAddRecords` should be called once with the correct arguments').to.be.true;
     });
 
-    it('should call `setTemporaryList` with the updated list', async function () {
+    it('should call `setSessionStorage` with the updated list', async function () {
       // Call the function
       const actionPromise = addSelectedAction(args);
 
@@ -588,8 +588,8 @@ describe('add selected', function () {
       // Wait for the action to complete
       await actionPromise;
 
-      // Check that `setTemporaryList` was called once with the updated list
-      expect(setTemporaryListStub.calledOnceWithExactly(args.list), '`setTemporaryList` should be called once with the updated list').to.be.true;
+      // Check that `setSessionStorage` was called once with the updated list
+      expect(setSessionStorageSpy.calledOnceWithExactly({ itemName: 'temporaryList', value: args.list }), '`setSessionStorage` should be called once with the updated list').to.be.true;
     });
 
     it('should call `styleAddedRecords` with the correct arguments', async function () {

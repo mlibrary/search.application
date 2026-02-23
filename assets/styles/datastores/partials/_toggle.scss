@@ -1,0 +1,17 @@
+// --------------------------------------------------
+//
+// # Actions
+//   Styles to apply directly to `views/datastores/partials/_toggle.erb`.
+//
+// ## Table of Contents
+//   1. Button
+//
+// --------------------------------------------------
+
+// ***************** //
+// *** 1. BUTTON *** //
+// ***************** //
+
+body.no-javascript button[data-toggle] {
+  display: none;
+}

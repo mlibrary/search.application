@@ -1,0 +1,17 @@
+<% @presenter.filters.each_with_index do |filter, index| %>
+  <details <%= "open" if index < 5 %> class="filter__details">
+    <summary class="filter__details--category">
+      <h3 class="h5"><%= filter.name %></h3>
+    </summary>
+    <div class="filter__details--content">
+      <ul id="filter__toggle--<%= filter.uid %>" class="list__no-style filter__details--options">
+        <% filter.options.each do |option| %>
+          <li class="filter__details--option">
+            <%= link_to(body: "<span class=\"filter__details--option-value\">#{option.value}</span> <span class=\"filter__details--option-count\">#{option.count}</span>", url: option.url, classes: ["underline__none"]) %>
+          </li>
+        <% end %>
+      </ul>
+      <%= erb :"datastores/partials/_toggle", locals: {classes: ["filter__details--toggle"], id: "filter__toggle--#{filter.uid}", count: 5, postfix: "#{filter.name} filters"} %>
+    </div>
+  </details>
+<% end %>

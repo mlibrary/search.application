@@ -1,0 +1,15 @@
+<% if @presenter.active_filters.any? %>
+  <div class="content filters__active">
+    <h3 class="h5">Active filters</h3>
+    <ul class="filters__active--list list__no-style">
+      <% @presenter.active_filters.each do |filter| %>
+        <li class="filters__active--item">
+          <%= link_to(body: "<span class=\"filters__active--link-text\">#{filter}</span>", url: filter.url, classes: ["filters__active--link"]) %>
+        </li>
+      <% end %>
+    </ul>
+    <% if @presenter.active_filters.size > 1 %>
+      <p><%= link_to(body: "Clear all active filters", url: @presenter.clear_filters_url, classes: ["filters__active--clear"]) %></p>
+    <% end %>
+  </div>
+<% end %>

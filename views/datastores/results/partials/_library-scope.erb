@@ -1,0 +1,35 @@
+<%
+  if @presenter.current_datastore == "catalog"
+    libraries = [
+      "All libraries",
+      "U-M Ann Arbor Libraries",
+      "Flint Thompson Library",
+      "Bentley Historical Library",
+      "William L. Clements Library"
+    ]
+    uri = URI.parse(request.fullpath)
+    params_hash = CGI.parse(uri.query.to_s)
+
+    # Remove "page" param to avoid issues with pagination when applying filters
+    params_hash.delete("page")
+
+    # Default to "U-M Ann Arbor Libraries" if no library is selected
+    selected_library = params_hash["library"]&.first || libraries[1]
+%>
+  <form class="library-scope container__rounded--no-shadow" method="get" action="/<%= @presenter.current_datastore %>">
+    <% params_hash.each do |key, value| %>
+      <% unless key == "library" %>
+        <% value.each do |v| %>
+          <input type="hidden" name="<%= key %>" value="<%= v %>">
+        <% end %>
+      <% end %>
+    <% end %>
+    <label class="library-scope__label strong" for="library-scope__select">Library Scope</label>
+    <select name="library" class="library-scope__select" id="library-scope__select" autocomplete="off">
+      <% libraries.each do |library| %>
+        <option value="<%= library %>" <%= "selected" if (selected_library == library) %>><%= library %></option>
+      <% end %>
+    </select>
+    <button type="submit" class="library-scope__submit hide__javascript">Apply</button>
+  </form>
+<% end %>

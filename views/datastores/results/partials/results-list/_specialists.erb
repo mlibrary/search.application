@@ -1,0 +1,63 @@
+<%
+  specialists = [
+    {
+      name: "Monique Rio",
+      title: "Integration Programmer",
+      uniqname: "mrio",
+      phone: "734-531-7862",
+      img: "https://www.lib.umich.edu/static/e11539075b1d0ab01f3874ae382c83ff/fc9a7/portrait.jpg"
+    },
+    {
+      name: "Erin Sullivan",
+      title: "Senior Front-End Developer",
+      uniqname: "esulliv",
+      phone: "000-000-0000",
+      img: "https://www.lib.umich.edu/static/98ef823a04fecb0ee44f2c0c19061905/2787c/MiCreativePorts-Day2-bw(127).jpg"
+    },
+    {
+      name: "Ken Varnum",
+      title: "Senior Program Manager and Discovery Strategist",
+      uniqname: "varnum",
+      phone: "734-615-3287",
+      img: "https://www.lib.umich.edu/static/4d7d6f7863883bf9dc34ee8b3e17630a/e3834/picture-39-1375819635.jpg"
+    },
+    {
+      name: "Albert Bertram",
+      title: "Web Applications Team Leader",
+      uniqname: "bertrama",
+      phone: "000-000-0000",
+      img: nil
+    },
+    {
+      name: "Ben Howell",
+      title: "User Experience and Accessibility Specialist",
+      uniqname: "bnhowell",
+      phone: "000-000-0000",
+      img: "https://www.lib.umich.edu/static/cc1d75be0ee04bd5bcc9f3edf29be06d/c48d9/img_4960.jpg"
+    }
+  ]
+%>
+<div class="specialists">
+  <div class="specialists__header">
+    <h3 class="h5 specialists__heading">Talk to a Library Specialist</h3>
+    <%= link_to(body: "Find more specialists", url: "https://www.lib.umich.edu/research-and-scholarship/help-research/find-specialist", open_in_new: true) %>
+  </div>
+  <ol class="list__no-style specialists__list" id="specialists__list">
+  <% specialists.each do |specialist| %>
+    <li class="specialists__list--item">
+      <% if specialist[:img] %>
+        <img src="<%= specialist[:img] %>" alt="Image of <%= specialist[:name] %>" class="specialists__list--item-image">
+      <% end %>
+      <div class="content specialists__list--item-content">
+        <h4 class="h5"><%= link_to(body: specialist[:name], url: "https://www.lib.umich.edu/users/#{specialist[:uniqname]}", open_in_new: true) %></h4>
+        <p><%= specialist[:title] %></p>
+        <% if specialist[:phone] && specialist[:phone] != "000-000-0000" %>
+          <p><%= link_to(body: specialist[:phone], url: "tel:+1-#{specialist[:phone]}") %></p>
+        <% end %>
+        <p><%= link_to(body: "#{specialist[:uniqname]}@umich.edu", url: "mailto:#{specialist[:uniqname]}@umich.edu") %></p>
+      </div>
+    </li>
+  <% end %>
+  </ol>
+  <%= erb :"datastores/partials/_toggle", locals: {classes: ["specialists__toggle"], id: "specialists__list", count: 3, postfix: "Library Specialists"} %>
+</div>

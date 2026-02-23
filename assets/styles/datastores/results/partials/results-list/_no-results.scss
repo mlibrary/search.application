@@ -1,0 +1,28 @@
+// --------------------------------------------------
+//
+// # No Results
+//   Styles to apply directly to `views/datastores/results/partials/results-list/_no-results.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.results__none';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} {
+  padding: 1rem;
+}

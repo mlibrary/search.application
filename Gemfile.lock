@@ -345,6 +345,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  addressable
   alma_rest_client!
   benchmark
   canister

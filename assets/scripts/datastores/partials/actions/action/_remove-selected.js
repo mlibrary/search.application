@@ -1,6 +1,6 @@
 import { displayAddSelectedAction, toggleAddedClass, toggleSelectedTabText } from './_add-selected.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
-import { inTemporaryList, setTemporaryList, viewingTemporaryList } from '../../../list/layout.js';
+import { inTemporaryList, setSessionStorage, viewingTemporaryList } from '../../../list/layout.js';
 import { toggleBanner } from '../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../_actions.js';
 
@@ -64,7 +64,7 @@ const handleRemoveSelectedClick = ({
   event,
   list,
   reloadPage = window.location.reload.bind(window.location),
-  setList = setTemporaryList,
+  setList = setSessionStorage,
   showBanner = toggleBanner,
   toggleRemoveButton = toggleRemoveSelectedButton,
   viewingList = viewingTemporaryList()
@@ -80,7 +80,7 @@ const handleRemoveSelectedClick = ({
   const updatedList = deleteRecords({ list });
 
   // Set the updated list
-  setList(updatedList);
+  setList({ itemName: 'temporaryList', value: updatedList });
 
   // Update the banner to reflect the new count of items in the list
   showBanner({ list: updatedList });

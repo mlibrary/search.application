@@ -1,5 +1,5 @@
 import { filterSelectedRecords, getCheckboxes, getCheckedCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../list/partials/list-item/_checkbox.js';
-import { inTemporaryList, setTemporaryList } from '../../../list/layout.js';
+import { inTemporaryList, setSessionStorage } from '../../../list/layout.js';
 import { displayRemoveSelectedAction } from './_remove-selected.js';
 import { toggleBanner } from '../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../_actions.js';
@@ -119,7 +119,7 @@ const addSelectedAction = ({
   displayAddAction = displayAddSelectedAction,
   displayRemoveAction = displayRemoveSelectedAction,
   list,
-  setList = setTemporaryList,
+  setList = setSessionStorage,
   showBanner = toggleBanner,
   styleRecords = styleAddedRecords
 } = {}) => {
@@ -142,7 +142,7 @@ const addSelectedAction = ({
       // Silent failure, so no action is needed
     } finally {
       // Set the updated list
-      setList(updatedList);
+      setList({ itemName: 'temporaryList', value: updatedList });
 
       // Re-style records after adding
       styleRecords({ list: updatedList });

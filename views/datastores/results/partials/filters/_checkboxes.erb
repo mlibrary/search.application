@@ -1,0 +1,11 @@
+<% if @presenter.boolean_filters.any? %>
+  <form class="filter__checkboxes" method="get" action="/<%= @presenter.current_datastore %>">
+    <% @presenter.boolean_filters.each do | filter| %>
+      <label class="checkbox filter__checkbox">
+        <input type="checkbox" name="<%= filter.uid %>" value="<%= filter.value %>" <%= "checked" if filter.checked? %>>
+        <%= filter.label %>
+      </label>
+    <% end %>
+    <button type="submit" class="hide__javascript filter__checkboxes--submit">Apply</button>
+  </form>
+<% end %>

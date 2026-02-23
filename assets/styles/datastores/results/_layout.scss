@@ -1,0 +1,77 @@
+@use '../../media';
+@use '../../utilities';
+@use './partials/info';
+@use './partials/library-scope';
+@use './partials/filters';
+@use './partials/summary';
+@use '../list/partials/go-to';
+@use '../partials/actions';
+@use './partials/results-list';
+@use './partials/pagination';
+
+// --------------------------------------------------
+//
+// # Results
+//   Styling for datastore results pages.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//     2.1. Sidebar
+//     2.2. Content
+//
+// --------------------------------------------------
+
+
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: 'results';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+.#{$class}__container {
+  @include utilities.flex($align: start, $responsive: 'lg');
+  max-width: 75rem;
+}
+
+
+
+// *              * //
+// * 2.1. SIDEBAR * //
+// *              * //
+
+.#{$class}__sidebar {
+  width: 100%;
+  @include media.breakpoint('lg') {
+    flex-shrink: 0;
+    width: 18.5rem;
+  }
+  & > * + * {
+    margin-top: 1rem;
+  }
+  .container__rounded--no-shadow {
+    background-color: var(--search-color-grey-100);
+  }
+}
+
+
+
+// *              * //
+// * 2.2. CONTENT * //
+// *              * //
+
+.#{$class}__content {
+  width: 100%;
+  & > * + * {
+    margin-top: 1rem;
+  }
+}

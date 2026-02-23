@@ -4,23 +4,24 @@
   { label: "Dearborn User" , value: "mlibrary.acct.testing3@gmail.com" }
 ] %>
 
-<div class="container__rounded development-users">
-  <h2>Design &amp; Development Options</h2>
-  <form method="get" action="/session_switcher">
-    <label for="test-user">
-      Active user account:
-    </label>
-    <div class="development-users__inputs">
-      <input type="text" list="users" id="test-user" name="uniqname" autocomplete="on" value="<%=session[:uniqname] || "" %>">
-      <button type="submit">Save</button>
-    </div>
-    <datalist id="users">
-      <% test_users.each do |user| %>
-        <option value="<%=user[:value]%>">
-          <%=user[:label]%>
-        </option>
-      <% end %>
-    </datalist>
-  </form>
+<div class="container">
+  <div class="container__rounded development-users">
+    <h2>Design &amp; Development Options</h2>
+    <form method="get" action="/session_switcher">
+      <label for="test-user">
+        Active user account:
+      </label>
+      <div class="development-users__inputs">
+        <input type="text" list="users" id="test-user" name="uniqname" autocomplete="on" value="<%=session[:uniqname] || "" %>">
+        <button type="submit">Save</button>
+      </div>
+      <datalist id="users">
+        <% test_users.each do |user| %>
+          <option value="<%=user[:value]%>">
+            <%=user[:label]%>
+          </option>
+        <% end %>
+      </datalist>
+    </form>
+  </div>
 </div>
-  

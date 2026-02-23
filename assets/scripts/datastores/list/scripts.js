@@ -1,4 +1,4 @@
-import { getTemporaryList, temporaryList } from './layout.js';
+import { defaultTemporaryList, getSessionStorage, temporaryList } from './layout.js';
 import { addSelected } from '../partials/actions/action/_add-selected.js';
 import { downloadTemporaryListRIS } from '../partials/actions/action/_ris.js';
 import { emailAction } from '../partials/actions/action/_email.js';
@@ -9,7 +9,7 @@ import { tabControl } from '../partials/_actions.js';
 import { textAction } from '../partials/actions/action/_text.js';
 
 // Get the temporary list from session storage
-const list = getTemporaryList();
+const list = getSessionStorage({ defaultValue: defaultTemporaryList, itemName: 'temporaryList' });
 
 // Actions panel
 tabControl('.actions');

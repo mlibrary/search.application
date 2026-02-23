@@ -5,6 +5,7 @@ require "services"
 require "yaml"
 require "active_support"
 require "sidekiq"
+require "addressable"
 
 module Search
 end

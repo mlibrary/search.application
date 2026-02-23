@@ -21,6 +21,9 @@
 
 a {
   color: colors.$color-anchor;
+  &:hover {
+    text-decoration-thickness: 0.125rem;
+  }
 }
 
 

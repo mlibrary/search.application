@@ -1,10 +1,17 @@
 <nav aria-label="Primary" class="primary-navigation">
   <ul>
     <% @datastores.each do |datastore| %>
+      <%
+        datastore_url = "/#{datastore.slug}"
+        # Add "query" param to datastore links if present in current URL
+        if params[:query].present?
+          datastore_url += "?query=#{CGI.escape(params[:query])}"
+        end
+      %>
       <li>
         <%= link_to(
           body: datastore.title,
-          url: "/#{datastore.slug}",
+          url: datastore_url,
           classes: ["underline__none", "primary-navigation__#{datastore.slug}"],
           rest: "aria-current=\"#{datastore.aria_current_attribute(@presenter.slug)}\""
         ) %>

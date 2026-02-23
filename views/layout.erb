@@ -75,15 +75,13 @@
   <!-- End Google Tag Manager (noscript) -->
   <%= erb :'partials/_header' %>
   <main>
-    <div class="container">
-      <% if @presenter.breadcrumbs&.any? %>
-        <%= erb :'partials/_breadcrumbs', locals: { breadcrumbs: @presenter.breadcrumbs } %>
-      <% end %>
-      <%= yield %>
-      <% if S.dev_login? %>
-        <%= erb :'partials/_development_users' %>
-      <% end %>
-    </div>
+    <% if @presenter.breadcrumbs&.any? %>
+      <%= erb :'partials/_breadcrumbs', locals: { breadcrumbs: @presenter.breadcrumbs } %>
+    <% end %>
+    <%= yield %>
+    <% if S.dev_login? %>
+      <%= erb :'partials/_development_users' %>
+    <% end %>
   </main>
   <%= erb :'partials/_footer' %>
   <% @presenter.scripts.flatten.each do |script| %>

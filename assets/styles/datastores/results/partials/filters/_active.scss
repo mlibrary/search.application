@@ -1,0 +1,82 @@
+@use '../../../../utilities';
+@use '../../../../forms';
+@use '../../../../icons';
+
+// --------------------------------------------------
+//
+// # Active Filters
+//   Styles to apply directly to `views/datastores/results/partials/filters/_active.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.filters__active';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} {
+  padding: 1rem;
+}
+
+
+
+// *           * //
+// * 2.1. LIST * //
+// *           * //
+
+#{$class}--list > li + li{
+  margin-top: 0.5rem;
+}
+
+
+
+
+
+// *********************** //
+// *** 3. ACTIVE LINKS *** //
+// *********************** //
+
+a#{$class}--link {
+  @include utilities.flex();
+  background-color: var(--color-green-100);
+  border: 1px solid var(--color-green-200);
+  border-radius: forms.$radius;
+  color: var(--search-color-green-300);
+  justify-content: space-between;
+  padding: 0.5rem;
+  text-decoration: none;
+  &:after {
+    @include icons.icon($icon: 'close');
+  }
+  &:hover {
+    border-color: var(--color-green-400);
+    #{$class}--link-text {
+      text-decoration: underline;
+    }
+  }
+}
+
+
+
+
+
+// ************************* //
+// *** 4. CLEAR ALL LINK *** //
+// ************************* //
+
+#{$class}--clear {
+  color: var(--search-color-grey-600);
+}

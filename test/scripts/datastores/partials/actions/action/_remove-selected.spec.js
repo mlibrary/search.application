@@ -229,7 +229,7 @@ describe('remove selected', function () {
     let displayAddSelectedActionSpy = null;
     let displayRemoveSelectedActionSpy = null;
     let reloadPageSpy = null;
-    let setTemporaryListSpy = null;
+    let setSessionStorageSpy = null;
     let toggleBannerSpy = null;
     let toggleRemoveSelectedButtonSpy = null;
     let args = null;
@@ -240,7 +240,7 @@ describe('remove selected', function () {
       displayAddSelectedActionSpy = sinon.spy();
       displayRemoveSelectedActionSpy = sinon.spy();
       reloadPageSpy = sinon.spy();
-      setTemporaryListSpy = sinon.spy();
+      setSessionStorageSpy = sinon.spy();
       toggleBannerSpy = sinon.spy();
       toggleRemoveSelectedButtonSpy = sinon.spy();
       args = {
@@ -251,7 +251,7 @@ describe('remove selected', function () {
         list: global.temporaryList,
         reloadPage: reloadPageSpy,
         removeSelectedButton: getRemoveSelectedButton(),
-        setList: setTemporaryListSpy,
+        setList: setSessionStorageSpy,
         showBanner: toggleBannerSpy,
         toggleRemoveButton: toggleRemoveSelectedButtonSpy,
         viewingList: false
@@ -271,7 +271,7 @@ describe('remove selected', function () {
       displayAddSelectedActionSpy = null;
       displayRemoveSelectedActionSpy = null;
       reloadPageSpy = null;
-      setTemporaryListSpy = null;
+      setSessionStorageSpy = null;
       toggleBannerSpy = null;
       toggleRemoveSelectedButtonSpy = null;
       args = null;
@@ -290,8 +290,8 @@ describe('remove selected', function () {
       expect(deleteSelectedRecordsStub.calledWith({ list: args.list }), '`deleteSelectedRecords` should be called with the correct arguments').to.be.true;
     });
 
-    it('should call `setTemporaryList` with the correct arguments', function () {
-      expect(setTemporaryListSpy.calledWith(deleteSelectedRecordsStub.returnValues[0]), '`setTemporaryList` should be called with the correct arguments').to.be.true;
+    it('should call `setSessionStorage` with the correct arguments', function () {
+      expect(setSessionStorageSpy.calledWith({ itemName: 'temporaryList', value: deleteSelectedRecordsStub.returnValues[0] }), '`setSessionStorage` should be called with the correct arguments').to.be.true;
     });
 
     it('should call `toggleBanner` with the correct arguments', function () {

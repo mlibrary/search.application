@@ -18,6 +18,7 @@ gem "activesupport"
 gem "semantic_logger"
 gem "twilio-ruby"
 gem "mail"
+gem "addressable"
 gem "debug"
 
 group :metrics do

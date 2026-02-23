@@ -1,0 +1,13 @@
+<div class="container__rounded--no-shadow content results__summary">
+  <div class="results__summary--content">
+    <% if total_results > 0 %>
+      <p><%= start_result %> to <%= end_result %> of <%= total_results %> <%= @presenter.page_title %> results</p>
+    <% else %>
+      <p><span class="strong">No results</span> match your search: <span class="strong"><%= params[:query] %></span></p>
+    <% end %>
+    <p>Showing results for: <span class="strong"><%= params[:query] %></span></p>
+  </div>
+  <% if total_results > 0 %>
+    <%= erb :'datastores/results/partials/summary/_sort' %>
+  <% end %>
+</div>

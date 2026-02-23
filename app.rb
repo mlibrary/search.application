@@ -92,14 +92,6 @@ class Search::Application < Sinatra::Base
   end
 
   Search::Datastores.each do |datastore|
-    get "/#{datastore.slug}" do
-      headers "metrics.datastore" => datastore.slug, "metrics.route" => "static_page"
-      Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
-      @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
-      erb :"datastores/layout", layout: :layout do
-        erb :"datastores/#{datastore.slug}"
-      end
-    end
     if datastore.slug == "catalog"
       get "/#{datastore.slug}/record/:id" do
         # profile = RubyProf::Profile.new
@@ -132,7 +124,30 @@ class Search::Application < Sinatra::Base
       rescue
         redirect "/#{datastore.slug}/record/:id"
       end
-
+      get "/catalog" do
+        if params.any?
+          @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+          erb :"datastores/results/layout", layout: :layout do
+            erb :"datastores/results/#{datastore.slug}"
+          end
+        else
+          headers "metrics.datastore" => datastore.slug, "metrics.route" => "static_page"
+          Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
+          @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+          erb :"datastores/layout", layout: :layout do
+            erb :"datastores/#{datastore.slug}"
+          end
+        end
+      end
+    else
+      get "/#{datastore.slug}" do
+        headers "metrics.datastore" => datastore.slug, "metrics.route" => "static_page"
+        Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
+        @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+        erb :"datastores/layout", layout: :layout do
+          erb :"datastores/#{datastore.slug}"
+        end
+      end
     end
     if datastore.slug == "everything"
       get "/#{datastore.slug}/list" do
@@ -223,7 +238,7 @@ class Search::Application < Sinatra::Base
       redirect "/#{params[:search_datastore]}"
     end
     # Make a search in the current site
-    redirect "https://search.lib.umich.edu/#{params[:search_datastore]}?query=#{query}"
+    redirect "/#{params[:search_datastore]}?query=#{query}"
   end
 
   if S.workshop?
