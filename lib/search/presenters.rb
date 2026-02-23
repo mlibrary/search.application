@@ -34,7 +34,7 @@ module Search::Presenters
   end
 
   def self.for_datastore_list(slug:, uri:, patron: nil)
-    Presenter::List.get(uri: uri, patron: patron)
+    Presenter::List.for(uri: uri, patron: patron)
   end
 
   def self.for_static_page(slug:, uri:, patron:)
