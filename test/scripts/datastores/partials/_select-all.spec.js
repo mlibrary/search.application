@@ -1,7 +1,9 @@
 import {
   getSelectAllCheckbox,
   selectAll,
-  selectAllCheckboxState
+  selectAllCheckboxState,
+  updateSelectedCount,
+  updateTotalCount
 } from '../../../../assets/scripts/datastores/partials/_select-all.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -19,7 +21,7 @@ describe('select all', function () {
           Select all
         </label>
         <div class="select-all__count">
-          <span class="select-all__count--checked">0</span> out of <span class="select-all__count--total">1</span> item selected.
+          <span class="select-all__count--checked">0</span> out of <span class="select-all__count--total">1</span> <span class="select-all__count--text">item</span> selected.
         </div>
       </div>
       <ol class="list__items">
@@ -177,15 +179,90 @@ describe('select all', function () {
     });
   });
 
+  describe('updateSelectedCount()', function () {
+    let getCountText = null;
+    let args = null;
+
+    beforeEach(function () {
+      getCountText = () => {
+        return document.querySelector('.select-all__count--checked').textContent;
+      };
+
+      args = {
+        count: 3
+      };
+
+      // Call the function
+      updateSelectedCount(args);
+    });
+
+    afterEach(function () {
+      getCountText = null;
+    });
+
+    it('should return the correct count text', function () {
+      expect(getCountText(), 'the count text should be correct').to.equal(String(args.count));
+    });
+  });
+
+  describe('updateTotalCount()', function () {
+    let getTotalText = null;
+    let getItemsText = null;
+    let args = null;
+
+    beforeEach(function () {
+      getTotalText = () => {
+        return document.querySelector('.select-all__count--total').textContent;
+      };
+
+      getItemsText = () => {
+        return document.querySelector('.select-all__count--text').textContent;
+      };
+
+      args = {
+        count: 3,
+        viewingList: true
+      };
+
+      // Call the function
+      updateTotalCount(args);
+    });
+
+    afterEach(function () {
+      getTotalText = null;
+      getItemsText = null;
+    });
+
+    it('should return the correct total text', function () {
+      expect(getTotalText(), 'the total text should be correct').to.equal(String(args.count));
+    });
+
+    it('should return the correct items text', function () {
+      expect(getItemsText(), 'the items text should be correct').to.equal(args.count === 1 ? 'item' : 'items');
+    });
+
+    it('should return early if not viewing My Temporary List', function () {
+      expect(() => {
+        return updateTotalCount({ ...args, viewingList: false });
+      }, 'the function should not throw when not viewing a temporary list').to.not.throw();
+    });
+  });
+
   describe('selectAll', function () {
+    let updateSelectedCountSpy = null;
+    let updateTotalCountSpy = null;
     let selectAllCheckboxStateSpy = null;
     let args = null;
 
     beforeEach(function () {
+      updateSelectedCountSpy = sinon.spy();
+      updateTotalCountSpy = sinon.spy();
       selectAllCheckboxStateSpy = sinon.spy();
       args = {
         checkbox: getSelectAllCheckbox(),
         checkboxes: getCheckboxes(),
+        countSelected: updateSelectedCountSpy,
+        countTotal: updateTotalCountSpy,
         selectCheckboxState: selectAllCheckboxStateSpy
       };
 
@@ -194,6 +271,8 @@ describe('select all', function () {
     });
 
     afterEach(function () {
+      updateSelectedCountSpy = null;
+      updateTotalCountSpy = null;
       selectAllCheckboxStateSpy = null;
       args = null;
     });
@@ -202,13 +281,20 @@ describe('select all', function () {
       expect(selectAllCheckboxStateSpy.calledOnceWithExactly({ checkbox: args.checkbox }), '`selectAllCheckboxState` should be called once during initialization').to.be.true;
     });
 
-    it('should call `selectAllCheckboxState` again when the `Select all` checkbox is changed with the correct arguments', function () {
+    it('should call `updateSelectedCount` once during initialization with the correct arguments', function () {
+      expect(updateSelectedCountSpy.calledOnce, '`updateSelectedCount` should be called once during initialization').to.be.true;
+    });
+
+    it('should call `updateSelectedCount` again when the `Select all` checkbox is changed with the correct arguments', function () {
       // Simulate a change event on the `Select all` checkbox
       args.checkbox.dispatchEvent(new window.Event('change'));
 
-      // Check that `selectAllCheckboxState` was called again
-      expect(selectAllCheckboxStateSpy.calledTwice, '`selectAllCheckboxState` should be called when the `Select all` checkbox is changed').to.be.true;
-      expect(selectAllCheckboxStateSpy.calledWithExactly({ checkbox: args.checkbox }), '`selectAllCheckboxState` should be called when the `Select all` checkbox is changed').to.be.true;
+      // Check that `updateSelectedCount` was called again
+      expect(updateSelectedCountSpy.calledTwice, '`updateSelectedCount` should be called when the `Select all` checkbox is changed').to.be.true;
+    });
+
+    it('should call `updateTotalCount` once during initialization with the correct arguments', function () {
+      expect(updateTotalCountSpy.calledOnceWithExactly({ count: args.checkboxes.length }), '`updateTotalCount` should be called once during initialization').to.be.true;
     });
 
     it('should check all record checkboxes when the `Select all` checkbox is initially checked on change', function () {
