@@ -59,8 +59,10 @@
       <%= erb :'/datastores/results/partials/_summary', locals: { total_results: total_results, start_result: start_result, end_result: end_result } %>
       <% if results.any? %>
         <%= erb :'/datastores/list/partials/_go-to' %>
-        <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
-        <%= erb :'/datastores/partials/_select-all', locals: { count: page_results.size } %>
+        <div class="container__sticky">
+          <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
+          <%= erb :'/datastores/partials/_select-all', locals: { count: page_results.size } %>
+        </div>
         <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: page_results, start_result: start_result, end_result: end_result } %>
         <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: current_page, per_page: per_page, total_results: total_results } %>
       <% else %>

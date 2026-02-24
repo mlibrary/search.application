@@ -30,7 +30,7 @@ $class: '.select-all';
 // ********************* //
 
 #{$class} {
-  @include utilities.flex();
+  @include utilities.flex($wrap: true);
   background-color: var(--search-color-blue-200);
   border: 2px solid var(--search-color-blue-300);
   border-radius: forms.$radius;
@@ -39,8 +39,12 @@ $class: '.select-all';
   @media print {
     display: none;
   }
-  .results__content > & {
-    margin-top: 0;
+  .container__sticky > .actions + & {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: -2px;
+    position: relative;
+    z-index: 1;
   }
 }
 
