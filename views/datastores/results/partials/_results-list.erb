@@ -1,4 +1,4 @@
-<ol start="<%= start_result %>" class="results__list list__no-style">
+<ol start="<%= start_result %>" class="list__no-style results__list">
   <% results.each_with_index do |result, index| %>
     <%= erb :'datastores/results/partials/results-list/_result', locals: { result: result, index: index, start_result: start_result } %>
     <%
