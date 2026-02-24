@@ -5,7 +5,7 @@ const getSelectAllCheckbox = () => {
   return document.querySelector('input[type="checkbox"].select-all__checkbox');
 };
 
-const selectAllCheckboxState = ({ checkbox, someChecked = someCheckboxesChecked }) => {
+const selectAllCheckboxState = ({ checkbox = getSelectAllCheckbox(), someChecked = someCheckboxesChecked } = {}) => {
   checkbox.indeterminate = someChecked(true) && someChecked(false);
   checkbox.checked = someChecked(true) && !someChecked(false);
 };

@@ -549,7 +549,8 @@ describe('layout', function () {
         disableActionTabs: sinon.spy(),
         displayCSLData: sinon.spy(),
         regenerateCitations: sinon.spy(),
-        selectAllCheckboxState: sinon.spy()
+        selectAllCheckboxState: sinon.spy(),
+        updateSelectedCount: sinon.spy()
       };
 
       args = { actions, list: global.temporaryList };

@@ -1,9 +1,9 @@
+import { selectAllCheckboxState, updateSelectedCount } from '../partials/_select-all.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
 import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { listItem } from './partials/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
-import { selectAllCheckboxState } from '../partials/_select-all.js';
 
 /* eslint-disable sort-keys */
 const defaultTemporaryList = {
@@ -148,7 +148,8 @@ const defaultActions = {
   },
   displayCSLData,
   regenerateCitations,
-  selectAllCheckboxState
+  selectAllCheckboxState,
+  updateSelectedCount
 };
 
 const handleSelectionChange = ({ actions, list }) => {
@@ -157,6 +158,7 @@ const handleSelectionChange = ({ actions, list }) => {
     if (event.target.matches(`input[type="checkbox"].record__checkbox, input[type="checkbox"].select-all__checkbox`)) {
       actions.actionsPanelText();
       actions.selectAllCheckboxState();
+      actions.updateSelectedCount();
       actions.disableActionTabs();
       actions.displayCSLData({ list });
       actions.regenerateCitations();
