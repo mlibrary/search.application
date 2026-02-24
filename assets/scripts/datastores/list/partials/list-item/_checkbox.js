@@ -39,16 +39,7 @@ const splitCheckboxValue = ({ value }) => {
   return { recordDatastore, recordId };
 };
 
-const checkboxChangeHandler = ({ checkboxes = getCheckboxes(), func, ...args }) => {
-  checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', () => {
-      func({ ...args });
-    });
-  });
-};
-
 export {
-  checkboxChangeHandler,
   filterSelectedRecords,
   getCheckboxes,
   getCheckedCheckboxes,
