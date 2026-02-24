@@ -1,79 +1,170 @@
+import {
+  changeTemporaryListBannerCount,
+  getTemporaryListBanner,
+  temporaryListBanner,
+  temporaryListBannerClass
+} from '../../../../../assets/scripts/datastores/list/partials/_go-to.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { temporaryListCount } from '../../../../../assets/scripts/datastores/list/layout.js';
-import { toggleBanner } from '../../../../../assets/scripts/datastores/list/partials/_go-to.js';
 
-describe('toggleBanner', function () {
-  let temporaryListCountStub = null;
-  let changeCountStub = null;
-  let args = null;
+describe('temporaryListBanner', function () {
   let getBanner = null;
-  const emptyClass = 'list__go-to--empty';
+  let getCountElement = null;
+  const hiddenClass = 'hide__javascript';
 
   beforeEach(function () {
-    temporaryListCountStub = sinon.stub().returns(5);
-    changeCountStub = sinon.stub();
-    args = {
-      countList: temporaryListCountStub,
-      countPartial: changeCountStub,
-      list: global.temporaryList
-    };
-
     // Apply HTML to the body
     document.body.innerHTML = `
-      <div class="list__go-to ${emptyClass}"></div>
+      <div class="list__go-to hide__javascript">
+        <span class="strong list__go-to--count">0</span> in list
+      </div>
     `;
 
     getBanner = () => {
       return document.querySelector('.list__go-to');
     };
 
-    // Check that the empty class is present initially
-    expect(getBanner().classList.contains(emptyClass), 'the empty class should be present initially').to.be.true;
-
-    // Call the function
-    toggleBanner(args);
+    getCountElement = () => {
+      return document.querySelector('.list__go-to--count');
+    };
   });
 
   afterEach(function () {
-    temporaryListCountStub = null;
-    changeCountStub = null;
-    args = null;
     getBanner = null;
+    getCountElement = null;
   });
 
-  it('should call `temporaryListCount` with the correct arguments', function () {
-    expect(temporaryListCountStub.calledOnceWithExactly(args.list), 'temporaryListCount should be called once with the correct list argument').to.be.true;
+  describe('getTemporaryListBanner()', function () {
+    it('should return the temporary list banner element', function () {
+      expect(getTemporaryListBanner(), '`getTemporaryListBanner` should return the correct element').to.deep.equal(getBanner());
+    });
   });
 
-  it('should call `changeCount` with the correct arguments', function () {
-    expect(changeCountStub.calledOnceWithExactly(temporaryListCount(global.temporaryList)), 'changeCount should be called once with the correct count argument').to.be.true;
+  describe('changeTemporaryListBannerCount()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        banner: getBanner(),
+        count: 5
+      };
+
+      // Call the function
+      changeTemporaryListBannerCount(args);
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should update the count element with the provided count', function () {
+      expect(getCountElement().textContent, `The count element should have been changed to ${args.count}`).to.equal(String(args.count));
+    });
+
+    it('should set the count to 0 if the provided count is not a number', function () {
+      // Set an invalid count
+      args.count = 'invalid';
+
+      // Call the function again
+      changeTemporaryListBannerCount(args);
+
+      // Verify the count is set to 0
+      expect(getCountElement().textContent, 'The count element should be set to 0 for invalid count').to.equal('0');
+    });
   });
 
-  it('should remove the empty class from the banner if the count is greater than 0', function () {
-    expect(getBanner().classList.contains(emptyClass), 'the empty class should be removed when count is greater than 0').to.be.false;
+  describe('temporaryListBannerClass()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        banner: getBanner(),
+        count: 5
+      };
+
+      // Check that the hidden class is initially present
+      expect(args.banner.classList.contains(hiddenClass), 'The banner should initially have the hidden class').to.be.true;
+
+      // Check that the count is greater than 0
+      expect(args.count, 'The count should be greater than 0').to.be.greaterThan(0);
+
+      // Call the function
+      temporaryListBannerClass(args);
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should remove the hidden class when count is greater than 0', function () {
+      expect(args.banner.classList.contains(hiddenClass), 'The banner should not have the hidden if the count is greater than 0').to.be.false;
+    });
+
+    it('should add the hidden class when count is 0', function () {
+      // Set the count to 0
+      args.count = 0;
+
+      // Call the function again
+      temporaryListBannerClass(args);
+
+      // Check that the hidden class is added
+      expect(args.banner.classList.contains(hiddenClass), 'The banner should have the hidden class when the count is 0').to.be.true;
+    });
   });
 
-  it('should add the empty class to the banner if the count is 0', function () {
-    // Update the stub to return 0
-    temporaryListCountStub.returns(0);
+  describe('temporaryListBanner()', function () {
+    let temporaryListCountStub = null;
+    let changeTemporaryListBannerCountSpy = null;
+    let temporaryListBannerClassSpy = null;
+    let args = null;
 
-    // Call the function again
-    toggleBanner(args);
+    beforeEach(function () {
+      temporaryListCountStub = sinon.stub().returns(5);
+      changeTemporaryListBannerCountSpy = sinon.spy();
+      temporaryListBannerClassSpy = sinon.spy();
 
-    expect(getBanner().classList.contains(emptyClass), 'the empty class should be added when count is 0').to.be.true;
-  });
+      args = {
+        banner: getBanner(),
+        countList: temporaryListCountStub,
+        list: global.temporaryList,
+        toggleClass: temporaryListBannerClassSpy,
+        updateCount: changeTemporaryListBannerCountSpy
+      };
 
-  it('should do nothing if the banner is not found', function () {
-    // Remove the banner from the DOM
-    document.body.innerHTML = '';
+      // Call the function
+      temporaryListBanner(args);
+    });
 
-    // Check that the banner is not found
-    expect(getBanner(), 'the banner should not be found').to.be.null;
+    afterEach(function () {
+      temporaryListCountStub = null;
+      changeTemporaryListBannerCountSpy = null;
+      temporaryListBannerClassSpy = null;
+      args = null;
+    });
 
-    // Call the function again
-    expect(() => {
-      return toggleBanner(args);
-    }, 'calling toggleBanner with no banner should not throw an error').to.not.throw();
+    it('should call `temporaryListCount` with the correct arguments', function () {
+      expect(temporaryListCountStub.calledOnceWithExactly(args.list), '`temporaryListCount` should be called once with the correct arguments').to.be.true;
+    });
+
+    it('should call `changeTemporaryListBannerCount` with the correct arguments', function () {
+      expect(changeTemporaryListBannerCountSpy.calledOnceWithExactly({ banner: args.banner, count: args.countList(args.list) }), '`changeTemporaryListBannerCount` should be called once with the correct arguments').to.be.true;
+    });
+
+    it('should call `temporaryListBannerClass` with the correct arguments', function () {
+      expect(temporaryListBannerClassSpy.calledOnceWithExactly({ banner: args.banner, count: args.countList(args.list) }), '`temporaryListBannerClass` should be called once with the correct arguments').to.be.true;
+    });
+
+    it('should return early if the banner element is not provided', function () {
+      // Set the banner to null
+      args.banner = null;
+
+      // Call the function again
+      temporaryListBanner(args);
+
+      // Check that the function does not throw an error
+      expect(() => {
+        return temporaryListBanner(args);
+      }, 'The function should not throw an error when the banner is not provided').to.not.throw();
+    });
   });
 });

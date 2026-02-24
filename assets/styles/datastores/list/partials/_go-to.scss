@@ -1,4 +1,3 @@
-@use './in-list';
 @use '../../../utilities';
 @use '../../../forms';
 
@@ -46,4 +45,19 @@ $class: '.list__go-to';
   @media print {
     display: none;
   }
+}
+
+
+
+
+
+// ****************** //
+// *** 3. IN LIST *** //
+// ****************** //
+
+#{$class}--in-list {
+  background-color: var(--search-color-blue-500);
+  border-radius: forms.$radius;
+  color: white;
+  padding: 0 .25rem;
 }

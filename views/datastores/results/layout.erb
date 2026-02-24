@@ -36,6 +36,9 @@
   per_page = 10
   start_result = current_page > 1 ? ((current_page - 1) * per_page) + 1 : 1
   end_result = [(start_result + per_page) - 1, total_results].min
+  page_results = results.map.with_index do |result, index|
+    result if index + 1 >= start_result && index + 1 <= end_result
+  end.compact
 %>
 
 <%= h1(body: @presenter.page_title, classes: ["visually-hidden"]) %>
@@ -56,9 +59,11 @@
       <%= erb :'/datastores/results/partials/_summary', locals: { total_results: total_results, start_result: start_result, end_result: end_result } %>
       <% if results.any? %>
         <%= erb :'/datastores/list/partials/_go-to' %>
-        <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
-        <%#= erb :'/datastores/results/partials/_select-all' %>
-        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: results, start_result: start_result, end_result: end_result } %>
+        <div class="container__sticky">
+          <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
+          <%= erb :'/datastores/partials/_select-all', locals: { count: page_results.size } %>
+        </div>
+        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: page_results, start_result: start_result, end_result: end_result } %>
         <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: current_page, per_page: per_page, total_results: total_results } %>
       <% else %>
         <%= erb :'/datastores/results/partials/results-list/_no-results' %>

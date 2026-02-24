@@ -1,18 +1,12 @@
-<%
-  # Filter results to the start_result to the end_result for pagination
-  page_results = results.map.with_index do |result, index|
-    result if index + 1 >= start_result && index + 1 <= end_result
-  end.compact
-%>
-<ol start="<%= start_result %>" class="results__list list__no-style">
-  <% page_results.each_with_index do |result, index| %>
+<ol start="<%= start_result %>" class="list__no-style results__list">
+  <% results.each_with_index do |result, index| %>
     <%= erb :'datastores/results/partials/results-list/_result', locals: { result: result, index: index, start_result: start_result } %>
     <%
       # Show specialists only on the first page
       if current_page == 1
-        if page_results.size < 3
+        if results.size < 3
           # Show specialists after the last result if there are less than 3 results
-          show_specialists = index == page_results.size - 1
+          show_specialists = index == results.size - 1
         else
           # Show specialists after the third result
           show_specialists = index == 2

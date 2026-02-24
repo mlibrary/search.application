@@ -1,0 +1,73 @@
+@use '../../utilities';
+@use '../../forms';
+
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/partials/_select-all.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Select All
+//     2.1. Label
+//     2.2. Count
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.select-all';
+
+
+
+
+
+
+// ********************* //
+// *** 2. SELECT ALL *** //
+// ********************* //
+
+#{$class} {
+  @include utilities.flex($wrap: true);
+  background-color: var(--search-color-blue-200);
+  border: 2px solid var(--search-color-blue-300);
+  border-radius: forms.$radius;
+  justify-content: space-between;
+  padding: .5rem 1rem;
+  @media print {
+    display: none;
+  }
+  .container__sticky > .actions + & {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: -2px;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+
+
+// *            * //
+// * 2.1. LABEL * //
+// *            * //
+
+#{$class}__label {
+  @include utilities.flex();
+  gap: 0.5rem;
+}
+
+
+
+// *            * //
+// * 2.2. COUNT * //
+// *            * //
+
+#{$class}__count {
+  background-color: var(--search-color-blue-500);
+  border-radius: forms.$radius;
+  color: white;
+  padding: 0 .25rem;
+}

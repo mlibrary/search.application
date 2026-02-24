@@ -1,7 +1,6 @@
 @use '../partials/breadcrumbs';
-@use './partials/select-all';
-@use './partials/in-list';
 @use '../partials/actions';
+@use '../partials/select-all';
 @use './partials/list-item';
 @use '../../utilities';
 @use '../../forms';
@@ -14,9 +13,8 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Container
-//   3. Header
-//   4. Empty
-//   5. Actions
+//   3. Empty
+//   4. Actions
 //
 // --------------------------------------------------
 
@@ -42,37 +40,8 @@ $class: '.list';
 
 
 
-
-// ****************** //
-// *** 3. ACTIONS *** //
-// ****************** //
-
-#{$class} #{$class}__actions {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  .actions {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  &--utilities {
-    @include utilities.flex($responsive: true, $wrap: true);
-    & {
-      background-color: var(--search-color-blue-200);
-      border: 2px solid var(--search-color-blue-300);
-      border-radius: 0 0 forms.$radius forms.$radius;
-      justify-content: space-between;
-      padding: 0.5rem 1rem;
-    }
-  }
-}
-
-
-
-
-
 // **************** //
-// *** 4. EMPTY *** //
+// *** 3. EMPTY *** //
 // **************** //
 
 #{$class} #{$class}__empty {
@@ -90,11 +59,10 @@ $class: '.list';
 
 
 // ****************** //
-// *** 5. ACTIONS *** //
+// *** 4. ACTIONS *** //
 // ****************** //
 
 #{$class} .actions {
-  body.no-javascript &,
   button#actions__link,
   #actions__link--tabpanel {
     display: none;

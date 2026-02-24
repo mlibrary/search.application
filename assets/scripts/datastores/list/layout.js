@@ -1,10 +1,9 @@
+import { selectAllCheckboxState, updateSelectedCount } from '../partials/_select-all.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
 import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { listItem } from './partials/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
-import { selectAllState } from './partials/_select-all.js';
-import { selectedText } from './partials/_in-list.js';
 
 /* eslint-disable sort-keys */
 const defaultTemporaryList = {
@@ -92,7 +91,7 @@ const nonEmptyDatastores = (list) => {
 };
 
 const toggleListElements = (list) => {
-  const listActions = document.querySelector('.list__actions');
+  const listActions = document.querySelector('.container__sticky');
   const emptyList = document.querySelector('.list__empty');
 
   // Check if elements should be visible or not based on temporary list being empty
@@ -149,19 +148,17 @@ const defaultActions = {
   },
   displayCSLData,
   regenerateCitations,
-  selectAllState,
-  selectedText: () => {
-    return selectedText();
-  }
+  selectAllCheckboxState,
+  updateSelectedCount
 };
 
 const handleSelectionChange = ({ actions, list }) => {
   // Watch for changes to the list and update accordingly
   document.querySelector('.list').addEventListener('change', (event) => {
-    if (event.target.matches(`input[type="checkbox"].list__item--checkbox, .select-all > input[type="checkbox"]`)) {
-      actions.selectedText();
+    if (event.target.matches(`input[type="checkbox"].record__checkbox, input[type="checkbox"].select-all__checkbox`)) {
       actions.actionsPanelText();
-      actions.selectAllState();
+      actions.selectAllCheckboxState();
+      actions.updateSelectedCount();
       actions.disableActionTabs();
       actions.displayCSLData({ list });
       actions.regenerateCitations();
@@ -171,7 +168,6 @@ const handleSelectionChange = ({ actions, list }) => {
 
 const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChange = handleSelectionChange, list } = {}) => {
   // Update Actions panel
-  actions.selectedText();
   actions.actionsPanelText();
   actions.displayCSLData({ list });
 

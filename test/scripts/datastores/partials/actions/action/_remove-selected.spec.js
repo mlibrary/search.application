@@ -18,7 +18,7 @@ nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
   recordIds.forEach((recordId, index) => {
     temporaryListHTML += `
       <div class="record__container" data-record-id="${recordId}" data-record-datastore="${datastore}">
-        <input type="checkbox" class="list__item--checkbox" value="${datastore},${recordId}" ${index === 0 ? 'checked' : ''}>
+        <input type="checkbox" class="record__checkbox" value="${datastore},${recordId}" ${index === 0 ? 'checked' : ''}>
       </div>
     `;
   });

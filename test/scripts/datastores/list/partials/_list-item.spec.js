@@ -45,7 +45,7 @@ describe('listItem()', function () {
 
     beforeEach(function () {
       // Apply HTML to the body
-      document.body.innerHTML = '<input type="checkbox" class="list__item--checkbox" value="" aria-label="Select record">';
+      document.body.innerHTML = '<input type="checkbox" class="record__checkbox" value="" aria-label="Select record">';
 
       getCheckbox = () => {
         return document.querySelector('input');
@@ -231,7 +231,7 @@ describe('listItem()', function () {
       document.body.innerHTML = `
         <li class="container__rounded list__item list__item--clone">
           <div class="list__item--header">
-            <input type="checkbox" class="list__item--checkbox" value="" aria-label="Select record">
+            <input type="checkbox" class="record__checkbox" value="" aria-label="Select record">
             ${listItemTitleHTML}
           </div>
           ${listItemMetadataHTML}
@@ -281,7 +281,7 @@ describe('listItem()', function () {
 
     it('should call `listItemCheckbox` with the correct arguments', function () {
       // Get the cloned checkbox
-      const itemCheckbox = clone.querySelector('.list__item--checkbox');
+      const itemCheckbox = clone.querySelector('.record__checkbox');
 
       // Check that `listItemCheckbox` was called
       expect(args.updates.listItemCheckbox.calledOnce, '`listItemCheckbox` should have been called once').to.be.true;

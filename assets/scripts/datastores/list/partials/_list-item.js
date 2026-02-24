@@ -74,7 +74,7 @@ const listItem = ({ datastore, index, record, recordId, updates = listItemUpdate
   clonedListItem.setAttribute('data-record-id', recordId);
   // Update the checkbox
   const { metadata, title, url } = record;
-  const itemCheckbox = clonedListItem.querySelector('.list__item--checkbox');
+  const itemCheckbox = clonedListItem.querySelector('.record__checkbox');
   updates.listItemCheckbox({ datastore, itemCheckbox, recordId, title: title.original });
   // Update the title
   const itemTitle = clonedListItem.querySelector('.list__item--title');

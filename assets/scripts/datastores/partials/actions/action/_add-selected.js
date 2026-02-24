@@ -1,7 +1,7 @@
 import { filterSelectedRecords, getCheckboxes, getCheckedCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../list/partials/list-item/_checkbox.js';
 import { inTemporaryList, setSessionStorage } from '../../../list/layout.js';
 import { displayRemoveSelectedAction } from './_remove-selected.js';
-import { toggleBanner } from '../../../list/partials/_go-to.js';
+import { temporaryListBanner } from '../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../_actions.js';
 
 const addSelectedClass = 'actions__add-selected';
@@ -120,7 +120,7 @@ const addSelectedAction = ({
   displayRemoveAction = displayRemoveSelectedAction,
   list,
   setList = setSessionStorage,
-  showBanner = toggleBanner,
+  showBanner = temporaryListBanner,
   styleRecords = styleAddedRecords
 } = {}) => {
   const button = addSelectedButton;

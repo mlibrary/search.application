@@ -47,9 +47,6 @@ $class: '.list__item';
 #{$class} {
   #{$class}--header {
     @include utilities.flex($align: baseline);
-    #{$class}--checkbox {
-      flex-shrink: 0;
-    }
     #{$class}--title {
       margin: 0;
       #{$class}--title-number,

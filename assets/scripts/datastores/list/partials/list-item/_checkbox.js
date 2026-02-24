@@ -1,6 +1,6 @@
 import { viewingFullRecord } from '../../../record/layout.js';
 
-const checkboxSelector = 'input[type="checkbox"].list__item--checkbox:not([value=""])';
+const checkboxSelector = 'input[type="checkbox"].record__checkbox:not([value=""])';
 
 const getCheckboxes = () => {
   return document.querySelectorAll(checkboxSelector);
@@ -39,16 +39,7 @@ const splitCheckboxValue = ({ value }) => {
   return { recordDatastore, recordId };
 };
 
-const checkboxChangeHandler = ({ checkboxes = getCheckboxes(), func, ...args }) => {
-  checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', () => {
-      func({ ...args });
-    });
-  });
-};
-
 export {
-  checkboxChangeHandler,
   filterSelectedRecords,
   getCheckboxes,
   getCheckedCheckboxes,
