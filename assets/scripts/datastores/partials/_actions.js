@@ -1,8 +1,7 @@
 import { changeAlert } from './actions/_alert.js';
 import { someCheckboxesChecked } from '../list/partials/list-item/_checkbox.js';
-import { viewingTemporaryList } from '../list/layout.js';
 
-const isSelected = (tab) => {
+const isSelected = ({ tab }) => {
   return tab.getAttribute('aria-selected') === 'true';
 };
 
@@ -18,12 +17,12 @@ const tabControl = (element) => {
   tabs.forEach((tab) => {
     // Hide tab panels that are not selected
     const tabPanel = getTabPanel({ tab, tabContainer });
-    tabPanel.style.display = isSelected(tab) ? 'block' : 'none';
+    tabPanel.style.display = isSelected({ tab }) ? 'block' : 'none';
     tab.addEventListener('click', (event) => {
       // Change `aria-selected` to the opposite of its current value
-      event.target.setAttribute(attribute, !isSelected(event.target));
+      event.target.setAttribute(attribute, !isSelected({ tab: event.target }));
       // Display the tab panel of the selected tab, if it is selected
-      tabPanel.style.display = isSelected(event.target) ? 'block' : 'none';
+      tabPanel.style.display = isSelected({ tab: event.target }) ? 'block' : 'none';
       // Hide and unselect all other tab panels
       tabs.forEach((otherTab) => {
         if (otherTab !== event.target) {
@@ -41,13 +40,7 @@ const tabControl = (element) => {
   });
 };
 
-const disableActionTabs = () => {
-  // Only run if viewing the temporary list
-  if (!viewingTemporaryList()) {
-    return;
-  }
-
-  const someChecked = someCheckboxesChecked(true);
+const disableActionTabs = ({ someChecked = someCheckboxesChecked(true) } = {}) => {
   const tabs = document.querySelectorAll('.actions__tablist button[role="tab"]');
   tabs.forEach((tab) => {
     if (!someChecked) {
