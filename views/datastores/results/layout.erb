@@ -63,7 +63,7 @@
           <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
           <%= erb :'/datastores/partials/_select-all', locals: { count: page_results.size } %>
         </div>
-        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: page_results, start_result: start_result } %>
+        <%= erb :'/datastores/results/partials/results-list/_list-items', layout: :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: page_results, start_result: start_result } %>
         <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: current_page, per_page: per_page, total_results: total_results } %>
       <% else %>
         <%= erb :'/datastores/results/partials/_no-results' %>

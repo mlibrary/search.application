@@ -1,5 +1,4 @@
-@use './results-list/result';
-@use './results-list/specialists';
+@use './results-list/list-items';
 
 // --------------------------------------------------
 //
@@ -16,17 +15,3 @@
 // ******************** //
 
 $class: '.results__list';
-
-
-
-
-
-// *************** //
-// *** 2. LIST *** //
-// *************** //
-
-#{$class} {
-  & > li + li {
-    margin-top: 1rem;
-  }
-}

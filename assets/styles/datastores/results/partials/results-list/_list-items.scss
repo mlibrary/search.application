@@ -1,14 +1,13 @@
-@use '../../../../utilities';
-@use '../../../../media';
+@use './list-items/result';
+@use './list-items/specialists';
 
 // --------------------------------------------------
 //
-// # Specialists
-//   Styles to apply directly to `views/datastores/results/partials/results-list/_result.erb`.
+// # Results List
+//   Styles to apply directly to `views/datastores/results/partials/results-list/_list-items.erb`.
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Container
 //
 // --------------------------------------------------
 
@@ -23,9 +22,9 @@ $class: '.results__list--item';
 
 
 // ******************** //
-// *** 2. CONTAINER *** //
+// *** 2. LIST ITEM *** //
 // ******************** //
 
-#{$class} {
-  padding: 1rem;
+#{$class} + #{$class} {
+  margin-top: 1rem;
 }

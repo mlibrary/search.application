@@ -1,4 +1,4 @@
-import { checkboxFilters } from '../../../../../assets/scripts/datastores/results/partials/_checkboxes.js';
+import { checkboxFilters } from '../../../../../../assets/scripts/datastores/results/partials/filters/_checkboxes.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
