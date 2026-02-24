@@ -348,12 +348,12 @@ describe('layout', function () {
 
     beforeEach(function () {
       document.body.innerHTML = `
-        <div class="list__actions"></div>
+        <div class="container__sticky"></div>
         <div class="list__empty"></div>
       `;
 
       getListActions = () => {
-        return document.querySelector('.list__actions');
+        return document.querySelector('.container__sticky');
       };
 
       getEmptyMessage = () => {

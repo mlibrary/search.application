@@ -92,9 +92,8 @@ $class: 'record';
 
 // * 3.1.1. CHECKBOX * //
 
-.#{$class} .#{$class}__information--header > .list__item--checkbox {
+.#{$class} .#{$class}__information--header > .record__checkbox {
   display: none;
-  flex-shrink: 0;
   margin-top: 0.75rem;
 }
 

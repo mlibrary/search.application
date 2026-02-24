@@ -91,7 +91,7 @@ const nonEmptyDatastores = (list) => {
 };
 
 const toggleListElements = (list) => {
-  const listActions = document.querySelector('.list__actions');
+  const listActions = document.querySelector('.container__sticky');
   const emptyList = document.querySelector('.list__empty');
 
   // Check if elements should be visible or not based on temporary list being empty
