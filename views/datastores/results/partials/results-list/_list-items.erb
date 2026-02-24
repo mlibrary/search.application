@@ -1,5 +1,5 @@
 <% results.each_with_index do |result, index| %>
-  <%= erb :'datastores/results/partials/results-list/list-items/_result', locals: { result: result, index: index, start_result: start_result } %>
+  <%= erb :'datastores/results/partials/results-list/list-items/_list-item', locals: { result: result, index: index, start_result: start_result } %>
   <%
     # Show specialists only on the first page
     if current_page == 1

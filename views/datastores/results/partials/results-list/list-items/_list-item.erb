@@ -1,0 +1,15 @@
+<li class="container__rounded results__list-item record__container" data-record-id="<%= result.id %>" data-record-datastore="<%= @presenter.current_datastore %>">
+  <div class="results__list-item--header">
+    <%= erb :'datastores/list/partials/list-item/_checkbox', locals: { checked: false, datastore: @presenter.current_datastore, record_id: result.id, record_title: result.title.first.text } %>
+    <h3 class="results__list-item--title h4">
+      <span class="results__list-item--title-number"><%= start_result + index %>.</span>
+      <%= link_to(body: result.title.first.text, url: "#{@presenter.current_datastore}/record/#{result.id}", classes: ["results__list-item--title-original"]) %>
+      <% if result.title.second %>
+        <span class="h5 results__list-item--title-transliterated">
+          <%= result.title.second.text %>
+        </span>
+      <% end %>
+    </h3>
+  </div>
+  <%= erb :'/datastores/partials/_metadata', locals: { metadata: result.metadata } %>
+</li>

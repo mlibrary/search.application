@@ -1,0 +1,67 @@
+@use '../../../../../utilities';
+@use '../../../../../media';
+@use '../../../../partials/metadata';
+
+// --------------------------------------------------
+//
+// # Specialists
+//   Styles to apply directly to `views/datastores/results/partials/results-list/list-items/_list-item.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. List Item
+//   3. Header
+//     3.1. Title
+//       3.1.1. Transliterated
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.results__list-item';
+
+
+
+
+
+// ******************** //
+// *** 2. LIST ITEM *** //
+// ******************** //
+
+#{$class} {
+  padding: 1rem;
+  & > * + * {
+    margin-top: 1rem;
+  }
+}
+
+
+
+
+
+// ***************** //
+// *** 3. HEADER *** //
+// ***************** //
+
+#{$class}--header {
+  @include utilities.flex($align: baseline);
+}
+
+
+
+// *            * //
+// * 3.1. TITLE * //
+// *            * //
+
+#{$class}--title {
+  color: var(--search-color-grey-500);
+  margin: 0;
+}
+
+// * 3.1.1. TRANSLITERATED * //
+
+#{$class}--title-transliterated {
+  display: block;
+}

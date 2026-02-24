@@ -1,4 +1,4 @@
-@use './list-items/result';
+@use './list-items/list-item';
 @use './list-items/specialists';
 
 // --------------------------------------------------
@@ -15,16 +15,4 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: '.results__list--item';
-
-
-
-
-
-// ******************** //
-// *** 2. LIST ITEM *** //
-// ******************** //
-
-#{$class} + #{$class} {
-  margin-top: 1rem;
-}
+$class: '.results__list-items';
