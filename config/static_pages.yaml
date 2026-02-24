@@ -1,0 +1,7 @@
+# These are pages with content rather than datastore landing pages or error pages. Adding a description, slug, and title here will create the page.
+- description: "Experience the University of Michigan Library Search, a discovery interface offering seamless access to physical and electronic resources. Since 2018, it provides a unified user experience with comprehensive search capabilities across Catalogs, Articles, Databases, Online Journals, and Guides & More."
+  slug: "about-library-search"
+  title: "About Library Search"
+- description: "Committed to inclusivity, University of Michigan Library strives to make Library Search accessible and user-friendly for everyone, adhering to WCAG 2.1 AA standards to ensure optimal usability."
+  slug: "accessibility"
+  title: "Accessibility"

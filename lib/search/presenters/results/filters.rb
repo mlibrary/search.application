@@ -40,6 +40,33 @@ module Search::Presenters
       def active?
         raise NotImplementedError
       end
+
+      private
+
+      def add_param(uri:, uid:, value:, prefix: nil)
+        result = Addressable::URI.parse(uri)
+        query_values = result.query_values(Array) || []
+        query_values.push([make_key(prefix, uid), value])
+        result.query_values = query_values
+        result.display_uri.to_s
+      end
+
+      def remove_param(uri:, uid:, value:, prefix: nil)
+        result = Addressable::URI.parse(uri)
+        query_values = result.query_values(Array) || []
+        to_be_removed = [make_key(prefix, uid), value]
+        query_values.reject! { |x| x == to_be_removed }
+        result.query_values = query_values
+        result.display_uri.to_s
+      end
+
+      def make_key(prefix, uid)
+        if prefix
+          "#{prefix}.#{uid}"
+        else
+          uid
+        end
+      end
     end
 
     class Filter::Inactive < Filter
@@ -48,7 +75,7 @@ module Search::Presenters
       end
 
       def url
-        Search::Presenters.add_param(uri: @uri, uid: uid, value: value, prefix: "filter")
+        add_param(uri: @uri, uid: uid, value: value, prefix: "filter")
       end
 
       def active?
@@ -62,7 +89,7 @@ module Search::Presenters
       end
 
       def url
-        Search::Presenters.remove_param(uri: @uri, uid: uid, value: value, prefix: "filter")
+        remove_param(uri: @uri, uid: uid, value: value, prefix: "filter")
       end
 
       def active?
