@@ -152,7 +152,7 @@ class Search::Application < Sinatra::Base
     if datastore.slug == "everything"
       get "/#{datastore.slug}/list" do
         # headers "metrics.datastore" => datastore.slug, "metrics.route" => "list"
-        @presenter = Search::Presenters.for_datastore_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+        @presenter = Search::Presenters.for_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
         erb :"datastores/list/layout", layout: :layout do
           erb :"datastores/list/#{datastore.slug}"
         end
@@ -160,12 +160,12 @@ class Search::Application < Sinatra::Base
     end
   end
 
-  Search::Presenters.static_pages.each do |page|
-    get "/#{page[:slug]}" do
+  Search::Presenters.static_page_slugs.each do |slug|
+    get "/#{slug}" do
       headers "metrics.route" => "static_page"
-      @presenter = Search::Presenters.for_static_page(slug: page[:slug], uri: URI.parse(request.fullpath), patron: @patron)
+      @presenter = Search::Presenters.for_static_page(slug: slug, uri: URI.parse(request.fullpath), patron: @patron)
       erb :"pages/layout", layout: :layout do
-        erb :"pages/#{page[:slug]}"
+        erb :"pages/#{slug}"
       end
     end
   end
