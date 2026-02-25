@@ -9,14 +9,14 @@ import {
   toggleAddedClass,
   toggleSelectedTabText
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_add-selected.js';
-import { defaultTemporaryList, inTemporaryList, nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
+import { defaultTemporaryList, getDatastores, inTemporaryList } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import { filterSelectedRecords, getCheckedCheckboxes, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
 const activeClass = 'record__container--in-temporary-list';
 let temporaryListHTML = '';
-nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
+getDatastores({ list: global.temporaryList }).forEach((datastore) => {
   const recordIds = Object.keys(global.temporaryList[datastore]);
   recordIds.forEach((recordId, index) => {
     temporaryListHTML += `

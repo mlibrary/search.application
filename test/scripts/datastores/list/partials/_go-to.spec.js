@@ -143,15 +143,15 @@ describe('temporaryListBanner', function () {
     });
 
     it('should call `temporaryListCount` with the correct arguments', function () {
-      expect(temporaryListCountStub.calledOnceWithExactly(args.list), '`temporaryListCount` should be called once with the correct arguments').to.be.true;
+      expect(temporaryListCountStub.calledOnceWithExactly({ list: args.list }), '`temporaryListCount` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `changeTemporaryListBannerCount` with the correct arguments', function () {
-      expect(changeTemporaryListBannerCountSpy.calledOnceWithExactly({ banner: args.banner, count: args.countList(args.list) }), '`changeTemporaryListBannerCount` should be called once with the correct arguments').to.be.true;
+      expect(changeTemporaryListBannerCountSpy.calledOnceWithExactly({ banner: args.banner, count: args.countList({ list: args.list }) }), '`changeTemporaryListBannerCount` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `temporaryListBannerClass` with the correct arguments', function () {
-      expect(temporaryListBannerClassSpy.calledOnceWithExactly({ banner: args.banner, count: args.countList(args.list) }), '`temporaryListBannerClass` should be called once with the correct arguments').to.be.true;
+      expect(temporaryListBannerClassSpy.calledOnceWithExactly({ banner: args.banner, count: args.countList({ list: args.list }) }), '`temporaryListBannerClass` should be called once with the correct arguments').to.be.true;
     });
 
     it('should return early if the banner element is not provided', function () {

@@ -1,11 +1,11 @@
 import { cslData, displayCSLData, getCSLTextarea } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
 import { expect } from 'chai';
-import { nonEmptyDatastores } from '../../../../../../../assets/scripts/datastores/list/layout.js';
+import { getDatastores } from '../../../../../../../assets/scripts/datastores/list/layout.js';
 import { selectedCitations } from '../../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import sinon from 'sinon';
 
 let temporaryListHTML = '';
-nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
+getDatastores({ list: global.temporaryList }).forEach((datastore) => {
   const recordIds = Object.keys(global.temporaryList[datastore]);
   recordIds.forEach((recordId, index) => {
     temporaryListHTML += `<li><input type="checkbox" class="record__checkbox" value="${datastore},${recordId}" ${index === 0 ? 'checked' : ''}></li>`;

@@ -2,12 +2,12 @@ import {
   createDatastoreList,
   datastoreHeading,
   defaultTemporaryList,
+  getDatastores,
   getSessionStorage,
   handleSelectionChange,
   initializeNonEmptyListFunctions,
   inTemporaryList,
   isTemporaryListEmpty,
-  nonEmptyDatastores,
   setSessionStorage,
   temporaryList,
   temporaryListCount,
@@ -198,6 +198,67 @@ describe('layout', function () {
     });
   });
 
+  describe('viewingTemporaryList()', function () {
+    beforeEach(function () {
+      // Check that the current pathname is not `/everything/list`
+      expect(window.location.pathname, 'the current pathname should not be `/everything/list`').to.not.equal('/everything/list');
+    });
+
+    it('should be `false` if the current pathname is not `/everything/list`', function () {
+      // Check that My Temporary List is not being viewed
+      expect(viewingTemporaryList(), 'the variable should be `false` if the current pathname is not `/everything/list`').to.be.false;
+    });
+
+    it('should be `true` if the current pathname is `/everything/list`', function () {
+      // Store the original window object
+      const originalWindow = global.window;
+
+      // Setup JSDOM with an updated URL
+      const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+        url: 'http://localhost/everything/list'
+      });
+
+      // Override the global window object
+      global.window = dom.window;
+
+      // Check that My Temporary List is being viewed
+      expect(viewingTemporaryList(), 'the variable should be `true` if the current pathname is `/everything/list`').to.be.true;
+
+      // Restore the original window object
+      global.window = originalWindow;
+    });
+  });
+
+  describe('getDatastores()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        empty: false,
+        list: global.temporaryList
+      };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should return an array', function () {
+      // Check that an array is always returned
+      expect(getDatastores(args), '`getDatastores()` should return an array').to.be.an('array');
+    });
+
+    it('should return datastore names that have records', function () {
+      // Check that datastore names are in the array
+      expect(getDatastores(args), '`getDatastores()` should return the names of the non-empty datastores').to.deep.equal(['catalog', 'onlinejournals']);
+    });
+
+    it('should return datastore names that do not have records', function () {
+      // Check that datastore names are in the array
+      expect(getDatastores({ ...args, empty: true }), '`getDatastores()` should return the names of the empty datastores').to.deep.equal(['articles', 'databases', 'everything', 'guidesandmore']);
+    });
+  });
+
   describe('inTemporaryList()', function () {
     let list = null;
     let recordDatastore = null;
@@ -205,9 +266,9 @@ describe('layout', function () {
 
     beforeEach(function () {
       list = { ...global.temporaryList };
-      // Grab the first datastore
-      [recordDatastore] = Object.keys(global.temporaryList);
-      // Grab the first record ID of the first datastore
+      // Grab the first non-empty datastore
+      [recordDatastore] = getDatastores({ list });
+      // Grab the first record ID of the first non-empty datastore
       [recordId] = Object.keys(global.temporaryList[recordDatastore]);
     });
 
@@ -261,99 +322,51 @@ describe('layout', function () {
     });
   });
 
-  describe('viewingTemporaryList()', function () {
-    beforeEach(function () {
-      // Check that the current pathname is not `/everything/list`
-      expect(window.location.pathname, 'the current pathname should not be `/everything/list`').to.not.equal('/everything/list');
-    });
-
-    it('should be `false` if the current pathname is not `/everything/list`', function () {
-      // Check that My Temporary List is not being viewed
-      expect(viewingTemporaryList(), 'the variable should be `false` if the current pathname is not `/everything/list`').to.be.false;
-    });
-
-    it('should be `true` if the current pathname is `/everything/list`', function () {
-      // Store the original window object
-      const originalWindow = global.window;
-
-      // Setup JSDOM with an updated URL
-      const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
-        url: 'http://localhost/everything/list'
-      });
-
-      // Override the global window object
-      global.window = dom.window;
-
-      // Check that My Temporary List is being viewed
-      expect(viewingTemporaryList(), 'the variable should be `true` if the current pathname is `/everything/list`').to.be.true;
-
-      // Restore the original window object
-      global.window = originalWindow;
-    });
-  });
-
   describe('isTemporaryListEmpty()', function () {
     it('should return `false` if at least one datastore has at least one record saved', function () {
       // Check that the temporary list is not empty
-      expect(isTemporaryListEmpty(global.temporaryList), 'the temporary list should not be empty').to.be.false;
+      expect(isTemporaryListEmpty({ list: global.temporaryList }), 'the temporary list should not be empty').to.be.false;
     });
 
     it('should return `true` if all datastores do not have records saved to them', function () {
-      // Create a copy of the temporary list and remove all saved records
-      const list = { ...global.temporaryList };
-      Object.keys(list).forEach((datastore) => {
+      // Create a list with all datastores emptied
+      const list = {};
+      Object.keys(global.temporaryList).forEach((datastore) => {
         list[datastore] = {};
       });
 
       // Check that the temporary list is empty
-      expect(isTemporaryListEmpty(list), 'the temporary list should be empty').to.be.true;
+      expect(isTemporaryListEmpty({ list }), 'the temporary list should be empty').to.be.true;
     });
   });
 
   describe('temporaryListCount()', function () {
     it('should return a number', function () {
       // Check that a number is always returned
-      expect(temporaryListCount(global.temporaryList), '`temporaryListCount()` should return a number').to.be.a('number');
+      expect(temporaryListCount({ list: global.temporaryList }), '`temporaryListCount()` should return a number').to.be.a('number');
     });
 
     it('should return the correct count of records in the temporary list', function () {
       // Check that the correct count is returned
-      expect(temporaryListCount(global.temporaryList), '`temporaryListCount()` should return the correct count of records in the temporary list').to.equal(Object.values(global.temporaryList).reduce((sum, datastore) => {
+      expect(temporaryListCount({ list: global.temporaryList }), '`temporaryListCount()` should return the correct count of records in the temporary list').to.equal(Object.values(global.temporaryList).reduce((sum, datastore) => {
         return sum + Object.keys(datastore).length;
       }, 0));
     });
   });
 
-  describe('nonEmptyDatastores()', function () {
-    it('should return an array', function () {
-      // Check that an array is always returned
-      expect(nonEmptyDatastores({}), '`nonEmptyDatastores()` should return an array').to.be.an('array');
-    });
-
-    it('should return datastore names that have records', function () {
-      // Check that datastore names are in the array
-      expect(nonEmptyDatastores(global.temporaryList), '`nonEmptyDatastores()` should return the names of the non-empty datastores').to.deep.equal(['catalog', 'onlinejournals']);
-    });
-
-    it('should return an empty array', function () {
-      // Check that an empty array is returned
-      expect(nonEmptyDatastores({}), '`nonEmptyDatastores()` should return an empty array').to.be.empty;
-    });
-  });
-
   describe('toggleListElements()', function () {
-    let getListActions = null;
+    let getLists = null;
     let getEmptyMessage = null;
     let list = null;
 
     beforeEach(function () {
       document.body.innerHTML = `
-        <div class="container__sticky"></div>
-        <div class="list__empty"></div>
+      <div class="list__empty"></div>
+      <div class="datastore-lists"></div>
       `;
 
-      getListActions = () => {
-        return document.querySelector('.container__sticky');
+      getLists = () => {
+        return document.querySelector('.datastore-lists');
       };
 
       getEmptyMessage = () => {
@@ -364,7 +377,7 @@ describe('layout', function () {
     });
 
     afterEach(function () {
-      getListActions = null;
+      getLists = null;
       getEmptyMessage = null;
       list = null;
     });
@@ -372,15 +385,15 @@ describe('layout', function () {
     describe('non-empty temporary list', function () {
       beforeEach(function () {
         // Check that the temporary list is not empty
-        expect(isTemporaryListEmpty(list), 'the temporary list should not be empty').to.be.false;
+        expect(isTemporaryListEmpty({ list }), 'the temporary list should not be empty').to.be.false;
 
         // Call the function
-        toggleListElements(list);
+        toggleListElements({ list });
       });
 
       it('should show actions', function () {
         // Check that the `style` attribute does not exist for Actions
-        expect(getListActions().hasAttribute('style'), 'the `style` attribute should not exist for Actions').to.be.false;
+        expect(getLists().hasAttribute('style'), 'the `style` attribute should not exist for Actions').to.be.false;
       });
 
       it('should hide the empty message', function () {
@@ -397,15 +410,15 @@ describe('layout', function () {
         });
 
         // Check that the temporary list is empty
-        expect(isTemporaryListEmpty(list), 'the temporary list should be empty').to.be.true;
+        expect(isTemporaryListEmpty({ list }), 'the temporary list should be empty').to.be.true;
 
         // Call the function
-        toggleListElements(list);
+        toggleListElements({ list });
       });
 
       it('should hide actions', function () {
         // Check that Actions's `style` is set to `none`
-        expect(getListActions().style.display, 'actions should be hidden').to.equal('none');
+        expect(getLists().style.display, 'actions should be hidden').to.equal('none');
       });
 
       it('should show the empty message', function () {
@@ -503,7 +516,7 @@ describe('layout', function () {
         </li>
       `;
 
-      datastores = nonEmptyDatastores(global.temporaryList);
+      datastores = getDatastores({ list: global.temporaryList });
 
       // Call the function
       createDatastoreList(global.temporaryList);

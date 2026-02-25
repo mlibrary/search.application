@@ -1,10 +1,9 @@
 import { listItem, listItemCheckbox, listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
 import { expect } from 'chai';
+import { getDatastores } from '../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
 
-const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
-  return Object.keys(global.temporaryList[datastore]).length > 0;
-});
+const nonEmptyDatastores = getDatastores({ list: global.temporaryList });
 const recordIds = Object.keys(global.temporaryList[nonEmptyDatastores[0]]);
 
 const listItemTitleHTML = `

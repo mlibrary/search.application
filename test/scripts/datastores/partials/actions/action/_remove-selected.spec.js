@@ -9,11 +9,11 @@ import {
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
-import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
+import { getDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
 
 let temporaryListHTML = '';
-nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
+getDatastores({ list: global.temporaryList }).forEach((datastore) => {
   const recordIds = Object.keys(global.temporaryList[datastore]);
   recordIds.forEach((recordId, index) => {
     temporaryListHTML += `

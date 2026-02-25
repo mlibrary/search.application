@@ -30,7 +30,7 @@ const temporaryListBanner = ({
   }
 
   // Get how many items are in the list
-  const count = countList(list);
+  const count = countList({ list });
 
   // Update the number of how many items are in My Temporary List
   updateCount({ banner, count });

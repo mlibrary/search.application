@@ -5,15 +5,14 @@ import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { listItem } from './partials/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
 
-/* eslint-disable sort-keys */
 const defaultTemporaryList = {
-  catalog: {},
   articles: {},
+  catalog: {},
   databases: {},
-  onlinejournals: {},
-  guidesandmore: {}
+  everything: {},
+  guidesandmore: {},
+  onlinejournals: {}
 };
-/* eslint-enable sort-keys */
 
 const getSessionStorage = ({ defaultValue, itemName }) => {
   // Check if a default value was provided
@@ -56,53 +55,47 @@ const setSessionStorage = ({ itemName, value }) => {
   sessionStorage.setItem(itemName, JSON.stringify(value));
 };
 
+const viewingTemporaryList = () => {
+  return window.location.pathname === '/everything/list';
+};
+
+const getDatastores = ({ empty = false, list }) => {
+  return Object.keys(list).filter((datastore) => {
+    if (empty) {
+      return Object.keys(list[datastore]).length === 0;
+    }
+    return Object.keys(list[datastore]).length > 0;
+  });
+};
+
 const inTemporaryList = ({ list, recordDatastore, recordId }) => {
   // Check that the datastore exists in the list, and the record ID exists within the datastore
   return Boolean(list?.[recordDatastore]?.[recordId]);
 };
 
-const viewingTemporaryList = () => {
-  return window.location.pathname === '/everything/list';
+const isTemporaryListEmpty = ({ datastores = getDatastores, list }) => {
+  return datastores({ empty: false, list }).length === 0;
 };
 
-const isTemporaryListEmpty = (list) => {
-  // Use for...in loop for fastest performance
-  for (const datastore in list) {
-    // Check if any of the datastores have records saved to them
-    if (Object.keys(list[datastore]).length > 0) {
-      // Exit early if non-empty found
-      return false;
-    }
-  }
-
-  return true;
-};
-
-const temporaryListCount = (list) => {
+const temporaryListCount = ({ list }) => {
   return Object.values(list).reduce((sum, datastore) => {
     return sum + Object.keys(datastore).length;
   }, 0);
 };
 
-const nonEmptyDatastores = (list) => {
-  return Object.keys(list).filter((datastore) => {
-    return Object.keys(list[datastore]).length > 0;
-  });
-};
-
-const toggleListElements = (list) => {
-  const listActions = document.querySelector('.container__sticky');
+const toggleListElements = ({ list }) => {
+  const lists = document.querySelector('.datastore-lists');
   const emptyList = document.querySelector('.list__empty');
 
   // Check if elements should be visible or not based on temporary list being empty
-  if (isTemporaryListEmpty(list)) {
+  if (isTemporaryListEmpty({ list })) {
     // Hide Actions when there are no saved records
-    listActions.style.display = 'none';
+    lists.style.display = 'none';
     // Show the empty message when there are no saved records
     emptyList.removeAttribute('style');
   } else {
     // Show Actions when there are saved records
-    listActions.removeAttribute('style');
+    lists.removeAttribute('style');
     // Hide the empty message when there are saved records
     emptyList.style.display = 'none';
   }
@@ -126,7 +119,7 @@ const createDatastoreList = (list) => {
   // Get the list container
   const listContainer = document.querySelector('.list');
   // Create an ordered list for each non-empty datastore
-  nonEmptyDatastores(list).forEach((datastore) => {
+  getDatastores({ list }).forEach((datastore) => {
     // Create heading
     listContainer.appendChild(datastoreHeading(datastore));
     // Create list container
@@ -189,7 +182,7 @@ const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) =>
   listFunctions.createDatastoreList(list);
 
   // Return early if My Temporary List is empty
-  if (isTemporaryListEmpty(list)) {
+  if (isTemporaryListEmpty({ list })) {
     return;
   }
 
@@ -200,12 +193,12 @@ export {
   createDatastoreList,
   datastoreHeading,
   defaultTemporaryList,
+  getDatastores,
   getSessionStorage,
   handleSelectionChange,
   initializeNonEmptyListFunctions,
   inTemporaryList,
   isTemporaryListEmpty,
-  nonEmptyDatastores,
   setSessionStorage,
   temporaryList,
   temporaryListCount,
