@@ -77,12 +77,6 @@ const isTemporaryListEmpty = ({ datastores = getDatastores, list }) => {
   return datastores({ empty: false, list }).length === 0;
 };
 
-const temporaryListCount = ({ list }) => {
-  return Object.values(list).reduce((sum, datastore) => {
-    return sum + Object.keys(datastore).length;
-  }, 0);
-};
-
 const toggleListElements = ({ list }) => {
   const lists = document.querySelector('.datastore-lists');
   const emptyList = document.querySelector('.list__empty');
@@ -115,7 +109,7 @@ const datastoreHeading = (datastore) => {
   return heading;
 };
 
-const createDatastoreList = (list) => {
+const createDatastoreList = ({ list }) => {
   // Get the list container
   const listContainer = document.querySelector('.list');
   // Create an ordered list for each non-empty datastore
@@ -176,10 +170,10 @@ const temporaryListFunctions = {
 
 const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) => {
   // Toggle what should and should not be displaying
-  listFunctions.toggleListElements(list);
+  listFunctions.toggleListElements({ list });
 
   // Build the list DOM
-  listFunctions.createDatastoreList(list);
+  listFunctions.createDatastoreList({ list });
 
   // Return early if My Temporary List is empty
   if (isTemporaryListEmpty({ list })) {
@@ -201,7 +195,6 @@ export {
   isTemporaryListEmpty,
   setSessionStorage,
   temporaryList,
-  temporaryListCount,
   toggleListElements,
   viewingTemporaryList
 };

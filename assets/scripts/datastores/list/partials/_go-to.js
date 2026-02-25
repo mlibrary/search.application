@@ -1,7 +1,11 @@
-import { temporaryListCount } from '../layout.js';
-
 const getTemporaryListBanner = () => {
   return document.querySelector('.list__go-to');
+};
+
+const getTemporaryListCount = ({ list }) => {
+  return Object.values(list).reduce((sum, datastore) => {
+    return sum + Object.keys(datastore).length;
+  }, 0);
 };
 
 const changeTemporaryListBannerCount = ({ banner, count }) => {
@@ -19,7 +23,7 @@ const temporaryListBannerClass = ({ banner, count }) => {
 
 const temporaryListBanner = ({
   banner = getTemporaryListBanner(),
-  countList = temporaryListCount,
+  countList = getTemporaryListCount,
   list,
   toggleClass = temporaryListBannerClass,
   updateCount = changeTemporaryListBannerCount
@@ -39,4 +43,10 @@ const temporaryListBanner = ({
   toggleClass({ banner, count });
 };
 
-export { changeTemporaryListBannerCount, getTemporaryListBanner, temporaryListBanner, temporaryListBannerClass };
+export {
+  changeTemporaryListBannerCount,
+  getTemporaryListBanner,
+  getTemporaryListCount,
+  temporaryListBanner,
+  temporaryListBannerClass
+};

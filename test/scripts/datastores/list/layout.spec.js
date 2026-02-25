@@ -10,7 +10,6 @@ import {
   isTemporaryListEmpty,
   setSessionStorage,
   temporaryList,
-  temporaryListCount,
   toggleListElements,
   viewingTemporaryList
 } from '../../../../assets/scripts/datastores/list/layout.js';
@@ -340,20 +339,6 @@ describe('layout', function () {
     });
   });
 
-  describe('temporaryListCount()', function () {
-    it('should return a number', function () {
-      // Check that a number is always returned
-      expect(temporaryListCount({ list: global.temporaryList }), '`temporaryListCount()` should return a number').to.be.a('number');
-    });
-
-    it('should return the correct count of records in the temporary list', function () {
-      // Check that the correct count is returned
-      expect(temporaryListCount({ list: global.temporaryList }), '`temporaryListCount()` should return the correct count of records in the temporary list').to.equal(Object.values(global.temporaryList).reduce((sum, datastore) => {
-        return sum + Object.keys(datastore).length;
-      }, 0));
-    });
-  });
-
   describe('toggleListElements()', function () {
     let getLists = null;
     let getEmptyMessage = null;
@@ -519,7 +504,7 @@ describe('layout', function () {
       datastores = getDatastores({ list: global.temporaryList });
 
       // Call the function
-      createDatastoreList(global.temporaryList);
+      createDatastoreList({ list: global.temporaryList });
     });
 
     afterEach(function () {
@@ -699,12 +684,12 @@ describe('layout', function () {
 
     it('should call `toggleListElements` with `list` as argument', function () {
       // Check that `toggleListElements` was called with stubs
-      expect(listFunctions.toggleListElements.calledOnceWithExactly(list), '`toggleListElements` should have been called with `list` once').to.be.true;
+      expect(listFunctions.toggleListElements.calledOnceWithExactly({ list }), '`toggleListElements` should have been called with `list` once').to.be.true;
     });
 
     it('should call `createDatastoreList` with `list` as argument', function () {
       // Check that `createDatastoreList` was called with stubs
-      expect(listFunctions.createDatastoreList.calledOnceWithExactly(list), '`createDatastoreList` should have been called with `list` once').to.be.true;
+      expect(listFunctions.createDatastoreList.calledOnceWithExactly({ list }), '`createDatastoreList` should have been called with `list` once').to.be.true;
     });
 
     describe('initializeNonEmptyListFunctions()', function () {
