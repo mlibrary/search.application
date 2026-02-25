@@ -1,0 +1,8 @@
+<input
+  type="checkbox"
+  class="record__checkbox"
+  value="<%= (defined?(datastore) && defined?(record_id)) ? "#{datastore},#{record_id}" : '' %>"
+  aria-label="Select <%= defined?(record_title) ? record_title : 'record' %>"
+  <%= checked ? ' checked' : '' %>
+  <%= defined?(disabled) ? ' disabled' : '' %>
+>
