@@ -1,3 +1,32 @@
+<%
+  # Create fake data for the list item clone
+  fake_data = JSON.parse('{
+    "id": "1337",
+    "title": [
+      {
+        "original": {
+          "text": "Original Title"
+        },
+        "transliterated": {
+          "text": "Transliterated Title"
+        }
+      }
+    ],
+    "published": [
+      {
+        "transliterated": {
+          "text": "Original Data"
+        },
+        "original": {
+          "text": "Transliterated Data"
+        }
+      }
+    ]
+  }')
+  result = Search::Presenters::Record::Catalog::Brief.new(
+    Search::Models::Record::Catalog.new(fake_data)
+  )
+%>
 <div class="container list">
   <%= h1(body: @presenter.page_title) %>
   <p>Items in this list are stored temporarily (within a single session).</p>
@@ -7,9 +36,17 @@
       Continue searching to add to this list.
     </p>
   </div>
-  <div class="hide__no-javascript container__sticky">
-    <%= erb :'datastores/partials/_actions', locals: { patron: @patron } %>
-    <%= erb :'datastores/partials/_select-all' %>
+  <div class="hide__no-javascript datastore-lists">
+    <div class="container__sticky">
+      <%= erb :'datastores/partials/_actions', locals: { patron: @patron } %>
+      <%= erb :'datastores/partials/_select-all' %>
+    </div>
+    <% @datastores.each do |datastore| %>
+      <section class="list__datastore list__<%= datastore.slug %>">
+        <h2><%= datastore.title %></h2>
+        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: 0, datastore: datastore.slug, results: [result], start_result: 1 } %>
+      </section>
+    <% end %>
   </div>
-  <%= erb :'datastores/list/partials/_list-item' %>
+  <%= erb :'datastores/list/partials/_list-item', locals: { datastore: @datastores.first.slug, result: result } %>
 </div>

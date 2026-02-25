@@ -34,34 +34,4 @@
   </table>
 </li>
 
-<%
-  # Create fake data for the list item clone
-  fake_data = JSON.parse('{
-    "id": "1337",
-    "title": [
-      {
-        "original": {
-          "text": "Original Title"
-        },
-        "transliterated": {
-          "text": "Transliterated Title"
-        }
-      }
-    ],
-    "published": [
-      {
-        "transliterated": {
-          "text": "Original Data"
-        },
-        "original": {
-          "text": "Transliterated Data"
-        }
-      }
-    ]
-  }')
-  result = Search::Presenters::Record::Catalog::Brief.new(
-    Search::Models::Record::Catalog.new(fake_data)
-  )
-%>
-
-<%= erb :'datastores/results/partials/results-list/_list-item', locals: { classes: ["hide__no-javascript", "list__item--clone"], datastore: "datastore", index: 0, result: result } %>
+<%= erb :'datastores/results/partials/results-list/_list-item', locals: { classes: ["hide__no-javascript", "list__item--clone"], datastore: datastore, index: 0, result: result } %>
