@@ -1,5 +1,5 @@
 import { changeAlert } from './actions/_alert.js';
-import { someCheckboxesChecked } from '../list/partials/list-item/_checkbox.js';
+import { someCheckboxesChecked } from '../results/partials/results-list/list-item/header/_checkbox.js';
 
 const isSelected = ({ tab }) => {
   return tab.getAttribute('aria-selected') === 'true';

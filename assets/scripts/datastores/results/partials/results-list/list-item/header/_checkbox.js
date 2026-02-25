@@ -1,4 +1,4 @@
-import { viewingFullRecord } from '../../../record/layout.js';
+import { viewingFullRecord } from '../../../../../record/layout.js';
 
 const checkboxSelector = 'input[type="checkbox"].record__checkbox:not([value=""])';
 

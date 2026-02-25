@@ -16,7 +16,7 @@ import {
   updateAndAttachCitations,
   updateCitations
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
-import { filterSelectedRecords, getCheckedCheckboxes, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, getCheckedCheckboxes, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
 import { getActiveCitationTab } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
 import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';

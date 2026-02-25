@@ -5,7 +5,7 @@ import {
   someCheckboxesChecked,
   splitCheckboxValue,
   toggleCheckedState
-} from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+} from '../../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
 
 const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {

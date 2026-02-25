@@ -1,4 +1,4 @@
-import { getCheckedCheckboxes } from '../../list/partials/list-item/_checkbox.js';
+import { getCheckedCheckboxes } from '../../results/partials/results-list/list-item/header/_checkbox.js';
 import { viewingTemporaryList } from '../../list/layout.js';
 
 const actionsPanelText = () => {

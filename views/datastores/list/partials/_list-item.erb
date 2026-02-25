@@ -1,9 +1,9 @@
 <li class="container__rounded list__item list__item--clone">
   <div class="list__item--header">
-    <%= erb :'datastores/results/partials/results-list/list-item/_checkbox', locals: { checked: true } %>
+    <input type="checkbox" class="record__checkbox" value="" aria-label="Select record" checked="">
     <h3 class="list__item--title h4">
       <span class="list__item--title-number">0.</span>
-      <%= link_to(body: "Original Title", url: "datastore/recordId", classes: ["list__item--title-original"]) %>
+      <a href="datastore/record/recordId" class="list__item--title-original">Original Title</a>
       <span class="h5 list__item--title-transliterated">
         Transliterated Title
       </span>
@@ -64,4 +64,4 @@
   )
 %>
 
-<%= erb :'datastores/results/partials/results-list/_list-item', locals: { classes: ["list__item--clone"], datastore: "datastore", index: 0, result: result } %>
+<%= erb :'datastores/results/partials/results-list/_list-item', locals: { classes: ["hide__no-javascript", "list__item--clone"], datastore: "datastore", index: 0, result: result } %>
