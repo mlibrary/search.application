@@ -1,6 +1,6 @@
 <ol start="<%= start_result %>" class="list__no-style results__list">
   <% results.each_with_index do |result, index| %>
-    <%= erb :'datastores/results/partials/results-list/_list-item', locals: { datastore: @presenter.current_datastore, index: start_result + index, result: result } %>
+    <%= erb :'datastores/results/partials/results-list/_list-item', locals: { datastore: datastore, index: start_result + index, result: result } %>
     <%
       # Show specialists only on the first page
       if current_page == 1
