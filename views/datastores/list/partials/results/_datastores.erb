@@ -1,0 +1,6 @@
+<% datastores.each do |datastore| %>
+  <section class="list__datastore list__<%= datastore.slug %>" data-datastore="<%= datastore.slug %>">
+    <h2><%= datastore.title %></h2>
+    <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: 0, datastore: datastore.slug, results: results, start_result: 1 } %>
+  </section>
+<% end %>

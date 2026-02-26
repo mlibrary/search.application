@@ -1,0 +1,28 @@
+// --------------------------------------------------
+//
+// # Empty
+//   Styles to apply directly to `views/datastores/list/partials/_empty.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Empty
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.list__empty';
+
+
+
+
+
+// **************** //
+// *** 2. EMPTY *** //
+// **************** //
+
+#{$class} {
+  padding: 1rem;
+}

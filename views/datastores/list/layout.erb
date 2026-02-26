@@ -30,23 +30,6 @@
 <div class="container list">
   <%= h1(body: @presenter.page_title) %>
   <p>Items in this list are stored temporarily (within a single session).</p>
-  <div class="container__rounded list__empty">
-    <p>
-      <span class="strong">This list is empty.</span>
-      Continue searching to add to this list.
-    </p>
-  </div>
-  <div class="hide__no-javascript datastore-lists">
-    <div class="container__sticky">
-      <%= erb :'datastores/partials/_actions', locals: { patron: @patron } %>
-      <%= erb :'datastores/partials/_select-all' %>
-    </div>
-    <% @datastores.each do |datastore| %>
-      <section class="list__datastore list__<%= datastore.slug %>" data-datastore="<%= datastore.slug %>">
-        <h2><%= datastore.title %></h2>
-        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: 0, datastore: datastore.slug, results: [result], start_result: 1 } %>
-      </section>
-    <% end %>
-  </div>
-  <%= erb :'datastores/list/partials/_list-item', locals: { datastore: @datastores.first.slug, result: result } %>
+  <%= erb :'datastores/list/partials/_empty' %>
+  <%= erb :'datastores/list/partials/_results', locals: { datastores: @datastores, results: [result] } %>
 </div>

@@ -1,0 +1,9 @@
+<div class="hide__no-javascript datastore-lists">
+  <div class="container__sticky">
+    <%= erb :'datastores/partials/_actions' %>
+    <%= erb :'datastores/partials/_select-all' %>
+  </div>
+  <%= erb :'datastores/list/partials/results/_datastores', locals: { datastores: datastores, results: results } %>
+</div>
+
+<%= erb :'datastores/list/partials/_list-item', locals: { datastore: datastores.first.slug, result: results.first } %>

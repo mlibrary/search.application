@@ -60,7 +60,7 @@
       <% if results.any? %>
         <%= erb :'/datastores/list/partials/_go-to' %>
         <div class="container__sticky">
-          <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
+          <%= erb :'/datastores/partials/_actions' %>
           <%= erb :'/datastores/partials/_select-all', locals: { count: page_results.size } %>
         </div>
         <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, datastore: @presenter.current_datastore, results: page_results, start_result: start_result } %>

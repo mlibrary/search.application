@@ -4,6 +4,7 @@ import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { listItem } from './partials/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
+import { removeEmptyListMessage } from './partials/_empty.js';
 
 const defaultTemporaryList = {
   articles: {},
@@ -94,23 +95,27 @@ const removeEmptyDatastoreSections = ({ datastores = getDatastores, list }) => {
   });
 };
 
-const toggleListElements = ({ list, listIsEmpty = isTemporaryListEmpty({ list }), removeLists = removeEmptyDatastoreSections } = {}) => {
+const toggleListElements = ({
+  list,
+  listIsEmpty = isTemporaryListEmpty({ list }),
+  removeEmptyMessage = removeEmptyListMessage,
+  removeLists = removeEmptyDatastoreSections
+} = {}) => {
   const lists = document.querySelector('.datastore-lists');
-  const emptyList = document.querySelector('.list__empty');
 
   // Check if elements should be visible or not based on temporary list being empty
   if (listIsEmpty) {
     // Hide lists when there are no saved records
     lists.style.display = 'none';
-    // Show the empty message when there are no saved records
-    emptyList.removeAttribute('style');
   } else {
     // Remove all datastore lists that are empty
     removeLists({ list });
+
+    // Remove the empty message from the DOM when there are saved records
+    removeEmptyMessage();
+
     // Show lists when there are saved records
     lists.removeAttribute('style');
-    // Hide the empty message when there are saved records
-    emptyList.style.display = 'none';
   }
 };
 

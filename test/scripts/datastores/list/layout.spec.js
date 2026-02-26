@@ -450,33 +450,31 @@ describe('layout', function () {
   });
 
   describe('toggleListElements()', function () {
+    let removeEmptyListMessageSpy = null;
     let removeEmptyDatastoreSectionsSpy = null;
     let args = null;
     let getLists = null;
-    let getEmptyMessage = null;
 
     beforeEach(function () {
+      removeEmptyListMessageSpy = sinon.spy();
       removeEmptyDatastoreSectionsSpy = sinon.spy();
       args = {
         list: global.temporaryList,
         listIsEmpty: false,
+        removeEmptyMessage: removeEmptyListMessageSpy,
         removeLists: removeEmptyDatastoreSectionsSpy
       };
 
       getLists = () => {
         return document.querySelector('.datastore-lists');
       };
-
-      getEmptyMessage = () => {
-        return document.querySelector('.list__empty');
-      };
     });
 
     afterEach(function () {
+      removeEmptyListMessageSpy = null;
       removeEmptyDatastoreSectionsSpy = null;
       args = null;
       getLists = null;
-      getEmptyMessage = null;
     });
 
     describe('non-empty temporary list', function () {
@@ -493,9 +491,9 @@ describe('layout', function () {
         expect(getLists().hasAttribute('style'), 'the `style` attribute should not exist for Actions').to.be.false;
       });
 
-      it('should hide the empty message', function () {
-        // Check that the empty message's `style` is set to `none`
-        expect(getEmptyMessage().style.display, 'the empty message should be hidden').to.equal('none');
+      it('should call `removeEmptyListMessage`', function () {
+        // Check that `removeEmptyListMessage` was called
+        expect(removeEmptyListMessageSpy.calledOnce, '`removeEmptyListMessage` should have been called once').to.be.true;
       });
 
       it('should call `removeEmptyDatastoreSections` with the correct arguments', function () {
@@ -519,9 +517,9 @@ describe('layout', function () {
         expect(getLists().style.display, 'actions should be hidden').to.equal('none');
       });
 
-      it('should show the empty message', function () {
-        // Check that the `style` attribute does not exist for the empty message
-        expect(getEmptyMessage().hasAttribute('style'), 'the `style` attribute should not exist for the empty message').to.be.false;
+      it('should not call `removeEmptyListMessage`', function () {
+        // Check that `removeEmptyListMessage` was not called
+        expect(removeEmptyListMessageSpy.notCalled, '`removeEmptyListMessage` should not have been called').to.be.true;
       });
 
       it('should not call `removeEmptyDatastoreSections`', function () {
