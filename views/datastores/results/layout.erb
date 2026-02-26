@@ -1,11 +1,3 @@
-<%
-  total_results = 24
-  current_page = params[:page].to_i && params[:page].to_i > 0 ? params[:page].to_i : 1
-  per_page = 10
-  start_result = current_page > 1 ? ((current_page - 1) * per_page) + 1 : 1
-  end_result = [(start_result + per_page) - 1, total_results].min
-%>
-
 <%= h1(body: @presenter.page_title, classes: ["visually-hidden"]) %>
 
 <%= erb :'/datastores/results/partials/_info', locals: { datastore: @presenter.page_title, info: yield, slug: @presenter.current_datastore } %>
@@ -21,15 +13,15 @@
 
     <h2 class="visually-hidden"><%= @presenter.page_title %> Results</h2>
     <section class="results__content">
-      <%= erb :'/datastores/results/partials/_summary', locals: { total_results: total_results, start_result: start_result, end_result: end_result } %>
+      <%= erb :'/datastores/results/partials/_summary', locals: { total_results: @presenter.pagination.total, start_result: @presenter.pagination.start, end_result: @presenter.pagination.end } %>
       <% if @presenter.entries.any? %>
         <%= erb :'/datastores/list/partials/_go-to' %>
         <div class="container__sticky">
           <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
           <%= erb :'/datastores/partials/_select-all', locals: { count: @presenter.entries.size } %>
         </div>
-        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: @presenter.entries, start_result: start_result, end_result: end_result } %>
-        <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: current_page, per_page: per_page, total_results: total_results } %>
+        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: @presenter.pagination.current_page, results: @presenter.entries, start_result: @presenter.pagination.start, end_result: @presenter.pagination.end } %>
+        <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: @presenter.pagination.current_page, per_page: @presenter.pagination.limit, total_results: @presenter.pagination.total } %>
       <% else %>
         <%= erb :'/datastores/results/partials/results-list/_no-results' %>
       <% end %>

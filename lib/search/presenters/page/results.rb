@@ -38,9 +38,20 @@ class Search::Presenters::Page
         "location_on", "check_circle", "warning", "error", "list",
         "arrow_back_ios", "arrow_forward_ios"]
 
-    def self.for(slug:, uri:, patron:)
+    def self.for(slug:, uri:, patron:, page:)
       datastore = Search::Datastores.find(slug)
-      new(datastore: datastore, uri: uri, patron: patron)
+      new(datastore: datastore, uri: uri, patron: patron, page: page)
+    end
+
+    attr_reader :page
+
+    def initialize(datastore:, uri:, patron:, page:)
+      @description = description
+      @slug = datastore.slug
+      @datastore = datastore # datastore object
+      @uri = uri
+      @patron = patron
+      @page = page.to_i
     end
 
     def styles
@@ -79,8 +90,21 @@ class Search::Presenters::Page
       @uri.to_s
     end
 
+    def pagination
+      total = 24
+      current_page = (page && page > 0) ? page : 1
+      start_result = (current_page > 1) ? ((current_page - 1) * limit) + 1 : 1
+      end_result = [(start_result + limit) - 1, total].min
+      OpenStruct.new(start: start_result, end: end_result, total: total, limit: limit, current_page: current_page)
+    end
+
+    def limit
+      10
+    end
+
     def entries
-      FIXED_RECORDS[1, 10]
+      start = pagination.current_page - 1
+      FIXED_RECORDS[start * limit, 10]
     end
 
     private
