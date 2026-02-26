@@ -74,21 +74,40 @@ const inTemporaryList = ({ list, recordDatastore, recordId }) => {
 };
 
 const isTemporaryListEmpty = ({ datastores = getDatastores, list }) => {
-  return datastores({ empty: false, list }).length === 0;
+  return datastores({ list }).length === 0;
 };
 
-const toggleListElements = ({ list }) => {
+const removeEmptyDatastoreSections = ({ datastores = getDatastores, list }) => {
+  // Get all non-empty datastores
+  const nonEmptyDatastores = datastores({ list });
+  // Get all datastore sections
+  const sections = document.querySelectorAll('.list__datastore');
+  // Loop through all sections
+  sections.forEach((section) => {
+    // Get the datastore of the section
+    const { datastore } = section.dataset;
+    // Check if the datastore is empty
+    if (!nonEmptyDatastores.includes(datastore)) {
+      // Remove the section from the DOM
+      section.remove();
+    }
+  });
+};
+
+const toggleListElements = ({ list, listIsEmpty = isTemporaryListEmpty({ list }), removeLists = removeEmptyDatastoreSections } = {}) => {
   const lists = document.querySelector('.datastore-lists');
   const emptyList = document.querySelector('.list__empty');
 
   // Check if elements should be visible or not based on temporary list being empty
-  if (isTemporaryListEmpty({ list })) {
-    // Hide Actions when there are no saved records
+  if (listIsEmpty) {
+    // Hide lists when there are no saved records
     lists.style.display = 'none';
     // Show the empty message when there are no saved records
     emptyList.removeAttribute('style');
   } else {
-    // Show Actions when there are saved records
+    // Remove all datastore lists that are empty
+    removeLists({ list });
+    // Show lists when there are saved records
     lists.removeAttribute('style');
     // Hide the empty message when there are saved records
     emptyList.style.display = 'none';
@@ -193,6 +212,7 @@ export {
   initializeNonEmptyListFunctions,
   inTemporaryList,
   isTemporaryListEmpty,
+  removeEmptyDatastoreSections,
   setSessionStorage,
   temporaryList,
   toggleListElements,

@@ -42,7 +42,7 @@
       <%= erb :'datastores/partials/_select-all' %>
     </div>
     <% @datastores.each do |datastore| %>
-      <section class="list__datastore list__<%= datastore.slug %>">
+      <section class="list__datastore list__<%= datastore.slug %>" data-datastore="<%= datastore.slug %>">
         <h2><%= datastore.title %></h2>
         <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: 0, datastore: datastore.slug, results: [result], start_result: 1 } %>
       </section>

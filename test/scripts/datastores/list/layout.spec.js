@@ -8,6 +8,7 @@ import {
   initializeNonEmptyListFunctions,
   inTemporaryList,
   isTemporaryListEmpty,
+  removeEmptyDatastoreSections,
   setSessionStorage,
   temporaryList,
   toggleListElements,
@@ -17,7 +18,69 @@ import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
 
+let lists = '';
+Object.keys(defaultTemporaryList).forEach((datastore) => {
+  lists += `
+    <section class="list__datastore list__${datastore}" data-datastore="${datastore}">
+      <li class="container__rounded results__list-item record__container" data-record-id="1337" data-record-datastore="catalog">
+        <div class="results__list-item--header">
+        <input type="checkbox" class="record__checkbox" value="catalog,1337" aria-label="Select Original Title">
+        <h3 class="h4 results__list-item--title">
+          <span class="results__list-item--title-number">1.</span>
+          <a href="catalog/record/1337" class="results__list-item--title-original">Original Title</a>
+          <span class="h5 results__list-item--title-transliterated">
+            Transliterated Title
+          </span>
+        </h3>
+      </div>
+      <table class="metadata">
+        <thead class="visually-hidden">
+          <tr>
+            <th scope="col">Field</th>
+            <th scope="col">Data</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <th scope="row">
+                Published/Created
+              </th>
+              <td>
+                <ul class="list__no-style metadata__list metadata__list--plain-text" id="metadata__toggle--published">
+                  <li>
+                    <ul class="list__no-style metadata__list--parallel">
+                      <li>
+                        Transliterated Data
+                      </li>
+                      <li>
+                        Original Data
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+                <button class="button__ghost metadata__toggle" aria-expanded="true" aria-controls="metadata__toggle--published" data-toggle="3">
+                  Show fewer Published/Created
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </section>
+  `;
+});
+
 describe('layout', function () {
+  beforeEach(function () {
+    // Apply HTML to the body
+    document.body.innerHTML = `
+      <div class="list__empty"></div>
+      <div class="datastore-lists">
+        ${lists}
+      </div>
+    `;
+  });
+
   describe('getSessionStorage()', function () {
     let getSessionStorageStub = null;
 
@@ -339,16 +402,66 @@ describe('layout', function () {
     });
   });
 
-  describe('toggleListElements()', function () {
-    let getLists = null;
-    let getEmptyMessage = null;
+  describe('removeEmptyDatastoreSections()', function () {
     let list = null;
+    let getDatastoresStub = null;
+    let args = null;
+    let getSections = null;
 
     beforeEach(function () {
-      document.body.innerHTML = `
-      <div class="list__empty"></div>
-      <div class="datastore-lists"></div>
-      `;
+      list = { ...global.temporaryList };
+      getDatastoresStub = sinon.stub().returns(getDatastores({ list }));
+      args = {
+        datastores: getDatastoresStub,
+        list
+      };
+
+      getSections = () => {
+        return document.querySelectorAll('.list__datastore');
+      };
+
+      // Check that all sections exist
+      expect(getSections().length, 'all datastore sections should exist').to.equal(Object.keys(list).length);
+
+      // Call the function
+      removeEmptyDatastoreSections(args);
+    });
+
+    afterEach(function () {
+      getDatastoresStub = null;
+      args = null;
+      getSections = null;
+    });
+
+    it('should call `getDatastores` with the correct arguments', function () {
+      expect(getDatastoresStub.calledOnceWithExactly({ list: args.list })).to.be.true;
+    });
+
+    it('should only remove empty datastore sections from the DOM', function () {
+      getSections().forEach((section) => {
+        const { datastore } = section.dataset;
+        if (getDatastoresStub().includes(datastore)) {
+          expect(section.parentNode, 'non-empty datastore section should not be removed').to.not.be.null;
+        } else {
+          expect(section.parentNode, 'empty datastore section should be removed').to.be.null;
+        }
+      });
+    });
+  });
+
+  describe('toggleListElements()', function () {
+    let removeEmptyDatastoreSectionsSpy = null;
+    let args = null;
+    let getLists = null;
+    let getEmptyMessage = null;
+
+    beforeEach(function () {
+      removeEmptyDatastoreSectionsSpy = sinon.spy();
+      args = {
+        list: global.temporaryList,
+        listIsEmpty: false,
+        removeLists: removeEmptyDatastoreSectionsSpy
+      };
 
       getLists = () => {
         return document.querySelector('.datastore-lists');
@@ -357,23 +470,22 @@ describe('layout', function () {
       getEmptyMessage = () => {
         return document.querySelector('.list__empty');
       };
-
-      list = { ...global.temporaryList };
     });
 
     afterEach(function () {
+      removeEmptyDatastoreSectionsSpy = null;
+      args = null;
       getLists = null;
       getEmptyMessage = null;
-      list = null;
     });
 
     describe('non-empty temporary list', function () {
       beforeEach(function () {
         // Check that the temporary list is not empty
-        expect(isTemporaryListEmpty({ list }), 'the temporary list should not be empty').to.be.false;
+        expect(args.listIsEmpty, 'the temporary list should not be empty').to.be.false;
 
         // Call the function
-        toggleListElements({ list });
+        toggleListElements(args);
       });
 
       it('should show actions', function () {
@@ -385,20 +497,21 @@ describe('layout', function () {
         // Check that the empty message's `style` is set to `none`
         expect(getEmptyMessage().style.display, 'the empty message should be hidden').to.equal('none');
       });
+
+      it('should call `removeEmptyDatastoreSections` with the correct arguments', function () {
+        // Check that `removeEmptyDatastoreSections` was called
+        expect(removeEmptyDatastoreSectionsSpy.calledOnceWithExactly({ list: args.list }), '`removeEmptyDatastoreSections` should have been called with the correct arguments').to.be.true;
+      });
     });
 
     describe('empty temporary list', function () {
       beforeEach(function () {
-        // Remove all saved records from the list
-        Object.keys(list).forEach((datastore) => {
-          list[datastore] = {};
-        });
-
         // Check that the temporary list is empty
-        expect(isTemporaryListEmpty({ list }), 'the temporary list should be empty').to.be.true;
+        args.listIsEmpty = true;
+        expect(args.listIsEmpty, 'the temporary list should be empty').to.be.true;
 
         // Call the function
-        toggleListElements({ list });
+        toggleListElements(args);
       });
 
       it('should hide actions', function () {
@@ -409,6 +522,11 @@ describe('layout', function () {
       it('should show the empty message', function () {
         // Check that the `style` attribute does not exist for the empty message
         expect(getEmptyMessage().hasAttribute('style'), 'the `style` attribute should not exist for the empty message').to.be.false;
+      });
+
+      it('should not call `removeEmptyDatastoreSections`', function () {
+        // Check that `removeEmptyDatastoreSections` was not called
+        expect(removeEmptyDatastoreSectionsSpy.notCalled, '`removeEmptyDatastoreSections` should not have been called').to.be.true;
       });
     });
   });
