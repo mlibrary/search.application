@@ -5,6 +5,7 @@ import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { listItem } from './partials/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { removeEmptyListMessage } from './partials/_empty.js';
+import { removeListResults } from './partials/_results.js';
 
 const defaultTemporaryList = {
   articles: {},
@@ -78,9 +79,7 @@ const isTemporaryListEmpty = ({ datastores = getDatastores, list }) => {
   return datastores({ list }).length === 0;
 };
 
-const removeEmptyDatastoreSections = ({ datastores = getDatastores, list }) => {
-  // Get all non-empty datastores
-  const nonEmptyDatastores = datastores({ list });
+const removeEmptyDatastoreSections = ({ datastores }) => {
   // Get all datastore sections
   const sections = document.querySelectorAll('.list__datastore');
   // Loop through all sections
@@ -88,7 +87,7 @@ const removeEmptyDatastoreSections = ({ datastores = getDatastores, list }) => {
     // Get the datastore of the section
     const { datastore } = section.dataset;
     // Check if the datastore is empty
-    if (!nonEmptyDatastores.includes(datastore)) {
+    if (!datastores.includes(datastore)) {
       // Remove the section from the DOM
       section.remove();
     }
@@ -97,25 +96,21 @@ const removeEmptyDatastoreSections = ({ datastores = getDatastores, list }) => {
 
 const toggleListElements = ({
   list,
-  listIsEmpty = isTemporaryListEmpty({ list }),
+  nonEmptyDatastores = getDatastores({ list }),
   removeEmptyMessage = removeEmptyListMessage,
-  removeLists = removeEmptyDatastoreSections
+  removeLists = removeEmptyDatastoreSections,
+  removeResults = removeListResults
 } = {}) => {
-  const lists = document.querySelector('.datastore-lists');
-
-  // Check if elements should be visible or not based on temporary list being empty
-  if (listIsEmpty) {
-    // Hide lists when there are no saved records
-    lists.style.display = 'none';
+  // Check if the temporary list is empty
+  if (nonEmptyDatastores.length === 0) {
+    // Remove the list results from the DOM
+    removeResults();
   } else {
-    // Remove all datastore lists that are empty
-    removeLists({ list });
+    // Remove all empty datastore sections
+    removeLists({ datastores: nonEmptyDatastores });
 
-    // Remove the empty message from the DOM when there are saved records
+    // Remove the empty message from the DOM
     removeEmptyMessage();
-
-    // Show lists when there are saved records
-    lists.removeAttribute('style');
   }
 };
 

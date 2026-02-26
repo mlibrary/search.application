@@ -404,16 +404,13 @@ describe('layout', function () {
 
   describe('removeEmptyDatastoreSections()', function () {
     let list = null;
-    let getDatastoresStub = null;
     let args = null;
     let getSections = null;
 
     beforeEach(function () {
       list = { ...global.temporaryList };
-      getDatastoresStub = sinon.stub().returns(getDatastores({ list }));
       args = {
-        datastores: getDatastoresStub,
-        list
+        datastores: getDatastores({ list })
       };
 
       getSections = () => {
@@ -428,19 +425,14 @@ describe('layout', function () {
     });
 
     afterEach(function () {
-      getDatastoresStub = null;
+      list = null;
       args = null;
       getSections = null;
     });
 
-    it('should call `getDatastores` with the correct arguments', function () {
-      expect(getDatastoresStub.calledOnceWithExactly({ list: args.list })).to.be.true;
-    });
-
     it('should only remove empty datastore sections from the DOM', function () {
       getSections().forEach((section) => {
-        const { datastore } = section.dataset;
-        if (getDatastoresStub().includes(datastore)) {
+        if (args.datastores.includes(section.dataset.datastore)) {
           expect(section.parentNode, 'non-empty datastore section should not be removed').to.not.be.null;
         } else {
           expect(section.parentNode, 'empty datastore section should be removed').to.be.null;
@@ -452,43 +444,36 @@ describe('layout', function () {
   describe('toggleListElements()', function () {
     let removeEmptyListMessageSpy = null;
     let removeEmptyDatastoreSectionsSpy = null;
+    let removeListResultsSpy = null;
     let args = null;
-    let getLists = null;
 
     beforeEach(function () {
       removeEmptyListMessageSpy = sinon.spy();
       removeEmptyDatastoreSectionsSpy = sinon.spy();
+      removeListResultsSpy = sinon.spy();
       args = {
         list: global.temporaryList,
-        listIsEmpty: false,
+        nonEmptyDatastores: getDatastores({ list: global.temporaryList }),
         removeEmptyMessage: removeEmptyListMessageSpy,
-        removeLists: removeEmptyDatastoreSectionsSpy
-      };
-
-      getLists = () => {
-        return document.querySelector('.datastore-lists');
+        removeLists: removeEmptyDatastoreSectionsSpy,
+        removeResults: removeListResultsSpy
       };
     });
 
     afterEach(function () {
       removeEmptyListMessageSpy = null;
       removeEmptyDatastoreSectionsSpy = null;
+      removeListResultsSpy = null;
       args = null;
-      getLists = null;
     });
 
     describe('non-empty temporary list', function () {
       beforeEach(function () {
         // Check that the temporary list is not empty
-        expect(args.listIsEmpty, 'the temporary list should not be empty').to.be.false;
+        expect(args.nonEmptyDatastores.length, 'the temporary list should not be empty').to.be.above(0);
 
         // Call the function
         toggleListElements(args);
-      });
-
-      it('should show actions', function () {
-        // Check that the `style` attribute does not exist for Actions
-        expect(getLists().hasAttribute('style'), 'the `style` attribute should not exist for Actions').to.be.false;
       });
 
       it('should call `removeEmptyListMessage`', function () {
@@ -498,23 +483,28 @@ describe('layout', function () {
 
       it('should call `removeEmptyDatastoreSections` with the correct arguments', function () {
         // Check that `removeEmptyDatastoreSections` was called
-        expect(removeEmptyDatastoreSectionsSpy.calledOnceWithExactly({ list: args.list }), '`removeEmptyDatastoreSections` should have been called with the correct arguments').to.be.true;
+        expect(removeEmptyDatastoreSectionsSpy.calledOnceWithExactly({ datastores: args.nonEmptyDatastores }), '`removeEmptyDatastoreSections` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should not call `removeResults`', function () {
+        // Check that `removeResults` was not called
+        expect(removeListResultsSpy.notCalled, '`removeResults` should not have been called').to.be.true;
       });
     });
 
     describe('empty temporary list', function () {
       beforeEach(function () {
         // Check that the temporary list is empty
-        args.listIsEmpty = true;
-        expect(args.listIsEmpty, 'the temporary list should be empty').to.be.true;
+        args.nonEmptyDatastores = [];
+        expect(args.nonEmptyDatastores.length, 'the temporary list should be empty').to.equal(0);
 
         // Call the function
         toggleListElements(args);
       });
 
-      it('should hide actions', function () {
-        // Check that Actions's `style` is set to `none`
-        expect(getLists().style.display, 'actions should be hidden').to.equal('none');
+      it('should call `removeResults`', function () {
+        // Check that `removeResults` was called
+        expect(removeListResultsSpy.calledOnce, '`removeResults` should have been called once').to.be.true;
       });
 
       it('should not call `removeEmptyListMessage`', function () {
