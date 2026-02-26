@@ -1,44 +1,9 @@
 <%
-  record_ids = [
-    990038939650106381,
-    990006758990106381,
-    99187579295006381,
-    990040646010106381,
-    11102699205,
-    11100320512,
-    11100323049,
-    11010551022,
-    11011665129,
-    990008570110106381,
-    990008570170106381,
-    990008570210106381,
-    990008570040106381,
-    990008839630106381,
-    99187591950506381,
-    99187482531606381,
-    99187422679306381,
-    11100372386,
-    99187272754306381,
-    99188902815106381,
-    990015014190106381,
-    990043272160106381,
-    990039822770106381,
-    990024357620106381
-  ]
-  results = record_ids.map do |id|
-    record_data = JSON.parse(File.read("#{File.dirname(__FILE__)}/../../../spec/fixtures/results/#{id}.json"))
-    Search::Presenters::Record::Catalog::Brief.new(
-      Search::Models::Record::Catalog.new(record_data)
-    )
-  end
-  total_results = record_ids.size
+  total_results = 24
   current_page = params[:page].to_i && params[:page].to_i > 0 ? params[:page].to_i : 1
   per_page = 10
   start_result = current_page > 1 ? ((current_page - 1) * per_page) + 1 : 1
   end_result = [(start_result + per_page) - 1, total_results].min
-  page_results = results.map.with_index do |result, index|
-    result if index + 1 >= start_result && index + 1 <= end_result
-  end.compact
 %>
 
 <%= h1(body: @presenter.page_title, classes: ["visually-hidden"]) %>
@@ -57,13 +22,13 @@
     <h2 class="visually-hidden"><%= @presenter.page_title %> Results</h2>
     <section class="results__content">
       <%= erb :'/datastores/results/partials/_summary', locals: { total_results: total_results, start_result: start_result, end_result: end_result } %>
-      <% if results.any? %>
+      <% if @presenter.entries.any? %>
         <%= erb :'/datastores/list/partials/_go-to' %>
         <div class="container__sticky">
           <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
-          <%= erb :'/datastores/partials/_select-all', locals: { count: page_results.size } %>
+          <%= erb :'/datastores/partials/_select-all', locals: { count: @presenter.entries.size } %>
         </div>
-        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: page_results, start_result: start_result, end_result: end_result } %>
+        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: current_page, results: @presenter.entries, start_result: start_result, end_result: end_result } %>
         <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: current_page, per_page: per_page, total_results: total_results } %>
       <% else %>
         <%= erb :'/datastores/results/partials/results-list/_no-results' %>
