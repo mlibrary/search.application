@@ -100,27 +100,11 @@ const toggleListElements = ({
   }
 };
 
-const datastoreHeading = (datastore) => {
-  const heading = document.createElement('h2');
-  // Capitalize first letter and replace underscores with spaces
-  let datastoreText = datastore.charAt(0).toUpperCase() + datastore.slice(1);
-  if (datastore === 'guidesandmore') {
-    datastoreText = 'Guides and More';
-  }
-  if (datastore === 'onlinejournals') {
-    datastoreText = 'Online Journals';
-  }
-  heading.textContent = datastoreText;
-  return heading;
-};
-
 const createDatastoreList = ({ list }) => {
   // Get the list container
   const listContainer = document.querySelector('.list');
   // Create an ordered list for each non-empty datastore
   getDatastores({ list }).forEach((datastore) => {
-    // Create heading
-    listContainer.appendChild(datastoreHeading(datastore));
     // Create list container
     const listItems = document.createElement('ol');
     listItems.classList.add('list__items', 'list__no-style');
@@ -190,7 +174,6 @@ const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) =>
 
 export {
   createDatastoreList,
-  datastoreHeading,
   defaultTemporaryList,
   getDatastores,
   getSessionStorage,

@@ -1,6 +1,5 @@
 import {
   createDatastoreList,
-  datastoreHeading,
   defaultTemporaryList,
   getDatastores,
   getSessionStorage,
@@ -479,55 +478,6 @@ describe('layout', function () {
     });
   });
 
-  describe('datastoreHeading()', function () {
-    let getHeading = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = '';
-
-      getHeading = () => {
-        return document.querySelector('h2');
-      };
-
-      // Check that an h2 does not exist
-      expect(getHeading(), 'an `h2` should not exist before the function is called').to.be.null;
-    });
-
-    afterEach(function () {
-      // Check that an h2 now exists
-      expect(getHeading(), 'an `h2` should exist after the function is called').to.not.be.null;
-
-      getHeading = null;
-    });
-
-    it('should create an h2 with the correct text for a normal datastore', function () {
-      const datastore = 'catalog';
-
-      // Call the function and append the heading to the body
-      document.body.appendChild(datastoreHeading(datastore));
-
-      // Check that the text is correct
-      expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case').to.equal(datastore.charAt(0).toUpperCase() + datastore.slice(1));
-    });
-
-    it('should create an h2 with the correct text for the `onlinejournals` datastore', function () {
-      // Call the function and append the heading to the body
-      document.body.appendChild(datastoreHeading('onlinejournals'));
-
-      // Check that the text is correct
-      expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case for `onlinejournals`').to.equal('Online Journals');
-    });
-
-    it('should create an h2 with the correct text for the `guidesandmore` datastore', function () {
-      // Call the function and append the heading to the body
-      document.body.appendChild(datastoreHeading('guidesandmore'));
-
-      // Check that the text is correct
-      expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case for `guidesandmore`').to.equal('Guides and More');
-    });
-  });
-
   describe('createDatastoreList()', function () {
     let datastores = null;
 
@@ -575,10 +525,6 @@ describe('layout', function () {
 
     afterEach(function () {
       datastores = null;
-    });
-
-    it('should create a heading for every non-empty datastore', function () {
-      expect(document.querySelectorAll('h2').length, 'an `h2` should have been created for every non-empty datastore').to.equal(datastores.length);
     });
 
     it('should create an ordered list for every non-empty datastore', function () {
