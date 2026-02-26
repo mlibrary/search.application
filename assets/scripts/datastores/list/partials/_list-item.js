@@ -1,23 +1,5 @@
 import { updateCheckboxLabel, updateCheckboxValue } from '../../results/partials/results-list/list-item/header/_checkbox.js';
-
-const listItemTitle = ({ index, itemTitle, title, url }) => {
-  // Update the number
-  const originalNumber = itemTitle.querySelector('.list__item--title-number');
-  originalNumber.textContent = `${index + 1}.`;
-
-  // Update original title
-  const originalTitle = itemTitle.querySelector('.list__item--title-original');
-  originalTitle.href = url;
-  originalTitle.textContent = title.original;
-
-  // Update transliterated title or remove if none exists
-  const transliteratedTitle = itemTitle.querySelector('.list__item--title-transliterated');
-  if (title.transliterated) {
-    transliteratedTitle.textContent = title.transliterated;
-  } else {
-    transliteratedTitle.remove();
-  }
-};
+import { updateListItemTitle } from '../../results/partials/results-list/list-item/header/_title.js';
 
 const listItemMetadata = ({ itemTable, metadata }) => {
   // Get row template
@@ -52,9 +34,9 @@ const listItemMetadata = ({ itemTable, metadata }) => {
 
 const listItemUpdates = {
   listItemMetadata,
-  listItemTitle,
   updateCheckboxLabel,
-  updateCheckboxValue
+  updateCheckboxValue,
+  updateListItemTitle
 };
 
 const listItem = ({ datastore, index, record, recordId, updates = listItemUpdates }) => {
@@ -73,12 +55,11 @@ const listItem = ({ datastore, index, record, recordId, updates = listItemUpdate
   updates.updateCheckboxLabel({ checkbox, title: title.original });
   updates.updateCheckboxValue({ checkbox, recordDatastore: datastore, recordId });
   // Update the title
-  const itemTitle = clonedListItem.querySelector('.list__item--title');
-  updates.listItemTitle({ index, itemTitle, title, url });
+  updates.updateListItemTitle({ index, listItem: clonedListItem, title, url });
   // Update the metadata
   const itemTable = clonedListItem.querySelector('table.metadata > tbody');
   updates.listItemMetadata({ itemTable, metadata });
   return clonedListItem;
 };
 
-export { listItem, listItemMetadata, listItemTitle };
+export { listItem, listItemMetadata };

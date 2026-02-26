@@ -1,4 +1,4 @@
-import { listItem, listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
+import { listItem, listItemMetadata } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
 import { expect } from 'chai';
 import { getDatastores } from '../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
@@ -38,81 +38,6 @@ const listItemMetadataHTML = `
 `;
 
 describe('listItem()', function () {
-  describe('listItemTitle()', function () {
-    let args = null;
-    let getOriginalNumber = null;
-    let getOriginalTitle = null;
-    let getTransliteratedTitle = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = listItemTitleHTML;
-
-      args = {
-        index: 0,
-        itemTitle: document.querySelector('.list__item--title'),
-        title: {
-          original: 'New Original Title',
-          transliterated: 'New Transliterated Title'
-        },
-        url: 'https://lib.umich.edu'
-      };
-
-      getOriginalNumber = () => {
-        return args.itemTitle.querySelector('.list__item--title-number');
-      };
-
-      getOriginalTitle = () => {
-        return args.itemTitle.querySelector('.list__item--title-original');
-      };
-
-      getTransliteratedTitle = () => {
-        return args.itemTitle.querySelector('.list__item--title-transliterated');
-      };
-
-      // Call the function
-      listItemTitle(args);
-    });
-
-    afterEach(function () {
-      args = null;
-      getOriginalNumber = null;
-      getOriginalTitle = null;
-      getTransliteratedTitle = null;
-    });
-
-    it('should update the number of the original number', function () {
-      // Check that the number was updated
-      expect(getOriginalNumber().textContent, 'the value of the number should be one larger than its index').to.equal(`${args.index + 1}.`);
-    });
-
-    it('should update the url of the original title link', function () {
-      // Check that the URL was updated
-      expect(getOriginalTitle().getAttribute('href'), 'the value of the `href` attribute should have been updated to the provided `url`').to.equal(args.url);
-    });
-
-    it('should update the original title text', function () {
-      // Check that the original title was updated
-      expect(getOriginalTitle().textContent, 'the original title should have been updated with the provided title').to.equal(args.title.original);
-    });
-
-    it('should update the transliterated title text if it exists', function () {
-      // Check that the transliterated title was updated
-      expect(getTransliteratedTitle().textContent, 'the transliterated title should have been updated with the provided title').to.equal(args.title.transliterated);
-    });
-
-    it('should remove the transliterated title element if none exists', function () {
-      // Remove the transliterated title from the args
-      args.title.transliterated = '';
-
-      // Call the function again
-      listItemTitle(args);
-
-      // Check that the transliterated title element was removed
-      expect(getTransliteratedTitle(), 'the transliterated title element should not exist if there is no transliterated title').to.be.null;
-    });
-  });
-
   describe('listItemMetadata()', function () {
     let args = null;
     let getRows = null;
@@ -202,13 +127,14 @@ describe('listItem()', function () {
 
       args = {
         datastore: nonEmptyDatastores[0],
+        index: 0,
         record: global.temporaryList[nonEmptyDatastores[0]][recordId],
         recordId,
         updates: {
           listItemMetadata: sinon.stub(),
-          listItemTitle: sinon.stub(),
           updateCheckboxLabel: sinon.spy(),
-          updateCheckboxValue: sinon.spy()
+          updateCheckboxValue: sinon.spy(),
+          updateListItemTitle: sinon.spy()
         }
       };
 
@@ -250,21 +176,8 @@ describe('listItem()', function () {
       expect(args.updates.updateCheckboxValue.calledOnceWithExactly({ checkbox: clone.querySelector('input[type="checkbox"]'), recordDatastore: args.datastore, recordId: args.recordId })).to.be.true;
     });
 
-    it('should call `listItemTitle` with the correct arguments', function () {
-      // Get the cloned title
-      const itemTitle = clone.querySelector('.list__item--title');
-
-      // Check that `listItemTitle` was called
-      expect(args.updates.listItemTitle.calledOnce, '`listItemTitle` should have been called once').to.be.true;
-
-      // Get the arguments for `listItemTitle`
-      const [titleArgs] = args.updates.listItemTitle.firstCall.args;
-
-      // Check that each argument is returning the correct value
-      expect(titleArgs.index, '`index` should have the correct value').to.equal(args.index);
-      expect(titleArgs.itemTitle, '`itemTitle` should have the correct value').to.equal(itemTitle);
-      expect(titleArgs.title, '`title` should have the correct value').to.deep.equal(args.record.title);
-      expect(titleArgs.url, '`url` should have the correct value').to.equal(args.record.url);
+    it('should call `updateListItemTitle` with the correct arguments', function () {
+      expect(args.updates.updateListItemTitle.calledOnceWithExactly({ index: args.index, listItem: clone, title: args.record.title, url: args.record.url })).to.be.true;
     });
 
     it('should call `listItemMetadata` with the correct arguments', function () {
@@ -282,7 +195,7 @@ describe('listItem()', function () {
       expect(metadataArgs.metadata, '`metadata` should have the correct value').to.deep.equal(args.record.metadata);
     });
 
-    it('should return the cloned nod', function () {
+    it('should return the cloned node', function () {
       // Call the function by attaching it to the body
       document.body.appendChild(listItem(args));
 
