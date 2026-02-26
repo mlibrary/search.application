@@ -8,7 +8,6 @@ import {
   initializeNonEmptyListFunctions,
   inTemporaryList,
   isTemporaryListEmpty,
-  removeEmptyDatastoreSections,
   setSessionStorage,
   temporaryList,
   toggleListElements,
@@ -399,45 +398,6 @@ describe('layout', function () {
 
       // Check that the temporary list is empty
       expect(isTemporaryListEmpty({ list }), 'the temporary list should be empty').to.be.true;
-    });
-  });
-
-  describe('removeEmptyDatastoreSections()', function () {
-    let list = null;
-    let args = null;
-    let getSections = null;
-
-    beforeEach(function () {
-      list = { ...global.temporaryList };
-      args = {
-        datastores: getDatastores({ list })
-      };
-
-      getSections = () => {
-        return document.querySelectorAll('.list__datastore');
-      };
-
-      // Check that all sections exist
-      expect(getSections().length, 'all datastore sections should exist').to.equal(Object.keys(list).length);
-
-      // Call the function
-      removeEmptyDatastoreSections(args);
-    });
-
-    afterEach(function () {
-      list = null;
-      args = null;
-      getSections = null;
-    });
-
-    it('should only remove empty datastore sections from the DOM', function () {
-      getSections().forEach((section) => {
-        if (args.datastores.includes(section.dataset.datastore)) {
-          expect(section.parentNode, 'non-empty datastore section should not be removed').to.not.be.null;
-        } else {
-          expect(section.parentNode, 'empty datastore section should be removed').to.be.null;
-        }
-      });
     });
   });
 

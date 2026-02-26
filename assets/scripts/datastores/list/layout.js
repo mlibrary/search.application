@@ -4,6 +4,7 @@ import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { listItem } from './partials/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
+import { removeEmptyDatastoreSections } from './partials/results/_datastores.js';
 import { removeEmptyListMessage } from './partials/_empty.js';
 import { removeListResults } from './partials/_results.js';
 
@@ -77,21 +78,6 @@ const inTemporaryList = ({ list, recordDatastore, recordId }) => {
 
 const isTemporaryListEmpty = ({ datastores = getDatastores, list }) => {
   return datastores({ list }).length === 0;
-};
-
-const removeEmptyDatastoreSections = ({ datastores }) => {
-  // Get all datastore sections
-  const sections = document.querySelectorAll('.list__datastore');
-  // Loop through all sections
-  sections.forEach((section) => {
-    // Get the datastore of the section
-    const { datastore } = section.dataset;
-    // Check if the datastore is empty
-    if (!datastores.includes(datastore)) {
-      // Remove the section from the DOM
-      section.remove();
-    }
-  });
 };
 
 const toggleListElements = ({
@@ -212,7 +198,6 @@ export {
   initializeNonEmptyListFunctions,
   inTemporaryList,
   isTemporaryListEmpty,
-  removeEmptyDatastoreSections,
   setSessionStorage,
   temporaryList,
   toggleListElements,
