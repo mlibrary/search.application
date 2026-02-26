@@ -76,10 +76,6 @@ const inTemporaryList = ({ list, recordDatastore, recordId }) => {
   return Boolean(list?.[recordDatastore]?.[recordId]);
 };
 
-const isTemporaryListEmpty = ({ datastores = getDatastores, list }) => {
-  return datastores({ list }).length === 0;
-};
-
 const toggleListElements = ({
   list,
   nonEmptyDatastores = getDatastores({ list }),
@@ -153,6 +149,7 @@ const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChang
 
 const temporaryListFunctions = {
   createDatastoreList,
+  getDatastores,
   initializeNonEmptyListFunctions,
   toggleListElements
 };
@@ -165,7 +162,7 @@ const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) =>
   listFunctions.createDatastoreList({ list });
 
   // Return early if My Temporary List is empty
-  if (isTemporaryListEmpty({ list })) {
+  if (listFunctions.getDatastores({ list }).length === 0) {
     return;
   }
 
@@ -180,7 +177,6 @@ export {
   handleSelectionChange,
   initializeNonEmptyListFunctions,
   inTemporaryList,
-  isTemporaryListEmpty,
   setSessionStorage,
   temporaryList,
   toggleListElements,
