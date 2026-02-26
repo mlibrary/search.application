@@ -1,4 +1,4 @@
-import { listItem, listItemCheckbox, listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
+import { listItem, listItemMetadata, listItemTitle } from '../../../../../assets/scripts/datastores/list/partials/_list-item.js';
 import { expect } from 'chai';
 import { getDatastores } from '../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
@@ -38,43 +38,6 @@ const listItemMetadataHTML = `
 `;
 
 describe('listItem()', function () {
-  describe('listItemCheckbox()', function () {
-    let getCheckbox = null;
-    let args = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = '<input type="checkbox" class="record__checkbox" value="" aria-label="Select record">';
-
-      getCheckbox = () => {
-        return document.querySelector('input');
-      };
-
-      args = {
-        datastore: 'catalog',
-        itemCheckbox: getCheckbox(),
-        recordId: '1337',
-        title: 'This is a title'
-      };
-
-      // Call the function
-      listItemCheckbox(args);
-    });
-
-    afterEach(function () {
-      getCheckbox = null;
-      args = null;
-    });
-
-    it('should update the checkbox value', function () {
-      expect(getCheckbox().value, 'the value of the checkbox should include the `datastore` and `recordId`').to.equal(`${args.datastore},${args.recordId}`);
-    });
-
-    it('should update the `aria-label` attribute of the checkbox', function () {
-      expect(getCheckbox().getAttribute('aria-label'), 'the `aria-label` attribute of the checkbox should include the record title').to.equal(`Select ${args.title}`);
-    });
-  });
-
   describe('listItemTitle()', function () {
     let args = null;
     let getOriginalNumber = null;
@@ -242,9 +205,10 @@ describe('listItem()', function () {
         record: global.temporaryList[nonEmptyDatastores[0]][recordId],
         recordId,
         updates: {
-          listItemCheckbox: sinon.stub(),
           listItemMetadata: sinon.stub(),
-          listItemTitle: sinon.stub()
+          listItemTitle: sinon.stub(),
+          updateCheckboxLabel: sinon.spy(),
+          updateCheckboxValue: sinon.spy()
         }
       };
 
@@ -278,21 +242,12 @@ describe('listItem()', function () {
       expect(clone.getAttribute('data-record-id'), '`data-record-id` should be defined to the provided record ID').to.equal(args.recordId);
     });
 
-    it('should call `listItemCheckbox` with the correct arguments', function () {
-      // Get the cloned checkbox
-      const itemCheckbox = clone.querySelector('.record__checkbox');
+    it('should call `updateCheckboxLabel` with the correct arguments', function () {
+      expect(args.updates.updateCheckboxLabel.calledOnceWithExactly({ checkbox: clone.querySelector('input[type="checkbox"]'), title: args.record.title.original })).to.be.true;
+    });
 
-      // Check that `listItemCheckbox` was called
-      expect(args.updates.listItemCheckbox.calledOnce, '`listItemCheckbox` should have been called once').to.be.true;
-
-      // Get the arguments for `listItemCheckbox`
-      const [checkboxArgs] = args.updates.listItemCheckbox.firstCall.args;
-
-      // Check that each argument is returning the correct value
-      expect(checkboxArgs.datastore, '`datastore` should have the correct value').to.equal(args.datastore);
-      expect(checkboxArgs.itemCheckbox, '`itemCheckbox` should have the correct value').to.equal(itemCheckbox);
-      expect(checkboxArgs.recordId, '`recordId` should have the correct value').to.equal(args.recordId);
-      expect(checkboxArgs.title, '`title` should have the correct value').to.equal(args.record.title.original);
+    it('should call `updateCheckboxValue` with the correct arguments', function () {
+      expect(args.updates.updateCheckboxValue.calledOnceWithExactly({ checkbox: clone.querySelector('input[type="checkbox"]'), recordDatastore: args.datastore, recordId: args.recordId })).to.be.true;
     });
 
     it('should call `listItemTitle` with the correct arguments', function () {

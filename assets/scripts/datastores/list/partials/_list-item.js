@@ -1,10 +1,4 @@
-const listItemCheckbox = ({ datastore, itemCheckbox, recordId, title }) => {
-  // Update the value
-  itemCheckbox.value = `${datastore},${recordId}`;
-
-  // Update the label
-  itemCheckbox.setAttribute('aria-label', `Select ${title}`);
-};
+import { updateCheckboxLabel, updateCheckboxValue } from '../../results/partials/results-list/list-item/header/_checkbox.js';
 
 const listItemTitle = ({ index, itemTitle, title, url }) => {
   // Update the number
@@ -57,9 +51,10 @@ const listItemMetadata = ({ itemTable, metadata }) => {
 };
 
 const listItemUpdates = {
-  listItemCheckbox,
   listItemMetadata,
-  listItemTitle
+  listItemTitle,
+  updateCheckboxLabel,
+  updateCheckboxValue
 };
 
 const listItem = ({ datastore, index, record, recordId, updates = listItemUpdates }) => {
@@ -74,8 +69,9 @@ const listItem = ({ datastore, index, record, recordId, updates = listItemUpdate
   clonedListItem.setAttribute('data-record-id', recordId);
   // Update the checkbox
   const { metadata, title, url } = record;
-  const itemCheckbox = clonedListItem.querySelector('.record__checkbox');
-  updates.listItemCheckbox({ datastore, itemCheckbox, recordId, title: title.original });
+  const checkbox = clonedListItem.querySelector('.record__checkbox');
+  updates.updateCheckboxLabel({ checkbox, title: title.original });
+  updates.updateCheckboxValue({ checkbox, recordDatastore: datastore, recordId });
   // Update the title
   const itemTitle = clonedListItem.querySelector('.list__item--title');
   updates.listItemTitle({ index, itemTitle, title, url });
@@ -85,4 +81,4 @@ const listItem = ({ datastore, index, record, recordId, updates = listItemUpdate
   return clonedListItem;
 };
 
-export { listItem, listItemCheckbox, listItemMetadata, listItemTitle };
+export { listItem, listItemMetadata, listItemTitle };
