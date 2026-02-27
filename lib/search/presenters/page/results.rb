@@ -38,20 +38,19 @@ class Search::Presenters::Page
         "location_on", "check_circle", "warning", "error", "list",
         "arrow_back_ios", "arrow_forward_ios"]
 
-    def self.for(slug:, uri:, patron:, page:)
+    def self.for(slug:, uri:, patron:, params:)
       datastore = Search::Datastores.find(slug)
-      new(datastore: datastore, uri: uri, patron: patron, page: page)
+      # results = Search::Presenters::Results.for(slug:, uri:)
+      new(datastore: datastore, uri: uri, patron: patron, params: params)
     end
 
-    attr_reader :page
-
-    def initialize(datastore:, uri:, patron:, page:)
+    def initialize(datastore:, uri:, patron:, params:)
       @description = description
       @slug = datastore.slug
       @datastore = datastore # datastore object
       @uri = uri
       @patron = patron
-      @page = page.to_i
+      @params = params
     end
 
     def styles
@@ -88,6 +87,10 @@ class Search::Presenters::Page
 
     def clear_filters_url
       @uri.to_s
+    end
+
+    def page
+      @params["page"].to_i
     end
 
     def pagination

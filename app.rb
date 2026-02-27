@@ -126,7 +126,7 @@ class Search::Application < Sinatra::Base
       end
       get "/catalog" do
         if params.any?
-          @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, page: params["page"])
+          @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, params: params)
           erb :"datastores/results/layout", layout: :layout do
             erb :"datastores/results/#{datastore.slug}"
           end
