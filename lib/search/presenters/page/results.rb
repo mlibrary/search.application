@@ -40,17 +40,18 @@ class Search::Presenters::Page
 
     def self.for(slug:, uri:, patron:, params:)
       datastore = Search::Datastores.find(slug)
-      # results = Search::Presenters::Results.for(slug:, uri:)
-      new(datastore: datastore, uri: uri, patron: patron, params: params)
+      results = Search::Presenters::Results.for(datastore: slug, params: params)
+      new(datastore: datastore, uri: uri, patron: patron, params: params, results: results)
     end
 
-    def initialize(datastore:, uri:, patron:, params:)
+    def initialize(datastore:, uri:, patron:, params:, results:)
       @description = description
       @slug = datastore.slug
       @datastore = datastore # datastore object
       @uri = uri
       @patron = patron
       @params = params
+      @results = results
     end
 
     def styles
@@ -89,25 +90,13 @@ class Search::Presenters::Page
       @uri.to_s
     end
 
-    def page
-      @params["page"].to_i
-    end
-
     def pagination
-      total = 24
-      current_page = (page && page > 0) ? page : 1
-      start_result = (current_page > 1) ? ((current_page - 1) * limit) + 1 : 1
-      end_result = [(start_result + limit) - 1, total].min
-      OpenStruct.new(start: start_result, end: end_result, total: total, limit: limit, current_page: current_page)
-    end
-
-    def limit
-      10
+      @results.pagination
     end
 
     def entries
       start = pagination.current_page - 1
-      FIXED_RECORDS[start * limit, 10]
+      FIXED_RECORDS[start * pagination.limit, 10]
     end
 
     private
