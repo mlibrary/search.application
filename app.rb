@@ -75,13 +75,7 @@ class Search::Application < Sinatra::Base
     def expired_user_session?
       session[:expires_at].nil? || session[:expires_at] < Time.now.to_i
     end
-  end
 
-  get "/" do
-    redirect to("/everything")
-  end
-
-  helpers do
     def login
       if @patron.logged_in?
         link_to(body: "Log out", url: "/logout", classes: ["underline__none"])
@@ -89,6 +83,14 @@ class Search::Application < Sinatra::Base
         erb :"partials/header/_login", locals: {text: "Log in"}
       end
     end
+
+    def full_uri
+      Addressable::URI.parse(request.url)
+    end
+  end
+
+  get "/" do
+    redirect to("/everything")
   end
 
   Search::Datastores.each do |datastore|
@@ -97,7 +99,7 @@ class Search::Application < Sinatra::Base
         # profile = RubyProf::Profile.new
         # profile.start
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "full_record"
-        @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, record_id: params["id"])
+        @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: full_uri, patron: @patron, record_id: params["id"])
         @record = @presenter.record
         erb :"datastores/record/layout", layout: :layout do
           erb :"datastores/record/#{datastore.slug}"
@@ -126,14 +128,14 @@ class Search::Application < Sinatra::Base
       end
       get "/catalog" do
         if params.any?
-          @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron, params: params)
+          @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: full_uri, patron: @patron)
           erb :"datastores/results/layout", layout: :layout do
             erb :"datastores/results/#{datastore.slug}"
           end
         else
           headers "metrics.datastore" => datastore.slug, "metrics.route" => "static_page"
           Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
-          @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+          @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: full_uri, patron: @patron)
           erb :"datastores/layout", layout: :layout do
             erb :"datastores/#{datastore.slug}"
           end

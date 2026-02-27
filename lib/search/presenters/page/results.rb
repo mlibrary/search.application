@@ -6,19 +6,18 @@ class Search::Presenters::Page
         "location_on", "check_circle", "warning", "error", "list",
         "arrow_back_ios", "arrow_forward_ios"]
 
-    def self.for(slug:, uri:, patron:, params:)
+    def self.for(slug:, uri:, patron:)
       datastore = Search::Datastores.find(slug)
-      results = Search::Presenters::Results.for(datastore: slug, params: params)
-      new(datastore: datastore, uri: uri, patron: patron, params: params, results: results)
+      results = Search::Presenters::Results.for(datastore: slug, uri: uri)
+      new(datastore: datastore, uri: uri, patron: patron, results: results)
     end
 
-    def initialize(datastore:, uri:, patron:, params:, results:)
+    def initialize(datastore:, uri:, patron:, results:)
       @description = description
       @slug = datastore.slug
       @datastore = datastore # datastore object
       @uri = uri
       @patron = patron
-      @params = params
       @results = results
     end
 

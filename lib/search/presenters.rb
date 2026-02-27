@@ -36,8 +36,8 @@ module Search::Presenters
       Page::Record.for(slug: slug, uri: uri, patron: patron, record_id: record_id)
     end
 
-    def for_datastore_results(slug:, uri:, params:, patron: nil)
-      Page::Results.for(slug: slug, uri: uri, patron: patron, params: params)
+    def for_datastore_results(slug:, uri:, patron: nil)
+      Page::Results.for(slug: slug, uri: uri, patron: patron)
     end
   end
 end

@@ -1,7 +1,7 @@
 module Search::Presenters
   class Results
-    def self.for(datastore:, params:)
-      "Search::Presenters::Results::#{datastore.capitalize}".constantize.for(params)
+    def self.for(datastore:, uri:)
+      "Search::Presenters::Results::#{datastore.capitalize}".constantize.for(uri)
     end
   end
 end
@@ -34,6 +34,95 @@ class Search::Presenters::Results::Catalog
     990039822770106381,
     990024357620106381
   ]
+
+  FIXED_FILTERS = [
+    {
+      uid: "availability",
+      name: "Availability",
+      options: [
+        {value: "Available Online", count: 15762},
+        {value: "Physical", count: 8421},
+        {value: "HathiTrust", count: 3245}
+      ]
+    },
+    {
+      uid: "format",
+      name: "Format",
+      options: [
+        {value: "Book", count: 11826},
+        {value: "Journal", count: 7398},
+        {value: "Music", count: 1234},
+        {value: "Video", count: 987},
+        {value: "Map", count: 456},
+        {value: "Manuscript", count: 321},
+        {value: "Audio (music)", count: 321}
+      ]
+    },
+    {
+      uid: "subject",
+      name: "Subject",
+      options: [
+        {value: "History", count: 6789},
+        {value: "Science", count: 5678},
+        {value: "Literature", count: 4567},
+        {value: "Art", count: 3456},
+        {value: "Technology", count: 2345}
+      ]
+    },
+    {
+      uid: "date_of_publication",
+      name: "Date of Publication",
+      options: [
+        {value: "2020-2024", count: 3456},
+        {value: "2010-2019", count: 5678},
+        {value: "2000-2009", count: 4567},
+        {value: "1990-1999", count: 2345},
+        {value: "1980-1989", count: 1234},
+        {value: "1970-1979", count: 1234},
+        {value: "1960-1969", count: 1234},
+        {value: "Before 1960", count: 6789}
+      ]
+    },
+    {
+      uid: "language",
+      name: "Language",
+      options: [
+        {value: "English", count: 14567},
+        {value: "Spanish", count: 2345},
+        {value: "French", count: 1234},
+        {value: "German", count: 987},
+        {value: "Chinese", count: 876},
+        {value: "Japanese", count: 765},
+        {value: "Russian", count: 654}
+      ]
+    },
+    {
+      uid: "author",
+      name: "Author",
+      options: [
+        {value: "Smith, John", count: 123},
+        {value: "Doe, Jane", count: 98},
+        {value: "Brown, Bob", count: 76},
+        {value: "Johnson, Alice", count: 54},
+        {value: "Davis, Charlie", count: 32}
+      ]
+    },
+    {
+      uid: "publisher",
+      name: "Publisher",
+      options: [
+        {value: "Penguin Random House", count: 456},
+        {value: "HarperCollins", count: 345},
+        {value: "Simon & Schuster", count: 234},
+        {value: "Macmillan Publishers", count: 123},
+        {value: "Hachette Livre", count: 98}
+      ]
+    }
+  ].map do |filter|
+    options = filter[:options].map { |x| OpenStruct.new(value: x[:value], count: x[:count]) }
+    OpenStruct.new(uid: filter[:uid], name: filter[:name], options: options)
+  end
+
   def self.records(pagination)
     start = pagination.current_page - 1
     FIXED_RECORD_IDS[start * pagination.limit, 10].map do |id|
@@ -42,6 +131,7 @@ class Search::Presenters::Results::Catalog
     end
   end
 
+  # This should be in the instance here. It should not be part of model::results
   def self.pagination(page)
     total = 24
     limit = 10
@@ -51,14 +141,17 @@ class Search::Presenters::Results::Catalog
     OpenStruct.new(start: start_result, end: end_result, total: total, limit: limit, current_page: current_page)
   end
 
-  def self.for(params)
-    pagination_inst = pagination(params["page"].to_i)
-    results_model_instance = OpenStruct.new(filters: [], records: records(pagination_inst), pagination: pagination_inst)
+  def self.for(uri)
+    pagination_inst = pagination(uri.query_hash["page"].to_i)
+    results_model_instance = OpenStruct.new(filters: FIXED_FILTERS, records: records(pagination_inst), pagination: pagination_inst, uri: uri)
     new(results_model_instance)
   end
 
   def initialize(results)
     @results = results
+  end
+
+  def filters
   end
 
   def pagination
