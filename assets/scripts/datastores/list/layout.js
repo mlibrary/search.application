@@ -1,19 +1,21 @@
 import { selectAllCheckboxState, updateSelectedCount } from '../partials/_select-all.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
+import { clonedListItem } from '../results/partials/results-list/_list-item.js';
 import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
-import { listItem } from './partials/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
+import { removeEmptyDatastoreSections } from './partials/results/_datastores.js';
+import { removeEmptyListMessage } from './partials/_empty.js';
+import { removeListResults } from './partials/_results.js';
 
-/* eslint-disable sort-keys */
 const defaultTemporaryList = {
-  catalog: {},
   articles: {},
+  catalog: {},
   databases: {},
-  onlinejournals: {},
-  guidesandmore: {}
+  everything: {},
+  guidesandmore: {},
+  onlinejournals: {}
 };
-/* eslint-enable sort-keys */
 
 const getSessionStorage = ({ defaultValue, itemName }) => {
   // Check if a default value was provided
@@ -56,86 +58,56 @@ const setSessionStorage = ({ itemName, value }) => {
   sessionStorage.setItem(itemName, JSON.stringify(value));
 };
 
+const viewingTemporaryList = () => {
+  return window.location.pathname === '/everything/list';
+};
+
+const getDatastores = ({ empty = false, list }) => {
+  return Object.keys(list).filter((datastore) => {
+    if (empty) {
+      return Object.keys(list[datastore]).length === 0;
+    }
+    return Object.keys(list[datastore]).length > 0;
+  });
+};
+
 const inTemporaryList = ({ list, recordDatastore, recordId }) => {
   // Check that the datastore exists in the list, and the record ID exists within the datastore
   return Boolean(list?.[recordDatastore]?.[recordId]);
 };
 
-const viewingTemporaryList = () => {
-  return window.location.pathname === '/everything/list';
-};
-
-const isTemporaryListEmpty = (list) => {
-  // Use for...in loop for fastest performance
-  for (const datastore in list) {
-    // Check if any of the datastores have records saved to them
-    if (Object.keys(list[datastore]).length > 0) {
-      // Exit early if non-empty found
-      return false;
-    }
-  }
-
-  return true;
-};
-
-const temporaryListCount = (list) => {
-  return Object.values(list).reduce((sum, datastore) => {
-    return sum + Object.keys(datastore).length;
-  }, 0);
-};
-
-const nonEmptyDatastores = (list) => {
-  return Object.keys(list).filter((datastore) => {
-    return Object.keys(list[datastore]).length > 0;
-  });
-};
-
-const toggleListElements = (list) => {
-  const listActions = document.querySelector('.container__sticky');
-  const emptyList = document.querySelector('.list__empty');
-
-  // Check if elements should be visible or not based on temporary list being empty
-  if (isTemporaryListEmpty(list)) {
-    // Hide Actions when there are no saved records
-    listActions.style.display = 'none';
-    // Show the empty message when there are no saved records
-    emptyList.removeAttribute('style');
+const toggleListElements = ({
+  list,
+  nonEmptyDatastores = getDatastores({ list }),
+  removeEmptyMessage = removeEmptyListMessage,
+  removeLists = removeEmptyDatastoreSections,
+  removeResults = removeListResults
+} = {}) => {
+  // Check if the temporary list is empty
+  if (nonEmptyDatastores.length === 0) {
+    // Remove the list results from the DOM
+    removeResults();
   } else {
-    // Show Actions when there are saved records
-    listActions.removeAttribute('style');
-    // Hide the empty message when there are saved records
-    emptyList.style.display = 'none';
+    // Remove all empty datastore sections
+    removeLists({ datastores: nonEmptyDatastores });
+
+    // Remove the empty message from the DOM
+    removeEmptyMessage();
   }
 };
 
-const datastoreHeading = (datastore) => {
-  const heading = document.createElement('h2');
-  // Capitalize first letter and replace underscores with spaces
-  let datastoreText = datastore.charAt(0).toUpperCase() + datastore.slice(1);
-  if (datastore === 'guidesandmore') {
-    datastoreText = 'Guides and More';
-  }
-  if (datastore === 'onlinejournals') {
-    datastoreText = 'Online Journals';
-  }
-  heading.textContent = datastoreText;
-  return heading;
-};
-
-const createDatastoreList = (list) => {
+const createDatastoreList = ({ list }) => {
   // Get the list container
   const listContainer = document.querySelector('.list');
   // Create an ordered list for each non-empty datastore
-  nonEmptyDatastores(list).forEach((datastore) => {
-    // Create heading
-    listContainer.appendChild(datastoreHeading(datastore));
+  getDatastores({ list }).forEach((recordDatastore) => {
     // Create list container
     const listItems = document.createElement('ol');
     listItems.classList.add('list__items', 'list__no-style');
     listContainer.appendChild(listItems);
     // Display records
-    Object.keys(list[datastore]).forEach((recordId, index) => {
-      listItems.appendChild(listItem({ datastore, index, record: list[datastore][recordId], recordId }));
+    Object.keys(list[recordDatastore]).forEach((recordId, index) => {
+      listItems.appendChild(clonedListItem({ index, record: list[recordDatastore][recordId], recordDatastore, recordId }));
     });
   });
 };
@@ -177,19 +149,20 @@ const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChang
 
 const temporaryListFunctions = {
   createDatastoreList,
+  getDatastores,
   initializeNonEmptyListFunctions,
   toggleListElements
 };
 
 const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) => {
   // Toggle what should and should not be displaying
-  listFunctions.toggleListElements(list);
+  listFunctions.toggleListElements({ list });
 
   // Build the list DOM
-  listFunctions.createDatastoreList(list);
+  listFunctions.createDatastoreList({ list });
 
   // Return early if My Temporary List is empty
-  if (isTemporaryListEmpty(list)) {
+  if (listFunctions.getDatastores({ list }).length === 0) {
     return;
   }
 
@@ -198,17 +171,14 @@ const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) =>
 
 export {
   createDatastoreList,
-  datastoreHeading,
   defaultTemporaryList,
+  getDatastores,
   getSessionStorage,
   handleSelectionChange,
   initializeNonEmptyListFunctions,
   inTemporaryList,
-  isTemporaryListEmpty,
-  nonEmptyDatastores,
   setSessionStorage,
   temporaryList,
-  temporaryListCount,
   toggleListElements,
   viewingTemporaryList
 };

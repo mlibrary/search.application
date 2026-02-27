@@ -1,0 +1,9 @@
+<div class="hide__no-javascript list__results">
+  <div class="container__sticky">
+    <%= erb :'datastores/partials/_actions' %>
+    <%= erb :'datastores/partials/_select-all' %>
+  </div>
+  <%= erb :'datastores/list/partials/results/_datastores', locals: { datastores: datastores, results: results } %>
+</div>
+
+<%= erb :'datastores/results/partials/results-list/_list-item', locals: { classes: ["hide__no-javascript", "list__item--clone"], datastore: datastores.first.slug, index: 0, result: results.first } %>

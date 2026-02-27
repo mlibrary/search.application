@@ -1,8 +1,5 @@
 import { disableActionTabs, getTabPanel, isSelected, tabControl, toggleTabDisplay } from '../../../../assets/scripts/datastores/partials/_actions.js';
-import { getCheckboxes, someCheckboxesChecked } from '../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
 import { expect } from 'chai';
-import { JSDOM } from 'jsdom';
-import { viewingTemporaryList } from '../../../../assets/scripts/datastores/list/layout.js';
 
 describe('actions', function () {
   let firstTab = null;
@@ -60,11 +57,11 @@ describe('actions', function () {
 
   describe('isSelected()', function () {
     it('should return `true`', function () {
-      expect(isSelected(firstTab()), 'the first tab should be selected').to.be.true;
+      expect(isSelected({ tab: firstTab() }), 'the first tab should be selected').to.be.true;
     });
 
     it('should return `false`', function () {
-      expect(isSelected(secondTab()), 'the second tab should not be selected').to.be.false;
+      expect(isSelected({ tab: secondTab() }), 'the second tab should not be selected').to.be.false;
     });
   });
 
@@ -138,70 +135,23 @@ describe('actions', function () {
       };
     });
 
-    describe('when not viewing the temporary list', function () {
-      beforeEach(function () {
-        // Check that Temporary List is not being viewed
-        expect(viewingTemporaryList(), 'the current pathname should not be `/everything/list`').to.be.false;
+    it('should disable all action tabs if no checkboxes are checked', function () {
+      // Call the function
+      disableActionTabs({ someChecked: false });
 
-        // Call the function
-        disableActionTabs();
-      });
-
-      it('should not return anything', function () {
-        expect(disableActionTabs()).to.be.undefined;
+      // Check that all tabs are disabled
+      getTabs().forEach((tab) => {
+        expect(tab.disabled, 'all tabs should be disabled if no checkboxes are checked').to.be.true;
       });
     });
 
-    describe('when viewing the temporary list', function () {
-      let originalWindow = null;
+    it('should enable all action tabs if at least one checkbox is checked', function () {
+      // Call the function
+      disableActionTabs({ someChecked: true });
 
-      beforeEach(function () {
-        // Save the original window object
-        originalWindow = global.window;
-
-        // Setup JSDOM with an updated URL
-        const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
-          url: 'http://localhost/everything/list'
-        });
-
-        // Override the global window object
-        global.window = dom.window;
-
-        // Check that Temporary List is being viewed
-        expect(viewingTemporaryList(), 'the current pathname should be `/everything/list`').to.be.true;
-      });
-
-      afterEach(function () {
-        // Restore the original window object
-        global.window = originalWindow;
-      });
-
-      it('should disable all action tabs if no checkboxes are checked', function () {
-        // Ensure no checkboxes are checked
-        getCheckboxes().forEach((checkbox) => {
-          checkbox.checked = false;
-        });
-
-        // Call the function
-        disableActionTabs();
-
-        // Check that all tabs are disabled
-        getTabs().forEach((tab) => {
-          expect(tab.disabled, 'all tabs should be disabled if no checkboxes are checked').to.be.true;
-        });
-      });
-
-      it('should enable all action tabs if at least one checkbox is checked', function () {
-        // Ensure at least one checkbox is checked
-        expect(someCheckboxesChecked(true), 'at least one checkbox should be checked for this test').to.be.true;
-
-        // Call the function
-        disableActionTabs();
-
-        // Check that all tabs are enabled
-        getTabs().forEach((tab) => {
-          expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
-        });
+      // Check that all tabs are enabled
+      getTabs().forEach((tab) => {
+        expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
       });
     });
   });

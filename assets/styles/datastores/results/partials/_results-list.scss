@@ -1,6 +1,5 @@
-@use './results-list/result';
+@use './results-list/list-item';
 @use './results-list/specialists';
-@use './results-list/no-results';
 
 // --------------------------------------------------
 //
@@ -9,6 +8,7 @@
 //
 // ## Table of Contents
 //   1. Variables
+//   2. List Items
 //
 // --------------------------------------------------
 
@@ -22,9 +22,9 @@ $class: '.results__list';
 
 
 
-// *************** //
-// *** 2. LIST *** //
-// *************** //
+// ********************* //
+// *** 2. LIST ITEMS *** //
+// ********************* //
 
 #{$class} {
   & > li + li {

@@ -4,6 +4,14 @@ const getToggleButtons = () => {
   return document.querySelectorAll(`button[${attribute}]`);
 };
 
+const removeToggleButton = ({ listItem }) => {
+  // Get the list item's toggle button
+  const button = listItem.querySelector(`button.metadata__toggle`);
+
+  // Remove it from the DOM
+  button.remove();
+};
+
 const getToggleButtonInformation = ({ button }) => {
   // Get the element that will be toggled
   const control = document.getElementById(button.getAttribute('aria-controls'));
@@ -68,6 +76,7 @@ const toggleItems = ({ buttonInformation = getToggleButtonInformation, buttons =
 export {
   getToggleButtonInformation,
   getToggleButtons,
+  removeToggleButton,
   setToggleButtonInformation,
   toggleDisplayedItems,
   toggleItems

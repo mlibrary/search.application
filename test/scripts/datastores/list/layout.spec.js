@@ -1,16 +1,13 @@
 import {
   createDatastoreList,
-  datastoreHeading,
   defaultTemporaryList,
+  getDatastores,
   getSessionStorage,
   handleSelectionChange,
   initializeNonEmptyListFunctions,
   inTemporaryList,
-  isTemporaryListEmpty,
-  nonEmptyDatastores,
   setSessionStorage,
   temporaryList,
-  temporaryListCount,
   toggleListElements,
   viewingTemporaryList
 } from '../../../../assets/scripts/datastores/list/layout.js';
@@ -18,7 +15,69 @@ import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
 
+let lists = '';
+Object.keys(defaultTemporaryList).forEach((datastore) => {
+  lists += `
+    <section class="list__datastore list__${datastore}" data-datastore="${datastore}">
+      <li class="container__rounded results__list-item record__container" data-record-id="1337" data-record-datastore="catalog">
+        <div class="results__list-item--header">
+        <input type="checkbox" class="record__checkbox" value="catalog,1337" aria-label="Select Original Title">
+        <h3 class="h4 results__list-item--title">
+          <span class="results__list-item--title-number">1.</span>
+          <a href="catalog/record/1337" class="results__list-item--title-original">Original Title</a>
+          <span class="h5 results__list-item--title-transliterated">
+            Transliterated Title
+          </span>
+        </h3>
+      </div>
+      <table class="metadata">
+        <thead class="visually-hidden">
+          <tr>
+            <th scope="col">Field</th>
+            <th scope="col">Data</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <th scope="row">
+                Published/Created
+              </th>
+              <td>
+                <ul class="list__no-style metadata__list metadata__list--plain-text" id="metadata__toggle--published">
+                  <li>
+                    <ul class="list__no-style metadata__list--parallel">
+                      <li>
+                        Transliterated Data
+                      </li>
+                      <li>
+                        Original Data
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+                <button class="button__ghost metadata__toggle" aria-expanded="true" aria-controls="metadata__toggle--published" data-toggle="3">
+                  Show fewer Published/Created
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </section>
+  `;
+});
+
 describe('layout', function () {
+  beforeEach(function () {
+    // Apply HTML to the body
+    document.body.innerHTML = `
+      <div class="list__empty"></div>
+      <div class="datastore-lists">
+        ${lists}
+      </div>
+    `;
+  });
+
   describe('getSessionStorage()', function () {
     let getSessionStorageStub = null;
 
@@ -198,6 +257,67 @@ describe('layout', function () {
     });
   });
 
+  describe('viewingTemporaryList()', function () {
+    beforeEach(function () {
+      // Check that the current pathname is not `/everything/list`
+      expect(window.location.pathname, 'the current pathname should not be `/everything/list`').to.not.equal('/everything/list');
+    });
+
+    it('should be `false` if the current pathname is not `/everything/list`', function () {
+      // Check that My Temporary List is not being viewed
+      expect(viewingTemporaryList(), 'the variable should be `false` if the current pathname is not `/everything/list`').to.be.false;
+    });
+
+    it('should be `true` if the current pathname is `/everything/list`', function () {
+      // Store the original window object
+      const originalWindow = global.window;
+
+      // Setup JSDOM with an updated URL
+      const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+        url: 'http://localhost/everything/list'
+      });
+
+      // Override the global window object
+      global.window = dom.window;
+
+      // Check that My Temporary List is being viewed
+      expect(viewingTemporaryList(), 'the variable should be `true` if the current pathname is `/everything/list`').to.be.true;
+
+      // Restore the original window object
+      global.window = originalWindow;
+    });
+  });
+
+  describe('getDatastores()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        empty: false,
+        list: global.temporaryList
+      };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should return an array', function () {
+      // Check that an array is always returned
+      expect(getDatastores(args), '`getDatastores()` should return an array').to.be.an('array');
+    });
+
+    it('should return datastore names that have records', function () {
+      // Check that datastore names are in the array
+      expect(getDatastores(args), '`getDatastores()` should return the names of the non-empty datastores').to.deep.equal(['catalog', 'onlinejournals']);
+    });
+
+    it('should return datastore names that do not have records', function () {
+      // Check that datastore names are in the array
+      expect(getDatastores({ ...args, empty: true }), '`getDatastores()` should return the names of the empty datastores').to.deep.equal(['articles', 'databases', 'everything', 'guidesandmore']);
+    });
+  });
+
   describe('inTemporaryList()', function () {
     let list = null;
     let recordDatastore = null;
@@ -205,9 +325,9 @@ describe('layout', function () {
 
     beforeEach(function () {
       list = { ...global.temporaryList };
-      // Grab the first datastore
-      [recordDatastore] = Object.keys(global.temporaryList);
-      // Grab the first record ID of the first datastore
+      // Grab the first non-empty datastore
+      [recordDatastore] = getDatastores({ list });
+      // Grab the first record ID of the first non-empty datastore
       [recordId] = Object.keys(global.temporaryList[recordDatastore]);
     });
 
@@ -261,206 +381,81 @@ describe('layout', function () {
     });
   });
 
-  describe('viewingTemporaryList()', function () {
-    beforeEach(function () {
-      // Check that the current pathname is not `/everything/list`
-      expect(window.location.pathname, 'the current pathname should not be `/everything/list`').to.not.equal('/everything/list');
-    });
-
-    it('should be `false` if the current pathname is not `/everything/list`', function () {
-      // Check that My Temporary List is not being viewed
-      expect(viewingTemporaryList(), 'the variable should be `false` if the current pathname is not `/everything/list`').to.be.false;
-    });
-
-    it('should be `true` if the current pathname is `/everything/list`', function () {
-      // Store the original window object
-      const originalWindow = global.window;
-
-      // Setup JSDOM with an updated URL
-      const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
-        url: 'http://localhost/everything/list'
-      });
-
-      // Override the global window object
-      global.window = dom.window;
-
-      // Check that My Temporary List is being viewed
-      expect(viewingTemporaryList(), 'the variable should be `true` if the current pathname is `/everything/list`').to.be.true;
-
-      // Restore the original window object
-      global.window = originalWindow;
-    });
-  });
-
-  describe('isTemporaryListEmpty()', function () {
-    it('should return `false` if at least one datastore has at least one record saved', function () {
-      // Check that the temporary list is not empty
-      expect(isTemporaryListEmpty(global.temporaryList), 'the temporary list should not be empty').to.be.false;
-    });
-
-    it('should return `true` if all datastores do not have records saved to them', function () {
-      // Create a copy of the temporary list and remove all saved records
-      const list = { ...global.temporaryList };
-      Object.keys(list).forEach((datastore) => {
-        list[datastore] = {};
-      });
-
-      // Check that the temporary list is empty
-      expect(isTemporaryListEmpty(list), 'the temporary list should be empty').to.be.true;
-    });
-  });
-
-  describe('temporaryListCount()', function () {
-    it('should return a number', function () {
-      // Check that a number is always returned
-      expect(temporaryListCount(global.temporaryList), '`temporaryListCount()` should return a number').to.be.a('number');
-    });
-
-    it('should return the correct count of records in the temporary list', function () {
-      // Check that the correct count is returned
-      expect(temporaryListCount(global.temporaryList), '`temporaryListCount()` should return the correct count of records in the temporary list').to.equal(Object.values(global.temporaryList).reduce((sum, datastore) => {
-        return sum + Object.keys(datastore).length;
-      }, 0));
-    });
-  });
-
-  describe('nonEmptyDatastores()', function () {
-    it('should return an array', function () {
-      // Check that an array is always returned
-      expect(nonEmptyDatastores({}), '`nonEmptyDatastores()` should return an array').to.be.an('array');
-    });
-
-    it('should return datastore names that have records', function () {
-      // Check that datastore names are in the array
-      expect(nonEmptyDatastores(global.temporaryList), '`nonEmptyDatastores()` should return the names of the non-empty datastores').to.deep.equal(['catalog', 'onlinejournals']);
-    });
-
-    it('should return an empty array', function () {
-      // Check that an empty array is returned
-      expect(nonEmptyDatastores({}), '`nonEmptyDatastores()` should return an empty array').to.be.empty;
-    });
-  });
-
   describe('toggleListElements()', function () {
-    let getListActions = null;
-    let getEmptyMessage = null;
-    let list = null;
+    let removeEmptyListMessageSpy = null;
+    let removeEmptyDatastoreSectionsSpy = null;
+    let removeListResultsSpy = null;
+    let args = null;
 
     beforeEach(function () {
-      document.body.innerHTML = `
-        <div class="container__sticky"></div>
-        <div class="list__empty"></div>
-      `;
-
-      getListActions = () => {
-        return document.querySelector('.container__sticky');
+      removeEmptyListMessageSpy = sinon.spy();
+      removeEmptyDatastoreSectionsSpy = sinon.spy();
+      removeListResultsSpy = sinon.spy();
+      args = {
+        list: global.temporaryList,
+        nonEmptyDatastores: getDatastores({ list: global.temporaryList }),
+        removeEmptyMessage: removeEmptyListMessageSpy,
+        removeLists: removeEmptyDatastoreSectionsSpy,
+        removeResults: removeListResultsSpy
       };
-
-      getEmptyMessage = () => {
-        return document.querySelector('.list__empty');
-      };
-
-      list = { ...global.temporaryList };
     });
 
     afterEach(function () {
-      getListActions = null;
-      getEmptyMessage = null;
-      list = null;
+      removeEmptyListMessageSpy = null;
+      removeEmptyDatastoreSectionsSpy = null;
+      removeListResultsSpy = null;
+      args = null;
     });
 
     describe('non-empty temporary list', function () {
       beforeEach(function () {
         // Check that the temporary list is not empty
-        expect(isTemporaryListEmpty(list), 'the temporary list should not be empty').to.be.false;
+        expect(args.nonEmptyDatastores.length, 'the temporary list should not be empty').to.be.above(0);
 
         // Call the function
-        toggleListElements(list);
+        toggleListElements(args);
       });
 
-      it('should show actions', function () {
-        // Check that the `style` attribute does not exist for Actions
-        expect(getListActions().hasAttribute('style'), 'the `style` attribute should not exist for Actions').to.be.false;
+      it('should call `removeEmptyListMessage`', function () {
+        // Check that `removeEmptyListMessage` was called
+        expect(removeEmptyListMessageSpy.calledOnce, '`removeEmptyListMessage` should have been called once').to.be.true;
       });
 
-      it('should hide the empty message', function () {
-        // Check that the empty message's `style` is set to `none`
-        expect(getEmptyMessage().style.display, 'the empty message should be hidden').to.equal('none');
+      it('should call `removeEmptyDatastoreSections` with the correct arguments', function () {
+        // Check that `removeEmptyDatastoreSections` was called
+        expect(removeEmptyDatastoreSectionsSpy.calledOnceWithExactly({ datastores: args.nonEmptyDatastores }), '`removeEmptyDatastoreSections` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should not call `removeResults`', function () {
+        // Check that `removeResults` was not called
+        expect(removeListResultsSpy.notCalled, '`removeResults` should not have been called').to.be.true;
       });
     });
 
     describe('empty temporary list', function () {
       beforeEach(function () {
-        // Remove all saved records from the list
-        Object.keys(list).forEach((datastore) => {
-          list[datastore] = {};
-        });
-
         // Check that the temporary list is empty
-        expect(isTemporaryListEmpty(list), 'the temporary list should be empty').to.be.true;
+        args.nonEmptyDatastores = [];
+        expect(args.nonEmptyDatastores.length, 'the temporary list should be empty').to.equal(0);
 
         // Call the function
-        toggleListElements(list);
+        toggleListElements(args);
       });
 
-      it('should hide actions', function () {
-        // Check that Actions's `style` is set to `none`
-        expect(getListActions().style.display, 'actions should be hidden').to.equal('none');
+      it('should call `removeResults`', function () {
+        // Check that `removeResults` was called
+        expect(removeListResultsSpy.calledOnce, '`removeResults` should have been called once').to.be.true;
       });
 
-      it('should show the empty message', function () {
-        // Check that the `style` attribute does not exist for the empty message
-        expect(getEmptyMessage().hasAttribute('style'), 'the `style` attribute should not exist for the empty message').to.be.false;
+      it('should not call `removeEmptyListMessage`', function () {
+        // Check that `removeEmptyListMessage` was not called
+        expect(removeEmptyListMessageSpy.notCalled, '`removeEmptyListMessage` should not have been called').to.be.true;
       });
-    });
-  });
 
-  describe('datastoreHeading()', function () {
-    let getHeading = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML = '';
-
-      getHeading = () => {
-        return document.querySelector('h2');
-      };
-
-      // Check that an h2 does not exist
-      expect(getHeading(), 'an `h2` should not exist before the function is called').to.be.null;
-    });
-
-    afterEach(function () {
-      // Check that an h2 now exists
-      expect(getHeading(), 'an `h2` should exist after the function is called').to.not.be.null;
-
-      getHeading = null;
-    });
-
-    it('should create an h2 with the correct text for a normal datastore', function () {
-      const datastore = 'catalog';
-
-      // Call the function and append the heading to the body
-      document.body.appendChild(datastoreHeading(datastore));
-
-      // Check that the text is correct
-      expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case').to.equal(datastore.charAt(0).toUpperCase() + datastore.slice(1));
-    });
-
-    it('should create an h2 with the correct text for the `onlinejournals` datastore', function () {
-      // Call the function and append the heading to the body
-      document.body.appendChild(datastoreHeading('onlinejournals'));
-
-      // Check that the text is correct
-      expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case for `onlinejournals`').to.equal('Online Journals');
-    });
-
-    it('should create an h2 with the correct text for the `guidesandmore` datastore', function () {
-      // Call the function and append the heading to the body
-      document.body.appendChild(datastoreHeading('guidesandmore'));
-
-      // Check that the text is correct
-      expect(getHeading().textContent, 'the `h2` should have the correct datastore in title case for `guidesandmore`').to.equal('Guides and More');
+      it('should not call `removeEmptyDatastoreSections`', function () {
+        // Check that `removeEmptyDatastoreSections` was not called
+        expect(removeEmptyDatastoreSectionsSpy.notCalled, '`removeEmptyDatastoreSections` should not have been called').to.be.true;
+      });
     });
   });
 
@@ -503,18 +498,14 @@ describe('layout', function () {
         </li>
       `;
 
-      datastores = nonEmptyDatastores(global.temporaryList);
+      datastores = getDatastores({ list: global.temporaryList });
 
       // Call the function
-      createDatastoreList(global.temporaryList);
+      createDatastoreList({ list: global.temporaryList });
     });
 
     afterEach(function () {
       datastores = null;
-    });
-
-    it('should create a heading for every non-empty datastore', function () {
-      expect(document.querySelectorAll('h2').length, 'an `h2` should have been created for every non-empty datastore').to.equal(datastores.length);
     });
 
     it('should create an ordered list for every non-empty datastore', function () {
@@ -661,59 +652,68 @@ describe('layout', function () {
   });
 
   describe('temporaryList()', function () {
-    let listFunctions = null;
     let list = null;
+    let listFunctions = null;
     let args = null;
 
     beforeEach(function () {
       // Create spies
+      list = { ...global.temporaryList };
       listFunctions = {
         createDatastoreList: sinon.stub(),
+        getDatastores: sinon.stub().returns(getDatastores({ list })),
         initializeNonEmptyListFunctions: sinon.stub(),
         toggleListElements: sinon.stub()
       };
-      list = sinon.spy();
-      args = { list, listFunctions };
+      args = {
+        list,
+        listFunctions
+      };
+
+      // Check that the list is not empty
+      expect(getDatastores({ list: args.list }), 'the temporary list should not be empty').to.not.be.empty;
 
       // Call the function
       temporaryList(args);
     });
 
     afterEach(function () {
-      listFunctions = null;
       list = null;
+      listFunctions = null;
+      args = null;
     });
 
-    it('should call `toggleListElements` with `list` as argument', function () {
+    it('should call `toggleListElements` with the correct arguments', function () {
       // Check that `toggleListElements` was called with stubs
-      expect(listFunctions.toggleListElements.calledOnceWithExactly(list), '`toggleListElements` should have been called with `list` once').to.be.true;
+      expect(listFunctions.toggleListElements.calledOnceWithExactly({ list: args.list }), '`toggleListElements` should have been called with the correct arguments').to.be.true;
     });
 
-    it('should call `createDatastoreList` with `list` as argument', function () {
+    it('should call `createDatastoreList` with the correct arguments', function () {
       // Check that `createDatastoreList` was called with stubs
-      expect(listFunctions.createDatastoreList.calledOnceWithExactly(list), '`createDatastoreList` should have been called with `list` once').to.be.true;
+      expect(listFunctions.createDatastoreList.calledOnceWithExactly({ list: args.list }), '`createDatastoreList` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `getDatastores` with the correct arguments', function () {
+      // Check that `getDatastores` was called with stubs
+      expect(listFunctions.getDatastores.calledOnceWithExactly({ list: args.list }), '`getDatastores` should have been called with the correct arguments').to.be.true;
     });
 
     describe('initializeNonEmptyListFunctions()', function () {
-      it('should not be called if the temporary list is empty', function () {
-        // Make the list empty
-        args.list = [];
-        expect(args.list, 'the temporary list should be empty').to.be.empty;
-
-        // Check that `initializeNonEmptyListFunctions` was not called
-        expect(listFunctions.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have not been called').to.be.false;
+      it('should be called if the temporary list is not empty', function () {
+        // Check that `initializeNonEmptyListFunctions` was called
+        expect(listFunctions.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have been called').to.be.true;
       });
 
-      it('should be called if the temporary list is not empty', function () {
-        // Make the list not empty
-        args.list = global.temporaryList;
-        expect(args.list, 'the temporary list should not be empty').to.not.be.empty;
+      it('should not be called if the temporary list is empty', function () {
+        // Check that the list is empty
+        args.list = { ...defaultTemporaryList };
+        expect(getDatastores({ list: args.list }), 'the temporary list should be empty').to.be.empty;
 
         // Call the function again
         temporaryList(args);
 
-        // Check that `initializeNonEmptyListFunctions` was called
-        expect(listFunctions.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have been called').to.be.true;
+        // Check that `initializeNonEmptyListFunctions` was not called
+        expect(listFunctions.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have not been called').to.be.false;
       });
     });
   });

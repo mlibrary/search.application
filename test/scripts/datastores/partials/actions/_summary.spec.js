@@ -1,6 +1,6 @@
 import { actionsPanelText } from '../../../../../assets/scripts/datastores/partials/actions/_summary.js';
 import { expect } from 'chai';
-import { getCheckedCheckboxes } from '../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { getCheckedCheckboxes } from '../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { JSDOM } from 'jsdom';
 import { viewingTemporaryList } from '../../../../../assets/scripts/datastores/list/layout.js';
 

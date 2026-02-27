@@ -1,4 +1,4 @@
-import { getCheckboxes, getCheckedCheckboxes, someCheckboxesChecked } from '../list/partials/list-item/_checkbox.js';
+import { getCheckboxes, getCheckedCheckboxes, someCheckboxesChecked } from '../results/partials/results-list/list-item/header/_checkbox.js';
 import { viewingTemporaryList } from '../list/layout.js';
 
 const getSelectAllCheckbox = () => {

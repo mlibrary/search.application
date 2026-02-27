@@ -16,10 +16,10 @@ import {
   updateAndAttachCitations,
   updateCitations
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
-import { filterSelectedRecords, getCheckedCheckboxes, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, getCheckedCheckboxes, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
 import { getActiveCitationTab } from '../../../../../../assets/scripts/datastores/partials/actions/action/citation/_tablist.js';
-import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
+import { getDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
 
 const cslExample = `[{"id":"990052871530106381","type":"song","title":"The Da Vinci code /","edition":"Abridged.","ISBN":["9780739339787","0739339788","9780307879257","0307879259"],"call-number":"PS 3552 .R792 D2 2003b","publisher-place":"New York :","publisher":"Random House Audio,","issued":{"literal":"2003"},"author":[{"family":"Brown","given":"Dan,"},{"family":"Michael","given":"Paul."}]},{"id":"990006758990106381","type":"article-journal","title":"Birds.","ISSN":["0006-3665"],"call-number":"QL671 .B678","publisher-place":"Sandy, Bedfordshire, Eng. :","publisher":"Royal Society for the Protection of Birds","issued":{"literal":"1966-2013"},"author":[{"literal":"Royal Society for the Protection of Birds."}],"number":"v. 1- Jan./Feb. 1966-"},{"id":"990038939650106381","type":"motion_picture","title":"Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /","call-number":"VIDEO-D 36841-D","publisher-place":"New York, NY :","publisher":"Kino on Video,","issued":{"literal":"2003"},"author":[{"family":"Miike","given":"Takashi,"},{"family":"Nakamura","given":"Masa."},{"family":"Masuda","given":"Yoshihiro."},{"family":"Okada","given":"Makoto."},{"family":"Kimura","given":"Toshiki."},{"family":"Aikawa","given":"Shō,"},{"family":"Takeuchi","given":"Riki."},{"family":"Chen","given":"Guanxi,"},{"family":"Endō","given":"Ken'ichi,"},{"literal":"Teah."},{"literal":"Daiē, Kabushiki Kaisha."},{"literal":"Tōei Bideo Kabushiki Kaisha."},{"literal":"Kino International Corporation."}]}]`;
@@ -29,7 +29,7 @@ const cslIDs = parsedCSL.map((csl) => {
 });
 
 let temporaryListHTML = '';
-nonEmptyDatastores(global.temporaryList).forEach((datastore) => {
+getDatastores({ list: global.temporaryList }).forEach((datastore) => {
   const recordIds = Object.keys(global.temporaryList[datastore]);
   recordIds.forEach((recordId, index) => {
     temporaryListHTML += `

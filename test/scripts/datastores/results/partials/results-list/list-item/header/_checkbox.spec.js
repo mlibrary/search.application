@@ -2,17 +2,20 @@ import {
   filterSelectedRecords,
   getCheckboxes,
   getCheckedCheckboxes,
+  getListItemCheckbox,
   someCheckboxesChecked,
   splitCheckboxValue,
-  toggleCheckedState
-} from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+  toggleCheckedState,
+  updateCheckbox,
+  updateCheckboxLabel,
+  updateCheckboxValue
+} from '../../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
+import { getDatastores } from '../../../../../../../../assets/scripts/datastores/list/layout.js';
+import sinon from 'sinon';
 
-const nonEmptyDatastores = Object.keys(global.temporaryList).filter((datastore) => {
-  return Object.keys(global.temporaryList[datastore]).length > 0;
-});
 let temporaryListHTML = '';
-nonEmptyDatastores.forEach((datastore) => {
+getDatastores({ list: global.temporaryList }).forEach((datastore) => {
   const recordIds = Object.keys(global.temporaryList[datastore]);
   recordIds.forEach((recordId, index) => {
     temporaryListHTML += `<li><input type="checkbox" class="record__checkbox" value="${datastore},${recordId}" ${index === 0 ? 'checked' : ''}></li>`;
@@ -20,6 +23,9 @@ nonEmptyDatastores.forEach((datastore) => {
 });
 
 describe('checkbox', function () {
+  let getListItem = null;
+  let getCheckbox = null;
+
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
@@ -28,8 +34,21 @@ describe('checkbox', function () {
       </ol>
     `;
 
+    getListItem = () => {
+      return document.querySelector('li');
+    };
+
+    getCheckbox = () => {
+      return document.querySelector('input[type="checkbox"]');
+    };
+
     // Check that at least one checkbox is checked
     expect(someCheckboxesChecked(true), 'at least one checkbox should be checked for this test').to.be.true;
+  });
+
+  afterEach(function () {
+    getListItem = null;
+    getCheckbox = null;
   });
 
   describe('getCheckboxes()', function () {
@@ -44,7 +63,7 @@ describe('checkbox', function () {
 
     beforeEach(function () {
       args = {
-        checkbox: getCheckboxes()[0],
+        checkbox: getCheckbox(),
         isAdded: true,
         viewingRecord: false
       };
@@ -102,6 +121,124 @@ describe('checkbox', function () {
 
       // Check that the checked state has not changed
       expect(args.checkbox.checked, 'the checked state should not change when viewing a full record').to.equal(initialCheckedState);
+    });
+  });
+
+  describe('getListItemCheckbox()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        listItem: getListItem()
+      };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should return the checkbox element within a list item', function () {
+      expect(getListItemCheckbox(args), 'the correct checkbox should be returned').to.equal(args.listItem.querySelector('input[type="checkbox"].record__checkbox'));
+    });
+  });
+
+  describe('updateCheckboxLabel()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        checkbox: getCheckbox(),
+        title: 'New title'
+      };
+
+      // Call the function
+      updateCheckboxLabel(args);
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should update the `aria-label` attribute of the checkbox', function () {
+      expect(args.checkbox.getAttribute('aria-label'), 'the `aria-label` attribute should be updated').to.equal(`Select ${args.title}`);
+    });
+  });
+
+  describe('updateCheckboxValue()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        checkbox: getCheckbox(),
+        recordDatastore: 'catalog',
+        recordId: 1337
+      };
+
+      // Call the function
+      updateCheckboxValue(args);
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should update the `value` of the checkbox', function () {
+      // Check that the `value` attribute has been updated
+      expect(args.checkbox.value, 'the checkbox `value` should have been updated').to.equal(`${args.recordDatastore},${args.recordId}`);
+    });
+  });
+
+  describe('updateCheckbox()', function () {
+    let getListItemCheckboxStub = null;
+    let updateCheckboxLabelSpy = null;
+    let updateCheckboxValueSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      getListItemCheckboxStub = sinon.stub().returns(getListItemCheckbox({ listItem: getListItem() }));
+      updateCheckboxLabelSpy = sinon.spy();
+      updateCheckboxValueSpy = sinon.spy();
+      args = {
+        getCheckbox: getListItemCheckboxStub,
+        listItem: getListItem(),
+        recordDatastore: 'catalog',
+        recordId: 1337,
+        title: 'Record title',
+        updateLabel: updateCheckboxLabelSpy,
+        updateValue: updateCheckboxValueSpy
+      };
+
+      // Call the function
+      updateCheckbox(args);
+    });
+
+    afterEach(function () {
+      getListItemCheckboxStub = null;
+      updateCheckboxLabelSpy = null;
+      updateCheckboxValueSpy = null;
+      args = null;
+    });
+
+    it('should call `getListItemCheckbox` with the correct arguments', function () {
+      expect(getListItemCheckboxStub.calledWith({ listItem: args.listItem }), '`getListItemCheckbox` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `updateCheckboxLabel` with the correct arguments', function () {
+      expect(updateCheckboxLabelSpy.calledWith({ checkbox: getListItemCheckbox({ listItem: args.listItem }), title: args.title }), '`updateCheckboxLabel` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `updateCheckboxValue` with the correct arguments', function () {
+      expect(updateCheckboxValueSpy.calledWith({ checkbox: getListItemCheckbox({ listItem: args.listItem }), recordDatastore: args.recordDatastore, recordId: args.recordId }), '`updateCheckboxValue` should have been called with the correct arguments').to.be.true;
+    });
+  });
+
+  describe('splitCheckboxValue()', function () {
+    it('should split the checkbox value into recordDatastore and recordId', function () {
+      const { value } = getCheckbox();
+      const { recordDatastore, recordId } = splitCheckboxValue({ value });
+      const [expectedDatastore, expectedRecordId] = value.split(',');
+      expect(recordDatastore, 'the recordDatastore should match the expected value').to.equal(expectedDatastore);
+      expect(recordId, 'the recordId should match the expected value').to.equal(expectedRecordId);
     });
   });
 
@@ -173,16 +310,6 @@ describe('checkbox', function () {
         // Check that the function returns false
         expect(someCheckboxesChecked(false), 'the function should return `false` if all checkboxes are checked').to.be.false;
       });
-    });
-  });
-
-  describe('splitCheckboxValue()', function () {
-    it('should split the checkbox value into recordDatastore and recordId', function () {
-      const [{ value }] = getCheckedCheckboxes();
-      const { recordDatastore, recordId } = splitCheckboxValue({ value });
-      const [expectedDatastore, expectedRecordId] = value.split(',');
-      expect(recordDatastore, 'the recordDatastore should match the expected value').to.equal(expectedDatastore);
-      expect(recordId, 'the recordId should match the expected value').to.equal(expectedRecordId);
     });
   });
 });

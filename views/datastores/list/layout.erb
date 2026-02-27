@@ -1,15 +1,35 @@
+<%
+  # Create fake data for the list item clone
+  fake_data = JSON.parse('{
+    "id": "1337",
+    "title": [
+      {
+        "original": {
+          "text": "Original Title"
+        },
+        "transliterated": {
+          "text": "Transliterated Title"
+        }
+      }
+    ],
+    "published": [
+      {
+        "transliterated": {
+          "text": "Original Data"
+        },
+        "original": {
+          "text": "Transliterated Data"
+        }
+      }
+    ]
+  }')
+  result = Search::Presenters::Record::Catalog::Brief.new(
+    Search::Models::Record::Catalog.new(fake_data)
+  )
+%>
 <div class="container list">
   <%= h1(body: @presenter.page_title) %>
   <p>Items in this list are stored temporarily (within a single session).</p>
-  <div class="container__rounded list__empty">
-    <p>
-      <span class="strong">This list is empty.</span>
-      Continue searching to add to this list.
-    </p>
-  </div>
-  <div class="hide__no-javascript container__sticky">
-    <%= erb :'datastores/partials/_actions', locals: { patron: @patron } %>
-    <%= erb :'datastores/partials/_select-all' %>
-  </div>
-  <%= erb :'datastores/list/partials/_list-item' %>
+  <%= erb :'datastores/list/partials/_empty' %>
+  <%= erb :'datastores/list/partials/_results', locals: { datastores: @datastores, results: [result] } %>
 </div>
