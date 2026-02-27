@@ -35,6 +35,7 @@ class Search::Presenters::Results::Catalog
     990024357620106381
   ]
 
+  # This will come from model facets
   FIXED_FILTERS = [
     {
       uid: "availability",
@@ -143,7 +144,7 @@ class Search::Presenters::Results::Catalog
 
   def self.for(uri)
     pagination_inst = pagination(uri.query_hash["page"].to_i)
-    results_model_instance = OpenStruct.new(filters: FIXED_FILTERS, records: records(pagination_inst), pagination: pagination_inst, uri: uri)
+    results_model_instance = OpenStruct.new(filters: FIXED_FILTERS, records: records(pagination_inst), pagination: pagination_inst, originating_uri: uri)
     new(results_model_instance)
   end
 
@@ -151,7 +152,31 @@ class Search::Presenters::Results::Catalog
     @results = results
   end
 
+  def all_filters
+    @all_filters ||= @results.filters.map do |filter|
+      filter.options.map do |option|
+        Search::Presenters::Results::Filter.for(
+          uri: @results.originating_uri, uid: filter.uid, value: option.value, count: option.count
+        )
+      end
+    end
+  end
+
+  def boolean_filters
+    [
+      OpenStruct.new(uid: "search_only", label: "View HathiTrust search-only materials", checked?: false)
+    ]
+  end
+
+  def active_filters
+    all_filters.flatten.select { |x| x.active? }
+  end
+
   def filters
+    all_filters.map do |group|
+      first = group.first
+      OpenStruct.new(uid: first.uid, name: first.group_name, options: group.reject { |x| x.active? })
+    end
   end
 
   def pagination
