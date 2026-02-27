@@ -2,7 +2,7 @@
 @use './partials/empty';
 @use '../partials/actions';
 @use '../partials/select-all';
-@use './partials/list-item';
+@use '../results/partials/_results-list';
 @use '../../utilities';
 @use '../../forms';
 

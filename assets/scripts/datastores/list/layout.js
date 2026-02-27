@@ -2,7 +2,7 @@ import { selectAllCheckboxState, updateSelectedCount } from '../partials/_select
 import { actionsPanelText } from '../partials/actions/_summary.js';
 import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
-import { listItem } from './partials/_list-item.js';
+import { listItem } from '../results/partials/results-list/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { removeEmptyDatastoreSections } from './partials/results/_datastores.js';
 import { removeEmptyListMessage } from './partials/_empty.js';
