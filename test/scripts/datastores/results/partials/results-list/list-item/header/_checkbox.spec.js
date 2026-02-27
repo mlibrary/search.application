@@ -2,14 +2,17 @@ import {
   filterSelectedRecords,
   getCheckboxes,
   getCheckedCheckboxes,
+  getListItemCheckbox,
   someCheckboxesChecked,
   splitCheckboxValue,
   toggleCheckedState,
+  updateCheckbox,
   updateCheckboxLabel,
   updateCheckboxValue
 } from '../../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
 import { getDatastores } from '../../../../../../../../assets/scripts/datastores/list/layout.js';
+import sinon from 'sinon';
 
 let temporaryListHTML = '';
 getDatastores({ list: global.temporaryList }).forEach((datastore) => {
@@ -20,6 +23,7 @@ getDatastores({ list: global.temporaryList }).forEach((datastore) => {
 });
 
 describe('checkbox', function () {
+  let getListItem = null;
   let getCheckbox = null;
 
   beforeEach(function () {
@@ -30,6 +34,10 @@ describe('checkbox', function () {
       </ol>
     `;
 
+    getListItem = () => {
+      return document.querySelector('li');
+    };
+
     getCheckbox = () => {
       return document.querySelector('input[type="checkbox"]');
     };
@@ -39,6 +47,7 @@ describe('checkbox', function () {
   });
 
   afterEach(function () {
+    getListItem = null;
     getCheckbox = null;
   });
 
@@ -115,6 +124,24 @@ describe('checkbox', function () {
     });
   });
 
+  describe('getListItemCheckbox()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        listItem: getListItem()
+      };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should return the checkbox element within a list item', function () {
+      expect(getListItemCheckbox(args), 'the correct checkbox should be returned').to.equal(args.listItem.querySelector('input[type="checkbox"].record__checkbox'));
+    });
+  });
+
   describe('updateCheckboxLabel()', function () {
     let args = null;
 
@@ -158,6 +185,50 @@ describe('checkbox', function () {
     it('should update the `value` of the checkbox', function () {
       // Check that the `value` attribute has been updated
       expect(args.checkbox.value, 'the checkbox `value` should have been updated').to.equal(`${args.recordDatastore},${args.recordId}`);
+    });
+  });
+
+  describe('updateCheckbox()', function () {
+    let getListItemCheckboxStub = null;
+    let updateCheckboxLabelSpy = null;
+    let updateCheckboxValueSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      getListItemCheckboxStub = sinon.stub().returns(getListItemCheckbox({ listItem: getListItem() }));
+      updateCheckboxLabelSpy = sinon.spy();
+      updateCheckboxValueSpy = sinon.spy();
+      args = {
+        getCheckbox: getListItemCheckboxStub,
+        listItem: getListItem(),
+        recordDatastore: 'catalog',
+        recordId: 1337,
+        title: 'Record title',
+        updateLabel: updateCheckboxLabelSpy,
+        updateValue: updateCheckboxValueSpy
+      };
+
+      // Call the function
+      updateCheckbox(args);
+    });
+
+    afterEach(function () {
+      getListItemCheckboxStub = null;
+      updateCheckboxLabelSpy = null;
+      updateCheckboxValueSpy = null;
+      args = null;
+    });
+
+    it('should call `getListItemCheckbox` with the correct arguments', function () {
+      expect(getListItemCheckboxStub.calledWith({ listItem: args.listItem }), '`getListItemCheckbox` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `updateCheckboxLabel` with the correct arguments', function () {
+      expect(updateCheckboxLabelSpy.calledWith({ checkbox: getListItemCheckbox({ listItem: args.listItem }), title: args.title }), '`updateCheckboxLabel` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `updateCheckboxValue` with the correct arguments', function () {
+      expect(updateCheckboxValueSpy.calledWith({ checkbox: getListItemCheckbox({ listItem: args.listItem }), recordDatastore: args.recordDatastore, recordId: args.recordId }), '`updateCheckboxValue` should have been called with the correct arguments').to.be.true;
     });
   });
 

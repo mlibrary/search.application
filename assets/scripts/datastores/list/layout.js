@@ -1,8 +1,8 @@
 import { selectAllCheckboxState, updateSelectedCount } from '../partials/_select-all.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
+import { clonedListItem } from '../results/partials/results-list/_list-item.js';
 import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
-import { listItem } from '../results/partials/results-list/_list-item.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { removeEmptyDatastoreSections } from './partials/results/_datastores.js';
 import { removeEmptyListMessage } from './partials/_empty.js';
@@ -100,14 +100,14 @@ const createDatastoreList = ({ list }) => {
   // Get the list container
   const listContainer = document.querySelector('.list');
   // Create an ordered list for each non-empty datastore
-  getDatastores({ list }).forEach((datastore) => {
+  getDatastores({ list }).forEach((recordDatastore) => {
     // Create list container
     const listItems = document.createElement('ol');
     listItems.classList.add('list__items', 'list__no-style');
     listContainer.appendChild(listItems);
     // Display records
-    Object.keys(list[datastore]).forEach((recordId, index) => {
-      listItems.appendChild(listItem({ datastore, index, record: list[datastore][recordId], recordId }));
+    Object.keys(list[recordDatastore]).forEach((recordId, index) => {
+      listItems.appendChild(clonedListItem({ index, record: list[recordDatastore][recordId], recordDatastore, recordId }));
     });
   });
 };

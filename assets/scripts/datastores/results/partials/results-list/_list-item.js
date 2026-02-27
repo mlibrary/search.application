@@ -1,4 +1,4 @@
-import { updateCheckboxLabel, updateCheckboxValue } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
+import { updateCheckbox } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { updateListItemTitle } from '../../../results/partials/results-list/list-item/header/_title.js';
 import { updateMetadata } from '../../../partials/_metadata.js';
 
@@ -18,40 +18,39 @@ const updateListItemAttributes = ({ listItem, recordDatastore, recordId }) => {
   listItem.setAttribute('data-record-id', recordId);
 };
 
-const listItemUpdates = {
+const listItemFunctions = {
   cloneListItem,
-  updateCheckboxLabel,
-  updateCheckboxValue,
+  updateCheckbox,
   updateListItemAttributes,
   updateListItemTitle,
   updateMetadata
 };
 
-const listItem = ({ datastore, index, record, recordId, updates = listItemUpdates }) => {
+const clonedListItem = ({ index, listItemFuncs = listItemFunctions, record, recordDatastore, recordId }) => {
   // Clone the list item template
-  const clonedListItem = updates.cloneListItem({ listItem: document.querySelector('.list__item--clone') });
+  const listItem = listItemFuncs.cloneListItem({ listItem: document.querySelector('.list__item--clone') });
 
   // Update the list item attributes
-  updates.updateListItemAttributes({ listItem: clonedListItem, recordDatastore: datastore, recordId });
+  listItemFuncs.updateListItemAttributes({ listItem, recordDatastore, recordId });
+
+  // Break down the record information
+  const { metadata, title, url } = record;
 
   // Update the checkbox
-  const { metadata, title, url } = record;
-  const checkbox = clonedListItem.querySelector('.record__checkbox');
-  updates.updateCheckboxLabel({ checkbox, title: title.original });
-  updates.updateCheckboxValue({ checkbox, recordDatastore: datastore, recordId });
+  listItemFuncs.updateCheckbox({ listItem, recordDatastore, recordId, title: title.original });
 
   // Update the title
-  updates.updateListItemTitle({ index, listItem: clonedListItem, title, url });
+  listItemFuncs.updateListItemTitle({ index, listItem, title, url });
 
   // Update the metadata
-  updates.updateMetadata({ listItem: clonedListItem, metadata });
+  listItemFuncs.updateMetadata({ listItem, metadata });
 
   // Return the new list item
-  return clonedListItem;
+  return listItem;
 };
 
 export {
   cloneListItem,
-  listItem,
+  clonedListItem,
   updateListItemAttributes
 };

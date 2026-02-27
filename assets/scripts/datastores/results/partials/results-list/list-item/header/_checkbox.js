@@ -16,6 +16,10 @@ const toggleCheckedState = ({ checkbox, isAdded, viewingRecord = viewingFullReco
   checkbox.checked = isAdded;
 };
 
+const getListItemCheckbox = ({ listItem }) => {
+  return listItem.querySelector('input[type="checkbox"].record__checkbox');
+};
+
 const updateCheckboxLabel = ({ checkbox, title }) => {
   // Update the checkbox label
   checkbox.setAttribute('aria-label', `Select ${title}`);
@@ -24,6 +28,25 @@ const updateCheckboxLabel = ({ checkbox, title }) => {
 const updateCheckboxValue = ({ checkbox, recordDatastore, recordId }) => {
   // Update the checkbox value
   checkbox.value = `${recordDatastore},${recordId}`;
+};
+
+const updateCheckbox = ({
+  getCheckbox = getListItemCheckbox,
+  listItem,
+  title,
+  recordDatastore,
+  recordId,
+  updateLabel = updateCheckboxLabel,
+  updateValue = updateCheckboxValue
+}) => {
+  // Get the checkbox
+  const checkbox = getCheckbox({ listItem });
+
+  // Update the checkbox label
+  updateLabel({ checkbox, title });
+
+  // Update the checkbox value
+  updateValue({ checkbox, recordDatastore, recordId });
 };
 
 const splitCheckboxValue = ({ value }) => {
@@ -53,9 +76,11 @@ export {
   filterSelectedRecords,
   getCheckboxes,
   getCheckedCheckboxes,
+  getListItemCheckbox,
   someCheckboxesChecked,
   splitCheckboxValue,
   toggleCheckedState,
   updateCheckboxLabel,
-  updateCheckboxValue
+  updateCheckboxValue,
+  updateCheckbox
 };

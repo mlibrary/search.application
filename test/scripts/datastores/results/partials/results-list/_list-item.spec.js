@@ -1,6 +1,6 @@
 import {
+  clonedListItem,
   cloneListItem,
-  listItem,
   updateListItemAttributes
 } from '../../../../../../assets/scripts/datastores/results/partials/results-list/_list-item.js';
 import { expect } from 'chai';
@@ -70,61 +70,56 @@ describe('List Item', function () {
     });
   });
 
-  describe('listItem()', function () {
+  describe('clonedListItem()', function () {
     let args = null;
-    let clone = null;
+    let listItem = null;
 
     beforeEach(function () {
       args = {
-        datastore: recordDatastore,
         index: 0,
-        record: global.temporaryList[recordDatastore][recordId],
-        recordId,
-        updates: {
+        listItemFuncs: {
           cloneListItem: sinon.stub().returns(getListItem().cloneNode(true)),
-          updateCheckboxLabel: sinon.spy(),
-          updateCheckboxValue: sinon.spy(),
+          updateCheckbox: sinon.spy(),
           updateListItemAttributes: sinon.spy(),
           updateListItemTitle: sinon.spy(),
           updateMetadata: sinon.spy()
-        }
+        },
+        record: global.temporaryList[recordDatastore][recordId],
+        recordDatastore,
+        recordId
       };
 
       // Call the function
-      clone = listItem(args);
+      listItem = clonedListItem(args);
     });
 
     afterEach(function () {
       args = null;
-      clone = null;
+      listItem = null;
     });
 
     it('should call `cloneListItem` with the correct arguments', function () {
-      expect(args.updates.cloneListItem.calledOnceWithExactly({ listItem: getListItem() }), '`cloneListItem` should have been called with the correct arguments').to.be.true;
+      expect(args.listItemFuncs.cloneListItem.calledOnceWithExactly({ listItem: getListItem() }), '`cloneListItem` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `updateListItemAttributes` with the correct arguments', function () {
-      expect(args.updates.updateListItemAttributes.calledOnceWithExactly({ listItem: clone, recordDatastore: args.datastore, recordId: args.recordId }), '`updateListItemAttributes` should have been called with the correct arguments').to.be.true;
+      expect(args.listItemFuncs.updateListItemAttributes.calledOnceWithExactly({ listItem, recordDatastore: args.recordDatastore, recordId: args.recordId }), '`updateListItemAttributes` should have been called with the correct arguments').to.be.true;
     });
 
-    it('should call `updateCheckboxLabel` with the correct arguments', function () {
-      expect(args.updates.updateCheckboxLabel.calledOnceWithExactly({ checkbox: clone.querySelector('input[type="checkbox"]'), title: args.record.title.original }), '`updateCheckboxLabel` should have been called with the correct arguments').to.be.true;
-    });
-
-    it('should call `updateCheckboxValue` with the correct arguments', function () {
-      expect(args.updates.updateCheckboxValue.calledOnceWithExactly({ checkbox: clone.querySelector('input[type="checkbox"]'), recordDatastore: args.datastore, recordId: args.recordId }), '`updateCheckboxValue` should have been called with the correct arguments').to.be.true;
+    it('should call `updateCheckbox` with the correct arguments', function () {
+      expect(args.listItemFuncs.updateCheckbox.calledOnceWithExactly({ listItem, recordDatastore: args.recordDatastore, recordId: args.recordId, title: args.record.title.original }), '`updateCheckbox` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `updateListItemTitle` with the correct arguments', function () {
-      expect(args.updates.updateListItemTitle.calledOnceWithExactly({ index: args.index, listItem: clone, title: args.record.title, url: args.record.url }), '`updateListItemTitle` should have been called with the correct arguments').to.be.true;
+      expect(args.listItemFuncs.updateListItemTitle.calledOnceWithExactly({ index: args.index, listItem, title: args.record.title, url: args.record.url }), '`updateListItemTitle` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `updateMetadata` with the correct arguments', function () {
-      expect(args.updates.updateMetadata.calledOnceWithExactly({ listItem: clone, metadata: args.record.metadata }), '`updateMetadata` should have been called with the correct arguments').to.be.true;
+      expect(args.listItemFuncs.updateMetadata.calledOnceWithExactly({ listItem, metadata: args.record.metadata }), '`updateMetadata` should have been called with the correct arguments').to.be.true;
     });
 
     it('should clone the list item', function () {
-      expect(clone, 'the clone should be a new node').to.not.deep.equal(getListItem());
+      expect(listItem, 'the clone should be a new node').to.not.deep.equal(getListItem());
     });
   });
 });
