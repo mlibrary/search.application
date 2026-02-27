@@ -34,12 +34,14 @@ class Search::Presenters::Results::Catalog
     990039822770106381,
     990024357620106381
   ]
-  FIXED_RECORDS = FIXED_RECORD_IDS.map do |id|
-    record_data = JSON.parse(File.read("#{S.project_root}/spec/fixtures/results/#{id}.json"))
-    Search::Presenters::Record::Catalog::Brief.new(
+  def self.records(pagination)
+    start = pagination.current_page - 1
+    FIXED_RECORD_IDS[start * pagination.limit, 10].map do |id|
+      record_data = JSON.parse(File.read("#{S.project_root}/spec/fixtures/results/#{id}.json"))
       Search::Models::Record::Catalog.new(record_data)
-    )
+    end
   end
+
   def self.pagination(page)
     total = 24
     limit = 10
@@ -50,7 +52,8 @@ class Search::Presenters::Results::Catalog
   end
 
   def self.for(params)
-    results_model_instance = OpenStruct.new(filters: [], records: [], pagination: pagination(params["page"].to_i))
+    pagination_inst = pagination(params["page"].to_i)
+    results_model_instance = OpenStruct.new(filters: [], records: records(pagination_inst), pagination: pagination_inst)
     new(results_model_instance)
   end
 
@@ -63,7 +66,8 @@ class Search::Presenters::Results::Catalog
   end
 
   def records
-    start = pagination.current_page - 1
-    FIXED_RECORDS[start * pagination.limit, 10]
+    @results.records.map do |record|
+      Search::Presenters::Record::Catalog::Brief.new(record)
+    end
   end
 end
