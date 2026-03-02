@@ -13,14 +13,14 @@
 
     <h2 class="visually-hidden"><%= @presenter.page_title %> Results</h2>
     <section class="results__content">
-      <%= erb :'/datastores/results/partials/_summary', locals: { total_results: @presenter.pagination.total, start_result: @presenter.pagination.start, end_result: @presenter.pagination.end } %>
+      <%= erb :'/datastores/results/partials/_summary', locals: { total_results: @presenter.pagination.total, start_result: @presenter.pagination.first_index, end_result: @presenter.pagination.last_index } %>
       <% if @presenter.entries.any? %>
         <%= erb :'/datastores/list/partials/_go-to' %>
         <div class="container__sticky">
           <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
           <%= erb :'/datastores/partials/_select-all', locals: { count: @presenter.entries.size } %>
         </div>
-        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: @presenter.pagination.current_page, results: @presenter.entries, start_result: @presenter.pagination.start, end_result: @presenter.pagination.end } %>
+        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: @presenter.pagination.current_page, results: @presenter.entries, start_result: @presenter.pagination.first_index, end_result: @presenter.pagination.last_index } %>
         <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: @presenter.pagination.current_page, per_page: @presenter.pagination.limit, total_results: @presenter.pagination.total } %>
       <% else %>
         <%= erb :'/datastores/results/partials/results-list/_no-results' %>

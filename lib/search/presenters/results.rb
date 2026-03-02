@@ -139,7 +139,7 @@ class Search::Presenters::Results::Catalog
     current_page = (page_num && page_num > 0) ? page_num : 1
     start_result = (current_page > 1) ? ((current_page - 1) * limit) + 1 : 1
     end_result = [(start_result + limit) - 1, total].min
-    OpenStruct.new(start: start_result, end: end_result, total: total, limit: limit, current_page: current_page)
+    OpenStruct.new(first_index: start_result, last_index: end_result, total: total, limit: limit, current_page: current_page)
   end
 
   def self.for(uri)
