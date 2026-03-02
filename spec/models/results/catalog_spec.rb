@@ -1,7 +1,7 @@
 RSpec.describe Search::Models::Results::Catalog do
   let(:data) { create(:catalog_api_one_result) }
 
-  subject { described_class.new(data) }
+  subject { described_class.new(data: data, originating_uri: Addressable::URI.parse("#{S.base_url}/catalog")) }
 
   it "has catalog records" do
     expect(subject.records.first.class.name).to eq("Search::Models::Record::Catalog")
