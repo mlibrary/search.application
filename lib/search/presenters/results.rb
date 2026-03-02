@@ -133,10 +133,10 @@ class Search::Presenters::Results::Catalog
   end
 
   # This should be in the instance here. It should not be part of model::results
-  def self.pagination(page)
-    total = 24
+  def self.pagination(page_num)
+    total = FIXED_RECORD_IDS.count
     limit = 10
-    current_page = (page && page > 0) ? page : 1
+    current_page = (page_num && page_num > 0) ? page_num : 1
     start_result = (current_page > 1) ? ((current_page - 1) * limit) + 1 : 1
     end_result = [(start_result + limit) - 1, total].min
     OpenStruct.new(start: start_result, end: end_result, total: total, limit: limit, current_page: current_page)
