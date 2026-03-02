@@ -7,18 +7,23 @@ RSpec.describe Search::Models::Results::Catalog do
     expect(subject.records.first.class.name).to eq("Search::Models::Record::Catalog")
   end
 
-  xit "has a limit" do
+  it "has a limit" do
+    data["limit"] = 5
+    expect(subject.limit).to eq(5)
   end
-  xit "has a total" do
+  it "has a total" do
+    data["total"] = 5
+    expect(subject.total).to eq(5)
   end
-  xit "has an offset" do
+  it "has an offset" do
+    data["offset"] = 1
+    expect(subject.offset).to eq(1)
   end
   context "#filters" do
-    xit "has filters" do
+    it "has filters" do
       filter = subject.filters.first
       expect(filter.field).to eq(data["filters"].first["field"])
-      expect(filter.values.first.to_s).to eq(data["filters"].first["values"].first["text"])
-      expect(filter.values.first.text).to eq(data["filters"].first["values"].first["text"])
+      expect(filter.values.first.value).to eq(data["filters"].first["values"].first["text"])
       expect(filter.values.first.count).to eq(data["filters"].first["values"].first["count"])
     end
   end
