@@ -7,6 +7,10 @@ class Search::Models::Results::Catalog
     @data["records"].map { |x| Search::Models::Record::Catalog.new(x) }
   end
 
+  def pagination
+    @pagination ||= Pagination.new(limit: limit, total: total, offset: offset)
+  end
+
   def limit
     @data["limit"]
   end
@@ -21,6 +25,27 @@ class Search::Models::Results::Catalog
 
   def filters
     @data["filters"].map { |x| Filter.new(x) }
+  end
+end
+
+class Search::Models::Results::Catalog::Pagination
+  attr_reader :total, :limit, :offset
+  def initialize(total:, limit:, offset:)
+    @total = total
+    @limit = limit
+    @offset = offset
+  end
+
+  def first_index
+    offset + 1
+  end
+
+  def last_index
+    [(offset + limit), total].min
+  end
+
+  def current_page
+    (offset / limit) + 1
   end
 end
 

@@ -15,7 +15,7 @@ module Factories
         ],
         "total" => 1,
         "limit" => 10,
-        "offset:" => 0
+        "offset" => 0
       }
     end
   end
