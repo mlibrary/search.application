@@ -115,7 +115,7 @@ class Search::Models::Results::Catalog
       "filters" => FIXED_FILTERS,
       "limit" => limit,
       "offset" => offset,
-      "total" => 24
+      "total" => FIXED_RECORD_IDS.length
     }
     new(data: data, originating_uri: uri)
   end
