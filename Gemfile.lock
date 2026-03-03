@@ -28,7 +28,7 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    addressable (2.8.8)
+    addressable (2.8.9)
       public_suffix (>= 2.0.2, < 8.0)
     aes_key_wrap (1.1.0)
     anyway_config (2.7.2)
@@ -242,7 +242,7 @@ GEM
       prism (>= 1.2, < 2.0)
       rbs (>= 3, < 5)
     ruby-next-core (1.1.2)
-    ruby-prof (2.0.2)
+    ruby-prof (2.0.3)
       base64
       ostruct
     ruby-progressbar (1.13.0)

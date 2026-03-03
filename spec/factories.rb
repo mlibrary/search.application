@@ -3,6 +3,7 @@ require "rspec/mocks"
 module Factories
 end
 require_relative "factories/catalog_api_record"
+require_relative "factories/catalog_api_results"
 require_relative "factories/catalog_record"
 require_relative "factories/shelf_browse"
 module Factories
@@ -10,6 +11,8 @@ module Factories
     case factory
     when :catalog_api_record
       CatalogAPIRecord.new(**opts).to_h
+    when :catalog_api_one_result
+      CatalogAPIResults.new.one_record
     when :catalog_record
       CatalogRecord.record(**opts)
     when :catalog_holdings
