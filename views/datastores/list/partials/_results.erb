@@ -5,5 +5,3 @@
   </div>
   <%= erb :'datastores/list/partials/results/_datastores', locals: { datastores: datastores, results: results } %>
 </div>
-
-<%= erb :'datastores/results/partials/results-list/_list-item', locals: { classes: ["hide__no-javascript", "list__item--clone"], datastore: datastores.first.slug, index: 0, result: results.first } %>

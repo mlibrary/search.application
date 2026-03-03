@@ -1,5 +1,4 @@
 import {
-  createDatastoreList,
   defaultTemporaryList,
   getDatastores,
   getSessionStorage,
@@ -459,66 +458,6 @@ describe('layout', function () {
     });
   });
 
-  describe('createDatastoreList()', function () {
-    let datastores = null;
-
-    beforeEach(function () {
-      document.body.innerHTML = `
-        <div class="list"></div>
-        <li class="container__rounded list__item list__item--clone">
-          <div class="list__item--header">
-            <input type="checkbox" class="record__checkbox" value="" aria-label="Select record">
-            <h3 class="list__item--title">
-              <span class="list__item--title-number">0.</span>
-              <a href="http://example.com/" class="list__item--title-original">
-                Original Title
-              </a>
-              <span class="list__item--title-transliterated h5">
-                Transliterated Title
-              </span>
-            </h3>
-          </div>
-          <table class="metadata">
-            <tbody>
-              <tr class="metadata__row--clone">
-                <th scope="row">
-                  Field
-                </th>
-                <td>
-                  <span class="metadata__data--original">
-                    Original Data
-                  </span>
-                  <span class="metadata__data--transliterated">
-                    Transliterated Data
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </li>
-      `;
-
-      datastores = getDatastores({ list: global.temporaryList });
-
-      // Call the function
-      createDatastoreList({ list: global.temporaryList });
-    });
-
-    afterEach(function () {
-      datastores = null;
-    });
-
-    it('should create an ordered list for every non-empty datastore', function () {
-      expect(document.querySelectorAll('ol').length, 'an `ol` should have been created for every non-empty datastore').to.equal(datastores.length);
-    });
-
-    it('should create list items for every record in each non-empty datastore', function () {
-      [...document.querySelectorAll('ol')].forEach((orderedList, index) => {
-        expect(orderedList.querySelectorAll('li').length, 'an `li` should have been created for every record that exists in the non-empty datastore').to.equal(Object.keys(global.temporaryList[datastores[index]]).length);
-      });
-    });
-  });
-
   describe('handleSelectionChange()', function () {
     let actions = null;
     let args = null;
@@ -660,10 +599,10 @@ describe('layout', function () {
       // Create spies
       list = { ...global.temporaryList };
       listFunctions = {
-        createDatastoreList: sinon.stub(),
         getDatastores: sinon.stub().returns(getDatastores({ list })),
         initializeNonEmptyListFunctions: sinon.stub(),
-        toggleListElements: sinon.stub()
+        toggleListElements: sinon.stub(),
+        updateResultsLists: sinon.stub()
       };
       args = {
         list,
@@ -688,9 +627,9 @@ describe('layout', function () {
       expect(listFunctions.toggleListElements.calledOnceWithExactly({ list: args.list }), '`toggleListElements` should have been called with the correct arguments').to.be.true;
     });
 
-    it('should call `createDatastoreList` with the correct arguments', function () {
-      // Check that `createDatastoreList` was called with stubs
-      expect(listFunctions.createDatastoreList.calledOnceWithExactly({ list: args.list }), '`createDatastoreList` should have been called with the correct arguments').to.be.true;
+    it('should call `updateResultsLists` with the correct arguments', function () {
+      // Check that `updateResultsLists` was called with stubs
+      expect(listFunctions.updateResultsLists.calledOnceWithExactly({ list: args.list }), '`updateResultsLists` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `getDatastores` with the correct arguments', function () {

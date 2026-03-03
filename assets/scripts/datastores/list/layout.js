@@ -1,12 +1,12 @@
 import { selectAllCheckboxState, updateSelectedCount } from '../partials/_select-all.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
-import { clonedListItem } from '../results/partials/results-list/_list-item.js';
 import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { removeEmptyDatastoreSections } from './partials/results/_datastores.js';
 import { removeEmptyListMessage } from './partials/_empty.js';
 import { removeListResults } from './partials/_results.js';
+import { updateResultsLists } from '../results/partials/_results-list.js';
 
 const defaultTemporaryList = {
   articles: {},
@@ -96,22 +96,6 @@ const toggleListElements = ({
   }
 };
 
-const createDatastoreList = ({ list }) => {
-  // Get the list container
-  const listContainer = document.querySelector('.list');
-  // Create an ordered list for each non-empty datastore
-  getDatastores({ list }).forEach((recordDatastore) => {
-    // Create list container
-    const listItems = document.createElement('ol');
-    listItems.classList.add('list__items', 'list__no-style');
-    listContainer.appendChild(listItems);
-    // Display records
-    Object.keys(list[recordDatastore]).forEach((recordId, index) => {
-      listItems.appendChild(clonedListItem({ index, record: list[recordDatastore][recordId], recordDatastore, recordId }));
-    });
-  });
-};
-
 // Bring in actions after DOM has been built
 const defaultActions = {
   actionsPanelText,
@@ -148,10 +132,10 @@ const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChang
 };
 
 const temporaryListFunctions = {
-  createDatastoreList,
   getDatastores,
   initializeNonEmptyListFunctions,
-  toggleListElements
+  toggleListElements,
+  updateResultsLists
 };
 
 const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) => {
@@ -159,7 +143,7 @@ const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) =>
   listFunctions.toggleListElements({ list });
 
   // Build the list DOM
-  listFunctions.createDatastoreList({ list });
+  listFunctions.updateResultsLists({ list });
 
   // Return early if My Temporary List is empty
   if (listFunctions.getDatastores({ list }).length === 0) {
@@ -170,7 +154,6 @@ const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) =>
 };
 
 export {
-  createDatastoreList,
   defaultTemporaryList,
   getDatastores,
   getSessionStorage,
