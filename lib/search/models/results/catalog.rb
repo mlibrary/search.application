@@ -132,7 +132,7 @@ class Search::Models::Results::Catalog
   end
 
   def pagination
-    @pagination ||= Pagination.new(limit: limit.to_i, total: total.to_i, offset: offset.to_i)
+    @pagination ||= Pagination.new(limit: limit, total: total.to_i, offset: offset.to_i)
   end
 
   def limit
