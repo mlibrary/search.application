@@ -104,7 +104,7 @@ class Search::Models::Results::Catalog
   ]
 
   def self.for(uri)
-    current_page = uri.query_hash["page"].to_i
+    current_page = (uri.query_hash["page"] || 1).to_i
     limit = 10
     offset = ((current_page - 1) * limit)
     records = FIXED_RECORD_IDS[offset, limit].map do |id|
