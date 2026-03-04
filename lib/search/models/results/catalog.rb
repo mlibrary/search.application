@@ -105,7 +105,7 @@ class Search::Models::Results::Catalog
 
   def self.for(uri)
     current_page = (uri.query_hash["page"] || 1).to_i
-    limit = 10
+    limit = (uri.query_hash["limit"] || 10).to_i
     offset = ((current_page - 1) * limit)
     records = FIXED_RECORD_IDS[offset, limit].map do |id|
       JSON.parse(File.read("#{S.project_root}/spec/fixtures/results/#{id}.json"))
