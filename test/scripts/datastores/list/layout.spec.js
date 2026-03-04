@@ -14,65 +14,13 @@ import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
 
-let lists = '';
-Object.keys(defaultTemporaryList).forEach((datastore) => {
-  lists += `
-    <section class="list__datastore list__${datastore}" data-datastore="${datastore}">
-      <li class="container__rounded results__list-item record__container" data-record-id="1337" data-record-datastore="catalog">
-        <div class="results__list-item--header">
-        <input type="checkbox" class="record__checkbox" value="catalog,1337" aria-label="Select Original Title">
-        <h3 class="h4 results__list-item--title">
-          <span class="results__list-item--title-number">1.</span>
-          <a href="catalog/record/1337" class="results__list-item--title-original">Original Title</a>
-          <span class="h5 results__list-item--title-transliterated">
-            Transliterated Title
-          </span>
-        </h3>
-      </div>
-      <table class="metadata">
-        <thead class="visually-hidden">
-          <tr>
-            <th scope="col">Field</th>
-            <th scope="col">Data</th>
-          </tr>
-        </thead>
-        <tbody>
-            <tr>
-              <th scope="row">
-                Published/Created
-              </th>
-              <td>
-                <ul class="list__no-style metadata__list metadata__list--plain-text" id="metadata__toggle--published">
-                  <li>
-                    <ul class="list__no-style metadata__list--parallel">
-                      <li>
-                        Transliterated Data
-                      </li>
-                      <li>
-                        Original Data
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-                <button class="button__ghost metadata__toggle" aria-expanded="true" aria-controls="metadata__toggle--published" data-toggle="3">
-                  Show fewer Published/Created
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </li>
-    </section>
-  `;
-});
-
 describe('layout', function () {
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
-      <div class="list__empty"></div>
-      <div class="datastore-lists">
-        ${lists}
+      <div class="list">
+        <input type="checkbox" class="record__checkbox" />
+        <input type="checkbox" class="select-all__checkbox" />
       </div>
     `;
   });
@@ -381,18 +329,22 @@ describe('layout', function () {
   });
 
   describe('toggleListElements()', function () {
+    let getDatastoresStub = null;
     let removeEmptyListMessageSpy = null;
     let removeEmptyDatastoreSectionsSpy = null;
     let removeListResultsSpy = null;
     let args = null;
 
     beforeEach(function () {
+      getDatastoresStub = sinon.stub().callsFake(({ list }) => {
+        return getDatastores({ list });
+      });
       removeEmptyListMessageSpy = sinon.spy();
       removeEmptyDatastoreSectionsSpy = sinon.spy();
       removeListResultsSpy = sinon.spy();
       args = {
+        datastores: getDatastoresStub,
         list: global.temporaryList,
-        nonEmptyDatastores: getDatastores({ list: global.temporaryList }),
         removeEmptyMessage: removeEmptyListMessageSpy,
         removeLists: removeEmptyDatastoreSectionsSpy,
         removeResults: removeListResultsSpy
@@ -400,6 +352,7 @@ describe('layout', function () {
     });
 
     afterEach(function () {
+      getDatastoresStub = null;
       removeEmptyListMessageSpy = null;
       removeEmptyDatastoreSectionsSpy = null;
       removeListResultsSpy = null;
@@ -409,10 +362,15 @@ describe('layout', function () {
     describe('non-empty temporary list', function () {
       beforeEach(function () {
         // Check that the temporary list is not empty
-        expect(args.nonEmptyDatastores.length, 'the temporary list should not be empty').to.be.above(0);
+        expect(args.datastores({ list: args.list }).length, 'the temporary list should not be empty').to.be.above(0);
 
         // Call the function
         toggleListElements(args);
+      });
+
+      it('should call `getDatastores` with the correct arguments', function () {
+        // Check that `getDatastores` was called
+        expect(getDatastoresStub.calledWithExactly({ list: args.list }), '`getDatastores` should have been called with the correct arguments').to.be.true;
       });
 
       it('should call `removeEmptyListMessage`', function () {
@@ -422,7 +380,7 @@ describe('layout', function () {
 
       it('should call `removeEmptyDatastoreSections` with the correct arguments', function () {
         // Check that `removeEmptyDatastoreSections` was called
-        expect(removeEmptyDatastoreSectionsSpy.calledOnceWithExactly({ datastores: args.nonEmptyDatastores }), '`removeEmptyDatastoreSections` should have been called with the correct arguments').to.be.true;
+        expect(removeEmptyDatastoreSectionsSpy.calledOnceWithExactly({ datastores: args.datastores({ list: args.list }) }), '`removeEmptyDatastoreSections` should have been called with the correct arguments').to.be.true;
       });
 
       it('should not call `removeResults`', function () {
@@ -434,11 +392,16 @@ describe('layout', function () {
     describe('empty temporary list', function () {
       beforeEach(function () {
         // Check that the temporary list is empty
-        args.nonEmptyDatastores = [];
-        expect(args.nonEmptyDatastores.length, 'the temporary list should be empty').to.equal(0);
+        args.list = defaultTemporaryList;
+        expect(args.datastores({ list: args.list }).length, 'the temporary list should be empty').to.equal(0);
 
         // Call the function
         toggleListElements(args);
+      });
+
+      it('should call `getDatastores` with the correct arguments', function () {
+        // Check that `getDatastores` was called
+        expect(getDatastoresStub.calledWithExactly({ list: args.list }), '`getDatastores` should have been called with the correct arguments').to.be.true;
       });
 
       it('should call `removeResults`', function () {
@@ -466,13 +429,6 @@ describe('layout', function () {
     let selectAll = null;
 
     beforeEach(function () {
-      document.body.innerHTML = `
-        <div class="list">
-          <input type="checkbox" class="record__checkbox" />
-          <input type="checkbox" class="select-all__checkbox" />
-        </div>
-      `;
-
       // Create sinon stubs for the action methods
       actions = {
         actionsPanelText: sinon.spy(),
@@ -591,68 +547,86 @@ describe('layout', function () {
   });
 
   describe('temporaryList()', function () {
-    let list = null;
-    let listFunctions = null;
+    let getDatastoresStub = null;
+    let initializeNonEmptyListFunctionsSpy = null;
+    let toggleListElementsSpy = null;
+    let updateResultsListsSpy = null;
     let args = null;
 
     beforeEach(function () {
-      // Create spies
-      list = { ...global.temporaryList };
-      listFunctions = {
-        getDatastores: sinon.stub().returns(getDatastores({ list })),
-        initializeNonEmptyListFunctions: sinon.stub(),
-        toggleListElements: sinon.stub(),
-        updateResultsLists: sinon.stub()
-      };
+      getDatastoresStub = sinon.stub().callsFake(({ list }) => {
+        return getDatastores({ list });
+      });
+      initializeNonEmptyListFunctionsSpy = sinon.spy();
+      toggleListElementsSpy = sinon.spy();
+      updateResultsListsSpy = sinon.spy();
       args = {
-        list,
-        listFunctions
+        datastores: getDatastoresStub,
+        initializeFunctions: initializeNonEmptyListFunctionsSpy,
+        list: global.temporaryList,
+        toggleElements: toggleListElementsSpy,
+        updateResults: updateResultsListsSpy
       };
-
-      // Check that the list is not empty
-      expect(getDatastores({ list: args.list }), 'the temporary list should not be empty').to.not.be.empty;
-
-      // Call the function
-      temporaryList(args);
     });
 
     afterEach(function () {
-      list = null;
-      listFunctions = null;
+      getDatastoresStub = null;
+      initializeNonEmptyListFunctionsSpy = null;
+      toggleListElementsSpy = null;
+      updateResultsListsSpy = null;
       args = null;
     });
 
-    it('should call `toggleListElements` with the correct arguments', function () {
-      // Check that `toggleListElements` was called with stubs
-      expect(listFunctions.toggleListElements.calledOnceWithExactly({ list: args.list }), '`toggleListElements` should have been called with the correct arguments').to.be.true;
-    });
+    describe('non-empty list', function () {
+      beforeEach(function () {
+        // Check that the list is not empty
+        expect(getDatastores({ list: args.list }), 'the temporary list should not be empty').to.not.be.empty;
 
-    it('should call `updateResultsLists` with the correct arguments', function () {
-      // Check that `updateResultsLists` was called with stubs
-      expect(listFunctions.updateResultsLists.calledOnceWithExactly({ list: args.list }), '`updateResultsLists` should have been called with the correct arguments').to.be.true;
-    });
-
-    it('should call `getDatastores` with the correct arguments', function () {
-      // Check that `getDatastores` was called with stubs
-      expect(listFunctions.getDatastores.calledOnceWithExactly({ list: args.list }), '`getDatastores` should have been called with the correct arguments').to.be.true;
-    });
-
-    describe('initializeNonEmptyListFunctions()', function () {
-      it('should be called if the temporary list is not empty', function () {
-        // Check that `initializeNonEmptyListFunctions` was called
-        expect(listFunctions.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have been called').to.be.true;
+        // Call the function
+        temporaryList(args);
       });
 
-      it('should not be called if the temporary list is empty', function () {
+      it('should call `toggleListElements` with the correct arguments', function () {
+        expect(toggleListElementsSpy.calledOnceWithExactly({ list: args.list }), '`toggleListElements` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `updateResultsLists` with the correct arguments', function () {
+        expect(updateResultsListsSpy.calledOnceWithExactly({ list: args.list }), '`updateResultsLists` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `getDatastores` with the correct arguments', function () {
+        expect(getDatastoresStub.calledOnceWithExactly({ list: args.list }), '`getDatastores` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `initializeNonEmptyListFunctions` with the correct arguments', function () {
+        expect(initializeNonEmptyListFunctionsSpy.calledOnceWithExactly({ list: args.list }), '`initializeNonEmptyListFunctions` should have been called with the correct arguments').to.be.true;
+      });
+    });
+
+    describe('empty list', function () {
+      beforeEach(function () {
         // Check that the list is empty
         args.list = { ...defaultTemporaryList };
         expect(getDatastores({ list: args.list }), 'the temporary list should be empty').to.be.empty;
 
-        // Call the function again
+        // Call the function
         temporaryList(args);
+      });
 
-        // Check that `initializeNonEmptyListFunctions` was not called
-        expect(listFunctions.initializeNonEmptyListFunctions.calledOnce, '`initializeNonEmptyListFunctions` should have not been called').to.be.false;
+      it('should call `toggleListElements` with the correct arguments', function () {
+        expect(toggleListElementsSpy.calledOnceWithExactly({ list: args.list }), '`toggleListElements` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `updateResultsLists` with the correct arguments', function () {
+        expect(updateResultsListsSpy.calledOnceWithExactly({ list: args.list }), '`updateResultsLists` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `getDatastores` with the correct arguments', function () {
+        expect(getDatastoresStub.calledOnceWithExactly({ list: args.list }), '`getDatastores` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should not call `initializeNonEmptyListFunctions` if the temporary list is empty', function () {
+        expect(initializeNonEmptyListFunctionsSpy.calledOnce, '`initializeNonEmptyListFunctions` should not have been called').to.be.false;
       });
     });
   });

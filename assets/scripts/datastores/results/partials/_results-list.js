@@ -1,5 +1,6 @@
 import { cloneListItem, getListItemPartial, updateListItem } from './results-list/_list-item.js';
 import { getDatastores } from '../../list/layout.js';
+import { toggleAddedClass } from '../../partials/actions/action/_add-selected.js';
 
 const getResultsList = ({ recordDatastore }) => {
   return document.querySelector(`.list__${recordDatastore} .results__list`);
@@ -13,6 +14,7 @@ const createRecordItem = ({
   recordDatastore,
   recordId,
   resultsList,
+  toggleClass = toggleAddedClass,
   updateItem = updateListItem
 }) => {
   // Clone the list item
@@ -21,6 +23,8 @@ const createRecordItem = ({
   updateItem({ index, listItem, record, recordDatastore, recordId });
   // Append the cloned list item to the results list
   resultsList.appendChild(listItem);
+  // Update class
+  toggleClass({ isAdded: true, recordDatastore, recordId });
 };
 
 const createRecordItems = ({

@@ -43,6 +43,7 @@ describe('Results list', function () {
 
   describe('createRecordItem()', function () {
     let cloneListItemStub = null;
+    let toggleAddedClassSpy = null;
     let updateListItemSpy = null;
     let args = null;
 
@@ -50,6 +51,7 @@ describe('Results list', function () {
       cloneListItemStub = sinon.stub().callsFake(({ listItem }) => {
         return cloneListItem({ listItem });
       });
+      toggleAddedClassSpy = sinon.spy();
       updateListItemSpy = sinon.spy();
       args = {
         cloneItem: cloneListItemStub,
@@ -59,6 +61,7 @@ describe('Results list', function () {
         recordDatastore: nonEmptyDatastore,
         recordId: Object.keys(global.temporaryList[nonEmptyDatastore])[0],
         resultsList: getList(),
+        toggleClass: toggleAddedClassSpy,
         updateItem: updateListItemSpy
       };
 
@@ -88,6 +91,10 @@ describe('Results list', function () {
 
     it('should append the cloned list item in the results list', function () {
       expect(args.resultsList.contains(cloneListItemStub.returnValues[0]), '`resultsList` should contain the cloned list item').to.be.true;
+    });
+
+    it('should call `toggleAddedClass` with the correct arguments', function () {
+      expect(toggleAddedClassSpy.calledWith({ isAdded: true, recordDatastore: args.recordDatastore, recordId: args.recordId }), '`toggleAddedClass` should have been called with the correct arguments').to.be.true;
     });
   });
 

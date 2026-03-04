@@ -77,12 +77,15 @@ const inTemporaryList = ({ list, recordDatastore, recordId }) => {
 };
 
 const toggleListElements = ({
+  datastores = getDatastores,
   list,
-  nonEmptyDatastores = getDatastores({ list }),
   removeEmptyMessage = removeEmptyListMessage,
   removeLists = removeEmptyDatastoreSections,
   removeResults = removeListResults
 } = {}) => {
+  // Get all datastores that are not empty
+  const nonEmptyDatastores = datastores({ list });
+
   // Check if the temporary list is empty
   if (nonEmptyDatastores.length === 0) {
     // Remove the list results from the DOM
@@ -131,26 +134,25 @@ const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChang
   handleChange({ actions, list });
 };
 
-const temporaryListFunctions = {
-  getDatastores,
-  initializeNonEmptyListFunctions,
-  toggleListElements,
-  updateResultsLists
-};
-
-const temporaryList = ({ list, listFunctions = temporaryListFunctions } = {}) => {
+const temporaryList = ({
+  datastores = getDatastores,
+  initializeFunctions = initializeNonEmptyListFunctions,
+  list,
+  toggleElements = toggleListElements,
+  updateResults = updateResultsLists
+} = {}) => {
   // Toggle what should and should not be displaying
-  listFunctions.toggleListElements({ list });
+  toggleElements({ list });
 
   // Build the list DOM
-  listFunctions.updateResultsLists({ list });
+  updateResults({ list });
 
   // Return early if My Temporary List is empty
-  if (listFunctions.getDatastores({ list }).length === 0) {
+  if (datastores({ list }).length === 0) {
     return;
   }
 
-  listFunctions.initializeNonEmptyListFunctions({ list });
+  initializeFunctions({ list });
 };
 
 export {

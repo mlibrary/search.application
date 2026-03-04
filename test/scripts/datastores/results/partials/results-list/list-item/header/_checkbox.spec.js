@@ -190,12 +190,14 @@ describe('checkbox', function () {
 
   describe('updateCheckbox()', function () {
     let getListItemCheckboxStub = null;
+    let toggleCheckedStateSpy = null;
     let updateCheckboxLabelSpy = null;
     let updateCheckboxValueSpy = null;
     let args = null;
 
     beforeEach(function () {
       getListItemCheckboxStub = sinon.stub().returns(getListItemCheckbox({ listItem: getListItem() }));
+      toggleCheckedStateSpy = sinon.spy();
       updateCheckboxLabelSpy = sinon.spy();
       updateCheckboxValueSpy = sinon.spy();
       args = {
@@ -204,6 +206,7 @@ describe('checkbox', function () {
         recordDatastore: 'catalog',
         recordId: 1337,
         title: 'Record title',
+        toggleState: toggleCheckedStateSpy,
         updateLabel: updateCheckboxLabelSpy,
         updateValue: updateCheckboxValueSpy
       };
@@ -214,6 +217,7 @@ describe('checkbox', function () {
 
     afterEach(function () {
       getListItemCheckboxStub = null;
+      toggleCheckedStateSpy = null;
       updateCheckboxLabelSpy = null;
       updateCheckboxValueSpy = null;
       args = null;
@@ -229,6 +233,10 @@ describe('checkbox', function () {
 
     it('should call `updateCheckboxValue` with the correct arguments', function () {
       expect(updateCheckboxValueSpy.calledWith({ checkbox: getListItemCheckbox({ listItem: args.listItem }), recordDatastore: args.recordDatastore, recordId: args.recordId }), '`updateCheckboxValue` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleCheckedState` with the correct arguments', function () {
+      expect(toggleCheckedStateSpy.calledWith({ checkbox: getListItemCheckbox({ listItem: args.listItem }), isAdded: true, viewingRecord: false }), '`toggleCheckedState` should have been called with the correct arguments').to.be.true;
     });
   });
 

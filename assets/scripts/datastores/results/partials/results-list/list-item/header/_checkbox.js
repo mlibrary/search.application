@@ -33,9 +33,10 @@ const updateCheckboxValue = ({ checkbox, recordDatastore, recordId }) => {
 const updateCheckbox = ({
   getCheckbox = getListItemCheckbox,
   listItem,
-  title,
   recordDatastore,
   recordId,
+  title,
+  toggleState = toggleCheckedState,
   updateLabel = updateCheckboxLabel,
   updateValue = updateCheckboxValue
 }) => {
@@ -47,6 +48,9 @@ const updateCheckbox = ({
 
   // Update the checkbox value
   updateValue({ checkbox, recordDatastore, recordId });
+
+  // Toggle the checked state
+  toggleState({ checkbox, isAdded: true, viewingRecord: false });
 };
 
 const splitCheckboxValue = ({ value }) => {
