@@ -4,12 +4,12 @@ import {
   responseBody,
   shareAction
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_email.js';
-import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
-import { nonEmptyDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
+import { getDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
 
-const checkboxValues = Object.entries(nonEmptyDatastores(global.temporaryList)).flatMap(([recordDatastore, record]) => {
+const checkboxValues = Object.entries(getDatastores({ list: global.temporaryList })).flatMap(([recordDatastore, record]) => {
   return Object.keys(record).map((recordId) => {
     return `${recordDatastore},${recordId}`;
   });

@@ -1,4 +1,4 @@
-import { filterSelectedRecords, getCheckboxes, getCheckedCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, getCheckboxes, getCheckedCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { inTemporaryList, setSessionStorage } from '../../../list/layout.js';
 import { displayRemoveSelectedAction } from './_remove-selected.js';
 import { temporaryListBanner } from '../../../list/partials/_go-to.js';

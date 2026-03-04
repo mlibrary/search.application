@@ -1,4 +1,4 @@
-import { filterSelectedRecords, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, splitCheckboxValue } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { changeAlert } from '../_alert.js';
 
 const responseBody = ({ elements, selectedRecords = filterSelectedRecords() }) => {

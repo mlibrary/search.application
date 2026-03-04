@@ -1,5 +1,5 @@
 import { displayAddSelectedAction, toggleAddedClass, toggleSelectedTabText } from './_add-selected.js';
-import { filterSelectedRecords, splitCheckboxValue } from '../../../list/partials/list-item/_checkbox.js';
+import { filterSelectedRecords, splitCheckboxValue } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { inTemporaryList, setSessionStorage, viewingTemporaryList } from '../../../list/layout.js';
 import { temporaryListBanner } from '../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../_actions.js';

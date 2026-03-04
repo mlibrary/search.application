@@ -11,6 +11,10 @@ class Search::Presenters::Page
       super.push("datastores/list/styles.css")
     end
 
+    def page_title
+      CURRENT_PAGE
+    end
+
     def scripts
       super.push("datastores/list/scripts.js")
     end
@@ -24,6 +28,10 @@ class Search::Presenters::Page
     end
 
     private
+
+    def title_parts
+      [CURRENT_PAGE, @datastore.title]
+    end
 
     def extra_icons
       EXTRA_ICONS

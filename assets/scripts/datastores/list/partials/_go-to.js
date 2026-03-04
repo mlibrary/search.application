@@ -1,7 +1,11 @@
-import { temporaryListCount } from '../layout.js';
-
 const getTemporaryListBanner = () => {
   return document.querySelector('.list__go-to');
+};
+
+const getTemporaryListCount = ({ list }) => {
+  return Object.values(list).reduce((sum, datastore) => {
+    return sum + Object.keys(datastore).length;
+  }, 0);
 };
 
 const changeTemporaryListBannerCount = ({ banner, count }) => {
@@ -19,7 +23,7 @@ const temporaryListBannerClass = ({ banner, count }) => {
 
 const temporaryListBanner = ({
   banner = getTemporaryListBanner(),
-  countList = temporaryListCount,
+  countList = getTemporaryListCount,
   list,
   toggleClass = temporaryListBannerClass,
   updateCount = changeTemporaryListBannerCount
@@ -30,7 +34,7 @@ const temporaryListBanner = ({
   }
 
   // Get how many items are in the list
-  const count = countList(list);
+  const count = countList({ list });
 
   // Update the number of how many items are in My Temporary List
   updateCount({ banner, count });
@@ -39,4 +43,10 @@ const temporaryListBanner = ({
   toggleClass({ banner, count });
 };
 
-export { changeTemporaryListBannerCount, getTemporaryListBanner, temporaryListBanner, temporaryListBannerClass };
+export {
+  changeTemporaryListBannerCount,
+  getTemporaryListBanner,
+  getTemporaryListCount,
+  temporaryListBanner,
+  temporaryListBannerClass
+};

@@ -1,6 +1,7 @@
 import {
   changeTemporaryListBannerCount,
   getTemporaryListBanner,
+  getTemporaryListCount,
   temporaryListBanner,
   temporaryListBannerClass
 } from '../../../../../assets/scripts/datastores/list/partials/_go-to.js';
@@ -37,6 +38,20 @@ describe('temporaryListBanner', function () {
   describe('getTemporaryListBanner()', function () {
     it('should return the temporary list banner element', function () {
       expect(getTemporaryListBanner(), '`getTemporaryListBanner` should return the correct element').to.deep.equal(getBanner());
+    });
+  });
+
+  describe('getTemporaryListCount()', function () {
+    it('should return a number', function () {
+      // Check that a number is always returned
+      expect(getTemporaryListCount({ list: global.temporaryList }), '`getTemporaryListCount()` should return a number').to.be.a('number');
+    });
+
+    it('should return the correct count of records in the temporary list', function () {
+      // Check that the correct count is returned
+      expect(getTemporaryListCount({ list: global.temporaryList }), '`getTemporaryListCount()` should return the correct count of records in the temporary list').to.equal(Object.values(global.temporaryList).reduce((sum, datastore) => {
+        return sum + Object.keys(datastore).length;
+      }, 0));
     });
   });
 
@@ -113,19 +128,19 @@ describe('temporaryListBanner', function () {
   });
 
   describe('temporaryListBanner()', function () {
-    let temporaryListCountStub = null;
+    let getTemporaryListCountStub = null;
     let changeTemporaryListBannerCountSpy = null;
     let temporaryListBannerClassSpy = null;
     let args = null;
 
     beforeEach(function () {
-      temporaryListCountStub = sinon.stub().returns(5);
+      getTemporaryListCountStub = sinon.stub().returns(5);
       changeTemporaryListBannerCountSpy = sinon.spy();
       temporaryListBannerClassSpy = sinon.spy();
 
       args = {
         banner: getBanner(),
-        countList: temporaryListCountStub,
+        countList: getTemporaryListCountStub,
         list: global.temporaryList,
         toggleClass: temporaryListBannerClassSpy,
         updateCount: changeTemporaryListBannerCountSpy
@@ -136,22 +151,22 @@ describe('temporaryListBanner', function () {
     });
 
     afterEach(function () {
-      temporaryListCountStub = null;
+      getTemporaryListCountStub = null;
       changeTemporaryListBannerCountSpy = null;
       temporaryListBannerClassSpy = null;
       args = null;
     });
 
-    it('should call `temporaryListCount` with the correct arguments', function () {
-      expect(temporaryListCountStub.calledOnceWithExactly(args.list), '`temporaryListCount` should be called once with the correct arguments').to.be.true;
+    it('should call `getTemporaryListCount` with the correct arguments', function () {
+      expect(getTemporaryListCountStub.calledOnceWithExactly({ list: args.list }), '`getTemporaryListCount` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `changeTemporaryListBannerCount` with the correct arguments', function () {
-      expect(changeTemporaryListBannerCountSpy.calledOnceWithExactly({ banner: args.banner, count: args.countList(args.list) }), '`changeTemporaryListBannerCount` should be called once with the correct arguments').to.be.true;
+      expect(changeTemporaryListBannerCountSpy.calledOnceWithExactly({ banner: args.banner, count: args.countList({ list: args.list }) }), '`changeTemporaryListBannerCount` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `temporaryListBannerClass` with the correct arguments', function () {
-      expect(temporaryListBannerClassSpy.calledOnceWithExactly({ banner: args.banner, count: args.countList(args.list) }), '`temporaryListBannerClass` should be called once with the correct arguments').to.be.true;
+      expect(temporaryListBannerClassSpy.calledOnceWithExactly({ banner: args.banner, count: args.countList({ list: args.list }) }), '`temporaryListBannerClass` should be called once with the correct arguments').to.be.true;
     });
 
     it('should return early if the banner element is not provided', function () {

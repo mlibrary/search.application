@@ -1,6 +1,7 @@
 import {
   getToggleButtonInformation,
   getToggleButtons,
+  removeToggleButton,
   setToggleButtonInformation,
   toggleDisplayedItems,
   toggleItems
@@ -17,18 +18,20 @@ describe('toggle items', function () {
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
-      <ul id="${id}">
-        <li>List item 1</li>
-        <li>List item 2</li>
-        <li>List item 3</li>
-        <li>List item 4</li>
-        <li>List item 5</li>
-        <li>List item 6</li>
-        <li>List item 7</li>
-      </ul>
-      <button aria-expanded="true" aria-controls="${id}" data-toggle="${toggleCount}">
-        Show fewer
-      </button>
+      <li>
+        <ul id="${id}">
+          <li>List item 1</li>
+          <li>List item 2</li>
+          <li>List item 3</li>
+          <li>List item 4</li>
+          <li>List item 5</li>
+          <li>List item 6</li>
+          <li>List item 7</li>
+        </ul>
+        <button class="metadata__toggle" aria-expanded="true" aria-controls="${id}" data-toggle="${toggleCount}">
+          Show fewer
+        </button>
+      </li>
     `;
 
     getItems = () => {
@@ -48,6 +51,20 @@ describe('toggle items', function () {
   describe('getToggleButtons()', function () {
     it('should get the toggle buttons', function () {
       expect(getToggleButtons(), 'should return all buttons with `data-toggle` attribute').to.deep.equal(document.querySelectorAll('button[data-toggle]'));
+    });
+  });
+
+  describe('removeToggleButton()', function () {
+    beforeEach(function () {
+      // Check that the button exists in the DOM
+      expect(getButton(), 'the toggle button should exist before removal').to.not.be.null;
+
+      // Call the function
+      removeToggleButton({ listItem: document.querySelector('li') });
+    });
+
+    it('should remove the toggle button from the list item', function () {
+      expect(getButton(), 'the toggle button should be removed').to.be.null;
     });
   });
 

@@ -1,6 +1,6 @@
 import { defaultTemporaryList, getSessionStorage } from '../list/layout.js';
 import { addSelected } from '../partials/actions/action/_add-selected.js';
-import { checkboxFilters } from './partials/_checkboxes.js';
+import { checkboxFilters } from './partials/filters/_checkboxes.js';
 import { copyLink } from '../partials/actions/action/_link.js';
 import { downloadTemporaryListRIS } from '../partials/actions/action/_ris.js';
 import { emailAction } from '../partials/actions/action/_email.js';

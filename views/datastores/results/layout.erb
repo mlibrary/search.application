@@ -17,13 +17,13 @@
       <% if @presenter.entries.any? %>
         <%= erb :'/datastores/list/partials/_go-to' %>
         <div class="container__sticky">
-          <%= erb :'/datastores/partials/_actions', locals: { patron: @patron } %>
+          <%= erb :'/datastores/partials/_actions' %>
           <%= erb :'/datastores/partials/_select-all', locals: { count: @presenter.entries.size } %>
         </div>
-        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: @presenter.pagination.current_page, results: @presenter.entries, start_result: @presenter.pagination.first_index, end_result: @presenter.pagination.last_index } %>
+        <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: @presenter.pagination.current_page, datastore: @presenter.current_datastore, results: @presenter.entries, start_result: @presenter.pagination.first_index } %>
         <%= erb :'/datastores/results/partials/_pagination', locals: { current_page: @presenter.pagination.current_page, per_page: @presenter.pagination.limit, total_results: @presenter.pagination.total } %>
       <% else %>
-        <%= erb :'/datastores/results/partials/results-list/_no-results' %>
+        <%= erb :'/datastores/results/partials/_no-results' %>
       <% end %>
     </section>
   </div>

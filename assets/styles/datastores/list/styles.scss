@@ -1,7 +1,8 @@
 @use '../partials/breadcrumbs';
+@use './partials/empty';
 @use '../partials/actions';
 @use '../partials/select-all';
-@use './partials/list-item';
+@use '../results/partials/_results-list';
 @use '../../utilities';
 @use '../../forms';
 
@@ -13,8 +14,7 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Container
-//   3. Empty
-//   4. Actions
+//   3. Actions
 //
 // --------------------------------------------------
 
@@ -40,26 +40,8 @@ $class: '.list';
 
 
 
-// **************** //
-// *** 3. EMPTY *** //
-// **************** //
-
-#{$class} #{$class}__empty {
-  padding: 1rem;
-  & > *:first-child {
-    margin-top: 0;
-  }
-  & > *:last-child {
-    margin-bottom: 0;
-  }
-}
-
-
-
-
-
 // ****************** //
-// *** 4. ACTIONS *** //
+// *** 3. ACTIONS *** //
 // ****************** //
 
 #{$class} .actions {
