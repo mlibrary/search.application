@@ -1,5 +1,6 @@
-import { disableActionTabs, getTabPanel, isSelected, tabControl, toggleTabDisplay } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { disableActionTabs, getTabPanel, initializeActions, isSelected, tabControl, toggleTabDisplay } from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { expect } from 'chai';
+import sinon from 'sinon';
 
 describe('actions', function () {
   let firstTab = null;
@@ -189,6 +190,87 @@ describe('actions', function () {
       // Check that the tab and its panel are not displayed
       expect(firstTab().style.display, 'the tab should not be displayed').to.equal('none');
       expect(firstTabPanel().style.display, 'the tab panel should not be displayed').to.equal('none');
+    });
+  });
+
+  describe('initializeActions()', function () {
+    let addSelectedSpy = null;
+    let initializeCitationsSpy = null;
+    let emailActionSpy = null;
+    let copyLinkSpy = null;
+    let removeSelectedSpy = null;
+    let downloadTemporaryListRISSpy = null;
+    let tabControlSpy = null;
+    let textActionSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      addSelectedSpy = sinon.spy();
+      initializeCitationsSpy = sinon.spy();
+      emailActionSpy = sinon.spy();
+      copyLinkSpy = sinon.spy();
+      removeSelectedSpy = sinon.spy();
+      downloadTemporaryListRISSpy = sinon.spy();
+      tabControlSpy = sinon.spy();
+      textActionSpy = sinon.spy();
+      args = {
+        addToList: addSelectedSpy,
+        citations: initializeCitationsSpy,
+        email: emailActionSpy,
+        link: copyLinkSpy,
+        list: global.temporaryList,
+        removeFromList: removeSelectedSpy,
+        ris: downloadTemporaryListRISSpy,
+        tabControlFunction: tabControlSpy,
+        text: textActionSpy
+      };
+
+      // Call the function
+      initializeActions(args);
+    });
+
+    afterEach(function () {
+      addSelectedSpy = null;
+      initializeCitationsSpy = null;
+      emailActionSpy = null;
+      copyLinkSpy = null;
+      removeSelectedSpy = null;
+      downloadTemporaryListRISSpy = null;
+      tabControlSpy = null;
+      textActionSpy = null;
+      args = null;
+    });
+
+    it('should call `tabControl` with the correct arguments', function () {
+      expect(tabControlSpy.calledOnceWithExactly('.actions'), '`tabControlFunction` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `emailAction`', function () {
+      expect(emailActionSpy.calledOnce, '`emailAction` should have been called').to.be.true;
+    });
+
+    it('should call `textAction`', function () {
+      expect(textActionSpy.calledOnce, '`textAction` should have been called').to.be.true;
+    });
+
+    it('should call `initializeCitations`', function () {
+      expect(initializeCitationsSpy.calledOnce, '`initializeCitations` should have been called').to.be.true;
+    });
+
+    it('should call `downloadTemporaryListRIS` with the correct arguments', function () {
+      expect(downloadTemporaryListRISSpy.calledOnceWithExactly({ list: args.list }), '`downloadTemporaryListRIS` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `copyLink`', function () {
+      expect(copyLinkSpy.calledOnce, '`copyLink` should have been called').to.be.true;
+    });
+
+    it('should call `addToList` with the correct arguments', function () {
+      expect(addSelectedSpy.calledOnceWithExactly({ list: args.list }), '`addToList` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `removeFromList` with the correct arguments', function () {
+      expect(removeSelectedSpy.calledOnceWithExactly({ list: args.list }), '`removeFromList` should have been called with the correct arguments').to.be.true;
     });
   });
 });

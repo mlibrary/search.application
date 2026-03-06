@@ -1,5 +1,12 @@
+import { addSelected } from './actions/action/_add-selected.js';
 import { changeAlert } from './actions/_alert.js';
+import { copyLink } from './actions/action/_link.js';
+import { downloadTemporaryListRIS } from './actions/action/_ris.js';
+import { emailAction } from './actions/action/_email.js';
+import { initializeCitations } from './actions/action/_citation.js';
+import { removeSelected } from './actions/action/_remove-selected.js';
 import { someCheckboxesChecked } from '../results/partials/results-list/list-item/header/_checkbox.js';
+import { textAction } from './actions/action/_text.js';
 
 const isSelected = ({ tab }) => {
   return tab.getAttribute('aria-selected') === 'true';
@@ -65,10 +72,47 @@ const toggleTabDisplay = ({ id, show }) => {
   tabPanel.style.display = tab.getAttribute('aria-selected') === 'true' ? 'block' : 'none';
 };
 
+const initializeActions = ({
+  addToList = addSelected,
+  citations = initializeCitations,
+  email = emailAction,
+  link = copyLink,
+  list,
+  removeFromList = removeSelected,
+  ris = downloadTemporaryListRIS,
+  tabControlFunction = tabControl,
+  text = textAction
+} = {}) => {
+  // Actions panel
+  tabControlFunction('.actions');
+
+  // Email
+  email();
+
+  // Text
+  text();
+
+  // Citations
+  citations();
+
+  // RIS
+  ris({ list });
+
+  // Copy link
+  link();
+
+  // Add to My Temporary List
+  addToList({ list });
+
+  // Remove from My Temporary List
+  removeFromList({ list });
+};
+
 export {
   changeAlert,
   disableActionTabs,
   getTabPanel,
+  initializeActions,
   isSelected,
   tabControl,
   toggleTabDisplay
