@@ -16,7 +16,7 @@
       <%= erb :'/datastores/results/partials/_summary', locals: { total_results: @presenter.pagination.total, start_result: @presenter.pagination.first_index, end_result: @presenter.pagination.last_index } %>
       <% if @presenter.entries.any? %>
         <%= erb :'/datastores/list/partials/_go-to' %>
-        <div class="container__sticky">
+        <div class="hide__no-javascript container__sticky">
           <%= erb :'/datastores/partials/_actions' %>
           <%= erb :'/datastores/partials/_select-all', locals: { count: @presenter.entries.size } %>
         </div>
