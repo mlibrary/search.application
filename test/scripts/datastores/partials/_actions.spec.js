@@ -5,18 +5,22 @@ describe('actions', function () {
   let firstTab = null;
   let firstTabPanel = null;
   let secondTab = null;
+  let getTabs = null;
   let getAlert = null;
 
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
       <div class="tabs">
-        <div role="tablist">
+        <div class="actions__tablist" role="tablist">
           <button type="button" role="tab" id="tab1" aria-selected="true" aria-controls="tabpanel1">
             Tab 1
           </button>
           <button type="button" role="tab" id="tab2" aria-selected="false" aria-controls="tabpanel2">
             Tab 2
+          </button>
+          <button type="button" role="tab" id="actions__link" aria-selected="false" aria-controls="actions__link--tabpanel">
+            Copy link
           </button>
         </div>
         <div id="tabpanel1" role="tabpanel">
@@ -24,6 +28,9 @@ describe('actions', function () {
         </div>
         <div id="tabpanel2" role="tabpanel">
           Tab Panel 2
+        </div>
+        <div id="actions__link--tabpanel" role="tabpanel">
+          Copy link tab panel
         </div>
       </div>
     `;
@@ -44,6 +51,10 @@ describe('actions', function () {
       return document.querySelector('.alert');
     };
 
+    getTabs = () => {
+      return document.querySelectorAll('button[role="tab"]');
+    };
+
     // Make sure the first tab is selected
     expect(firstTab().getAttribute('aria-selected'), 'Tab 1 should be selected.').to.equal('true');
   });
@@ -53,6 +64,7 @@ describe('actions', function () {
     firstTabPanel = null;
     secondTab = null;
     getAlert = null;
+    getTabs = null;
   });
 
   describe('isSelected()', function () {
@@ -116,32 +128,19 @@ describe('actions', function () {
   });
 
   describe('disableActionTabs()', function () {
-    let getTabs = null;
-
-    beforeEach(function () {
-      // Apply HTML to the body
-      document.body.innerHTML += `
-        <ol class="list__items">
-          <li><input type="checkbox" class="record__checkbox" value="rec1" checked></li>
-          <li><input type="checkbox" class="record__checkbox" value="rec2"></li>
-          <li><input type="checkbox" class="record__checkbox" value="rec3"></li>
-          <li><input type="checkbox" class="record__checkbox" value="rec4"></li>
-          <li><input type="checkbox" class="record__checkbox" value="rec5"></li>
-        </ol>
-      `;
-
-      getTabs = () => {
-        return document.querySelectorAll('.actions__tablist button[role="tab"]');
-      };
-    });
-
-    it('should disable all action tabs if no checkboxes are checked', function () {
+    it('should disable all but the `Copy link` action tabs if no checkboxes are checked', function () {
       // Call the function
       disableActionTabs({ someChecked: false });
 
-      // Check that all tabs are disabled
+      // Loop through all tabs
       getTabs().forEach((tab) => {
-        expect(tab.disabled, 'all tabs should be disabled if no checkboxes are checked').to.be.true;
+        if (tab.getAttribute('id') === 'actions__link') {
+          // Check that the `Copy link` tab is not disabled
+          expect(tab.hasAttribute('disabled'), 'the `Copy link` tab should not be disabled if no checkboxes are checked').to.be.false;
+        } else {
+          // Check that all other tabs are disabled
+          expect(tab.hasAttribute('disabled'), `\`#${tab.getAttribute('id')}\` should be disabled if no checkboxes are checked`).to.be.true;
+        }
       });
     });
 
@@ -149,9 +148,10 @@ describe('actions', function () {
       // Call the function
       disableActionTabs({ someChecked: true });
 
-      // Check that all tabs are enabled
+      // Loop through all tabs
       getTabs().forEach((tab) => {
-        expect(tab.disabled, 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
+        // Check that all tabs are not disabled
+        expect(tab.hasAttribute('disabled'), 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
       });
     });
   });

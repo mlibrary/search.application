@@ -1,1 +1,9 @@
-<textarea class="citation__csl" readonly><%= @record && [@record.csl].to_json %></textarea>
+<%
+  csl = []
+  if @record
+    csl = [@record.csl]
+  elsif defined?(@presenter.entries)
+    csl = @presenter.entries.map { |entry| entry.csl }
+  end
+%>
+<textarea class="citation__csl" readonly><%= csl.to_json %></textarea>

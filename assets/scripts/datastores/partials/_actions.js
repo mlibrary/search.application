@@ -41,14 +41,18 @@ const tabControl = (element) => {
 };
 
 const disableActionTabs = ({ someChecked = someCheckboxesChecked(true) } = {}) => {
-  const tabs = document.querySelectorAll('.actions__tablist button[role="tab"]');
+  // Grab all the tabs except the `Copy link` tab
+  const tabs = document.querySelectorAll('.actions__tablist button[role="tab"]:not(#actions__link)');
+
+  // Loop through all the tabs
   tabs.forEach((tab) => {
-    if (!someChecked) {
-      if (tab.getAttribute('aria-selected') === 'true') {
-        tab.click();
-      }
+    // Check if all checkboxes are unchecked, and the tab is selected
+    if (!someChecked && tab.getAttribute('aria-selected') === 'true') {
+      // Click the tab to deselect it
+      tab.click();
     }
-    tab.disabled = !someChecked;
+    // Toggle the `disabled` attribute based on the `someChecked` value
+    tab.toggleAttribute('disabled', !someChecked);
   });
 };
 
