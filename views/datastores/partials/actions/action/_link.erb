@@ -1,6 +1,15 @@
+<%
+  # Get the full URL with paths
+  uri = S.base_url + request.path
+  # Check if not viewing a full record, and there are query parameters
+  if !request.path.include?("/record") && !request.query_string.empty?
+    # Apply the query parameters to the full path
+    uri = uri + "?" + request.query_string
+  end
+%>
 <%= erb :"datastores/partials/actions/_alert", locals: { type: "success", message: "Link copied!" } %>
 <form class="actions__form action__link--form">
   <label for="action__link--input">Copy link</label>
-  <input type="url" id="action__link--input" name="action__link--input" autocomplete="off" value="<%= request.url.sub("?" + request.query_string, "") %>">
+  <input type="url" id="action__link--input" name="action__link--input" autocomplete="off" value="<%= uri %>">
   <button class="link__copy" type="submit" disabled>Copy link</button>
 </form>

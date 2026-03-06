@@ -7,7 +7,8 @@
       <ul id="filter__toggle--<%= filter.uid %>" class="list__no-style filter__details--options">
         <% filter.options.each do |option| %>
           <li class="filter__details--option">
-            <%= link_to(body: "<span class=\"filter__details--option-value\">#{option.value}</span> <span class=\"filter__details--option-count\">#{option.count}</span>", url: option.url, classes: ["underline__none"]) %>
+            <%= link_to(body: option.value, url: option.url, classes: ["underline__none"]) %>
+            <span><%= option.count %></span>
           </li>
         <% end %>
       </ul>

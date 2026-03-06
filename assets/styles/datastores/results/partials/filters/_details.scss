@@ -59,22 +59,10 @@ $class: '.filter__details';
 // *             * //
 
 #{$class}--option {
+  @include utilities.flex($align: baseline);
+  justify-content: space-between;
   & + & {
     margin-top: 0.5rem;
-  }
-  & > a {
-    @include utilities.flex($align: baseline);
-    justify-content: space-between;
-    &:hover {
-      text-decoration: none;
-      #{$class}--option-value {
-        text-decoration: underline;
-      }
-    }
-    #{$class}--option-count {
-      color: colors.$color-text;
-      text-decoration: none;
-    }
   }
 }
 

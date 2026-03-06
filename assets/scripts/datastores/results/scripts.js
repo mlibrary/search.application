@@ -8,6 +8,7 @@ import { hideInfo } from './partials/_info.js';
 import { initializeCitations } from '../partials/actions/action/_citation.js';
 import { libraryScope } from './partials/_library-scope.js';
 import { removeSelected } from '../partials/actions/action/_remove-selected.js';
+import { resultsList } from './layout.js';
 import { selectAll } from '../partials/_select-all.js';
 import { sortResults } from './partials/summary/_sort.js';
 import { tabControl } from '../partials/_actions.js';
@@ -62,3 +63,6 @@ removeSelected({ list });
 
 // Select all
 selectAll();
+
+// Results list
+resultsList();
