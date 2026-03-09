@@ -1,8 +1,9 @@
-import { filterSelectedRecords, getCheckboxes, getCheckedCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
+import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { inTemporaryList, setSessionStorage } from '../../../list/layout.js';
 import { displayRemoveSelectedAction } from './_remove-selected.js';
 import { temporaryListBanner } from '../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../_actions.js';
+import { viewingFullRecord } from '../../../record/layout.js';
 
 const addSelectedClass = 'actions__add-selected';
 
@@ -10,7 +11,12 @@ const getAddSelectedButton = () => {
   return document.querySelector(`#${addSelectedClass}--tabpanel .action__add-selected`);
 };
 
-const toggleSelectedTabText = ({ checkedCheckboxes = getCheckedCheckboxes(), tabID = addSelectedClass } = {}) => {
+const updateSelectedTabText = ({ fullRecord = viewingFullRecord(), tabID = addSelectedClass } = {}) => {
+  // Return early if not viewing a full record
+  if (!fullRecord) {
+    return;
+  }
+
   // Get the tab element
   const tab = document.getElementById(tabID);
 
@@ -19,14 +25,8 @@ const toggleSelectedTabText = ({ checkedCheckboxes = getCheckedCheckboxes(), tab
     return;
   }
 
-  // Replace `selected` with `record` if there is only one checkbox selected, and vice versa
-  const updatedText = tab.textContent.replace(
-    /(?:selected|record)/u,
-    checkedCheckboxes.length === 1 ? 'record' : 'selected'
-  );
-
-  // Update the tab's text content
-  tab.textContent = updatedText;
+  // Replace `selected` with `record` in the tab text
+  tab.textContent = tab.textContent.replace('selected', 'record');
 };
 
 const toggleAddedClass = ({ isAdded, recordDatastore, recordId }) => {
@@ -164,7 +164,7 @@ const addSelectedAction = ({
   });
 };
 
-const addSelected = ({ addAction = addSelectedAction, list, selectedTabText = toggleSelectedTabText, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {
+const addSelected = ({ addAction = addSelectedAction, list, selectedTabText = updateSelectedTabText, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {
   // Toggle `Add selected` action based on current selection
   toggleAction({ list });
 
@@ -187,5 +187,5 @@ export {
   getAddSelectedButton,
   styleAddedRecords,
   toggleAddedClass,
-  toggleSelectedTabText
+  updateSelectedTabText
 };

@@ -7,10 +7,10 @@ import {
   getAddSelectedButton,
   styleAddedRecords,
   toggleAddedClass,
-  toggleSelectedTabText
+  updateSelectedTabText
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_add-selected.js';
 import { defaultTemporaryList, getDatastores, inTemporaryList } from '../../../../../../assets/scripts/datastores/list/layout.js';
-import { filterSelectedRecords, getCheckedCheckboxes, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
+import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -65,12 +65,12 @@ describe('add selected', function () {
     });
   });
 
-  describe('toggleSelectedTabText()', function () {
+  describe('updateSelectedTabText()', function () {
     let args = null;
 
     beforeEach(function () {
       args = {
-        checkedCheckboxes: getCheckedCheckboxes(),
+        fullRecord: true,
         tabID: 'actions__add-selected'
       };
 
@@ -80,12 +80,27 @@ describe('add selected', function () {
       // Check that the tab text is "Add selected" to begin with
       expect(getTab().textContent, 'the tab text should be "Add selected" to begin with').to.equal('Add selected');
 
-      // Check that there are multiple checkboxes selected to begin with
-      expect(args.checkedCheckboxes.length, 'there should be multiple checkboxes selected to begin with').to.be.greaterThan(1);
+      // Check that a full record is being viewed
+      expect(args.fullRecord, 'a full record should be viewed to begin with').to.be.true;
     });
 
     afterEach(function () {
       args = null;
+    });
+
+    it('should update the tab text to "Add record" if viewing a full record', function () {
+      // Call the function
+      updateSelectedTabText(args);
+
+      expect(getTab().textContent, 'the tab text should be updated to "Add record" if viewing a full record').to.equal('Add record');
+    });
+
+    it('should return early if not viewing a full record', function () {
+      // Call the function
+      updateSelectedTabText({ ...args, fullRecord: false });
+
+      // Check that the tab text is not updated
+      expect(getTab().textContent, 'the tab text should not be updated if not viewing a full record').to.equal('Add selected');
     });
 
     it('should return early if the tab is not found', function () {
@@ -95,40 +110,10 @@ describe('add selected', function () {
       expect(document.getElementById(tabID), `the tab with ID "${tabID}" should not exist`).to.be.null;
 
       // Call the function
-      expect(() => {
-        return toggleSelectedTabText({ ...args, tabID });
-      }, 'calling `toggleSelectedTabText` with a non-existent tab ID should not throw an error').to.not.throw();
-    });
+      updateSelectedTabText({ ...args, tabID });
 
-    it('should update the tab text to "Add record" if there is only one checkbox selected', function () {
-      // Uncheck all checkboxes except one
-      getCheckedCheckboxes().forEach((checkbox, index) => {
-        checkbox.checked = index === 0;
-      });
-      args.checkedCheckboxes = getCheckedCheckboxes();
-
-      // Check that one checkbox is selected
-      expect(args.checkedCheckboxes.length, 'there should be exactly one checkbox selected').to.equal(1);
-
-      // Call the function
-      toggleSelectedTabText(args);
-
-      // Check that the tab text is updated to "Add record"
-      expect(getTab().textContent, 'the tab text should be "Add record"').to.equal('Add record');
-    });
-
-    it('should update the tab text to "Add selected" if there are multiple checkboxes selected', function () {
-      // Update the tab text to "Add record"
-      getTab().textContent = 'Add record';
-
-      // Check that the tab text is "Add record" to begin with
-      expect(getTab().textContent, 'the tab text should be "Add record" to begin with').to.equal('Add record');
-
-      // Call the function
-      toggleSelectedTabText(args);
-
-      // Check that the tab text is updated to "Add selected"
-      expect(getTab().textContent, 'the tab text should be "Add selected"').to.equal('Add selected');
+      // Check that the tab text is not updated
+      expect(getTab().textContent, 'the tab text should not be updated if not viewing a full record').to.equal('Add selected');
     });
   });
 
@@ -681,21 +666,21 @@ describe('add selected', function () {
 
   describe('addSelected()', function () {
     let addSelectedActionSpy = null;
-    let toggleSelectedTabTextSpy = null;
+    let updateSelectedTabTextSpy = null;
     let styleAddedRecordsSpy = null;
     let displayAddSelectedActionSpy = null;
     let args = null;
 
     beforeEach(function () {
       addSelectedActionSpy = sinon.spy();
-      toggleSelectedTabTextSpy = sinon.spy();
+      updateSelectedTabTextSpy = sinon.spy();
       styleAddedRecordsSpy = sinon.spy();
       displayAddSelectedActionSpy = sinon.spy();
 
       args = {
         addAction: addSelectedActionSpy,
         list: global.temporaryList,
-        selectedTabText: toggleSelectedTabTextSpy,
+        selectedTabText: updateSelectedTabTextSpy,
         styleRecords: styleAddedRecordsSpy,
         toggleAction: displayAddSelectedActionSpy
       };
@@ -706,7 +691,7 @@ describe('add selected', function () {
 
     afterEach(function () {
       addSelectedActionSpy = null;
-      toggleSelectedTabTextSpy = null;
+      updateSelectedTabTextSpy = null;
       styleAddedRecordsSpy = null;
       displayAddSelectedActionSpy = null;
       args = null;
@@ -722,9 +707,9 @@ describe('add selected', function () {
       expect(styleAddedRecordsSpy.calledOnceWithExactly({ list: args.list }), '`styleAddedRecords` should be called once with the correct arguments').to.be.true;
     });
 
-    it('should call `toggleSelectedTabText` with the correct arguments', function () {
-      // Check that `toggleSelectedTabText` was called once with the correct arguments
-      expect(toggleSelectedTabTextSpy.calledOnceWithExactly(), '`toggleSelectedTabText` should be called once with the correct arguments').to.be.true;
+    it('should call `updateSelectedTabText` with the correct arguments', function () {
+      // Check that `updateSelectedTabText` was called once with the correct arguments
+      expect(updateSelectedTabTextSpy.calledOnceWithExactly(), '`updateSelectedTabText` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `addSelectedAction` with the correct arguments', function () {
