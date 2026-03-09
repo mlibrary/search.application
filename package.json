@@ -29,16 +29,16 @@
   "homepage": "https://github.com/mlibrary/search.application#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@stylistic/eslint-plugin": "^5.9.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "chai": "^6.2.2",
     "esbuild": "^0.27.3",
-    "eslint": "^10.0.2",
+    "eslint": "^10.0.3",
     "eslint-plugin-mocha": "^11.2.0",
     "globals": "^17.4.0",
     "jsdom": "^28.1.0",
     "mocha": "^11.7.5",
     "sass": "^1.97.3",
-    "sinon": "^21.0.1"
+    "sinon": "^21.0.2"
   },
   "dependencies": {
     "citeproc": "^2.4.63"
