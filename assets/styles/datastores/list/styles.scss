@@ -15,6 +15,7 @@
 //   1. Variables
 //   2. Container
 //   3. Actions
+//     3.1. Copy Link
 //
 // --------------------------------------------------
 
@@ -43,6 +44,19 @@ $class: '.list';
 // ****************** //
 // *** 3. ACTIONS *** //
 // ****************** //
+
+#{$class} .actions__tablist {
+  flex-wrap: nowrap;
+  & > button[role="tab"] {
+    flex-basis: auto;
+  }
+}
+
+
+
+// *                * //
+// * 3.1. COPY LINK * //
+// *                * //
 
 #{$class} .actions {
   button#actions__link,
