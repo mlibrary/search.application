@@ -7,6 +7,7 @@ import { initializeCitations } from './actions/action/_citation.js';
 import { removeSelected } from './actions/action/_remove-selected.js';
 import { someCheckboxesChecked } from '../results/partials/results-list/list-item/header/_checkbox.js';
 import { textAction } from './actions/action/_text.js';
+import { toggleSelectedAction } from './actions/action/_toggle-selected.js';
 
 const isSelected = ({ tab }) => {
   return tab.getAttribute('aria-selected') === 'true';
@@ -81,7 +82,8 @@ const initializeActions = ({
   removeFromList = removeSelected,
   ris = downloadTemporaryListRIS,
   tabControlFunction = tabControl,
-  text = textAction
+  text = textAction,
+  toggleSelected = toggleSelectedAction
 } = {}) => {
   // Actions panel
   tabControlFunction('.actions');
@@ -106,6 +108,9 @@ const initializeActions = ({
 
   // Remove from My Temporary List
   removeFromList({ list });
+
+  // Toggle add/remove selected
+  toggleSelected({ list });
 };
 
 export {

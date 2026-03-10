@@ -8,6 +8,7 @@
 @use './actions/action/citation';
 @use './actions/action/add-selected';
 @use './actions/action/remove-selected';
+@use './actions/action/toggle-selected';
 
 // --------------------------------------------------
 //
@@ -37,7 +38,8 @@ $tabs: (
   "ris": "draft",
   "link": "link",
   "add-selected": "add",
-  "remove-selected": "delete"
+  "remove-selected": "delete",
+  "toggle-selected": "add"
 );
 
 

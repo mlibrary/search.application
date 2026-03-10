@@ -202,6 +202,7 @@ describe('actions', function () {
     let downloadTemporaryListRISSpy = null;
     let tabControlSpy = null;
     let textActionSpy = null;
+    let toggleSelectedSpy = null;
     let args = null;
 
     beforeEach(function () {
@@ -213,6 +214,7 @@ describe('actions', function () {
       downloadTemporaryListRISSpy = sinon.spy();
       tabControlSpy = sinon.spy();
       textActionSpy = sinon.spy();
+      toggleSelectedSpy = sinon.spy();
       args = {
         addToList: addSelectedSpy,
         citations: initializeCitationsSpy,
@@ -222,7 +224,8 @@ describe('actions', function () {
         removeFromList: removeSelectedSpy,
         ris: downloadTemporaryListRISSpy,
         tabControlFunction: tabControlSpy,
-        text: textActionSpy
+        text: textActionSpy,
+        toggleSelected: toggleSelectedSpy
       };
 
       // Call the function
@@ -238,6 +241,7 @@ describe('actions', function () {
       downloadTemporaryListRISSpy = null;
       tabControlSpy = null;
       textActionSpy = null;
+      toggleSelectedSpy = null;
       args = null;
     });
 
@@ -271,6 +275,10 @@ describe('actions', function () {
 
     it('should call `removeFromList` with the correct arguments', function () {
       expect(removeSelectedSpy.calledOnceWithExactly({ list: args.list }), '`removeFromList` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleSelected` with the correct arguments', function () {
+      expect(toggleSelectedSpy.calledOnceWithExactly({ list: args.list }), '`toggleSelected` should have been called with the correct arguments').to.be.true;
     });
   });
 });
