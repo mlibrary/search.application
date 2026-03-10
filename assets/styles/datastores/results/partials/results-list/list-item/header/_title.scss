@@ -1,0 +1,45 @@
+// --------------------------------------------------
+//
+// # Title
+//   Styles to apply directly to `views/datastores/results/partials/results-list/list-item/header/_title.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Title
+//     2.1. Truncate
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.results__list-item--title';
+
+
+
+
+
+// **************** //
+// *** 2. TITLE *** //
+// **************** //
+
+#{$class} {
+  color: var(--search-color-grey-500);
+  margin: 0;
+}
+
+
+
+// *               * //
+// * 2.1. TRUNCATE * //
+// *               * //
+
+#{$class}-truncate {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

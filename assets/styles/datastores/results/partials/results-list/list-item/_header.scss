@@ -1,0 +1,31 @@
+@use '../../../../../utilities';
+@use './header/title';
+
+// --------------------------------------------------
+//
+// # Header
+//   Styles to apply directly to `views/datastores/results/partials/results-list/list-item/_header.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Header
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.results__list-item--header';
+
+
+
+
+
+// ***************** //
+// *** 2. HEADER *** //
+// ***************** //
+
+#{$class} {
+  @include utilities.flex($align: baseline);
+}
