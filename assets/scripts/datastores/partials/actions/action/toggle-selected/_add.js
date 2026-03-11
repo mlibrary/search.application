@@ -2,7 +2,6 @@ import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleChecked
 import { inTemporaryList, setSessionStorage } from '../../../../list/layout.js';
 import { displayRemoveSelectedAction } from './_remove.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
-import { toggleTabDisplay } from '../../../_actions.js';
 
 const addSelectedClass = 'actions__add-selected';
 
@@ -83,21 +82,9 @@ const fetchAndAddRecords = async ({ addClass = toggleAddedClass, checkboxValues 
   return updatedList;
 };
 
-const displayAddSelectedAction = ({ checkedValues = filterSelectedRecords(), inList = inTemporaryList, list, splitValue = splitCheckboxValue, toggleTab = toggleTabDisplay } = {}) => {
-  // Check if any of the selected records are not in the temporary list
-  const showTab = checkedValues.some((value) => {
-    const { recordDatastore, recordId } = splitValue({ value });
-    return !inList({ list, recordDatastore, recordId });
-  });
-
-  // Show `Add selected` if there are selected records not already in the temporary list
-  toggleTab({ id: addSelectedClass, show: showTab });
-};
-
 const addSelectedAction = ({
   addRecords = fetchAndAddRecords,
   addSelectedButton = getAddSelectedButton(),
-  displayAddAction = displayAddSelectedAction,
   displayRemoveAction = displayRemoveSelectedAction,
   list,
   setList = setSessionStorage,
@@ -131,9 +118,6 @@ const addSelectedAction = ({
       // Update the banner to reflect the new count of items in the list
       showBanner({ list: updatedList });
 
-      // Toggle the display of the `Add selected` action based on the updated list
-      displayAddAction({ list: updatedList });
-
       // Toggle the display of the `Remove selected` action based on the updated list
       displayRemoveAction({ list: updatedList });
 
@@ -145,10 +129,7 @@ const addSelectedAction = ({
   });
 };
 
-const addSelected = ({ addAction = addSelectedAction, list, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {
-  // Toggle `Add selected` action based on current selection
-  toggleAction({ list });
-
+const addSelected = ({ addAction = addSelectedAction, list, styleRecords = styleAddedRecords } = {}) => {
   // Style records on load
   styleRecords({ list });
 
@@ -159,7 +140,6 @@ const addSelected = ({ addAction = addSelectedAction, list, styleRecords = style
 export {
   addSelected,
   addSelectedAction,
-  displayAddSelectedAction,
   fetchAndAddRecords,
   fetchRecordData,
   getAddSelectedButton,
