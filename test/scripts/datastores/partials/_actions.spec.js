@@ -194,11 +194,9 @@ describe('actions', function () {
   });
 
   describe('initializeActions()', function () {
-    let addSelectedSpy = null;
     let initializeCitationsSpy = null;
     let emailActionSpy = null;
     let copyLinkSpy = null;
-    let removeSelectedSpy = null;
     let downloadTemporaryListRISSpy = null;
     let tabControlSpy = null;
     let textActionSpy = null;
@@ -206,22 +204,18 @@ describe('actions', function () {
     let args = null;
 
     beforeEach(function () {
-      addSelectedSpy = sinon.spy();
       initializeCitationsSpy = sinon.spy();
       emailActionSpy = sinon.spy();
       copyLinkSpy = sinon.spy();
-      removeSelectedSpy = sinon.spy();
       downloadTemporaryListRISSpy = sinon.spy();
       tabControlSpy = sinon.spy();
       textActionSpy = sinon.spy();
       toggleSelectedSpy = sinon.spy();
       args = {
-        addToList: addSelectedSpy,
         citations: initializeCitationsSpy,
         email: emailActionSpy,
         link: copyLinkSpy,
         list: global.temporaryList,
-        removeFromList: removeSelectedSpy,
         ris: downloadTemporaryListRISSpy,
         tabControlFunction: tabControlSpy,
         text: textActionSpy,
@@ -233,11 +227,9 @@ describe('actions', function () {
     });
 
     afterEach(function () {
-      addSelectedSpy = null;
       initializeCitationsSpy = null;
       emailActionSpy = null;
       copyLinkSpy = null;
-      removeSelectedSpy = null;
       downloadTemporaryListRISSpy = null;
       tabControlSpy = null;
       textActionSpy = null;
@@ -267,14 +259,6 @@ describe('actions', function () {
 
     it('should call `copyLink`', function () {
       expect(copyLinkSpy.calledOnce, '`copyLink` should have been called').to.be.true;
-    });
-
-    it('should call `addToList` with the correct arguments', function () {
-      expect(addSelectedSpy.calledOnceWithExactly({ list: args.list }), '`addToList` should have been called with the correct arguments').to.be.true;
-    });
-
-    it('should call `removeFromList` with the correct arguments', function () {
-      expect(removeSelectedSpy.calledOnceWithExactly({ list: args.list }), '`removeFromList` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `toggleSelected` with the correct arguments', function () {

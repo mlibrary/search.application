@@ -6,10 +6,10 @@ import {
   removeSelected,
   removeSelectedAction,
   toggleRemoveSelectedButton
-} from '../../../../../../assets/scripts/datastores/partials/actions/action/_remove-selected.js';
-import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
+} from '../../../../../../../assets/scripts/datastores/partials/actions/action/toggle-selected/_remove.js';
+import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
-import { getDatastores } from '../../../../../../assets/scripts/datastores/list/layout.js';
+import { getDatastores } from '../../../../../../../assets/scripts/datastores/list/layout.js';
 import sinon from 'sinon';
 
 let temporaryListHTML = '';

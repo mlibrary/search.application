@@ -88,31 +88,62 @@ describe('copyLink', function () {
 
   describe('copyLink()', function () {
     let copyToClipboardSpy = null;
+    let args = null;
 
     beforeEach(function () {
       copyToClipboardSpy = sinon.spy();
+      args = {
+        copy: copyToClipboardSpy,
+        viewingList: false
+      };
 
       // Check that the button is disabled initially
       expect(getButton().hasAttribute('disabled'), '`disabled` attribute should be set').to.be.true;
-
-      // Call the function
-      copyLink({ copy: copyToClipboardSpy });
     });
 
     afterEach(function () {
       copyToClipboardSpy = null;
+      args = null;
     });
 
-    it('should remove the `disabled` attribute from the button', function () {
-      expect(getButton().hasAttribute('disabled'), '`disabled` attribute should not exist').to.be.false;
+    describe('when not viewing My Temporary List', function () {
+      beforeEach(function () {
+        // Call the function
+        copyLink(args);
+      });
+
+      it('should remove the `disabled` attribute from the button', function () {
+        expect(getButton().hasAttribute('disabled'), '`disabled` attribute should not exist').to.be.false;
+      });
+
+      it('should call `copyToClipboard` with the correct arguments', function () {
+        // Click the button to trigger the action
+        getButton().click();
+
+        // Check that `copyToClipboard` should have been called with the correct arguments
+        expect(copyToClipboardSpy.calledWithExactly({ alert: getAlert(), text: getInput().value }), '`copyToClipboard` should have been called with the correct arguments').to.be.true;
+      });
     });
 
-    it('should call `copyToClipboard` with the correct arguments', function () {
-      // Click the button to trigger the action
-      getButton().click();
+    describe('when viewing My Temporary List', function () {
+      beforeEach(function () {
+        args.viewingList = true;
 
-      // Check that `copyToClipboard` should have been called with the correct arguments
-      expect(copyToClipboardSpy.calledWithExactly({ alert: getAlert(), text: getInput().value }), '`copyToClipboard` should have been called with the correct arguments').to.be.true;
+        // Call the function
+        copyLink(args);
+      });
+
+      it('should not remove the `disabled` attribute from the button', function () {
+        expect(getButton().hasAttribute('disabled'), '`disabled` attribute should exist').to.be.true;
+      });
+
+      it('should not call `copyToClipboard` with the correct arguments', function () {
+        // Click the button to trigger the action
+        getButton().click();
+
+        // Check that `copyToClipboard` should not have been called
+        expect(copyToClipboardSpy.called, '`copyToClipboard` should not have been called').to.be.false;
+      });
     });
   });
 });

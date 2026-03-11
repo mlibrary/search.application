@@ -8,9 +8,7 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Tab
-//     2.1. Add
-//     2.2. Remove
-//       2.2.1. Text
+//     2.1. Icon
 //   3. Tab Panel
 //     3.1. Add
 //     3.2. Remove
@@ -38,28 +36,12 @@ body.no-javascript button#actions__#{$class} {
 
 
 
-// *          * //
-// * 2.1. ADD * //
-// *          * //
-
-button#actions__#{$class}.actions__#{$class}--remove .actions__#{$class}--text-add {
-  display: none;
-}
-
-
-
-// *             * //
-// * 2.2. REMOVE * //
-// *             * //
+// *           * //
+// * 2.1. ICON * //
+// *           * //
 
 .actions__tablist > button[role=tab]#actions__#{$class}.actions__#{$class}--remove:before {
   @include icons.icon($icon: 'delete');
-}
-
-// * 2.2.1. TEXT * //
-
-button#actions__#{$class}:not(.actions__#{$class}--remove) .actions__#{$class}--text-remove {
-  display: none;
 }
 
 

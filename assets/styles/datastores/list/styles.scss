@@ -15,7 +15,6 @@
 //   1. Variables
 //   2. Container
 //   3. Actions
-//     3.1. Copy Link
 //
 // --------------------------------------------------
 
@@ -49,18 +48,5 @@ $class: '.list';
   flex-wrap: nowrap;
   & > button[role="tab"] {
     flex-basis: auto;
-  }
-}
-
-
-
-// *                * //
-// * 3.1. COPY LINK * //
-// *                * //
-
-#{$class} .actions {
-  button#actions__link,
-  #actions__link--tabpanel {
-    display: none;
   }
 }

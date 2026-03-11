@@ -8,9 +8,9 @@ import {
   styleAddedRecords,
   toggleAddedClass,
   updateSelectedTabText
-} from '../../../../../../assets/scripts/datastores/partials/actions/action/_add-selected.js';
-import { defaultTemporaryList, getDatastores, inTemporaryList } from '../../../../../../assets/scripts/datastores/list/layout.js';
-import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
+} from '../../../../../../../assets/scripts/datastores/partials/actions/action/toggle-selected/_add.js';
+import { defaultTemporaryList, getDatastores, inTemporaryList } from '../../../../../../../assets/scripts/datastores/list/layout.js';
+import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 

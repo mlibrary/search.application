@@ -1,9 +1,9 @@
-import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
-import { inTemporaryList, setSessionStorage } from '../../../list/layout.js';
-import { displayRemoveSelectedAction } from './_remove-selected.js';
-import { temporaryListBanner } from '../../../list/partials/_go-to.js';
-import { toggleTabDisplay } from '../../_actions.js';
-import { viewingFullRecord } from '../../../record/layout.js';
+import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
+import { inTemporaryList, setSessionStorage } from '../../../../list/layout.js';
+import { displayRemoveSelectedAction } from './_remove.js';
+import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
+import { toggleTabDisplay } from '../../../_actions.js';
+import { viewingFullRecord } from '../../../../record/layout.js';
 
 const addSelectedClass = 'actions__add-selected';
 

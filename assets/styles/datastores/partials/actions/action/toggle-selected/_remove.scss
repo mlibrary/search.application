@@ -1,0 +1,43 @@
+@use '../../../../../icons';
+
+// --------------------------------------------------
+//
+// # Toggle Selected
+//   Styles to apply directly to `views/datastores/partials/actions/action/toggle-selected/_remove.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Icon
+//   3. Button
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: "actions__toggle-selected";
+
+
+
+
+
+// *************** //
+// *** 2. ICON *** //
+// *************** //
+
+.actions__tablist > button[role=tab]##{$class}.#{$class}--remove:before {
+  @include icons.icon($icon: 'delete');
+}
+
+
+
+
+
+// ***************** //
+// *** 3. BUTTON *** //
+// ***************** //
+
+##{$class}--tabpanel:not(.#{$class}--tabpanel-remove) .action__remove-selected {
+  display: none;
+}

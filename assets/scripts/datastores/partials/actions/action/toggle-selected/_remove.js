@@ -1,8 +1,8 @@
-import { displayAddSelectedAction, toggleAddedClass, updateSelectedTabText } from './_add-selected.js';
-import { filterSelectedRecords, splitCheckboxValue } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
-import { inTemporaryList, setSessionStorage, viewingTemporaryList } from '../../../list/layout.js';
-import { temporaryListBanner } from '../../../list/partials/_go-to.js';
-import { toggleTabDisplay } from '../../_actions.js';
+import { displayAddSelectedAction, toggleAddedClass, updateSelectedTabText } from './_add.js';
+import { filterSelectedRecords, splitCheckboxValue } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
+import { inTemporaryList, setSessionStorage, viewingTemporaryList } from '../../../../list/layout.js';
+import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
+import { toggleTabDisplay } from '../../../_actions.js';
 
 const removeSelectedClass = 'actions__remove-selected';
 

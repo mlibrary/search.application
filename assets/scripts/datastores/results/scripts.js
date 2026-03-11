@@ -37,4 +37,4 @@ initializeActions({ list });
 selectAll();
 
 // Results list
-resultsList();
+resultsList({ list });
