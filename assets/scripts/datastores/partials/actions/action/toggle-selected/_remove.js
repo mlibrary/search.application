@@ -1,8 +1,7 @@
 import { filterSelectedRecords, splitCheckboxValue } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
-import { inTemporaryList, setSessionStorage, viewingTemporaryList } from '../../../../list/layout.js';
+import { setSessionStorage, viewingTemporaryList } from '../../../../list/layout.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
 import { toggleAddedClass } from './_add.js';
-import { toggleTabDisplay } from '../../../_actions.js';
 
 const removeSelectedClass = 'actions__remove-selected';
 
@@ -40,26 +39,8 @@ const deleteSelectedRecords = ({
   return updatedList;
 };
 
-const displayRemoveSelectedAction = ({
-  checkedValues = filterSelectedRecords(),
-  inList = inTemporaryList,
-  list,
-  splitValue = splitCheckboxValue,
-  toggleTab = toggleTabDisplay
-} = {}) => {
-  // Check if all of the selected records are in the temporary list
-  const showTab = checkedValues.every((value) => {
-    const { recordDatastore, recordId } = splitValue({ value });
-    return inList({ list, recordDatastore, recordId });
-  });
-
-  // Show `Remove selected` if all of the selected records are in the temporary list
-  toggleTab({ id: removeSelectedClass, show: showTab });
-};
-
 const handleRemoveSelectedClick = ({
   deleteRecords = deleteSelectedRecords,
-  displayRemoveAction = displayRemoveSelectedAction,
   event,
   list,
   reloadPage = window.location.reload.bind(window.location),
@@ -84,9 +65,6 @@ const handleRemoveSelectedClick = ({
   // Update the banner to reflect the new count of items in the list
   showBanner({ list: updatedList });
 
-  // Toggle the display of the `Remove selected` action based on the updated list
-  displayRemoveAction({ list: updatedList });
-
   // Enable the button and change the text back to the original text after the removal is complete
   toggleRemoveButton({ button, disabled: false, text });
 
@@ -109,17 +87,13 @@ const removeSelectedAction = ({
   });
 };
 
-const removeSelected = ({ displayRemoveAction = displayRemoveSelectedAction, list, removeAction = removeSelectedAction } = {}) => {
-  // Toggle `Remove selected` action display on load
-  displayRemoveAction({ list });
-
+const removeSelected = ({ list, removeAction = removeSelectedAction } = {}) => {
   // Initialize the remove selected action
   removeAction({ list });
 };
 
 export {
   deleteSelectedRecords,
-  displayRemoveSelectedAction,
   getRemoveSelectedButton,
   handleRemoveSelectedClick,
   removeSelected,

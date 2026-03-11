@@ -1,6 +1,5 @@
 import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { inTemporaryList, setSessionStorage } from '../../../../list/layout.js';
-import { displayRemoveSelectedAction } from './_remove.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
 
 const addSelectedClass = 'actions__add-selected';
@@ -85,7 +84,6 @@ const fetchAndAddRecords = async ({ addClass = toggleAddedClass, checkboxValues 
 const addSelectedAction = ({
   addRecords = fetchAndAddRecords,
   addSelectedButton = getAddSelectedButton(),
-  displayRemoveAction = displayRemoveSelectedAction,
   list,
   setList = setSessionStorage,
   showBanner = temporaryListBanner,
@@ -117,9 +115,6 @@ const addSelectedAction = ({
 
       // Update the banner to reflect the new count of items in the list
       showBanner({ list: updatedList });
-
-      // Toggle the display of the `Remove selected` action based on the updated list
-      displayRemoveAction({ list: updatedList });
 
       // Restore original button text
       button.textContent = buttonText;

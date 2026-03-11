@@ -1,6 +1,5 @@
 import {
   deleteSelectedRecords,
-  displayRemoveSelectedAction,
   getRemoveSelectedButton,
   handleRemoveSelectedClick,
   removeSelected,
@@ -161,72 +160,8 @@ describe('remove selected', function () {
     });
   });
 
-  describe('displayRemoveSelectedAction()', function () {
-    let inTemporaryListSpy = null;
-    let splitCheckboxValueStub = null;
-    let toggleTabDisplaySpy = null;
-    let args = null;
-
-    beforeEach(function () {
-      inTemporaryListSpy = sinon.spy();
-      splitCheckboxValueStub = sinon.stub().returns((checkbox) => {
-        return splitCheckboxValue({ value: checkbox.value });
-      });
-      toggleTabDisplaySpy = sinon.spy();
-
-      args = {
-        checkedValues: filterSelectedRecords(),
-        inList: inTemporaryListSpy,
-        list: global.temporaryList,
-        splitValue: splitCheckboxValue,
-        toggleTab: toggleTabDisplaySpy
-      };
-
-      // Check that there is at least one checked checkbox value to test with
-      expect(args.checkedValues.length, 'there should be at least one checked checkbox value to test with').to.be.greaterThan(0);
-
-      // Call the function
-      displayRemoveSelectedAction(args);
-    });
-
-    afterEach(function () {
-      inTemporaryListSpy = null;
-      splitCheckboxValueStub = null;
-      toggleTabDisplaySpy = null;
-      args = null;
-    });
-
-    it('should call `splitCheckboxValue` at least once with the correct arguments', function () {
-      // Call the function with the stubbed `splitValue`
-      displayRemoveSelectedAction({ ...args, splitValue: splitCheckboxValueStub });
-
-      // Check that `splitCheckboxValue` was called at least once with the correct arguments
-      expect(splitCheckboxValueStub.calledWithExactly({ value: args.checkedValues[0] }), '`splitCheckboxValue` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should call `inTemporaryList` at least once with the correct arguments', function () {
-      // Get the expected arguments for the first checked checkbox value
-      const { recordDatastore, recordId } = splitCheckboxValue({ value: args.checkedValues[0] });
-
-      // Check that `inTemporaryList` was called at least once with the correct arguments
-      expect(inTemporaryListSpy.calledWithExactly({ list: args.list, recordDatastore, recordId }), '`inTemporaryList` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should call `toggleTab` with the correct arguments', function () {
-      // Check if all checked values are already in the temporary list
-      const showTab = args.checkedValues.every((value) => {
-        const { recordDatastore, recordId } = splitCheckboxValue({ value });
-        return inTemporaryListSpy({ list: args.list, recordDatastore, recordId });
-      });
-
-      // Check that `toggleTab` was called with the correct arguments
-      expect(toggleTabDisplaySpy.calledWithExactly({ id: 'actions__remove-selected', show: showTab }), '`toggleTab` should be called with the correct arguments for the `remove-selected` tab').to.be.true;
-    });
-  });
-
   describe('handleRemoveSelectedClick()', function () {
     let deleteSelectedRecordsStub = null;
-    let displayRemoveSelectedActionSpy = null;
     let reloadPageSpy = null;
     let setSessionStorageSpy = null;
     let toggleBannerSpy = null;
@@ -236,14 +171,12 @@ describe('remove selected', function () {
 
     beforeEach(function () {
       deleteSelectedRecordsStub = sinon.stub().returns({});
-      displayRemoveSelectedActionSpy = sinon.spy();
       reloadPageSpy = sinon.spy();
       setSessionStorageSpy = sinon.spy();
       toggleBannerSpy = sinon.spy();
       toggleRemoveSelectedButtonSpy = sinon.spy();
       args = {
         deleteRecords: deleteSelectedRecordsStub,
-        displayRemoveAction: displayRemoveSelectedActionSpy,
         event: { target: getRemoveSelectedButton() },
         list: global.temporaryList,
         reloadPage: reloadPageSpy,
@@ -265,7 +198,6 @@ describe('remove selected', function () {
 
     afterEach(function () {
       deleteSelectedRecordsStub = null;
-      displayRemoveSelectedActionSpy = null;
       reloadPageSpy = null;
       setSessionStorageSpy = null;
       toggleBannerSpy = null;
@@ -292,10 +224,6 @@ describe('remove selected', function () {
 
     it('should call `toggleBanner` with the correct arguments', function () {
       expect(toggleBannerSpy.calledWith({ list: deleteSelectedRecordsStub.returnValues[0] }), '`toggleBanner` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should call `displayRemoveSelectedAction` with the correct arguments', function () {
-      expect(displayRemoveSelectedActionSpy.calledWith({ list: deleteSelectedRecordsStub.returnValues[0] }), '`displayRemoveSelectedAction` should be called with the correct arguments').to.be.true;
     });
 
     it('should not call `reloadPage` if `viewingList` is `false`', function () {
@@ -354,15 +282,12 @@ describe('remove selected', function () {
   });
 
   describe('removeSelected()', function () {
-    let displayRemoveSelectedActionSpy = null;
     let removeSelectedActionSpy = null;
     let args = null;
 
     beforeEach(function () {
-      displayRemoveSelectedActionSpy = sinon.spy();
       removeSelectedActionSpy = sinon.spy();
       args = {
-        displayRemoveAction: displayRemoveSelectedActionSpy,
         list: global.temporaryList,
         removeAction: removeSelectedActionSpy
       };
@@ -372,13 +297,8 @@ describe('remove selected', function () {
     });
 
     afterEach(function () {
-      displayRemoveSelectedActionSpy = null;
       removeSelectedActionSpy = null;
       args = null;
-    });
-
-    it('should call `displayRemoveSelectedAction` with the correct arguments', function () {
-      expect(displayRemoveSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`displayRemoveSelectedAction` should be called with the correct arguments').to.be.true;
     });
 
     it('should call `removeSelectedAction` with the correct arguments', function () {

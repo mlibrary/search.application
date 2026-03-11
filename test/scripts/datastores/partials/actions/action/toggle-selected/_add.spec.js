@@ -365,7 +365,6 @@ describe('add selected', function () {
 
   describe('addSelectedAction()', function () {
     let fetchAndAddRecordsStub = null;
-    let displayRemoveSelectedActionSpy = null;
     let setSessionStorageSpy = null;
     let toggleBannerSpy = null;
     let styleAddedRecordsStub = null;
@@ -373,14 +372,12 @@ describe('add selected', function () {
 
     beforeEach(function () {
       fetchAndAddRecordsStub = sinon.stub().resolves(defaultTemporaryList);
-      displayRemoveSelectedActionSpy = sinon.spy();
       setSessionStorageSpy = sinon.spy();
       toggleBannerSpy = sinon.spy();
       styleAddedRecordsStub = sinon.stub();
       args = {
         addRecords: fetchAndAddRecordsStub,
         addSelectedButton: getAddSelectedButton(),
-        displayRemoveAction: displayRemoveSelectedActionSpy,
         list: defaultTemporaryList,
         setList: setSessionStorageSpy,
         showBanner: toggleBannerSpy,
@@ -390,7 +387,6 @@ describe('add selected', function () {
 
     afterEach(function () {
       fetchAndAddRecordsStub = null;
-      displayRemoveSelectedActionSpy = null;
       setSessionStorageSpy = null;
       toggleBannerSpy = null;
       styleAddedRecordsStub = null;
@@ -476,20 +472,6 @@ describe('add selected', function () {
 
       // Check that `toggleBanner` was called once with the arguments
       expect(toggleBannerSpy.calledOnceWithExactly({ list: args.list }), '`toggleBanner` should be called once with the correct arguments').to.be.true;
-    });
-
-    it('should call `displayRemoveSelectedAction` with the correct arguments', async function () {
-      // Call the function
-      const actionPromise = addSelectedAction(args);
-
-      // Click the button to trigger the action
-      args.addSelectedButton.click();
-
-      // Wait for the action to complete
-      await actionPromise;
-
-      // Check that `displayRemoveSelectedAction` was called once with the arguments
-      expect(displayRemoveSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`displayRemoveSelectedAction` should be called once with the correct arguments').to.be.true;
     });
 
     it('should restore the `Add selected` button text after processing', async function () {
