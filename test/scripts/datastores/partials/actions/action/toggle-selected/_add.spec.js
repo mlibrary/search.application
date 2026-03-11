@@ -32,9 +32,9 @@ describe('add selected', function () {
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
-      <button id="actions__add-selected">Add selected</button>
-      <div id="actions__add-selected--tabpanel">
-        <button class="action__add-selected">Add to My Temporary List</button>
+      <button id="actions__toggle-selected">Add selected</button>
+      <div id="actions__toggle-selected--tabpanel">
+        <button class="action__toggle-selected--add">Add to My Temporary List</button>
       </div>
       ${temporaryListHTML}
     `;
@@ -53,7 +53,7 @@ describe('add selected', function () {
 
   describe('getAddSelectedButton()', function () {
     it('should return the add selected button element', function () {
-      expect(getAddSelectedButton()).to.deep.equal(document.querySelector('button.action__add-selected'));
+      expect(getAddSelectedButton()).to.deep.equal(document.querySelector('button.action__toggle-selected--add'));
     });
   });
 

@@ -27,9 +27,9 @@ describe('remove selected', function () {
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
-      <button id="actions__remove-selected">Remove selected</button>
-      <div id="actions__remove-selected--tabpanel">
-        <button class="action__remove-selected">Remove from My Temporary List</button>
+      <button id="actions__toggle-selected">Remove selected</button>
+      <div id="actions__toggle-selected--tabpanel">
+        <button class="action__toggle-selected--remove">Remove from My Temporary List</button>
       </div>
       ${temporaryListHTML}
     `;
@@ -37,7 +37,7 @@ describe('remove selected', function () {
 
   describe('getRemoveSelectedButton()', function () {
     it('should return the remove selected button element', function () {
-      expect(getRemoveSelectedButton(), 'getRemoveSelectedButton() should return the correct button').to.deep.equal(document.querySelector('#actions__remove-selected--tabpanel button.action__remove-selected'));
+      expect(getRemoveSelectedButton(), 'getRemoveSelectedButton() should return the correct button').to.deep.equal(document.querySelector('#actions__toggle-selected--tabpanel button.action__toggle-selected--remove'));
     });
   });
 

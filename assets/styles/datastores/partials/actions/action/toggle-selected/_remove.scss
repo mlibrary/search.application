@@ -38,6 +38,6 @@ $class: "actions__toggle-selected";
 // *** 3. BUTTON *** //
 // ***************** //
 
-##{$class}--tabpanel:not(.#{$class}--tabpanel-remove) .action__remove-selected {
+##{$class}--tabpanel:not(.#{$class}--tabpanel-remove) .action__toggle-selected--remove {
   display: none;
 }

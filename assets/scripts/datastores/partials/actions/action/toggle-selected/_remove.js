@@ -3,10 +3,8 @@ import { setSessionStorage, viewingTemporaryList } from '../../../../list/layout
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
 import { toggleAddedClass } from './_add.js';
 
-const removeSelectedClass = 'actions__remove-selected';
-
 const getRemoveSelectedButton = () => {
-  return document.querySelector(`#${removeSelectedClass}--tabpanel .action__remove-selected`);
+  return document.querySelector(`#actions__toggle-selected--tabpanel .action__toggle-selected--remove`);
 };
 
 const toggleRemoveSelectedButton = ({ button, disabled = false, text }) => {

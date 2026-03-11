@@ -2,10 +2,8 @@ import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleChecked
 import { inTemporaryList, setSessionStorage } from '../../../../list/layout.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
 
-const addSelectedClass = 'actions__add-selected';
-
 const getAddSelectedButton = () => {
-  return document.querySelector(`#${addSelectedClass}--tabpanel .action__add-selected`);
+  return document.querySelector(`#actions__toggle-selected--tabpanel .action__toggle-selected--add`);
 };
 
 const toggleAddedClass = ({ isAdded, recordDatastore, recordId }) => {
@@ -21,7 +19,14 @@ const toggleAddedClass = ({ isAdded, recordDatastore, recordId }) => {
   container.classList.toggle(`${className}--in-temporary-list`, isAdded);
 };
 
-const styleAddedRecords = ({ checkboxes = getCheckboxes(), inList = inTemporaryList, list, splitValue = splitCheckboxValue, toggleClass = toggleAddedClass, toggleChecked = toggleCheckedState }) => {
+const styleAddedRecords = ({
+  checkboxes = getCheckboxes(),
+  inList = inTemporaryList,
+  list,
+  splitValue = splitCheckboxValue,
+  toggleClass = toggleAddedClass,
+  toggleChecked = toggleCheckedState
+}) => {
   // Loop through records
   checkboxes.forEach((checkbox) => {
     const { recordDatastore, recordId } = splitValue({ value: checkbox.value });

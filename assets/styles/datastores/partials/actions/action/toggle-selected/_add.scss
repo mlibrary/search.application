@@ -24,7 +24,7 @@ $class: "actions__toggle-selected--tabpanel";
 // *** 2. BUTTON *** //
 // ***************** //
 
-##{$class}.#{$class}-remove .action__add-selected {
+##{$class}.#{$class}-remove .action__toggle-selected--add {
   display: none;
 }
 
