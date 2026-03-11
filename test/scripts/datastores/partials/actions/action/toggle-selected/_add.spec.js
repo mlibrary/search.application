@@ -6,8 +6,7 @@ import {
   fetchRecordData,
   getAddSelectedButton,
   styleAddedRecords,
-  toggleAddedClass,
-  updateSelectedTabText
+  toggleAddedClass
 } from '../../../../../../../assets/scripts/datastores/partials/actions/action/toggle-selected/_add.js';
 import { defaultTemporaryList, getDatastores, inTemporaryList } from '../../../../../../../assets/scripts/datastores/list/layout.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
@@ -28,7 +27,6 @@ getDatastores({ list: global.temporaryList }).forEach((datastore) => {
 });
 
 describe('add selected', function () {
-  let getTab = null;
   let checkboxes = null;
   let checkboxCount = null;
 
@@ -42,10 +40,6 @@ describe('add selected', function () {
       ${temporaryListHTML}
     `;
 
-    getTab = () => {
-      return document.getElementById('actions__add-selected');
-    };
-
     checkboxes = () => {
       return Array.from(document.querySelectorAll('input[type="checkbox"]'));
     };
@@ -54,7 +48,6 @@ describe('add selected', function () {
   });
 
   afterEach(function () {
-    getTab = null;
     checkboxes = null;
     checkboxCount = null;
   });
@@ -62,58 +55,6 @@ describe('add selected', function () {
   describe('getAddSelectedButton()', function () {
     it('should return the add selected button element', function () {
       expect(getAddSelectedButton()).to.deep.equal(document.querySelector('button.action__add-selected'));
-    });
-  });
-
-  describe('updateSelectedTabText()', function () {
-    let args = null;
-
-    beforeEach(function () {
-      args = {
-        fullRecord: true,
-        tabID: 'actions__add-selected'
-      };
-
-      // Check that the tab element exists
-      expect(document.getElementById(args.tabID), `the tab with ID "${args.tabID}" should exist`).to.exist;
-
-      // Check that the tab text is "Add selected" to begin with
-      expect(getTab().textContent, 'the tab text should be "Add selected" to begin with').to.equal('Add selected');
-
-      // Check that a full record is being viewed
-      expect(args.fullRecord, 'a full record should be viewed to begin with').to.be.true;
-    });
-
-    afterEach(function () {
-      args = null;
-    });
-
-    it('should update the tab text to "Add record" if viewing a full record', function () {
-      // Call the function
-      updateSelectedTabText(args);
-
-      expect(getTab().textContent, 'the tab text should be updated to "Add record" if viewing a full record').to.equal('Add record');
-    });
-
-    it('should return early if not viewing a full record', function () {
-      // Call the function
-      updateSelectedTabText({ ...args, fullRecord: false });
-
-      // Check that the tab text is not updated
-      expect(getTab().textContent, 'the tab text should not be updated if not viewing a full record').to.equal('Add selected');
-    });
-
-    it('should return early if the tab is not found', function () {
-      const tabID = 'non-existent-tab-id';
-
-      // Check that the non-existent tab ID does not exist
-      expect(document.getElementById(tabID), `the tab with ID "${tabID}" should not exist`).to.be.null;
-
-      // Call the function
-      updateSelectedTabText({ ...args, tabID });
-
-      // Check that the tab text is not updated
-      expect(getTab().textContent, 'the tab text should not be updated if not viewing a full record').to.equal('Add selected');
     });
   });
 
@@ -666,21 +607,18 @@ describe('add selected', function () {
 
   describe('addSelected()', function () {
     let addSelectedActionSpy = null;
-    let updateSelectedTabTextSpy = null;
     let styleAddedRecordsSpy = null;
     let displayAddSelectedActionSpy = null;
     let args = null;
 
     beforeEach(function () {
       addSelectedActionSpy = sinon.spy();
-      updateSelectedTabTextSpy = sinon.spy();
       styleAddedRecordsSpy = sinon.spy();
       displayAddSelectedActionSpy = sinon.spy();
 
       args = {
         addAction: addSelectedActionSpy,
         list: global.temporaryList,
-        selectedTabText: updateSelectedTabTextSpy,
         styleRecords: styleAddedRecordsSpy,
         toggleAction: displayAddSelectedActionSpy
       };
@@ -691,7 +629,6 @@ describe('add selected', function () {
 
     afterEach(function () {
       addSelectedActionSpy = null;
-      updateSelectedTabTextSpy = null;
       styleAddedRecordsSpy = null;
       displayAddSelectedActionSpy = null;
       args = null;
@@ -705,11 +642,6 @@ describe('add selected', function () {
     it('should call `styleAddedRecords` with the correct arguments', function () {
       // Check that `styleAddedRecords` was called once with the correct arguments
       expect(styleAddedRecordsSpy.calledOnceWithExactly({ list: args.list }), '`styleAddedRecords` should be called once with the correct arguments').to.be.true;
-    });
-
-    it('should call `updateSelectedTabText` with the correct arguments', function () {
-      // Check that `updateSelectedTabText` was called once with the correct arguments
-      expect(updateSelectedTabTextSpy.calledOnceWithExactly(), '`updateSelectedTabText` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `addSelectedAction` with the correct arguments', function () {

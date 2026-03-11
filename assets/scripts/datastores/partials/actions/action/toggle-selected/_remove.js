@@ -1,4 +1,4 @@
-import { displayAddSelectedAction, toggleAddedClass, updateSelectedTabText } from './_add.js';
+import { displayAddSelectedAction, toggleAddedClass } from './_add.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { inTemporaryList, setSessionStorage, viewingTemporaryList } from '../../../../list/layout.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
@@ -113,12 +113,9 @@ const removeSelectedAction = ({
   });
 };
 
-const removeSelected = ({ displayRemoveAction = displayRemoveSelectedAction, list, removeAction = removeSelectedAction, selectedTabText = updateSelectedTabText } = {}) => {
+const removeSelected = ({ displayRemoveAction = displayRemoveSelectedAction, list, removeAction = removeSelectedAction } = {}) => {
   // Toggle `Remove selected` action display on load
   displayRemoveAction({ list });
-
-  // Update the "Remove selected" tab text if viewing a full record
-  selectedTabText({ tabID: removeSelectedClass });
 
   // Initialize the remove selected action
   removeAction({ list });

@@ -3,30 +3,11 @@ import { inTemporaryList, setSessionStorage } from '../../../../list/layout.js';
 import { displayRemoveSelectedAction } from './_remove.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
 import { toggleTabDisplay } from '../../../_actions.js';
-import { viewingFullRecord } from '../../../../record/layout.js';
 
 const addSelectedClass = 'actions__add-selected';
 
 const getAddSelectedButton = () => {
   return document.querySelector(`#${addSelectedClass}--tabpanel .action__add-selected`);
-};
-
-const updateSelectedTabText = ({ fullRecord = viewingFullRecord(), tabID = addSelectedClass } = {}) => {
-  // Return early if not viewing a full record
-  if (!fullRecord) {
-    return;
-  }
-
-  // Get the tab element
-  const tab = document.getElementById(tabID);
-
-  // Return early if the tab is not found
-  if (!tab) {
-    return;
-  }
-
-  // Replace `selected` with `record` in the tab text
-  tab.textContent = tab.textContent.replace('selected', 'record');
 };
 
 const toggleAddedClass = ({ isAdded, recordDatastore, recordId }) => {
@@ -164,15 +145,12 @@ const addSelectedAction = ({
   });
 };
 
-const addSelected = ({ addAction = addSelectedAction, list, selectedTabText = updateSelectedTabText, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {
+const addSelected = ({ addAction = addSelectedAction, list, styleRecords = styleAddedRecords, toggleAction = displayAddSelectedAction } = {}) => {
   // Toggle `Add selected` action based on current selection
   toggleAction({ list });
 
   // Style records on load
   styleRecords({ list });
-
-  // Update the "Add selected" tab text on load and whenever checkboxes are changed
-  selectedTabText();
 
   // Initialize the add selected action
   addAction({ list });
@@ -186,6 +164,5 @@ export {
   fetchRecordData,
   getAddSelectedButton,
   styleAddedRecords,
-  toggleAddedClass,
-  updateSelectedTabText
+  toggleAddedClass
 };

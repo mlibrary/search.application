@@ -364,18 +364,15 @@ describe('remove selected', function () {
   describe('removeSelected()', function () {
     let displayRemoveSelectedActionSpy = null;
     let removeSelectedActionSpy = null;
-    let updateSelectedTabTextSpy = null;
     let args = null;
 
     beforeEach(function () {
       displayRemoveSelectedActionSpy = sinon.spy();
       removeSelectedActionSpy = sinon.spy();
-      updateSelectedTabTextSpy = sinon.spy();
       args = {
         displayRemoveAction: displayRemoveSelectedActionSpy,
         list: global.temporaryList,
-        removeAction: removeSelectedActionSpy,
-        selectedTabText: updateSelectedTabTextSpy
+        removeAction: removeSelectedActionSpy
       };
 
       // Call the function
@@ -385,16 +382,11 @@ describe('remove selected', function () {
     afterEach(function () {
       displayRemoveSelectedActionSpy = null;
       removeSelectedActionSpy = null;
-      updateSelectedTabTextSpy = null;
       args = null;
     });
 
     it('should call `displayRemoveSelectedAction` with the correct arguments', function () {
       expect(displayRemoveSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`displayRemoveSelectedAction` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should call `updateSelectedTabText` with the correct arguments', function () {
-      expect(updateSelectedTabTextSpy.calledOnceWithExactly({ tabID: 'actions__remove-selected' }), '`updateSelectedTabText` should be called with the correct arguments').to.be.true;
     });
 
     it('should call `removeSelectedAction` with the correct arguments', function () {
