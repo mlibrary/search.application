@@ -20,6 +20,10 @@ RSpec.describe "requests" do
   def base_api_record
     create(:catalog_api_record, fields: [:id, :call_number, :title, :citation, :holdings, :indexing_date])
   end
+
+  def base_results
+    create(:catalog_api_one_result)
+  end
   context "session setting" do
     context "Logged in User" do
       it "does not touch the session when unexpired" do
@@ -98,6 +102,8 @@ RSpec.describe "requests" do
   end
   context "catalog search results" do
     it "shows the results page when there is a query parameter" do
+      stub_request(:get, "#{S.catalog_api_url}/search?offset=0")
+        .to_return(status: 200, body: base_results.to_json, headers: {content_type: "application/json"})
       get "/catalog?query=title:(test)"
       expect(last_response.body).to include("Catalog results")
     end

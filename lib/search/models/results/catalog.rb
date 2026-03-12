@@ -110,13 +110,14 @@ class Search::Models::Results::Catalog
     records = FIXED_RECORD_IDS[offset, limit].map do |id|
       JSON.parse(File.read("#{S.project_root}/spec/fixtures/results/#{id}.json"))
     end
-    data = {
+    {
       "records" => records,
       "filters" => FIXED_FILTERS,
       "limit" => limit,
       "offset" => offset,
       "total" => FIXED_RECORD_IDS.length
     }
+    data = Search::Clients::CatalogAPI.new.get_results(offset: offset)
     new(data: data, originating_uri: uri)
   end
 
