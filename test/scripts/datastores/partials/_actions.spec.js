@@ -1,10 +1,9 @@
-import { disableActionTabs, getTabPanel, initializeActions, isSelected, tabControl, toggleTabDisplay } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { disableActionTabs, getTabPanel, initializeActions, isSelected, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
 describe('actions', function () {
   let firstTab = null;
-  let firstTabPanel = null;
   let secondTab = null;
   let getTabs = null;
   let getAlert = null;
@@ -40,10 +39,6 @@ describe('actions', function () {
       return document.querySelector('[aria-controls="tabpanel1"]');
     };
 
-    firstTabPanel = () => {
-      return document.querySelector('#tabpanel1');
-    };
-
     secondTab = () => {
       return document.querySelector('[aria-controls="tabpanel2"]');
     };
@@ -62,7 +57,6 @@ describe('actions', function () {
 
   afterEach(function () {
     firstTab = null;
-    firstTabPanel = null;
     secondTab = null;
     getAlert = null;
     getTabs = null;
@@ -154,42 +148,6 @@ describe('actions', function () {
         // Check that all tabs are not disabled
         expect(tab.hasAttribute('disabled'), 'all tabs should be enabled if at least one checkbox is checked').to.be.false;
       });
-    });
-  });
-
-  describe('toggleTabDisplay()', function () {
-    let args = null;
-
-    beforeEach(function () {
-      args = {
-        id: 'tab1',
-        show: true
-      };
-
-      // Call the function
-      toggleTabDisplay(args);
-    });
-
-    it('should show the tab and its panel', function () {
-      // Check that `args.show` is `true`
-      expect(args.show, '`args.show` should be `true` for this test').to.be.true;
-
-      // Check that the tab and its panel are displayed
-      expect(firstTab().style.display, 'the tab should be displayed').to.equal('flex');
-      expect(firstTabPanel().style.display, 'the tab panel should be displayed').to.equal('block');
-    });
-
-    it('should hide the tab and its panel', function () {
-      // Update args to hide the tab and its panel
-      args.show = false;
-      expect(args.show, '`args.show` should be `false` for this test').to.be.false;
-
-      // Call the function again
-      toggleTabDisplay(args);
-
-      // Check that the tab and its panel are not displayed
-      expect(firstTab().style.display, 'the tab should not be displayed').to.equal('none');
-      expect(firstTabPanel().style.display, 'the tab panel should not be displayed').to.equal('none');
     });
   });
 
