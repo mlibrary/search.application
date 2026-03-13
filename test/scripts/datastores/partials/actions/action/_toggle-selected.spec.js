@@ -4,6 +4,7 @@ import {
   getToggleSelectedTabPanel,
   toggleActionClasses,
   toggleSelectedAction,
+  toggleSelectedButton,
   updateToggleSelectedAction,
   updateToggleSelectedTabText
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_toggle-selected.js';
@@ -258,6 +259,59 @@ describe('toggle selected', function () {
 
     it('should call `toggleActionClasses` with the correct arguments', function () {
       expect(toggleActionClassesSpy.calledOnceWithExactly({ inList: args.checkIfAllInList({ list: args.list }) }), '`toggleClasses` should have been called with the correct arguments').to.be.true;
+    });
+  });
+
+  describe('toggleSelectedButton()', function () {
+    let getButton = null;
+    let args = null;
+
+    beforeEach(function () {
+      getButton = () => {
+        return document.querySelector(`#actions__toggle-selected--tabpanel button`);
+      };
+      args = {
+        button: getButton(),
+        originalText: getButton().textContent,
+        text: 'Disabled Text'
+      };
+    });
+
+    afterEach(function () {
+      getButton = null;
+      args = null;
+    });
+
+    describe('when `disabled` is `true`', function () {
+      beforeEach(function () {
+        // Call the function
+        args.disabled = true;
+        toggleSelectedButton(args);
+      });
+
+      it('should update the button text', function () {
+        expect(getButton().textContent, 'Button text should be updated').to.equal(args.text);
+      });
+
+      it('should disable the button', function () {
+        expect(getButton().disabled, 'Button should be disabled').to.be.true;
+      });
+    });
+
+    describe('when `disabled` is `false`', function () {
+      beforeEach(function () {
+        // Call the function
+        args.disabled = false;
+        toggleSelectedButton(args);
+      });
+
+      it('should restore the button text', function () {
+        expect(getButton().textContent, 'Button text should be updated').to.equal(args.originalText);
+      });
+
+      it('should enable the button', function () {
+        expect(getButton().disabled, 'Button should be enabled').to.be.false;
+      });
     });
   });
 

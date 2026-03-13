@@ -84,6 +84,13 @@ const updateToggleSelectedAction = ({
   toggleClasses({ inList });
 };
 
+const toggleSelectedButton = ({ button, disabled = false, originalText, text }) => {
+  // Update the button text depending on whether the button is being disabled or enabled
+  button.textContent = disabled ? text : originalText;
+  // Update the button disabled state
+  button.disabled = disabled;
+};
+
 const toggleSelectedAction = ({
   add = addSelected,
   list,
@@ -106,6 +113,7 @@ export {
   getToggleSelectedTabPanel,
   toggleActionClasses,
   toggleSelectedAction,
+  toggleSelectedButton,
   updateToggleSelectedAction,
   updateToggleSelectedTabText
 };
