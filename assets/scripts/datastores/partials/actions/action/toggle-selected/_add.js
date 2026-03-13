@@ -1,6 +1,6 @@
 import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
+import { getToggleSelectedTab, toggleSelectedButton, updateToggleSelectedAction } from '../_toggle-selected.js';
 import { inTemporaryList, setSessionStorage } from '../../../../list/layout.js';
-import { toggleSelectedButton, updateToggleSelectedAction } from '../_toggle-selected.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
 import { updateListForRemovingRecords } from './_remove.js';
 
@@ -108,6 +108,7 @@ const handleAddSelectedClick = async ({
   showBanner = temporaryListBanner,
   styleRecords = styleAddedRecords,
   toggleAddButton = toggleSelectedButton,
+  toggleSelectedTab = getToggleSelectedTab(),
   updateList = updateListForRemovingRecords,
   updateToggleSelected = updateToggleSelectedAction
 } = {}) => {
@@ -145,6 +146,9 @@ const handleAddSelectedClick = async ({
 
     // Update the banner to reflect the new count of items in the list
     showBanner({ list: copiedList });
+
+    // Click the tab to close the tab panel after adding records
+    toggleSelectedTab.click();
   }
 };
 

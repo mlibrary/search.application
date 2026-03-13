@@ -374,6 +374,7 @@ describe('add selected', function () {
     let styleAddedRecordsSpy = null;
     let temporaryListBannerSpy = null;
     let toggleSelectedButtonSpy = null;
+    let getToggleSelectedTabSpy = null;
     let updateListForRemovingRecordsSpy = null;
     let updateToggleSelectedActionSpy = null;
     let args = null;
@@ -386,6 +387,7 @@ describe('add selected', function () {
       styleAddedRecordsSpy = sinon.spy();
       temporaryListBannerSpy = sinon.spy();
       toggleSelectedButtonSpy = sinon.spy();
+      getToggleSelectedTabSpy = sinon.spy();
       updateListForRemovingRecordsSpy = sinon.spy();
       updateToggleSelectedActionSpy = sinon.spy();
       args = {
@@ -396,6 +398,7 @@ describe('add selected', function () {
         showBanner: temporaryListBannerSpy,
         styleRecords: styleAddedRecordsSpy,
         toggleAddButton: toggleSelectedButtonSpy,
+        toggleSelectedTab: { click: getToggleSelectedTabSpy },
         updateList: updateListForRemovingRecordsSpy,
         updateToggleSelected: updateToggleSelectedActionSpy
       };
@@ -412,6 +415,7 @@ describe('add selected', function () {
       styleAddedRecordsSpy = null;
       temporaryListBannerSpy = null;
       toggleSelectedButtonSpy = null;
+      getToggleSelectedTabSpy = null;
       updateListForRemovingRecordsSpy = null;
       updateToggleSelectedActionSpy = null;
       args = null;
@@ -462,6 +466,10 @@ describe('add selected', function () {
 
       it('should call `temporaryListBanner` with the correct arguments after processing', function () {
         expect(temporaryListBannerSpy.calledOnceWithExactly({ list: global.temporaryList }), '`temporaryListBanner` should be called once with the correct arguments after processing').to.be.true;
+      });
+
+      it('should call `getToggleSelectedTab` to get the toggle selected tab after processing', function () {
+        expect(getToggleSelectedTabSpy.calledOnce, '`getToggleSelectedTab` should be called once to get the toggle selected tab after processing').to.be.true;
       });
     });
   });

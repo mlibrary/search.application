@@ -136,6 +136,7 @@ describe('remove selected', function () {
     let setSessionStorageSpy = null;
     let temporaryListBannerSpy = null;
     let toggleSelectedButtonSpy = null;
+    let getToggleSelectedTabSpy = null;
     let updateListForAddingRecordsSpy = null;
     let updateToggleSelectedActionSpy = null;
     let args = null;
@@ -147,6 +148,7 @@ describe('remove selected', function () {
       setSessionStorageSpy = sinon.spy();
       temporaryListBannerSpy = sinon.spy();
       toggleSelectedButtonSpy = sinon.spy();
+      getToggleSelectedTabSpy = sinon.spy();
       updateListForAddingRecordsSpy = sinon.spy();
       updateToggleSelectedActionSpy = sinon.spy();
       args = {
@@ -157,6 +159,7 @@ describe('remove selected', function () {
         setList: setSessionStorageSpy,
         showBanner: temporaryListBannerSpy,
         toggleRemoveButton: toggleSelectedButtonSpy,
+        toggleSelectedTab: { click: getToggleSelectedTabSpy },
         updateList: updateListForAddingRecordsSpy,
         updateToggleSelected: updateToggleSelectedActionSpy
       };
@@ -170,6 +173,7 @@ describe('remove selected', function () {
       setSessionStorageSpy = null;
       temporaryListBannerSpy = null;
       toggleSelectedButtonSpy = null;
+      getToggleSelectedTabSpy = null;
       updateListForAddingRecordsSpy = null;
       updateToggleSelectedActionSpy = null;
       args = null;
@@ -178,13 +182,8 @@ describe('remove selected', function () {
 
     describe('while viewing My Temporary List', function () {
       beforeEach(function () {
-        args.viewingList = true;
-
         // Call the function
-        handleRemoveSelectedClick(args);
-
-        // Click the button
-        args.event.target.click();
+        handleRemoveSelectedClick({ ...args, viewingList: true });
       });
 
       it('should call `toggleSelectedButton` with `disabled` set to `true`', function () {
@@ -218,17 +217,16 @@ describe('remove selected', function () {
       it('should not call `temporaryListBanner` to update the banner with the new list', function () {
         expect(temporaryListBannerSpy.notCalled, '`temporaryListBanner` should not be called to update the banner with the new list').to.be.true;
       });
+
+      it('should not call `getToggleSelectedTab` to get the toggle selected tab', function () {
+        expect(getToggleSelectedTabSpy.notCalled, '`getToggleSelectedTab` should not be called to get the toggle selected tab').to.be.true;
+      });
     });
 
     describe('while not viewing My Temporary List', function () {
       beforeEach(function () {
-        args.viewingList = false;
-
         // Call the function
-        handleRemoveSelectedClick(args);
-
-        // Click the button
-        args.event.target.click();
+        handleRemoveSelectedClick({ ...args, viewingList: false });
       });
 
       it('should call `toggleSelectedButton` with `disabled` set to `true`', function () {
@@ -261,6 +259,10 @@ describe('remove selected', function () {
 
       it('should call `temporaryListBanner` to update the banner with the new list', function () {
         expect(temporaryListBannerSpy.calledWith({ list: updatedList }), '`temporaryListBanner` should be called to update the banner with the new list').to.be.true;
+      });
+
+      it('should call `getToggleSelectedTab` to get the toggle selected tab', function () {
+        expect(getToggleSelectedTabSpy.calledOnce, '`getToggleSelectedTab` should be called once to get the toggle selected tab').to.be.true;
       });
     });
   });
