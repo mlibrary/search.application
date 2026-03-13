@@ -1,6 +1,14 @@
 import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { inTemporaryList, setSessionStorage } from '../../../../list/layout.js';
+import { toggleSelectedButton, updateToggleSelectedAction } from '../_toggle-selected.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
+import { updateListForRemovingRecords } from './_remove.js';
+
+let updatedList = null;
+
+const updateListForAddingRecords = ({ list }) => {
+  updatedList = { ...list };
+};
 
 const getAddSelectedButton = () => {
   return document.querySelector(`#actions__toggle-selected--tabpanel .action__toggle-selected--add`);
@@ -22,11 +30,11 @@ const toggleAddedClass = ({ isAdded, recordDatastore, recordId }) => {
 const styleAddedRecords = ({
   checkboxes = getCheckboxes(),
   inList = inTemporaryList,
-  list,
+  list = updatedList,
   splitValue = splitCheckboxValue,
   toggleClass = toggleAddedClass,
   toggleChecked = toggleCheckedState
-}) => {
+} = {}) => {
   // Loop through records
   checkboxes.forEach((checkbox) => {
     const { recordDatastore, recordId } = splitValue({ value: checkbox.value });
@@ -58,9 +66,15 @@ const fetchRecordData = async ({ recordDatastore, recordId }) => {
   }
 };
 
-const fetchAndAddRecords = async ({ addClass = toggleAddedClass, checkboxValues = filterSelectedRecords(), fetchRecord = fetchRecordData, list, splitValue = splitCheckboxValue }) => {
+const fetchAndAddRecords = async ({
+  addClass = toggleAddedClass,
+  checkboxValues = filterSelectedRecords(),
+  fetchRecord = fetchRecordData,
+  list = updatedList,
+  splitValue = splitCheckboxValue
+}) => {
   // Create a shallow copy of the list to update
-  const updatedList = { ...list };
+  const copiedList = { ...list };
 
   // Run all fetches and collect their results
   await Promise.all(
@@ -73,7 +87,7 @@ const fetchAndAddRecords = async ({ addClass = toggleAddedClass, checkboxValues 
         const recordData = await fetchRecord({ recordDatastore, recordId });
 
         // Add the fetched record data to the datastore in the final list
-        updatedList[recordDatastore] = { ...(updatedList[recordDatastore] || {}), ...recordData };
+        copiedList[recordDatastore] = { ...(copiedList[recordDatastore] || {}), ...recordData };
 
         // Add the class to visually indicate the record is in the temporary list
         addClass({ isAdded: true, recordDatastore, recordId });
@@ -83,58 +97,82 @@ const fetchAndAddRecords = async ({ addClass = toggleAddedClass, checkboxValues 
     })
   );
 
-  return updatedList;
+  return copiedList;
+};
+
+const handleAddSelectedClick = async ({
+  addRecords = fetchAndAddRecords,
+  event,
+  list = updatedList,
+  setList = setSessionStorage,
+  showBanner = temporaryListBanner,
+  styleRecords = styleAddedRecords,
+  toggleAddButton = toggleSelectedButton,
+  updateList = updateListForRemovingRecords,
+  updateToggleSelected = updateToggleSelectedAction
+} = {}) => {
+  const button = event.target;
+  const originalText = button.textContent;
+  const toggleAddButtonArgs = { button, disabled: true, originalText, text: 'Adding...' };
+
+  let copiedList = { ...list };
+
+  // Disable the button and change the text to indicate that the addition is in progress
+  toggleAddButton(toggleAddButtonArgs);
+
+  try {
+    // Fetch and add the selected records
+    const addedRecords = await addRecords({ list });
+    // Merge added records into the updated list
+    copiedList = { ...list, ...addedRecords };
+  } catch {
+    // Silent failure, so no action is needed
+  } finally {
+    // Set the updated list
+    setList({ itemName: 'temporaryList', value: copiedList });
+
+    // Update the list for adding records
+    updateList({ list: copiedList });
+
+    // Re-style records after adding
+    styleRecords({ list: copiedList });
+
+    // Enable the button and change the text back to the original text after the addition is complete
+    toggleAddButton({ ...toggleAddButtonArgs, disabled: false });
+
+    // Update the toggle selected action
+    updateToggleSelected({ list: copiedList });
+
+    // Update the banner to reflect the new count of items in the list
+    showBanner({ list: copiedList });
+  }
 };
 
 const addSelectedAction = ({
-  addRecords = fetchAndAddRecords,
-  addSelectedButton = getAddSelectedButton(),
-  list,
-  setList = setSessionStorage,
-  showBanner = temporaryListBanner,
-  styleRecords = styleAddedRecords
+  button = getAddSelectedButton(),
+  handleAddSelected = handleAddSelectedClick
 } = {}) => {
-  const button = addSelectedButton;
-  const buttonText = button.textContent;
-
-  let updatedList = { ...list };
-
-  button.addEventListener('click', async () => {
-    // Disable the button while processing to prevent multiple clicks
-    button.disabled = true;
-    // Update button text to indicate processing
-    button.textContent = 'Adding...';
-    try {
-      // Fetch and add the selected records
-      const addedRecords = await addRecords({ list: updatedList });
-      // Merge added records into the updated list
-      updatedList = { ...updatedList, ...addedRecords };
-    } catch {
-      // Silent failure, so no action is needed
-    } finally {
-      // Set the updated list
-      setList({ itemName: 'temporaryList', value: updatedList });
-
-      // Re-style records after adding
-      styleRecords({ list: updatedList });
-
-      // Update the banner to reflect the new count of items in the list
-      showBanner({ list: updatedList });
-
-      // Restore original button text
-      button.textContent = buttonText;
-      // Re-enable the button
-      button.disabled = false;
-    }
+  // Add click event listener to the add selected button
+  button.addEventListener('click', async (event) => {
+    // Handle the add selected action
+    await handleAddSelected({ event });
   });
 };
 
-const addSelected = ({ addAction = addSelectedAction, list, styleRecords = styleAddedRecords } = {}) => {
+const addSelected = ({
+  addAction = addSelectedAction,
+  list,
+  styleRecords = styleAddedRecords,
+  updateList = updateListForAddingRecords
+} = {}) => {
+  // Save the list to a variable that can be updated
+  updateList({ list });
+
   // Style records on load
-  styleRecords({ list });
+  styleRecords();
 
   // Initialize the add selected action
-  addAction({ list });
+  addAction();
 };
 
 export {
@@ -143,6 +181,9 @@ export {
   fetchAndAddRecords,
   fetchRecordData,
   getAddSelectedButton,
+  handleAddSelectedClick,
   styleAddedRecords,
-  toggleAddedClass
+  toggleAddedClass,
+  updatedList,
+  updateListForAddingRecords
 };
