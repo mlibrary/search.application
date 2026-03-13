@@ -1,6 +1,6 @@
 import { cloneListItem, getListItemPartial, updateListItem } from './results-list/_list-item.js';
 import { getDatastores } from '../../list/layout.js';
-import { toggleAddedClass } from '../../partials/actions/action/_add-selected.js';
+import { toggleAddedClass } from '../../partials/actions/action/toggle-selected/_add.js';
 
 const getResultsList = ({ recordDatastore }) => {
   return document.querySelector(`.list__${recordDatastore} .results__list`);

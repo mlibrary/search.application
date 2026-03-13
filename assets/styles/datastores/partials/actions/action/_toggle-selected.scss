@@ -1,0 +1,91 @@
+@use '../../../../icons';
+@use './toggle-selected/add';
+@use './toggle-selected/remove';
+
+// --------------------------------------------------
+//
+// # Toggle Selected
+//   Styles to apply directly to `views/datastores/partials/actions/action/_toggle-selected.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Tab
+//     2.1. Icon
+//   3. Tab Panel
+//     3.1. Add
+//     3.2. Remove
+//   4. Record
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: "toggle-selected";
+
+
+
+
+
+// ************** //
+// *** 2. TAB *** //
+// ************** //
+
+body.no-javascript button#actions__#{$class} {
+  display: none;
+}
+
+
+
+// *           * //
+// * 2.1. ICON * //
+// *           * //
+
+.actions__tablist > button[role=tab]#actions__#{$class}.actions__#{$class}--remove:before {
+  @include icons.icon($icon: 'delete');
+}
+
+
+
+
+
+// ******************** //
+// *** 3. TAB PANEL *** //
+// ******************** //
+
+body.no-javascript #actions__#{$class}--tabpanel {
+  display: none;
+}
+
+
+
+// *          * //
+// * 3.1. ADD * //
+// *          * //
+
+#actions__#{$class}--tabpanel.actions__#{$class}--tabpanel-remove .action__add-selected {
+  display: none;
+}
+
+
+
+// *             * //
+// * 3.2. REMOVE * //
+// *             * //
+
+#actions__#{$class}--tabpanel:not(.actions__#{$class}--tabpanel-remove) .action__remove-selected {
+  display: none;
+}
+
+
+
+
+
+// ***************** //
+// *** 4. RECORD *** //
+// ***************** //
+
+.record__container--in-temporary-list {
+  outline: 2px solid var(--search-color-blue-300);
+}

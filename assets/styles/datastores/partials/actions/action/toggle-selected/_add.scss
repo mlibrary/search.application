@@ -1,11 +1,11 @@
 // --------------------------------------------------
 //
-// # Add Selected
-//   Styles to apply directly to `views/datastores/partials/actions/action/_add-selected.erb`.
+// # Toggle Selected
+//   Styles to apply directly to `views/datastores/partials/actions/action/toggle-selected/_add.erb`.
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Tab
+//   2. Button
 //   3. Record
 //
 // --------------------------------------------------
@@ -14,21 +14,18 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: "add-selected";
+$class: "actions__toggle-selected--tabpanel";
 
 
 
 
 
-// ************** //
-// *** 2. TAB *** //
-// ************** //
+// ***************** //
+// *** 2. BUTTON *** //
+// ***************** //
 
-body.no-javascript {
-  button#actions__#{$class},
-  #actions__#{$class}--tabpanel {
-    display: none;
-  }
+##{$class}.#{$class}-remove .action__toggle-selected--add {
+  display: none;
 }
 
 

@@ -1,6 +1,5 @@
-@use '../../../../utilities';
-@use '../../../../media';
 @use '../../../partials/metadata';
+@use './list-item/header';
 
 // --------------------------------------------------
 //
@@ -10,9 +9,6 @@
 // ## Table of Contents
 //   1. Variables
 //   2. List Item
-//   3. Header
-//     3.1. Title
-//       3.1.1. Transliterated
 //
 // --------------------------------------------------
 
@@ -35,33 +31,4 @@ $class: '.results__list-item';
   & > * + * {
     margin-top: 1rem;
   }
-}
-
-
-
-
-
-// ***************** //
-// *** 3. HEADER *** //
-// ***************** //
-
-#{$class}--header {
-  @include utilities.flex($align: baseline);
-}
-
-
-
-// *            * //
-// * 3.1. TITLE * //
-// *            * //
-
-#{$class}--title {
-  color: var(--search-color-grey-500);
-  margin: 0;
-}
-
-// * 3.1.1. TRANSLITERATED * //
-
-#{$class}--title-transliterated {
-  display: block;
 }

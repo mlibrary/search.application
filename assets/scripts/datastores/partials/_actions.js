@@ -1,5 +1,11 @@
 import { changeAlert } from './actions/_alert.js';
+import { copyLink } from './actions/action/_link.js';
+import { downloadTemporaryListRIS } from './actions/action/_ris.js';
+import { emailAction } from './actions/action/_email.js';
+import { initializeCitations } from './actions/action/_citation.js';
 import { someCheckboxesChecked } from '../results/partials/results-list/list-item/header/_checkbox.js';
+import { textAction } from './actions/action/_text.js';
+import { toggleSelectedAction } from './actions/action/_toggle-selected.js';
 
 const isSelected = ({ tab }) => {
   return tab.getAttribute('aria-selected') === 'true';
@@ -56,20 +62,43 @@ const disableActionTabs = ({ someChecked = someCheckboxesChecked(true) } = {}) =
   });
 };
 
-const toggleTabDisplay = ({ id, show }) => {
-  const tab = document.querySelector(`#${id}`);
-  const tabPanel = document.querySelector(`#${tab.getAttribute('aria-controls')}`);
+const initializeActions = ({
+  citations = initializeCitations,
+  email = emailAction,
+  link = copyLink,
+  list,
+  ris = downloadTemporaryListRIS,
+  tabControlFunction = tabControl,
+  text = textAction,
+  toggleSelected = toggleSelectedAction
+} = {}) => {
+  // Actions panel
+  tabControlFunction('.actions');
 
-  tab.style.display = show ? 'flex' : 'none';
-  tab.setAttribute('aria-selected', show ? tab.getAttribute('aria-selected') : 'false');
-  tabPanel.style.display = tab.getAttribute('aria-selected') === 'true' ? 'block' : 'none';
+  // Email
+  email();
+
+  // Text
+  text();
+
+  // Citations
+  citations();
+
+  // RIS
+  ris({ list });
+
+  // Copy link
+  link();
+
+  // Toggle add/remove selected
+  toggleSelected({ list });
 };
 
 export {
   changeAlert,
   disableActionTabs,
   getTabPanel,
+  initializeActions,
   isSelected,
-  tabControl,
-  toggleTabDisplay
+  tabControl
 };

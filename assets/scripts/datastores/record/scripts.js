@@ -1,13 +1,7 @@
 import { defaultTemporaryList, getSessionStorage } from '../list/layout.js';
-import { addSelected } from '../partials/actions/action/_add-selected.js';
-import { copyLink } from '../partials/actions/action/_link.js';
-import { emailAction } from '../partials/actions/action/_email.js';
-import { initializeCitations } from '../partials/actions/action/_citation.js';
-import { removeSelected } from '../partials/actions/action/_remove-selected.js';
+import { initializeActions } from '../partials/_actions.js';
 import shelfBrowse from './partials/_shelf-browse.js';
-import { tabControl } from '../partials/_actions.js';
 import { temporaryListBanner } from '../list/partials/_go-to.js';
-import { textAction } from '../partials/actions/action/_text.js';
 import { toggleItems } from '../partials/_toggle.js';
 import toggleMARCData from './partials/_marc.js';
 import toggleTruncatedText from './partials/_title.js';
@@ -19,25 +13,7 @@ const list = getSessionStorage({ defaultValue: defaultTemporaryList, itemName: '
 temporaryListBanner({ list });
 
 // Actions panel
-tabControl('.actions');
-
-// Email
-emailAction();
-
-// Text
-textAction();
-
-// Citations
-initializeCitations();
-
-// Copy link
-copyLink();
-
-// Add to My Temporary List
-addSelected({ list });
-
-// Remove from My Temporary List
-removeSelected({ list });
+initializeActions({ list });
 
 // Record Title
 toggleTruncatedText();

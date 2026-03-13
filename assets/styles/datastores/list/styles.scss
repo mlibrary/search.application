@@ -44,9 +44,9 @@ $class: '.list';
 // *** 3. ACTIONS *** //
 // ****************** //
 
-#{$class} .actions {
-  button#actions__link,
-  #actions__link--tabpanel {
-    display: none;
+#{$class} .actions__tablist {
+  flex-wrap: nowrap;
+  & > button[role="tab"] {
+    flex-basis: auto;
   }
 }

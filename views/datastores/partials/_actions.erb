@@ -5,9 +5,12 @@
     "citation" => "Citation",
     "ris" => "Export&nbsp;Citation (EndNote,&nbsp;Zotero,&nbsp;etc.)",
     "link" => "Copy&nbsp;link",
-    "add-selected" => "Add&nbsp;selected",
-    "remove-selected" => "Remove&nbsp;selected"
+    "toggle-selected" => "Toggle&nbsp;selected"
   }
+  # Remove the "Copy link" action if viewing My Temporary List
+  if request.path.include?("everything/list")
+    actions.delete("link")
+  end
 %>
 <details open class="container__rounded--no-shadow actions">
   <summary class="actions__summary">
