@@ -548,7 +548,9 @@ describe('layout', function () {
 
   describe('temporaryList()', function () {
     let getDatastoresStub = null;
+    let initializeActionsSpy = null;
     let initializeNonEmptyListFunctionsSpy = null;
+    let selectAllSpy = null;
     let toggleListElementsSpy = null;
     let updateResultsListsSpy = null;
     let args = null;
@@ -557,12 +559,16 @@ describe('layout', function () {
       getDatastoresStub = sinon.stub().callsFake(({ list }) => {
         return getDatastores({ list });
       });
+      initializeActionsSpy = sinon.spy();
       initializeNonEmptyListFunctionsSpy = sinon.spy();
+      selectAllSpy = sinon.spy();
       toggleListElementsSpy = sinon.spy();
       updateResultsListsSpy = sinon.spy();
       args = {
+        actionsPanel: initializeActionsSpy,
         datastores: getDatastoresStub,
         initializeFunctions: initializeNonEmptyListFunctionsSpy,
+        initializeSelectAll: selectAllSpy,
         list: global.temporaryList,
         toggleElements: toggleListElementsSpy,
         updateResults: updateResultsListsSpy
@@ -571,7 +577,9 @@ describe('layout', function () {
 
     afterEach(function () {
       getDatastoresStub = null;
+      initializeActionsSpy = null;
       initializeNonEmptyListFunctionsSpy = null;
+      selectAllSpy = null;
       toggleListElementsSpy = null;
       updateResultsListsSpy = null;
       args = null;
@@ -601,6 +609,14 @@ describe('layout', function () {
       it('should call `initializeNonEmptyListFunctions` with the correct arguments', function () {
         expect(initializeNonEmptyListFunctionsSpy.calledOnceWithExactly({ list: args.list }), '`initializeNonEmptyListFunctions` should have been called with the correct arguments').to.be.true;
       });
+
+      it('should call `initializeActions` with the correct arguments', function () {
+        expect(initializeActionsSpy.calledOnceWithExactly({ list: args.list }), '`initializeActions` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `selectAll` with the correct arguments', function () {
+        expect(selectAllSpy.calledOnceWithExactly(), '`selectAll` should have been called with the correct arguments').to.be.true;
+      });
     });
 
     describe('empty list', function () {
@@ -627,6 +643,14 @@ describe('layout', function () {
 
       it('should not call `initializeNonEmptyListFunctions` if the temporary list is empty', function () {
         expect(initializeNonEmptyListFunctionsSpy.calledOnce, '`initializeNonEmptyListFunctions` should not have been called').to.be.false;
+      });
+
+      it('should not call `initializeActions` if the temporary list is empty', function () {
+        expect(initializeActionsSpy.calledOnce, '`initializeActions` should not have been called').to.be.false;
+      });
+
+      it('should not call `selectAll` if the temporary list is empty', function () {
+        expect(selectAllSpy.calledOnce, '`selectAll` should not have been called').to.be.false;
       });
     });
   });

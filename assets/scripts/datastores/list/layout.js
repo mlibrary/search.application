@@ -1,6 +1,6 @@
-import { selectAllCheckboxState, updateSelectedCount } from '../partials/_select-all.js';
+import { disableActionTabs, initializeActions } from '../partials/_actions.js';
+import { selectAll, selectAllCheckboxState, updateSelectedCount } from '../partials/_select-all.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
-import { disableActionTabs } from '../partials/_actions.js';
 import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { removeEmptyDatastoreSections } from './partials/results/_datastores.js';
@@ -135,8 +135,10 @@ const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChang
 };
 
 const temporaryList = ({
+  actionsPanel = initializeActions,
   datastores = getDatastores,
   initializeFunctions = initializeNonEmptyListFunctions,
+  initializeSelectAll = selectAll,
   list,
   toggleElements = toggleListElements,
   updateResults = updateResultsLists
@@ -152,7 +154,14 @@ const temporaryList = ({
     return;
   }
 
+  // Initialize functions that should only run if My Temporary List is not empty
   initializeFunctions({ list });
+
+  // Actions panel
+  actionsPanel({ list });
+
+  // Initialize select all partial
+  initializeSelectAll();
 };
 
 export {
