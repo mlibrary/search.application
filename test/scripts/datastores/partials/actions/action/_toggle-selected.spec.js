@@ -5,6 +5,8 @@ import {
   toggleActionClasses,
   toggleSelectedAction,
   toggleSelectedButton,
+  updatedList,
+  updateListForTogglingRecords,
   updateToggleSelectedAction,
   updateToggleSelectedTabText
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_toggle-selected.js';
@@ -29,6 +31,28 @@ describe('toggle selected', function () {
         </div>
       </div>
     `;
+  });
+
+  describe('updateListForTogglingRecords()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = { list: global.temporaryList };
+
+      // Check that `updatedList` is null to begin with
+      expect(updatedList, '`updatedList` should be null before calling `updateListForTogglingRecords`').to.be.null;
+
+      // Call the function
+      updateListForTogglingRecords(args);
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should update the `updatedList` variable with the provided list', function () {
+      expect(updatedList, '`updatedList` should be updated with the provided list').to.deep.equal(args.list);
+    });
   });
 
   describe('getToggleSelectedTab()', function () {
@@ -316,12 +340,14 @@ describe('toggle selected', function () {
   });
 
   describe('toggleSelectedAction()', function () {
+    let updateListForTogglingRecordsSpy = null;
     let addSelectedSpy = null;
     let removeSelectedSpy = null;
     let updateToggleSelectedActionSpy = null;
     let args = null;
 
     beforeEach(function () {
+      updateListForTogglingRecordsSpy = sinon.spy();
       addSelectedSpy = sinon.spy();
       removeSelectedSpy = sinon.spy();
       updateToggleSelectedActionSpy = sinon.spy();
@@ -329,7 +355,8 @@ describe('toggle selected', function () {
         add: addSelectedSpy,
         list: global.temporaryList,
         remove: removeSelectedSpy,
-        updateAction: updateToggleSelectedActionSpy
+        updateAction: updateToggleSelectedActionSpy,
+        updateList: updateListForTogglingRecordsSpy
       };
 
       // Call the function
@@ -337,22 +364,27 @@ describe('toggle selected', function () {
     });
 
     afterEach(function () {
+      updateListForTogglingRecordsSpy = null;
       addSelectedSpy = null;
       removeSelectedSpy = null;
       updateToggleSelectedActionSpy = null;
       args = null;
     });
 
+    it('should call `updateListForTogglingRecords` with the correct arguments', function () {
+      expect(updateListForTogglingRecordsSpy.calledOnceWithExactly({ list: args.list }), '`updateList` should have been called with the correct arguments').to.be.true;
+    });
+
     it('should call `addSelected` with the correct arguments', function () {
-      expect(addSelectedSpy.calledOnceWithExactly({ list: args.list }), '`add` should have been called with the correct arguments').to.be.true;
+      expect(addSelectedSpy.calledOnceWithExactly(), '`add` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `removeSelected` with the correct arguments', function () {
-      expect(removeSelectedSpy.calledOnceWithExactly({ list: args.list }), '`remove` should have been called with the correct arguments').to.be.true;
+      expect(removeSelectedSpy.calledOnceWithExactly(), '`remove` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `updateToggleSelectedAction` with the correct arguments', function () {
-      expect(updateToggleSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`updateAction` should have been called with the correct arguments').to.be.true;
+      expect(updateToggleSelectedActionSpy.calledOnceWithExactly(), '`updateAction` should have been called with the correct arguments').to.be.true;
     });
   });
 });

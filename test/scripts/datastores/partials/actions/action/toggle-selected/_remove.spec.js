@@ -3,9 +3,7 @@ import {
   getRemoveSelectedButton,
   handleRemoveSelectedClick,
   removeSelected,
-  removeSelectedAction,
-  updatedList,
-  updateListForRemovingRecords
+  removeSelectedAction
 } from '../../../../../../../assets/scripts/datastores/partials/actions/action/toggle-selected/_remove.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
@@ -34,28 +32,6 @@ describe('remove selected', function () {
       </div>
       ${temporaryListHTML}
     `;
-  });
-
-  describe('updateListForRemovingRecords()', function () {
-    let args = null;
-
-    beforeEach(function () {
-      args = { list: global.temporaryList };
-
-      // Check that `updatedList` is null to begin with
-      expect(updatedList, '`updatedList` should be null before calling `updateListForRemovingRecords`').to.be.null;
-
-      // Call the function
-      updateListForRemovingRecords(args);
-    });
-
-    afterEach(function () {
-      args = null;
-    });
-
-    it('should update the `updatedList` variable with the provided list', function () {
-      expect(updatedList, '`updatedList` should be updated with the provided list').to.deep.equal(args.list);
-    });
   });
 
   describe('getRemoveSelectedButton()', function () {
@@ -137,7 +113,7 @@ describe('remove selected', function () {
     let temporaryListBannerSpy = null;
     let toggleSelectedButtonSpy = null;
     let getToggleSelectedTabSpy = null;
-    let updateListForAddingRecordsSpy = null;
+    let updateListForTogglingRecordsSpy = null;
     let updateToggleSelectedActionSpy = null;
     let args = null;
     let originalText = null;
@@ -149,7 +125,7 @@ describe('remove selected', function () {
       temporaryListBannerSpy = sinon.spy();
       toggleSelectedButtonSpy = sinon.spy();
       getToggleSelectedTabSpy = sinon.spy();
-      updateListForAddingRecordsSpy = sinon.spy();
+      updateListForTogglingRecordsSpy = sinon.spy();
       updateToggleSelectedActionSpy = sinon.spy();
       args = {
         deleteRecords: deleteSelectedRecordsStub,
@@ -160,7 +136,7 @@ describe('remove selected', function () {
         showBanner: temporaryListBannerSpy,
         toggleRemoveButton: toggleSelectedButtonSpy,
         toggleSelectedTab: { click: getToggleSelectedTabSpy },
-        updateList: updateListForAddingRecordsSpy,
+        updateList: updateListForTogglingRecordsSpy,
         updateToggleSelected: updateToggleSelectedActionSpy
       };
 
@@ -174,7 +150,7 @@ describe('remove selected', function () {
       temporaryListBannerSpy = null;
       toggleSelectedButtonSpy = null;
       getToggleSelectedTabSpy = null;
-      updateListForAddingRecordsSpy = null;
+      updateListForTogglingRecordsSpy = null;
       updateToggleSelectedActionSpy = null;
       args = null;
       originalText = null;
@@ -202,8 +178,8 @@ describe('remove selected', function () {
         expect(reloadPageSpy.calledOnce, '`reloadPage` should be called once to reload the page').to.be.true;
       });
 
-      it('should not call `updateListForAddingRecords` to update the list for adding records', function () {
-        expect(updateListForAddingRecordsSpy.notCalled, '`updateListForAddingRecords` should not be called to update the list for adding records').to.be.true;
+      it('should not call `updateListForTogglingRecords` to update the list for adding records', function () {
+        expect(updateListForTogglingRecordsSpy.notCalled, '`updateListForTogglingRecords` should not be called to update the list for adding records').to.be.true;
       });
 
       it('should not call `toggleSelectedButton` with `disabled` set to `false` and the original text', function () {
@@ -245,8 +221,8 @@ describe('remove selected', function () {
         expect(reloadPageSpy.notCalled, '`reloadPage` should not be called').to.be.true;
       });
 
-      it('should call `updateListForAddingRecords` with the correct arguments', function () {
-        expect(updateListForAddingRecordsSpy.calledWith({ list: updatedList }), '`updateListForAddingRecords` should be called with the correct arguments').to.be.true;
+      it('should call `updateListForTogglingRecords` with the correct arguments', function () {
+        expect(updateListForTogglingRecordsSpy.calledWith({ list: deleteSelectedRecordsStub.returnValues[0] }), '`updateListForTogglingRecords` should be called with the correct arguments').to.be.true;
       });
 
       it('should call `toggleSelectedButton` again with `disabled` set to `false` and the original text', function () {
@@ -254,11 +230,11 @@ describe('remove selected', function () {
       });
 
       it('should call `updateToggleSelectedAction` with the correct arguments', function () {
-        expect(updateToggleSelectedActionSpy.calledWith({ list: updatedList }), '`updateToggleSelectedAction` should be called with the correct arguments').to.be.true;
+        expect(updateToggleSelectedActionSpy.calledWith({ list: deleteSelectedRecordsStub.returnValues[0] }), '`updateToggleSelectedAction` should be called with the correct arguments').to.be.true;
       });
 
       it('should call `temporaryListBanner` to update the banner with the new list', function () {
-        expect(temporaryListBannerSpy.calledWith({ list: updatedList }), '`temporaryListBanner` should be called to update the banner with the new list').to.be.true;
+        expect(temporaryListBannerSpy.calledWith({ list: deleteSelectedRecordsStub.returnValues[0] }), '`temporaryListBanner` should be called to update the banner with the new list').to.be.true;
       });
 
       it('should call `getToggleSelectedTab` to get the toggle selected tab', function () {
@@ -300,16 +276,12 @@ describe('remove selected', function () {
 
   describe('removeSelected()', function () {
     let removeSelectedActionSpy = null;
-    let updateListForRemovingRecordsSpy = null;
     let args = null;
 
     beforeEach(function () {
       removeSelectedActionSpy = sinon.spy();
-      updateListForRemovingRecordsSpy = sinon.spy();
       args = {
-        list: global.temporaryList,
-        removeAction: removeSelectedActionSpy,
-        updateList: updateListForRemovingRecordsSpy
+        removeAction: removeSelectedActionSpy
       };
 
       // Call the function
@@ -318,12 +290,7 @@ describe('remove selected', function () {
 
     afterEach(function () {
       removeSelectedActionSpy = null;
-      updateListForRemovingRecordsSpy = null;
       args = null;
-    });
-
-    it('should call `updateListForRemovingRecords` with the correct arguments', function () {
-      expect(updateListForRemovingRecordsSpy.calledOnceWithExactly({ list: args.list }), '`updateListForRemovingRecords` should be called with the correct arguments').to.be.true;
     });
 
     it('should call `removeSelectedAction` with the correct arguments', function () {

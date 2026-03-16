@@ -6,9 +6,7 @@ import {
   getAddSelectedButton,
   handleAddSelectedClick,
   styleAddedRecords,
-  toggleAddedClass,
-  updatedList,
-  updateListForAddingRecords
+  toggleAddedClass
 } from '../../../../../../../assets/scripts/datastores/partials/actions/action/toggle-selected/_add.js';
 import { defaultTemporaryList, getDatastores, inTemporaryList } from '../../../../../../../assets/scripts/datastores/list/layout.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
@@ -52,28 +50,6 @@ describe('add selected', function () {
   afterEach(function () {
     checkboxes = null;
     checkboxCount = null;
-  });
-
-  describe('updateListForAddingRecords()', function () {
-    let args = null;
-
-    beforeEach(function () {
-      args = { list: global.temporaryList };
-
-      // Check that `updatedList` is null to begin with
-      expect(updatedList, '`updatedList` should be null before calling `updateListForAddingRecords`').to.be.null;
-
-      // Call the function
-      updateListForAddingRecords(args);
-    });
-
-    afterEach(function () {
-      args = null;
-    });
-
-    it('should update the `updatedList` variable with the provided list', function () {
-      expect(updatedList, '`updatedList` should be updated with the provided list').to.deep.equal(args.list);
-    });
   });
 
   describe('getAddSelectedButton()', function () {
@@ -375,7 +351,7 @@ describe('add selected', function () {
     let temporaryListBannerSpy = null;
     let toggleSelectedButtonSpy = null;
     let getToggleSelectedTabSpy = null;
-    let updateListForRemovingRecordsSpy = null;
+    let updateListForTogglingRecordsSpy = null;
     let updateToggleSelectedActionSpy = null;
     let args = null;
     let originalText = null;
@@ -388,7 +364,7 @@ describe('add selected', function () {
       temporaryListBannerSpy = sinon.spy();
       toggleSelectedButtonSpy = sinon.spy();
       getToggleSelectedTabSpy = sinon.spy();
-      updateListForRemovingRecordsSpy = sinon.spy();
+      updateListForTogglingRecordsSpy = sinon.spy();
       updateToggleSelectedActionSpy = sinon.spy();
       args = {
         addRecords: fetchAndAddRecordsStub,
@@ -399,7 +375,7 @@ describe('add selected', function () {
         styleRecords: styleAddedRecordsSpy,
         toggleAddButton: toggleSelectedButtonSpy,
         toggleSelectedTab: { click: getToggleSelectedTabSpy },
-        updateList: updateListForRemovingRecordsSpy,
+        updateList: updateListForTogglingRecordsSpy,
         updateToggleSelected: updateToggleSelectedActionSpy
       };
 
@@ -416,7 +392,7 @@ describe('add selected', function () {
       temporaryListBannerSpy = null;
       toggleSelectedButtonSpy = null;
       getToggleSelectedTabSpy = null;
-      updateListForRemovingRecordsSpy = null;
+      updateListForTogglingRecordsSpy = null;
       updateToggleSelectedActionSpy = null;
       args = null;
       originalText = null;
@@ -448,8 +424,8 @@ describe('add selected', function () {
         expect(setSessionStorageSpy.calledOnceWithExactly({ itemName: 'temporaryList', value: global.temporaryList }), '`setSessionStorage` should be called once with the updated list after processing').to.be.true;
       });
 
-      it('should call `updateListForRemovingRecords` with the updated list after processing', function () {
-        expect(updateListForRemovingRecordsSpy.calledOnceWithExactly({ list: global.temporaryList }), '`updateListForRemovingRecords` should be called once with the updated list after processing').to.be.true;
+      it('should call `updateListForTogglingRecords` with the updated list after processing', function () {
+        expect(updateListForTogglingRecordsSpy.calledOnceWithExactly({ list: global.temporaryList }), '`updateListForTogglingRecords` should be called once with the updated list after processing').to.be.true;
       });
 
       it('should call `styleAddedRecords` with the correct arguments after processing', function () {
@@ -508,19 +484,15 @@ describe('add selected', function () {
   describe('addSelected()', function () {
     let addSelectedActionSpy = null;
     let styleAddedRecordsSpy = null;
-    let updateListForAddingRecordsSpy = null;
     let args = null;
 
     beforeEach(function () {
       addSelectedActionSpy = sinon.spy();
       styleAddedRecordsSpy = sinon.spy();
-      updateListForAddingRecordsSpy = sinon.spy();
 
       args = {
         addAction: addSelectedActionSpy,
-        list: global.temporaryList,
-        styleRecords: styleAddedRecordsSpy,
-        updateList: updateListForAddingRecordsSpy
+        styleRecords: styleAddedRecordsSpy
       };
 
       // Call the function
@@ -530,13 +502,7 @@ describe('add selected', function () {
     afterEach(function () {
       addSelectedActionSpy = null;
       styleAddedRecordsSpy = null;
-      updateListForAddingRecordsSpy = null;
       args = null;
-    });
-
-    it('should call `updateListForAddingRecords` with the correct arguments', function () {
-      // Check that `updateListForAddingRecords` was called once with the correct arguments
-      expect(updateListForAddingRecordsSpy.calledOnceWithExactly({ list: args.list }), '`updateListForAddingRecords` should be called once with the correct arguments').to.be.true;
     });
 
     it('should call `styleAddedRecords` with the correct arguments', function () {

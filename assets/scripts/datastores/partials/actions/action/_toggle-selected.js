@@ -4,6 +4,12 @@ import { addSelected } from './toggle-selected/_add.js';
 import { removeSelected } from './toggle-selected/_remove.js';
 import { viewingFullRecord } from '../../../record/layout.js';
 
+let updatedList = null;
+
+const updateListForTogglingRecords = ({ list }) => {
+  updatedList = list;
+};
+
 const toggleSelectedId = 'actions__toggle-selected';
 
 const getToggleSelectedTab = () => {
@@ -70,7 +76,7 @@ const toggleActionClasses = ({
 
 const updateToggleSelectedAction = ({
   checkIfAllInList = checkIfInList,
-  list,
+  list = updatedList,
   toggleClasses = toggleActionClasses,
   updateText = updateToggleSelectedTabText
 } = {}) => {
@@ -95,16 +101,20 @@ const toggleSelectedAction = ({
   add = addSelected,
   list,
   remove = removeSelected,
-  updateAction = updateToggleSelectedAction
+  updateAction = updateToggleSelectedAction,
+  updateList = updateListForTogglingRecords
 } = {}) => {
+  // Update the list that will be passed to the add and remove functions
+  updateList({ list });
+
   // Initialize adding selected record(s) to My Temporary List
-  add({ list });
+  add();
 
   // Initialize removing selected record(s) from My Temporary List
-  remove({ list });
+  remove();
 
   // Update the toggle selected action (text and classes) based on whether the selected record(s) are in My Temporary List
-  updateAction({ list });
+  updateAction();
 };
 
 export {
@@ -114,6 +124,8 @@ export {
   toggleActionClasses,
   toggleSelectedAction,
   toggleSelectedButton,
+  updatedList,
+  updateListForTogglingRecords,
   updateToggleSelectedAction,
   updateToggleSelectedTabText
 };
