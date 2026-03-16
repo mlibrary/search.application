@@ -51,6 +51,7 @@ const handleRemoveSelectedClick = ({
   const originalText = button.textContent;
   const toggleRemoveButtonArgs = { button, disabled: true, originalText, text: 'Removing...' };
 
+  // Create a shallow copy of the list
   let copiedList = { ...list };
 
   // Disable the button and change the text to indicate that the removal is in progress
