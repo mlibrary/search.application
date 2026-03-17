@@ -865,35 +865,58 @@ describe('citation', function () {
   });
 
   describe('initializeCitations()', function () {
-    let citationTabsStub = null;
-    let citationsStub = null;
-    let copyCitationButtonStub = null;
+    let cacheCSLDataSpy = null;
+    let tabControlSpy = null;
+    let displayCitationsSpy = null;
+    let copyCitationSpy = null;
+    let updateCSLDataSpy = null;
+    let args = null;
 
     beforeEach(function () {
-      citationTabsStub = sinon.stub();
-      citationsStub = sinon.stub();
-      copyCitationButtonStub = sinon.stub();
+      cacheCSLDataSpy = sinon.spy();
+      tabControlSpy = sinon.spy();
+      displayCitationsSpy = sinon.spy();
+      copyCitationSpy = sinon.spy();
+      updateCSLDataSpy = sinon.spy();
+      args = {
+        cacheCSL: cacheCSLDataSpy,
+        citationTabs: tabControlSpy,
+        citations: displayCitationsSpy,
+        copyCitationButton: copyCitationSpy,
+        list: global.temporaryList,
+        updateCSLTextarea: updateCSLDataSpy
+      };
 
       // Call the function
-      initializeCitations(citationsStub, copyCitationButtonStub, citationTabsStub);
+      initializeCitations(args);
     });
 
     afterEach(function () {
-      citationTabsStub = null;
-      citationsStub = null;
-      copyCitationButtonStub = null;
+      cacheCSLDataSpy = null;
+      tabControlSpy = null;
+      displayCitationsSpy = null;
+      copyCitationSpy = null;
+      updateCSLDataSpy = null;
     });
 
-    it('should call `citationTabs` with the correct selector', function () {
-      expect(citationTabsStub.calledOnceWithExactly('.citation'), '`citationTabs` should have been called once with the correct selector').to.be.true;
+    it('should call `tabControl` with the correct arguments', function () {
+      expect(tabControlSpy.calledOnceWithExactly('.citation'), '`tabControl` should have been called once with the correct arguments').to.be.true;
     });
 
-    it('should call `citations`', function () {
-      expect(citationsStub.calledOnce, '`citations` should have been called once').to.be.true;
+    it('should call `cacheCSLData` with the correct arguments', function () {
+      expect(cacheCSLDataSpy.calledOnceWithExactly({ list: args.list }), '`cacheCSLData` should have been called once with the correct arguments').to.be.true;
     });
 
-    it('should call `copyCitationButton`', function () {
-      expect(copyCitationButtonStub.calledOnce, '`copyCitationButton` should have been called once').to.be.true;
+    it('should call `updateCSLData` with the correct arguments', function () {
+      expect(updateCSLDataSpy.calledOnceWithExactly(), '`updateCSLData` should have been called once with the correct arguments').to.be.true;
+    });
+
+    it('should call `displayCitations` with the correct arguments', function () {
+      expect(displayCitationsSpy.calledOnceWithExactly(), '`displayCitations` should have been called once with the correct arguments').to.be.true;
+    });
+
+    it('should call `copyCitation` with the correct arguments', function () {
+      expect(copyCitationSpy.calledOnceWithExactly(), '`copyCitation` should have been called once with the correct arguments').to.be.true;
     });
   });
 });

@@ -1,8 +1,8 @@
+import { cacheCSLData, cslData, updateCSLData } from './citation/_csl.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { attachTheCitations } from './citation/tabpanel/_textbox.js';
 import { copyCitation } from './citation/_copy-citation.js';
 import CSL from 'citeproc';
-import { cslData } from './citation/_csl.js';
 import { getActiveCitationTab } from './citation/_tablist.js';
 import { tabControl } from '../../_actions.js';
 
@@ -183,23 +183,40 @@ const handleTabClick = (citations) => {
   });
 };
 
-const displayCitations = (citations = generateCitations, tabClick = handleTabClick) => {
+const displayCitations = ({
+  activeCitationTab = getActiveCitationTab(),
+  citations = generateCitations,
+  tabClick = handleTabClick
+} = {}) => {
   // Check if there is an active tab on load
-  const tab = getActiveCitationTab();
+  const tab = activeCitationTab;
 
   // Get the citations of the active tab
   if (tab) {
-    // `citations` is passed in for testing purposes
+    // Generate the citations
     citations({ tab });
   }
 
-  // `tabClick` is passed in for testing purposes
+  // Update citations on tab click
   tabClick(citations);
 };
 
-const initializeCitations = (citations = displayCitations, copyCitationButton = copyCitation, citationTabs = tabControl) => {
+const initializeCitations = ({
+  cacheCSL = cacheCSLData,
+  citationTabs = tabControl,
+  citations = displayCitations,
+  copyCitationButton = copyCitation,
+  list,
+  updateCSLTextarea = updateCSLData
+} = {}) => {
   // Initialize tab control for citations
   citationTabs('.citation');
+
+  // Cache the CSL data
+  cacheCSL({ list });
+
+  // Update CSL textarea
+  updateCSLTextarea();
 
   // Display the citations
   citations();
