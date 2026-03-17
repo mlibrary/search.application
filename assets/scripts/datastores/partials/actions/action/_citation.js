@@ -8,6 +8,20 @@ import { tabControl } from '../../_actions.js';
 
 const citationFileCache = {};
 
+const getListCitationData = ({ list, type }) => {
+  // Make sure `type` is either `csl` or `ris`
+  if (!type || !['csl', 'ris'].includes(type)) {
+    return null;
+  }
+
+  // Map all items in the list to a flat array of the specified citation type
+  return Object.values(list).reduce((acc, datastore) => {
+    return acc.concat(Object.values(datastore).map((item) => {
+      return item.citation[type];
+    }));
+  }, []);
+};
+
 const selectedCitations = ({ filteredValues = filterSelectedRecords(), list, splitValue = splitCheckboxValue, type }) => {
   // Make sure `type` is either `csl` or `ris`
   if (!type || !['csl', 'ris'].includes(type)) {
@@ -204,6 +218,7 @@ export {
   fetchCitationFileText,
   generateCitations,
   getBibliographyEntries,
+  getListCitationData,
   handleTabClick,
   initializeCitations,
   regenerateCitations,

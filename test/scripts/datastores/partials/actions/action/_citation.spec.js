@@ -7,6 +7,7 @@ import {
   fetchCitationFileText,
   generateCitations,
   getBibliographyEntries,
+  getListCitationData,
   handleTabClick,
   initializeCitations,
   regenerateCitations,
@@ -87,6 +88,48 @@ describe('citation', function () {
     citationSpy = null;
     getTabList = null;
     getTab = null;
+  });
+
+  describe('getListCitationData()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        list: global.temporaryList,
+        type: 'csl'
+      };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should return `null` if no type is provided', function () {
+      expect(getListCitationData({ list: args.list }), 'the return should be `null` if no type is provided').to.be.null;
+    });
+
+    it('should return `null` if the incorrect type is provided', function () {
+      expect(getListCitationData({ ...args, type: 'wrong type' }), 'the return should be `null` if the incorrect type is provided').to.be.null;
+    });
+
+    it('should return an array', function () {
+      expect(getListCitationData(args), '`getListCitationData(type)` should return an array').to.be.an('array');
+    });
+
+    it('should return the correct citation type', function () {
+      // Loop through each citation type
+      ['csl', 'ris'].forEach((type) => {
+        const data = getListCitationData({ ...args, type });
+        // Loop through each datastore
+        Object.keys(args.list).forEach((datastore) => {
+          // Loop through each record in the datastore
+          Object.keys(args.list[datastore]).forEach((recordId) => {
+            // Check that the correct data is included
+            expect(data, `\`citation.${type}\` values should be included for each record in the list`).to.deep.include(args.list[datastore][recordId].citation[type]);
+          });
+        });
+      });
+    });
   });
 
   describe('selectedCitations()', function () {
