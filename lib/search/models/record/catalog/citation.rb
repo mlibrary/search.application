@@ -21,6 +21,6 @@ class Search::Models::Record::Catalog::Citation
   end
 
   def csl
-    @data["csl"]
+    @data&.dig("csl")
   end
 end

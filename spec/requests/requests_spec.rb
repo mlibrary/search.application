@@ -102,7 +102,7 @@ RSpec.describe "requests" do
   end
   context "catalog search results" do
     it "shows the results page when there is a query parameter" do
-      stub_request(:get, "#{S.catalog_api_url}/search?offset=0")
+      stub_request(:get, "#{S.catalog_api_url}/search?offset=0&query=title:(test)&limit=10")
         .to_return(status: 200, body: base_results.to_json, headers: {content_type: "application/json"})
       get "/catalog?query=title:(test)"
       expect(last_response.body).to include("Catalog results")

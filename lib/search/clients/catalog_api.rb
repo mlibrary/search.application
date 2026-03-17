@@ -18,7 +18,7 @@ module Search
       end
 
       def get_results(limit: 10, offset: 0, query: "*", filters: [])
-        @conn.get("search", offset: offset).body
+        @conn.get("search", offset: offset, limit: limit, query: query).body
       end
     end
   end
