@@ -160,45 +160,49 @@ const generateCitations = async ({
   citationCache.push(citationStyle);
 };
 
-const regenerateCitations = (citations = generateCitations, activeTab = getActiveCitationTab) => {
+const regenerateCitations = ({ generateTabCitations = generateCitations, tab = getActiveCitationTab() } = {}) => {
   // Clear the cache
   citationStyleCache = [];
 
   // Generate the citations
-  citations({ tab: activeTab() });
+  generateTabCitations({ tab });
 };
 
-const handleTabClick = (citations) => {
+const generateCitationsOnTabClick = ({ event, generateTabCitations = generateCitations } = {}) => {
+  const tab = event.target.closest('[role="tab"]');
+
+  // Return early if tab is not clicked or has closed
+  if (!tab || tab.getAttribute('aria-selected') !== 'true') {
+    return;
+  }
+
+  // Generate the citations for the clicked tab
+  generateTabCitations({ tab });
+};
+
+const handleCitationTabClick = ({ generateCitationsOnClick = generateCitationsOnTabClick } = {}) => {
   // Check if a click occurred in the tablist
   document.querySelector('.citation > [role="tablist"]').addEventListener('click', (event) => {
-    const tab = event.target.closest('[role="tab"]');
-
-    // Return early if tab is not clicked or has closed
-    if (!tab || tab.getAttribute('aria-selected') !== 'true') {
-      return;
-    }
-
-    // `citations` is passed in for testing purposes
-    citations({ tab });
+    generateCitationsOnClick({ event });
   });
 };
 
 const displayCitations = ({
-  activeCitationTab = getActiveCitationTab(),
-  citations = generateCitations,
-  tabClick = handleTabClick
+  activeCitationTab = getActiveCitationTab,
+  generateTabCitations = generateCitations,
+  handleTabClick = handleCitationTabClick
 } = {}) => {
   // Check if there is an active tab on load
-  const tab = activeCitationTab;
+  const tab = activeCitationTab();
 
   // Get the citations of the active tab
   if (tab) {
     // Generate the citations
-    citations({ tab });
+    generateTabCitations({ tab });
   }
 
   // Update citations on tab click
-  tabClick(citations);
+  handleTabClick();
 };
 
 const initializeCitations = ({
@@ -234,9 +238,10 @@ export {
   fetchCitationFiles,
   fetchCitationFileText,
   generateCitations,
+  generateCitationsOnTabClick,
   getBibliographyEntries,
   getListCitationData,
-  handleTabClick,
+  handleCitationTabClick,
   initializeCitations,
   regenerateCitations,
   retrieveItem,

@@ -6,9 +6,10 @@ import {
   fetchCitationFiles,
   fetchCitationFileText,
   generateCitations,
+  generateCitationsOnTabClick,
   getBibliographyEntries,
   getListCitationData,
-  handleTabClick,
+  handleCitationTabClick,
   initializeCitations,
   regenerateCitations,
   retrieveItem,
@@ -42,7 +43,6 @@ getDatastores({ list: global.temporaryList }).forEach((datastore) => {
 });
 
 describe('citation', function () {
-  let citationSpy = null;
   let getTabList = null;
   let getTab = null;
 
@@ -73,8 +73,6 @@ describe('citation', function () {
       </ol>
     `;
 
-    citationSpy = sinon.spy();
-
     getTabList = () => {
       return document.querySelector('[role="tablist"]');
     };
@@ -85,7 +83,6 @@ describe('citation', function () {
   });
 
   afterEach(function () {
-    citationSpy = null;
     getTabList = null;
     getTab = null;
   });
@@ -725,142 +722,210 @@ describe('citation', function () {
   });
 
   describe('regenerateCitations()', function () {
-    let citationsSpy = null;
-    let activeTabExample = null;
-    let activeTabStub = null;
+    let generateCitationsSpy = null;
+    let args = null;
 
     beforeEach(function () {
-      // Reset cache for a clean start
-      citationStyleCache.length = 0;
+      generateCitationsSpy = sinon.spy();
+      args = {
+        generateTabCitations: generateCitationsSpy,
+        tab: getTab()
+      };
 
-      // Check that cache is clear
-      expect(citationStyleCache, '`citationStyleCache` should be empty').to.be.empty;
-
-      // Cache styles
-      citationStyleCache.push('apa', 'mla', 'chicago');
-
-      // Check that styles are cached
-      expect(citationStyleCache, '`citationStyleCache` should no longer be empty').to.not.be.empty;
-
-      // Create spies and stubs
-      citationsSpy = sinon.spy();
-      activeTabExample = 'mockTab';
-      activeTabStub = sinon.stub().returns(activeTabExample);
+      // Check that the cache is populated
+      citationStyleCache.push('some-style');
+      expect(citationStyleCache.length, 'the `citationStyleCache` should have at least one entry before regeneration').to.be.greaterThan(0);
 
       // Call the function
-      regenerateCitations(citationsSpy, activeTabStub);
+      regenerateCitations(args);
     });
 
     afterEach(function () {
-      citationsSpy = null;
-      activeTabExample = null;
-      activeTabStub = null;
+      generateCitationsSpy = null;
+      args = null;
     });
 
     it('should clear `citationStyleCache`', function () {
       expect(citationStyleCache, '`citationStyleCache` should have been cleared').to.deep.equal([]);
     });
 
-    it('should call `citations` with the result of `activeTab`', function () {
-      expect(citationsSpy.calledOnce, '`citations` should have been called once').to.be.true;
-      expect(citationsSpy.calledOnceWithExactly({ tab: activeTabExample }), '`citations` should have been called with `activeTab`').to.be.true;
+    it('should call `generateCitations` with the correct arguments', function () {
+      expect(generateCitationsSpy.calledOnceWithExactly({ tab: args.tab }), '`generateCitations` should have been called with the correct arguments').to.be.true;
     });
   });
 
-  describe('handleTabClick()', function () {
-    beforeEach(function () {
-      // Call the function with the spy
-      handleTabClick(citationSpy);
-    });
-
-    it('should not call the function if a tab was not clicked', function () {
-      // Click the tablist
-      const clickEvent = new window.Event('click', { bubbles: true });
-      getTabList().dispatchEvent(clickEvent);
-
-      // Check that the function was not called
-      expect(citationSpy.calledOnce, 'the function should not have been called if a tab was not clicked').to.be.false;
-    });
-
-    it('should not call the function if a tab was unselected on click', function () {
-      // Get the `APA` tab
-      const unselectedTab = getTab('apa');
-
-      // Check that the tab is not selected
-      expect(unselectedTab.getAttribute('aria-selected'), 'the `APA` tab should not be selected').to.equal('false');
-
-      // Click the tab
-      const clickEvent = new window.Event('click', { bubbles: true });
-      unselectedTab.dispatchEvent(clickEvent);
-
-      // Check that the function was not called
-      expect(citationSpy.calledOnce, 'the function should not have been called if a tab was unselected').to.be.false;
-    });
-
-    it('should call the function if a tab was selected on click', function () {
-      // Get the `MLA` tab
-      const selectedTab = getTab('mla');
-
-      // Check that the tab is selected
-      expect(selectedTab.getAttribute('aria-selected'), 'the `MLA` tab should be selected').to.equal('true');
-
-      // Click the tab
-      const clickEvent = new window.Event('click', { bubbles: true });
-      selectedTab.dispatchEvent(clickEvent);
-
-      // Check that the function was not called
-      expect(citationSpy.calledOnce, 'the function should have been called if a tab was selected').to.be.true;
-    });
-  });
-
-  describe('displayCitations()', function () {
-    let tabClickSpy = null;
-    let callFunction = null;
+  describe('generateCitationsOnTabClick()', function () {
+    let generateCitationsSpy = null;
+    let args = null;
 
     beforeEach(function () {
-      tabClickSpy = sinon.spy();
-      callFunction = () => {
-        return displayCitations(citationSpy, tabClickSpy);
+      generateCitationsSpy = sinon.spy();
+      args = {
+        event: { target: {
+          closest: () => {
+            return getTab();
+          }
+        } },
+        generateTabCitations: generateCitationsSpy
       };
     });
 
     afterEach(function () {
-      tabClickSpy = null;
-      callFunction = null;
+      generateCitationsSpy = null;
+      args = null;
     });
 
-    it('should call the citations spy if there is an active tab', function () {
-      // Check if there is an active tab
-      expect(getActiveCitationTab(), 'a tab should be active').to.not.be.null;
+    it('should call `generateCitations` if the target is a selected tab', function () {
+      // Make an existing, selected tab the target
+      args.event.target.closest = () => {
+        return getTab();
+      };
+
+      // Check that the target exsists and is a tab
+      expect(args.event.target.closest(), 'the event target should be a tab').to.deep.equal(getTab());
+
+      // Check that the target is a selected tab
+      expect(args.event.target.closest().getAttribute('aria-selected'), 'the event target should be a selected tab').to.equal('true');
 
       // Call the function
-      callFunction();
+      generateCitationsOnTabClick(args);
 
-      // Check that `citations` was called
-      expect(citationSpy.calledOnce, 'the `citationSpy` should have been called once').to.be.true;
+      // Check that the function was called
+      expect(generateCitationsSpy.calledOnceWithExactly({ tab: args.event.target.closest() }), '`generateCitations` should have been called if a tab was selected').to.be.true;
     });
 
-    it('should not call the citations spy if there is no active tab', function () {
-      // Make the active tab inactive
-      getActiveCitationTab().setAttribute('aria-selected', 'false');
-      expect(getActiveCitationTab(), 'a tab should not be active').to.be.null;
+    it('should call `generateCitations` the target does not exist', function () {
+      // Make the target not exist
+      args.event.target.closest = () => {
+        return null;
+      };
 
       // Call the function
-      callFunction();
+      generateCitationsOnTabClick(args);
 
-      // Check that `citations` was not called
-      expect(citationSpy.calledOnce, 'the `citationSpy` should not have been called').to.be.false;
+      // Check that the function was not called
+      expect(generateCitationsSpy.notCalled, '`generateCitations` should not have been called if the target does not exist').to.be.true;
     });
 
-    it('should call the `tabClick` function with `citations` stubbed', function () {
+    it('should not call `generateCitations` if a tab was unselected on click', function () {
+      // Make an existing, selected tab the target
+      args.event.target.closest = () => {
+        return getTab('apa');
+      };
+
+      // Check that the target exsists and is a tab
+      expect(args.event.target.closest(), 'the event target should be a tab').to.deep.equal(getTab('apa'));
+
+      // Check that the target is an unselected tab
+      expect(args.event.target.closest().getAttribute('aria-selected'), 'the event target should be an unselected tab').to.equal('false');
+
       // Call the function
-      callFunction();
+      generateCitationsOnTabClick(args);
 
-      // Check that the `tabClick` function was called
-      expect(tabClickSpy.calledOnce, 'the `tabClick` should have been called once').to.be.true;
+      // Check that the function was not called
+      expect(generateCitationsSpy.notCalled, '`generateCitations` should not have been called if a tab was unselected').to.be.true;
+    });
+  });
 
-      // Check that `tabClickSpy` was called with `citationSpy`
-      expect(tabClickSpy.calledOnceWithExactly(citationSpy), '`tabClickSpy` should have been called with `citationSpy` once').to.be.true;
+  describe('handleCitationTabClick()', function () {
+    let generateCitationsOnTabClickSpy = null;
+    let args = null;
+    let event = null;
+
+    beforeEach(function () {
+      generateCitationsOnTabClickSpy = sinon.spy();
+      args = {
+        generateCitationsOnClick: generateCitationsOnTabClickSpy
+      };
+
+      // Call the function
+      handleCitationTabClick(args);
+
+      // Click the tablist
+      event = new window.Event('click', { bubbles: true });
+      getTabList().dispatchEvent(event);
+    });
+
+    afterEach(function () {
+      generateCitationsOnTabClickSpy = null;
+      event = null;
+    });
+
+    it('should call `generateCitationsOnClick` with the correct arguments', function () {
+      expect(generateCitationsOnTabClickSpy.calledOnceWithExactly({ event }), '`generateCitationsOnClick` should have been called with the correct arguments').to.be.true;
+    });
+  });
+
+  describe('displayCitations()', function () {
+    let getActiveCitationTabStub = null;
+    let generateCitationsSpy = null;
+    let handleCitationTabClickSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      getActiveCitationTabStub = sinon.stub().callsFake(() => {
+        return getActiveCitationTab();
+      });
+      generateCitationsSpy = sinon.spy();
+      handleCitationTabClickSpy = sinon.spy();
+      args = {
+        activeCitationTab: getActiveCitationTabStub,
+        generateTabCitations: generateCitationsSpy,
+        handleTabClick: handleCitationTabClickSpy
+      };
+    });
+
+    afterEach(function () {
+      getActiveCitationTabStub = null;
+      generateCitationsSpy = null;
+      handleCitationTabClickSpy = null;
+      args = null;
+    });
+
+    describe('when there is an active citation tab', function () {
+      beforeEach(function () {
+        // Ensure there is an active tab
+        const activeTab = getActiveCitationTab();
+        activeTab.setAttribute('aria-selected', 'true');
+
+        // Call the function
+        displayCitations(args);
+      });
+
+      it('should call `getActiveCitationTab` with the correct arguments', function () {
+        expect(getActiveCitationTabStub.calledOnceWithExactly(), '`getActiveCitationTab` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `generateCitations` with the correct arguments', function () {
+        expect(generateCitationsSpy.calledOnceWithExactly({ tab: args.activeCitationTab() }), '`generateCitations` should have been called once with the correct arguments').to.be.true;
+      });
+
+      it('should call `handleCitationTabClick` with the correct arguments', function () {
+        expect(handleCitationTabClickSpy.calledOnceWithExactly(), '`handleCitationTabClick` should have been called with the correct arguments').to.be.true;
+      });
+    });
+
+    describe('when there is no active citation tab', function () {
+      beforeEach(function () {
+        // Ensure there is no active tab
+        const activeTab = getActiveCitationTab();
+        activeTab.setAttribute('aria-selected', 'false');
+
+        // Call the function
+        displayCitations(args);
+      });
+
+      it('should call `getActiveCitationTab` with the correct arguments', function () {
+        expect(getActiveCitationTabStub.calledOnceWithExactly(), '`getActiveCitationTab` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should not call `generateCitations`', function () {
+        expect(generateCitationsSpy.notCalled, '`generateCitations` should NOT have been called').to.be.true;
+      });
+
+      it('should call `handleCitationTabClick` with the correct arguments', function () {
+        expect(handleCitationTabClickSpy.calledOnceWithExactly(), '`handleCitationTabClick` should have been called with the correct arguments').to.be.true;
+      });
     });
   });
 
