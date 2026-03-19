@@ -46,6 +46,10 @@ class Search::Presenters::Page
   def breadcrumbs
   end
 
+  def actions
+    ACTIONS
+  end
+
   private
 
   def title_parts
@@ -56,6 +60,7 @@ class Search::Presenters::Page
     []
   end
 end
+
 require_relative "page/static"
 require_relative "page/datastore_static"
 require_relative "page/list"
