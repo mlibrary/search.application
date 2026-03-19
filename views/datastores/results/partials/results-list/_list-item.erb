@@ -5,8 +5,7 @@
     <%= erb :"/datastores/partials/_metadata", locals: { metadata: result.metadata } %>
   </div>
   <%=
-    # Show holdings unless viewing My Temporary List
-    if !request.path.include?("everything/list")
+    if @presenter.show_holdings?
       erb :"datastores/partials/_holdings", locals: { holdings: result.holdings.list }
     end
   %>
