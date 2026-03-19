@@ -164,36 +164,36 @@ describe('toggle selected', function () {
       args = null;
     });
 
-    it('should update the tab text to `Add selected`', function () {
+    it('should update the tab text to `Add&nbsp;selected`', function () {
       // Call the function
       updateToggleSelectedTabText(args);
 
-      // Check that the tab text has been updated to `Add selected`
-      expect(args.tab.textContent, 'The tab text should have been updated to `Add selected`').to.equal('Add selected');
+      // Check that the tab `innerHTML` has been updated to `Add&nbsp;selected`
+      expect(args.tab.innerHTML, 'The tab `innerHTML` should have been updated to `Add&nbsp;selected`').to.equal('Add&nbsp;selected');
     });
 
-    it('should update the tab text to `Remove selected`', function () {
+    it('should update the tab `innerHTML` to `Remove&nbsp;selected`', function () {
       // Call the function
       updateToggleSelectedTabText({ ...args, inList: true });
 
-      // Check that the tab text has been updated to `Remove selected`
-      expect(args.tab.textContent, 'The tab text should have been updated to `Remove selected`').to.equal('Remove selected');
+      // Check that the tab `innerHTML` has been updated to `Remove&nbsp;selected`
+      expect(args.tab.innerHTML, 'The tab `innerHTML` should have been updated to `Remove&nbsp;selected`').to.equal('Remove&nbsp;selected');
     });
 
-    it('should update the tab text to `Add record`', function () {
+    it('should update the tab `innerHTML` to `Add&nbsp;record`', function () {
       // Call the function
       updateToggleSelectedTabText({ ...args, fullRecord: true });
 
-      // Check that the tab text has been updated to `Add record`
-      expect(args.tab.textContent, 'The tab text should have been updated to `Add record`').to.equal('Add record');
+      // Check that the tab `innerHTML` has been updated to `Add&nbsp;record`
+      expect(args.tab.innerHTML, 'The tab `innerHTML` should have been updated to `Add&nbsp;record`').to.equal('Add&nbsp;record');
     });
 
-    it('should update the tab text to `Remove record`', function () {
+    it('should update the tab `innerHTML` to `Remove&nbsp;record`', function () {
       // Call the function
       updateToggleSelectedTabText({ ...args, fullRecord: true, inList: true });
 
-      // Check that the tab text has been updated to `Remove record`
-      expect(args.tab.textContent, 'The tab text should have been updated to `Remove record`').to.equal('Remove record');
+      // Check that the tab `innerHTML` has been updated to `Remove&nbsp;record`
+      expect(args.tab.innerHTML, 'The tab `innerHTML` should have been updated to `Remove&nbsp;record`').to.equal('Remove&nbsp;record');
     });
   });
 
