@@ -26,7 +26,9 @@ describe('results layout', function () {
   describe('handleSelectionChange()', function () {
     let actionsPanelTextSpy = null;
     let disableActionTabsSpy = null;
+    let regenerateCitationsSpy = null;
     let selectAllCheckboxStateSpy = null;
+    let updateCSLDataSpy = null;
     let updateSelectedCountSpy = null;
     let updateToggleSelectedActionSpy = null;
     let args = null;
@@ -34,13 +36,17 @@ describe('results layout', function () {
     beforeEach(function () {
       actionsPanelTextSpy = sinon.spy();
       disableActionTabsSpy = sinon.spy();
+      regenerateCitationsSpy = sinon.spy();
       selectAllCheckboxStateSpy = sinon.spy();
       updateSelectedCountSpy = sinon.spy();
       updateToggleSelectedActionSpy = sinon.spy();
+      updateCSLDataSpy = sinon.spy();
       args = {
         actionsText: actionsPanelTextSpy,
         disableTabs: disableActionTabsSpy,
         selectAllCheckbox: selectAllCheckboxStateSpy,
+        updateCSL: updateCSLDataSpy,
+        updateCitations: regenerateCitationsSpy,
         updateCount: updateSelectedCountSpy,
         updateToggleSelected: updateToggleSelectedActionSpy
       };
@@ -55,7 +61,9 @@ describe('results layout', function () {
     afterEach(function () {
       actionsPanelTextSpy = null;
       disableActionTabsSpy = null;
+      regenerateCitationsSpy = null;
       selectAllCheckboxStateSpy = null;
+      updateCSLDataSpy = null;
       updateSelectedCountSpy = null;
       updateToggleSelectedActionSpy = null;
       args = null;
@@ -71,6 +79,14 @@ describe('results layout', function () {
 
     it('should call `disableActionTabs` with the correct arguments', function () {
       expect(disableActionTabsSpy.calledOnceWithExactly(), '`disableActionTabs` should have been called on change').to.be.true;
+    });
+
+    it('should call `updateCSLData` with the correct arguments', function () {
+      expect(updateCSLDataSpy.calledOnceWithExactly(), '`updateCSLData` should have been called on change').to.be.true;
+    });
+
+    it('should call `regenerateCitations` with the correct arguments', function () {
+      expect(regenerateCitationsSpy.calledOnceWithExactly(), '`regenerateCitations` should have been called on change').to.be.true;
     });
 
     it('should call `selectAllCheckboxState` with the correct arguments', function () {

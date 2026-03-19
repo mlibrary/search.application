@@ -2,14 +2,18 @@ import { checkboxSelector, getCheckboxes } from './partials/results-list/list-it
 import { disableActionTabs, initializeActions } from '../partials/_actions.js';
 import { selectAll, selectAllCheckboxState, updateSelectedCount } from '../partials/_select-all.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
+import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { temporaryListBanner } from '../list/partials/_go-to.js';
+import { updateCSLData } from '../partials/actions/action/citation/_csl.js';
 import { updateToggleSelectedAction } from '../partials/actions/action/_toggle-selected.js';
 
 const handleSelectionChange = ({
   actionsText = actionsPanelText,
   disableTabs = disableActionTabs,
   selectAllCheckbox = selectAllCheckboxState,
+  updateCitations = regenerateCitations,
   updateCount = updateSelectedCount,
+  updateCSL = updateCSLData,
   updateToggleSelected = updateToggleSelectedAction
 } = {}) => {
   // Watch for changes to the list and update accordingly
@@ -23,6 +27,12 @@ const handleSelectionChange = ({
 
       // Disable action tabs if no records are selected
       disableTabs();
+
+      // Update CSL data
+      updateCSL();
+
+      // Regenerate citations
+      updateCitations();
 
       // Update the state of the `Select All` checkbox
       selectAllCheckbox();

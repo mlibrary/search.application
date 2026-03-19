@@ -1,12 +1,26 @@
+import { cacheCSLData, cslData, updateCSLData } from './citation/_csl.js';
 import { filterSelectedRecords, splitCheckboxValue } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { attachTheCitations } from './citation/tabpanel/_textbox.js';
 import { copyCitation } from './citation/_copy-citation.js';
 import CSL from 'citeproc';
-import { cslData } from './citation/_csl.js';
 import { getActiveCitationTab } from './citation/_tablist.js';
 import { tabControl } from '../../_actions.js';
 
 const citationFileCache = {};
+
+const getListCitationData = ({ list, type }) => {
+  // Make sure `type` is either `csl` or `ris`
+  if (!type || !['csl', 'ris'].includes(type)) {
+    return null;
+  }
+
+  // Map all items in the list to a flat array of the specified citation type
+  return Object.values(list).reduce((acc, datastore) => {
+    return acc.concat(Object.values(datastore).map((item) => {
+      return item.citation[type];
+    }));
+  }, []);
+};
 
 const selectedCitations = ({ filteredValues = filterSelectedRecords(), list, splitValue = splitCheckboxValue, type }) => {
   // Make sure `type` is either `csl` or `ris`
@@ -146,46 +160,67 @@ const generateCitations = async ({
   citationCache.push(citationStyle);
 };
 
-const regenerateCitations = (citations = generateCitations, activeTab = getActiveCitationTab) => {
+const regenerateCitations = ({ generateTabCitations = generateCitations, tab = getActiveCitationTab() } = {}) => {
   // Clear the cache
   citationStyleCache = [];
 
   // Generate the citations
-  citations({ tab: activeTab() });
+  generateTabCitations({ tab });
 };
 
-const handleTabClick = (citations) => {
+const generateCitationsOnTabClick = ({ event, generateTabCitations = generateCitations } = {}) => {
+  const tab = event.target.closest('[role="tab"]');
+
+  // Return early if tab is not clicked or has closed
+  if (!tab || tab.getAttribute('aria-selected') !== 'true') {
+    return;
+  }
+
+  // Generate the citations for the clicked tab
+  generateTabCitations({ tab });
+};
+
+const handleCitationTabClick = ({ generateCitationsOnClick = generateCitationsOnTabClick } = {}) => {
   // Check if a click occurred in the tablist
   document.querySelector('.citation > [role="tablist"]').addEventListener('click', (event) => {
-    const tab = event.target.closest('[role="tab"]');
-
-    // Return early if tab is not clicked or has closed
-    if (!tab || tab.getAttribute('aria-selected') !== 'true') {
-      return;
-    }
-
-    // `citations` is passed in for testing purposes
-    citations({ tab });
+    generateCitationsOnClick({ event });
   });
 };
 
-const displayCitations = (citations = generateCitations, tabClick = handleTabClick) => {
+const displayCitations = ({
+  activeCitationTab = getActiveCitationTab,
+  generateTabCitations = generateCitations,
+  handleTabClick = handleCitationTabClick
+} = {}) => {
   // Check if there is an active tab on load
-  const tab = getActiveCitationTab();
+  const tab = activeCitationTab();
 
   // Get the citations of the active tab
   if (tab) {
-    // `citations` is passed in for testing purposes
-    citations({ tab });
+    // Generate the citations
+    generateTabCitations({ tab });
   }
 
-  // `tabClick` is passed in for testing purposes
-  tabClick(citations);
+  // Update citations on tab click
+  handleTabClick();
 };
 
-const initializeCitations = ({ citations = displayCitations, copyCitationButton = copyCitation, citationTabs = tabControl } = {}) => {
+const initializeCitations = ({
+  cacheCSL = cacheCSLData,
+  citationTabs = tabControl,
+  citations = displayCitations,
+  copyCitationButton = copyCitation,
+  list,
+  updateCSLTextarea = updateCSLData
+} = {}) => {
   // Initialize tab control for citations
   citationTabs('.citation');
+
+  // Cache the CSL data
+  cacheCSL({ list });
+
+  // Update CSL textarea
+  updateCSLTextarea();
 
   // Display the citations
   citations();
@@ -203,8 +238,10 @@ export {
   fetchCitationFiles,
   fetchCitationFileText,
   generateCitations,
+  generateCitationsOnTabClick,
   getBibliographyEntries,
-  handleTabClick,
+  getListCitationData,
+  handleCitationTabClick,
   initializeCitations,
   regenerateCitations,
   retrieveItem,
