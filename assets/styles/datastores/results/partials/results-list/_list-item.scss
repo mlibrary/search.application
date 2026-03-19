@@ -1,4 +1,5 @@
 @use '../../../partials/metadata';
+@use '../../../partials/holdings';
 @use './list-item/header';
 
 // --------------------------------------------------
@@ -8,7 +9,7 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. List Item
+//   2. Information
 //
 // --------------------------------------------------
 
@@ -22,11 +23,11 @@ $class: '.results__list-item';
 
 
 
-// ******************** //
-// *** 2. LIST ITEM *** //
-// ******************** //
+// ********************** //
+// *** 2. INFORMATION *** //
+// ********************** //
 
-#{$class} {
+#{$class}--information {
   padding: 1rem;
   & > * + * {
     margin-top: 1rem;

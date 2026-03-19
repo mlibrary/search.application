@@ -27,6 +27,14 @@ class Search::Presenters::Page
       "#{@uri}/ris"
     end
 
+    def actions
+      ACTIONS.reject { |action| action.uid == "link" }
+    end
+
+    def show_holdings?
+      false
+    end
+
     private
 
     def title_parts

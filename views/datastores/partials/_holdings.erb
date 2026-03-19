@@ -19,7 +19,7 @@
             <li><%= info %></li>
           <% end %>
         </ul>
-        <%= erb :"datastores/partials/_toggle", locals: {classes: ["holding__content--info-toggle"], id: "holding__content--info-#{index}", count: 1, postfix: "holdings notes"} %>
+        <%= erb :"datastores/partials/_toggle", locals: {classes: ["holding__content--info-toggle"], id: "holding__content--info-#{index}", count: 1, postfix: "holdings #{holding.holding_info.count == 1 ? 'note' : 'notes'}"} %>
       <% end %>
       <% if holding.kind == "finding_aid" %>
         <p>

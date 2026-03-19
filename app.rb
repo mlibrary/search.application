@@ -100,6 +100,7 @@ class Search::Application < Sinatra::Base
         # profile.start
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "full_record"
         @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: full_uri, patron: @patron, record_id: params["id"])
+        S.logger.info(@presenter.actions)
         @record = @presenter.record
         erb :"datastores/record/layout", layout: :layout do
           erb :"datastores/record/#{datastore.slug}"

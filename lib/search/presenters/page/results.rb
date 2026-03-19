@@ -60,6 +60,10 @@ class Search::Presenters::Page
       @results.records
     end
 
+    def show_holdings?
+      true
+    end
+
     private
 
     def title_parts
