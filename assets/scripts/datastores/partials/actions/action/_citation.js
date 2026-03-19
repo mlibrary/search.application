@@ -183,7 +183,7 @@ const displayCitations = (citations = generateCitations, tabClick = handleTabCli
   tabClick(citations);
 };
 
-const initializeCitations = (citations = displayCitations, copyCitationButton = copyCitation, citationTabs = tabControl) => {
+const initializeCitations = ({ citations = displayCitations, copyCitationButton = copyCitation, citationTabs = tabControl } = {}) => {
   // Initialize tab control for citations
   citationTabs('.citation');
 

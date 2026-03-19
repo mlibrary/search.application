@@ -82,7 +82,7 @@ const initializeActions = ({
   text();
 
   // Citations
-  citations();
+  citations({ list });
 
   // RIS
   ris({ list });
