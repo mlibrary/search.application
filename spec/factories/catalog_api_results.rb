@@ -3,7 +3,7 @@ module Factories
     def one_record
       {
         "records" => [
-          Factories::CatalogAPIRecord.new(fields: [:id, :title, :citation]).to_h
+          Factories::CatalogAPIRecord.new(fields: [:id, :title, :citation, :holdings]).to_h
         ],
         "filters" => [
           {

@@ -31,6 +31,10 @@ class Search::Presenters::Page
       ACTIONS.reject { |action| action.uid == "link" }
     end
 
+    def show_holdings?
+      false
+    end
+
     private
 
     def title_parts
