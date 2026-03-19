@@ -2,5 +2,10 @@
 <li class="<%= classes.join(' ') %>" data-record-id="<%= result.id %>" data-record-datastore="<%= datastore %>">
   <%= erb :"/datastores/results/partials/results-list/list-item/_header", locals: { datastore: datastore, index: index, record_id: result.id, record_title: result.title } %>
   <%= erb :"/datastores/partials/_metadata", locals: { metadata: result.metadata } %>
-  <%= erb :"datastores/partials/_holdings", locals: { holdings: result.holdings.list } %>
+  <%=
+  # Show holdings unless viewing My Temporary List
+  if !request.path.include?("everything/list")
+    erb :"datastores/partials/_holdings", locals: { holdings: result.holdings.list }
+  end
+  %>
 </li>
