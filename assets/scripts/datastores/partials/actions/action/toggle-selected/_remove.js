@@ -1,14 +1,8 @@
 import { filterSelectedRecords, splitCheckboxValue } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
-import { getToggleSelectedTab, toggleSelectedButton, updateToggleSelectedAction } from '../_toggle-selected.js';
+import { getToggleSelectedTab, toggleSelectedButton, updatedList, updateListForTogglingRecords, updateToggleSelectedAction } from '../_toggle-selected.js';
 import { setSessionStorage, viewingTemporaryList } from '../../../../list/layout.js';
-import { toggleAddedClass, updateListForAddingRecords } from './_add.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
-
-let updatedList = null;
-
-const updateListForRemovingRecords = ({ list }) => {
-  updatedList = { ...list };
-};
+import { toggleAddedClass } from './_add.js';
 
 const getRemoveSelectedButton = () => {
   return document.querySelector(`#actions__toggle-selected--tabpanel .action__toggle-selected--remove`);
@@ -48,7 +42,7 @@ const handleRemoveSelectedClick = ({
   showBanner = temporaryListBanner,
   toggleRemoveButton = toggleSelectedButton,
   toggleSelectedTab = getToggleSelectedTab(),
-  updateList = updateListForAddingRecords,
+  updateList = updateListForTogglingRecords,
   updateToggleSelected = updateToggleSelectedAction,
   viewingList = viewingTemporaryList()
 } = {}) => {
@@ -57,14 +51,17 @@ const handleRemoveSelectedClick = ({
   const originalText = button.textContent;
   const toggleRemoveButtonArgs = { button, disabled: true, originalText, text: 'Removing...' };
 
+  // Create a shallow copy of the list
+  let copiedList = { ...list };
+
   // Disable the button and change the text to indicate that the removal is in progress
   toggleRemoveButton(toggleRemoveButtonArgs);
 
   // Update the list by deleting the selected records
-  updatedList = deleteRecords({ list });
+  copiedList = deleteRecords({ list: copiedList });
 
   // Set the updated list
-  setList({ itemName: 'temporaryList', value: updatedList });
+  setList({ itemName: 'temporaryList', value: copiedList });
 
   // Check if the user is currently viewing My Temporary List
   if (viewingList) {
@@ -72,16 +69,16 @@ const handleRemoveSelectedClick = ({
     reloadPage();
   } else {
     // Update the list for removing records
-    updateList({ list: updatedList });
+    updateList({ list: copiedList });
 
     // Enable the button and change the text back to the original text after the removal is complete
     toggleRemoveButton({ ...toggleRemoveButtonArgs, disabled: false });
 
     // Update the toggle selected action
-    updateToggleSelected({ list: updatedList });
+    updateToggleSelected({ list: copiedList });
 
     // Update the banner to reflect the new count of items in the list
-    showBanner({ list: updatedList });
+    showBanner({ list: copiedList });
 
     // Click the tab to close the tab panel after adding records
     toggleSelectedTab.click();
@@ -100,13 +97,8 @@ const removeSelectedAction = ({
 };
 
 const removeSelected = ({
-  list,
-  removeAction = removeSelectedAction,
-  updateList = updateListForRemovingRecords
+  removeAction = removeSelectedAction
 } = {}) => {
-  // Save the list to a variable that can be updated
-  updateList({ list });
-
   // Initialize the remove selected action
   removeAction();
 };
@@ -116,7 +108,5 @@ export {
   getRemoveSelectedButton,
   handleRemoveSelectedClick,
   removeSelected,
-  removeSelectedAction,
-  updatedList,
-  updateListForRemovingRecords
+  removeSelectedAction
 };

@@ -5,6 +5,8 @@ import {
   toggleActionClasses,
   toggleSelectedAction,
   toggleSelectedButton,
+  updatedList,
+  updateListForTogglingRecords,
   updateToggleSelectedAction,
   updateToggleSelectedTabText
 } from '../../../../../../assets/scripts/datastores/partials/actions/action/_toggle-selected.js';
@@ -29,6 +31,28 @@ describe('toggle selected', function () {
         </div>
       </div>
     `;
+  });
+
+  describe('updateListForTogglingRecords()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = { list: global.temporaryList };
+
+      // Check that `updatedList` is null to begin with
+      expect(updatedList, '`updatedList` should be null before calling `updateListForTogglingRecords`').to.be.null;
+
+      // Call the function
+      updateListForTogglingRecords(args);
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should update the `updatedList` variable with the provided list', function () {
+      expect(updatedList, '`updatedList` should be updated with the provided list').to.deep.equal(args.list);
+    });
   });
 
   describe('getToggleSelectedTab()', function () {
@@ -145,7 +169,7 @@ describe('toggle selected', function () {
       updateToggleSelectedTabText(args);
 
       // Check that the tab text has been updated to `Add selected`
-      expect(args.tab.textContent, 'The tab text should have been updated to `Add selected`').to.equal('Add selected');
+      expect(args.tab.textContent, 'The tab text should have been updated to `Add selected`').to.equal('Add selected');
     });
 
     it('should update the tab text to `Remove selected`', function () {
@@ -153,7 +177,7 @@ describe('toggle selected', function () {
       updateToggleSelectedTabText({ ...args, inList: true });
 
       // Check that the tab text has been updated to `Remove selected`
-      expect(args.tab.textContent, 'The tab text should have been updated to `Remove selected`').to.equal('Remove selected');
+      expect(args.tab.textContent, 'The tab text should have been updated to `Remove selected`').to.equal('Remove selected');
     });
 
     it('should update the tab text to `Add record`', function () {
@@ -161,7 +185,7 @@ describe('toggle selected', function () {
       updateToggleSelectedTabText({ ...args, fullRecord: true });
 
       // Check that the tab text has been updated to `Add record`
-      expect(args.tab.textContent, 'The tab text should have been updated to `Add record`').to.equal('Add record');
+      expect(args.tab.textContent, 'The tab text should have been updated to `Add record`').to.equal('Add record');
     });
 
     it('should update the tab text to `Remove record`', function () {
@@ -169,7 +193,7 @@ describe('toggle selected', function () {
       updateToggleSelectedTabText({ ...args, fullRecord: true, inList: true });
 
       // Check that the tab text has been updated to `Remove record`
-      expect(args.tab.textContent, 'The tab text should have been updated to `Remove record`').to.equal('Remove record');
+      expect(args.tab.textContent, 'The tab text should have been updated to `Remove record`').to.equal('Remove record');
     });
   });
 
@@ -316,12 +340,14 @@ describe('toggle selected', function () {
   });
 
   describe('toggleSelectedAction()', function () {
+    let updateListForTogglingRecordsSpy = null;
     let addSelectedSpy = null;
     let removeSelectedSpy = null;
     let updateToggleSelectedActionSpy = null;
     let args = null;
 
     beforeEach(function () {
+      updateListForTogglingRecordsSpy = sinon.spy();
       addSelectedSpy = sinon.spy();
       removeSelectedSpy = sinon.spy();
       updateToggleSelectedActionSpy = sinon.spy();
@@ -329,7 +355,8 @@ describe('toggle selected', function () {
         add: addSelectedSpy,
         list: global.temporaryList,
         remove: removeSelectedSpy,
-        updateAction: updateToggleSelectedActionSpy
+        updateAction: updateToggleSelectedActionSpy,
+        updateList: updateListForTogglingRecordsSpy
       };
 
       // Call the function
@@ -337,22 +364,27 @@ describe('toggle selected', function () {
     });
 
     afterEach(function () {
+      updateListForTogglingRecordsSpy = null;
       addSelectedSpy = null;
       removeSelectedSpy = null;
       updateToggleSelectedActionSpy = null;
       args = null;
     });
 
+    it('should call `updateListForTogglingRecords` with the correct arguments', function () {
+      expect(updateListForTogglingRecordsSpy.calledOnceWithExactly({ list: args.list }), '`updateList` should have been called with the correct arguments').to.be.true;
+    });
+
     it('should call `addSelected` with the correct arguments', function () {
-      expect(addSelectedSpy.calledOnceWithExactly({ list: args.list }), '`add` should have been called with the correct arguments').to.be.true;
+      expect(addSelectedSpy.calledOnceWithExactly(), '`add` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `removeSelected` with the correct arguments', function () {
-      expect(removeSelectedSpy.calledOnceWithExactly({ list: args.list }), '`remove` should have been called with the correct arguments').to.be.true;
+      expect(removeSelectedSpy.calledOnceWithExactly(), '`remove` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `updateToggleSelectedAction` with the correct arguments', function () {
-      expect(updateToggleSelectedActionSpy.calledOnceWithExactly({ list: args.list }), '`updateAction` should have been called with the correct arguments').to.be.true;
+      expect(updateToggleSelectedActionSpy.calledOnceWithExactly(), '`updateAction` should have been called with the correct arguments').to.be.true;
     });
   });
 });

@@ -1,14 +1,7 @@
 import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
-import { getToggleSelectedTab, toggleSelectedButton, updateToggleSelectedAction } from '../_toggle-selected.js';
+import { getToggleSelectedTab, toggleSelectedButton, updatedList, updateListForTogglingRecords, updateToggleSelectedAction } from '../_toggle-selected.js';
 import { inTemporaryList, setSessionStorage } from '../../../../list/layout.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
-import { updateListForRemovingRecords } from './_remove.js';
-
-let updatedList = null;
-
-const updateListForAddingRecords = ({ list }) => {
-  updatedList = { ...list };
-};
 
 const getAddSelectedButton = () => {
   return document.querySelector(`#actions__toggle-selected--tabpanel .action__toggle-selected--add`);
@@ -109,7 +102,7 @@ const handleAddSelectedClick = async ({
   styleRecords = styleAddedRecords,
   toggleAddButton = toggleSelectedButton,
   toggleSelectedTab = getToggleSelectedTab(),
-  updateList = updateListForRemovingRecords,
+  updateList = updateListForTogglingRecords,
   updateToggleSelected = updateToggleSelectedAction
 } = {}) => {
   const button = event.target;
@@ -165,13 +158,8 @@ const addSelectedAction = ({
 
 const addSelected = ({
   addAction = addSelectedAction,
-  list,
-  styleRecords = styleAddedRecords,
-  updateList = updateListForAddingRecords
+  styleRecords = styleAddedRecords
 } = {}) => {
-  // Save the list to a variable that can be updated
-  updateList({ list });
-
   // Style records on load
   styleRecords();
 
@@ -187,7 +175,5 @@ export {
   getAddSelectedButton,
   handleAddSelectedClick,
   styleAddedRecords,
-  toggleAddedClass,
-  updatedList,
-  updateListForAddingRecords
+  toggleAddedClass
 };

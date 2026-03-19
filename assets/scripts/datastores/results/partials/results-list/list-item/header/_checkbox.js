@@ -77,6 +77,7 @@ const someCheckboxesChecked = (checked = false) => {
 };
 
 export {
+  checkboxSelector,
   filterSelectedRecords,
   getCheckboxes,
   getCheckedCheckboxes,

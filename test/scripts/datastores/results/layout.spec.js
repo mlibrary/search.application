@@ -28,6 +28,7 @@ describe('results layout', function () {
     let disableActionTabsSpy = null;
     let selectAllCheckboxStateSpy = null;
     let updateSelectedCountSpy = null;
+    let updateToggleSelectedActionSpy = null;
     let args = null;
 
     beforeEach(function () {
@@ -35,11 +36,13 @@ describe('results layout', function () {
       disableActionTabsSpy = sinon.spy();
       selectAllCheckboxStateSpy = sinon.spy();
       updateSelectedCountSpy = sinon.spy();
+      updateToggleSelectedActionSpy = sinon.spy();
       args = {
-        actionsPanel: actionsPanelTextSpy,
+        actionsText: actionsPanelTextSpy,
         disableTabs: disableActionTabsSpy,
         selectAllCheckbox: selectAllCheckboxStateSpy,
-        updateCount: updateSelectedCountSpy
+        updateCount: updateSelectedCountSpy,
+        updateToggleSelected: updateToggleSelectedActionSpy
       };
 
       // Call the function
@@ -54,63 +57,128 @@ describe('results layout', function () {
       disableActionTabsSpy = null;
       selectAllCheckboxStateSpy = null;
       updateSelectedCountSpy = null;
+      updateToggleSelectedActionSpy = null;
       args = null;
     });
 
-    it('should call `actionsPanelText` on change', function () {
-      expect(actionsPanelTextSpy.calledOnce, '`actionsPanelText` should have been called on change').to.be.true;
+    it('should call `updateToggleSelectedAction` with the correct arguments', function () {
+      expect(updateToggleSelectedActionSpy.calledOnceWithExactly(), '`updateToggleSelectedAction` should have been called on change').to.be.true;
     });
 
-    it('should call `disableActionTabs` on change', function () {
-      expect(disableActionTabsSpy.calledOnce, '`disableActionTabs` should have been called on change').to.be.true;
+    it('should call `actionsPanelText` with the correct arguments', function () {
+      expect(actionsPanelTextSpy.calledOnceWithExactly(), '`actionsPanelText` should have been called on change').to.be.true;
     });
 
-    it('should call `selectAllCheckboxState` on change', function () {
-      expect(selectAllCheckboxStateSpy.calledOnce, '`selectAllCheckboxState` should have been called on change').to.be.true;
+    it('should call `disableActionTabs` with the correct arguments', function () {
+      expect(disableActionTabsSpy.calledOnceWithExactly(), '`disableActionTabs` should have been called on change').to.be.true;
     });
 
-    it('should call `updateSelectedCount` on change', function () {
-      expect(updateSelectedCountSpy.calledOnce, '`updateSelectedCount` should have been called on change').to.be.true;
+    it('should call `selectAllCheckboxState` with the correct arguments', function () {
+      expect(selectAllCheckboxStateSpy.calledOnceWithExactly(), '`selectAllCheckboxState` should have been called on change').to.be.true;
+    });
+
+    it('should call `updateSelectedCount` with the correct arguments', function () {
+      expect(updateSelectedCountSpy.calledOnceWithExactly(), '`updateSelectedCount` should have been called on change').to.be.true;
     });
   });
 
   describe('resultsList()', function () {
+    let initializeActionsSpy = null;
     let actionsPanelTextSpy = null;
     let disableActionTabsSpy = null;
     let handleSelectionChangeSpy = null;
+    let selectAllSpy = null;
+    let temporaryListBannerSpy = null;
     let args = null;
 
     beforeEach(function () {
+      initializeActionsSpy = sinon.spy();
       actionsPanelTextSpy = sinon.spy();
       disableActionTabsSpy = sinon.spy();
       handleSelectionChangeSpy = sinon.spy();
+      selectAllSpy = sinon.spy();
+      temporaryListBannerSpy = sinon.spy();
       args = {
-        actionsPanel: actionsPanelTextSpy,
+        actionsPanel: initializeActionsSpy,
+        actionsText: actionsPanelTextSpy,
         disableTabs: disableActionTabsSpy,
-        handleChange: handleSelectionChangeSpy
+        handleChange: handleSelectionChangeSpy,
+        initializeSelectAll: selectAllSpy,
+        list: global.temporaryList,
+        showBanner: temporaryListBannerSpy
       };
-
-      // Call the function
-      resultsList(args);
     });
 
     afterEach(function () {
+      initializeActionsSpy = null;
       actionsPanelTextSpy = null;
       disableActionTabsSpy = null;
       handleSelectionChangeSpy = null;
+      selectAllSpy = null;
+      temporaryListBannerSpy = null;
       args = null;
     });
 
-    it('should call `actionsPanelText`', function () {
-      expect(actionsPanelTextSpy.calledOnce, '`actionsPanelText` should have been called').to.be.true;
+    describe('when there is at least one checkbox', function () {
+      beforeEach(function () {
+        // Call the function
+        resultsList({ ...args, checkboxCount: 1 });
+      });
+
+      it('should call `temporaryListBanner` with the correct arguments', function () {
+        expect(temporaryListBannerSpy.calledOnceWithExactly({ list: global.temporaryList }), '`temporaryListBanner` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `initializeActions` with the correct arguments', function () {
+        expect(initializeActionsSpy.calledOnceWithExactly({ list: global.temporaryList }), '`initializeActions` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `actionsPanelText` with the correct arguments', function () {
+        expect(actionsPanelTextSpy.calledOnceWithExactly(), '`actionsPanelText` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `disableActionTabs` with the correct arguments', function () {
+        expect(disableActionTabsSpy.calledOnceWithExactly(), '`disableActionTabs` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `selectAll` with the correct arguments', function () {
+        expect(selectAllSpy.calledOnceWithExactly(), '`selectAll` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `handleSelectionChange` with the correct arguments', function () {
+        expect(handleSelectionChangeSpy.calledOnceWithExactly({ list: global.temporaryList }), '`handleSelectionChange` should have been called with the correct arguments').to.be.true;
+      });
     });
 
-    it('should call `disableActionTabs`', function () {
-      expect(disableActionTabsSpy.calledOnce, '`disableActionTabs` should have been called').to.be.true;
-    });
+    describe('when there are no checkboxes', function () {
+      beforeEach(function () {
+        // Call the function
+        resultsList({ ...args, checkboxCount: 0 });
+      });
 
-    it('should call `handleSelectionChange`', function () {
-      expect(handleSelectionChangeSpy.calledOnce, '`handleSelectionChange` should have been called').to.be.true;
+      it('should not call `temporaryListBanner`', function () {
+        expect(temporaryListBannerSpy.notCalled, '`temporaryListBanner` should not have been called').to.be.true;
+      });
+
+      it('should not call `initializeActions`', function () {
+        expect(initializeActionsSpy.notCalled, '`initializeActions` should not have been called').to.be.true;
+      });
+
+      it('should not call `actionsPanelText`', function () {
+        expect(actionsPanelTextSpy.notCalled, '`actionsPanelText` should not have been called').to.be.true;
+      });
+
+      it('should not call `disableActionTabs`', function () {
+        expect(disableActionTabsSpy.notCalled, '`disableActionTabs` should not have been called').to.be.true;
+      });
+
+      it('should not call `selectAll`', function () {
+        expect(selectAllSpy.notCalled, '`selectAll` should not have been called').to.be.true;
+      });
+
+      it('should not call `handleSelectionChange`', function () {
+        expect(handleSelectionChangeSpy.notCalled, '`handleSelectionChange` should not have been called').to.be.true;
+      });
     });
   });
 });
