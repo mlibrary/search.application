@@ -16,6 +16,10 @@ module Search
       def get_record(id)
         @conn.get("records/#{id}").body
       end
+
+      def get_results(limit: 10, offset: 0, query: "*", filters: [])
+        @conn.get("search", offset: offset, limit: limit, query: query).body
+      end
     end
   end
 end
