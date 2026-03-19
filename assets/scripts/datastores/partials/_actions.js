@@ -75,23 +75,24 @@ const initializeActions = ({
   // Actions panel
   tabControlFunction('.actions');
 
+  // Copy link
+  link();
+
+  // Toggle add/remove selected
+  // Initialize this action before the rest to ensure the necessary state is set for all checkboxes
+  toggleSelected({ list });
+
   // Email
   email();
 
   // Text
   text();
 
-  // Citations
-  citations({ list });
-
   // RIS
   ris({ list });
 
-  // Copy link
-  link();
-
-  // Toggle add/remove selected
-  toggleSelected({ list });
+  // Citations
+  citations({ list });
 };
 
 export {

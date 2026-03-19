@@ -199,6 +199,14 @@ describe('actions', function () {
       expect(tabControlSpy.calledOnceWithExactly('.actions'), '`tabControlFunction` should have been called with the correct arguments').to.be.true;
     });
 
+    it('should call `copyLink` with the correct arguments', function () {
+      expect(copyLinkSpy.calledOnceWithExactly(), '`copyLink` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleSelected` with the correct arguments', function () {
+      expect(toggleSelectedSpy.calledOnceWithExactly({ list: args.list }), '`toggleSelected` should have been called with the correct arguments').to.be.true;
+    });
+
     it('should call `emailAction` with the correct arguments', function () {
       expect(emailActionSpy.calledOnceWithExactly(), '`emailAction` should have been called with the correct arguments').to.be.true;
     });
@@ -213,14 +221,6 @@ describe('actions', function () {
 
     it('should call `downloadTemporaryListRIS` with the correct arguments', function () {
       expect(downloadTemporaryListRISSpy.calledOnceWithExactly({ list: args.list }), '`downloadTemporaryListRIS` should have been called with the correct arguments').to.be.true;
-    });
-
-    it('should call `copyLink` with the correct arguments', function () {
-      expect(copyLinkSpy.calledOnceWithExactly(), '`copyLink` should have been called with the correct arguments').to.be.true;
-    });
-
-    it('should call `toggleSelected` with the correct arguments', function () {
-      expect(toggleSelectedSpy.calledOnceWithExactly({ list: args.list }), '`toggleSelected` should have been called with the correct arguments').to.be.true;
     });
   });
 });
