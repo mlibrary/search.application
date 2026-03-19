@@ -1,4 +1,13 @@
 class Search::Presenters::Page
+  ACTIONS = [
+    ["email", "Email"],
+    ["text", "Text"],
+    ["citation", "Citation"],
+    ["ris", "Export&nbsp;Citation (EndNote,&nbsp;Zotero,&nbsp;etc.)"],
+    ["link", "Copy&nbsp;link"],
+    ["toggle-selected", "Toggle&nbsp;selected"]
+  ].map { |uid, text| Search::Presenters::Action.new(uid: uid, text: text) }
+
   attr_reader :slug, :description
   def initialize(slug:, datastore:, uri:, patron:, title: nil, description: nil)
     @title = title
@@ -46,6 +55,10 @@ class Search::Presenters::Page
   def breadcrumbs
   end
 
+  def actions
+    ACTIONS
+  end
+
   private
 
   def title_parts
@@ -56,6 +69,7 @@ class Search::Presenters::Page
     []
   end
 end
+
 require_relative "page/static"
 require_relative "page/datastore_static"
 require_relative "page/list"

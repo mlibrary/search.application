@@ -27,6 +27,10 @@ class Search::Presenters::Page
       "#{@uri}/ris"
     end
 
+    def actions
+      ACTIONS.reject { |action| action.uid == "link" }
+    end
+
     private
 
     def title_parts

@@ -2,6 +2,7 @@ module Search
   module Presenters
   end
 end
+require "search/presenters/action"
 require "search/presenters/affiliations"
 require "search/presenters/breadcrumbs"
 require "search/presenters/icons"
