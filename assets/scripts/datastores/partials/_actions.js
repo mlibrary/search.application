@@ -88,11 +88,11 @@ const initializeActions = ({
   // Text
   text();
 
-  // RIS
-  ris({ list });
-
   // Citations
   citations({ list });
+
+  // RIS
+  ris({ list });
 };
 
 export {

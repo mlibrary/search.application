@@ -1,11 +1,11 @@
 import { disableActionTabs, initializeActions } from '../partials/_actions.js';
 import { selectAll, selectAllCheckboxState, updateSelectedCount } from '../partials/_select-all.js';
 import { actionsPanelText } from '../partials/actions/_summary.js';
-import { displayCSLData } from '../partials/actions/action/citation/_csl.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { removeEmptyDatastoreSections } from './partials/results/_datastores.js';
 import { removeEmptyListMessage } from './partials/_empty.js';
 import { removeListResults } from './partials/_results.js';
+import { updateCSLData } from '../partials/actions/action/citation/_csl.js';
 import { updateResultsLists } from '../results/partials/_results-list.js';
 
 const defaultTemporaryList = {
@@ -105,13 +105,13 @@ const defaultActions = {
   disableActionTabs: () => {
     return disableActionTabs();
   },
-  displayCSLData,
   regenerateCitations,
   selectAllCheckboxState,
+  updateCSLData,
   updateSelectedCount
 };
 
-const handleSelectionChange = ({ actions, list }) => {
+const handleSelectionChange = ({ actions }) => {
   // Watch for changes to the list and update accordingly
   document.querySelector('.list').addEventListener('change', (event) => {
     if (event.target.matches(`input[type="checkbox"].record__checkbox, input[type="checkbox"].select-all__checkbox`)) {
@@ -119,19 +119,19 @@ const handleSelectionChange = ({ actions, list }) => {
       actions.selectAllCheckboxState();
       actions.updateSelectedCount();
       actions.disableActionTabs();
-      actions.displayCSLData({ list });
+      actions.updateCSLData();
       actions.regenerateCitations();
     }
   });
 };
 
-const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChange = handleSelectionChange, list } = {}) => {
+const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChange = handleSelectionChange } = {}) => {
   // Update Actions panel
   actions.actionsPanelText();
-  actions.displayCSLData({ list });
+  actions.updateCSLData();
 
   // `handleChange` is passed in for testing purposes
-  handleChange({ actions, list });
+  handleChange({ actions });
 };
 
 const temporaryList = ({
@@ -154,14 +154,14 @@ const temporaryList = ({
     return;
   }
 
-  // Initialize functions that should only run if My Temporary List is not empty
-  initializeFunctions({ list });
-
   // Actions panel
   actionsPanel({ list });
 
   // Initialize select all partial
   initializeSelectAll();
+
+  // Initialize functions that should only run if My Temporary List is not empty
+  initializeFunctions();
 };
 
 export {

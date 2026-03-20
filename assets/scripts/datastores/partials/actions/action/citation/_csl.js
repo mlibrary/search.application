@@ -1,5 +1,5 @@
-import { getListCitationData, selectedCitations } from '../_citation.js';
 import { getCheckboxes } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
+import { getListCitationData } from '../_citation.js';
 import { viewingTemporaryList } from '../../../../list/layout.js';
 
 let cslDataCache = null;
@@ -51,16 +51,10 @@ const updateCSLData = ({
   textArea.textContent = JSON.stringify(getCSLData);
 };
 
-const displayCSLData = ({ getCitations = selectedCitations, list, textArea = getCSLTextarea }) => {
-  // Apply the data to the textarea
-  textArea().textContent = JSON.stringify(getCitations({ list, type: 'csl' }));
-};
-
 export {
   cacheCSLData,
   cslData,
   cslDataCache,
-  displayCSLData,
   getCSLTextarea,
   getSelectedCSLData,
   updateCSLData

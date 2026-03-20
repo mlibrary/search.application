@@ -2,15 +2,14 @@ import {
   cacheCSLData,
   cslData,
   cslDataCache,
-  displayCSLData,
   getCSLTextarea,
   getSelectedCSLData,
   updateCSLData
 } from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
 import { getCheckboxes, getCheckedCheckboxes } from '../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
-import { getListCitationData, selectedCitations } from '../../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import { expect } from 'chai';
 import { getDatastores } from '../../../../../../../assets/scripts/datastores/list/layout.js';
+import { getListCitationData } from '../../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
 import sinon from 'sinon';
 
 let temporaryListHTML = '';
@@ -24,7 +23,6 @@ getDatastores({ list: global.temporaryList }).forEach((datastore) => {
 describe('csl', function () {
   let listCSLData = null;
   let getTextArea = null;
-  let citationCSLData = null;
 
   beforeEach(function () {
     listCSLData = getListCitationData({ list: global.temporaryList, type: 'csl' });
@@ -44,15 +42,11 @@ describe('csl', function () {
     getTextArea = () => {
       return document.querySelector('textarea');
     };
-
-    // Grab CSL from temporary list
-    citationCSLData = JSON.stringify(selectedCitations({ list: global.temporaryList, type: 'csl' }));
   });
 
   afterEach(function () {
     listCSLData = null;
     getTextArea = null;
-    citationCSLData = null;
   });
 
   describe('getCSLTextarea()', function () {
@@ -194,26 +188,6 @@ describe('csl', function () {
 
     it('should update the textarea with only the selected CSL data', function () {
       expect(args.textArea.textContent, 'the textarea content should match the expected selected CSL data').to.equal(JSON.stringify(args.getCSLData));
-    });
-  });
-
-  describe('displayCSLData()', function () {
-    it('should display the CSL data in the textarea', function () {
-      // Call the function
-      displayCSLData({ list: global.temporaryList });
-
-      // Check the textarea content
-      expect(getTextArea().textContent, 'the CSL data in the textarea should match the expected data').to.equal(citationCSLData);
-    });
-
-    it('should call `selectedCitations`', function () {
-      const selectedCitationsSpy = sinon.spy();
-
-      // Call the function
-      displayCSLData({ getCitations: selectedCitationsSpy, list: global.temporaryList });
-
-      // Check that the spy was called
-      expect(selectedCitationsSpy.calledOnce, 'selectedCitations() should have been called').to.be.true;
     });
   });
 });

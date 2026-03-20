@@ -433,13 +433,13 @@ describe('layout', function () {
       actions = {
         actionsPanelText: sinon.spy(),
         disableActionTabs: sinon.spy(),
-        displayCSLData: sinon.spy(),
         regenerateCitations: sinon.spy(),
         selectAllCheckboxState: sinon.spy(),
+        updateCSLData: sinon.spy(),
         updateSelectedCount: sinon.spy()
       };
 
-      args = { actions, list: global.temporaryList };
+      args = { actions };
 
       // Initialize the function with the stubbed actions
       handleSelectionChange(args);
@@ -470,13 +470,10 @@ describe('layout', function () {
       const event = new window.Event('change', { bubbles: true });
       checkbox().dispatchEvent(event);
 
-      // Check if all actions were called
+      // Check if all actions were called with the correct arguments
       Object.keys(actions).forEach((key) => {
-        expect(actions[key].calledOnce, `\`${key}\` should have been called`).to.be.true;
+        expect(actions[key].calledOnceWithExactly(), `\`${key}\` should have been called with the correct arguments`).to.be.true;
       });
-
-      // Check that `displayCSLData` was called with the correct arguments
-      expect(actions.displayCSLData.calledWithExactly({ list: args.list }), '`displayCSLData` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call all action functions when the `Select all` checkbox changes', function () {
@@ -484,13 +481,10 @@ describe('layout', function () {
       const event = new window.Event('change', { bubbles: true });
       selectAll().dispatchEvent(event);
 
-      // Check if all actions were called
+      // Check if all actions were called with the correct arguments
       Object.keys(actions).forEach((key) => {
-        expect(actions[key].calledOnce, `\`${key}\` should have been called`).to.be.true;
+        expect(actions[key].calledOnceWithExactly(), `\`${key}\` should have been called with the correct arguments`).to.be.true;
       });
-
-      // Check that `displayCSLData` was called with the correct arguments
-      expect(actions.displayCSLData.calledWithExactly({ list: args.list }), '`displayCSLData` should have been called with the correct arguments').to.be.true;
     });
 
     it('should not call action functions for irrelevant changes', function () {
@@ -517,8 +511,8 @@ describe('layout', function () {
     beforeEach(function () {
       // Create spies
       actions = {
-        actionsPanelText: sinon.stub(),
-        displayCSLData: sinon.stub()
+        actionsPanelText: sinon.spy(),
+        updateCSLData: sinon.spy()
       };
       handleChange = sinon.spy();
       args = { actions, handleChange, list: global.temporaryList };
@@ -534,15 +528,15 @@ describe('layout', function () {
     });
 
     it('calls all action methods', function () {
-      // Check that all actions are called once
+      // Check that all actions are called once with no arguments
       Object.keys(actions).forEach((action) => {
-        expect(actions[action].calledOnce, `\`${action}()\` should have been called once`).to.be.true;
+        expect(actions[action].calledOnceWithExactly(), `\`${action}()\` should have been called once with no arguments`).to.be.true;
       });
     });
 
     it('should call `handleChange` with `actions` as argument', function () {
       // Check that `handleChange` was called with actions
-      expect(handleChange.calledOnceWithExactly({ actions: args.actions, list: args.list }), '`handleChange` should have been called with `actions` once').to.be.true;
+      expect(handleChange.calledOnceWithExactly({ actions: args.actions }), '`handleChange` should have been called with `actions` once').to.be.true;
     });
   });
 
@@ -606,16 +600,16 @@ describe('layout', function () {
         expect(getDatastoresStub.calledOnceWithExactly({ list: args.list }), '`getDatastores` should have been called with the correct arguments').to.be.true;
       });
 
-      it('should call `initializeNonEmptyListFunctions` with the correct arguments', function () {
-        expect(initializeNonEmptyListFunctionsSpy.calledOnceWithExactly({ list: args.list }), '`initializeNonEmptyListFunctions` should have been called with the correct arguments').to.be.true;
-      });
-
       it('should call `initializeActions` with the correct arguments', function () {
         expect(initializeActionsSpy.calledOnceWithExactly({ list: args.list }), '`initializeActions` should have been called with the correct arguments').to.be.true;
       });
 
       it('should call `selectAll` with the correct arguments', function () {
         expect(selectAllSpy.calledOnceWithExactly(), '`selectAll` should have been called with the correct arguments').to.be.true;
+      });
+
+      it('should call `initializeNonEmptyListFunctions` with the correct arguments', function () {
+        expect(initializeNonEmptyListFunctionsSpy.calledOnceWithExactly(), '`initializeNonEmptyListFunctions` should have been called with the correct arguments').to.be.true;
       });
     });
 
