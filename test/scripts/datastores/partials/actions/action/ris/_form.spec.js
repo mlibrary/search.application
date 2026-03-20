@@ -1,9 +1,9 @@
 import {
   downloadRISFormSubmit,
-  downloadTemporaryListRIS,
   generateRISDownloadAnchor,
   generateRISFile,
-  generateRISFileName
+  generateRISFileName,
+  handleRISFormSubmit
 } from '../../../../../../../assets/scripts/datastores/partials/actions/action/ris/_form.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -197,7 +197,7 @@ describe('RIS', function () {
     });
   });
 
-  describe('downloadRISFormSubmit()', function () {
+  describe('handleRISFormSubmit()', function () {
     let generateRISDownloadAnchorSpy = null;
     let args = null;
 
@@ -224,7 +224,7 @@ describe('RIS', function () {
         expect(args.event.target.getAttribute('action'), 'the form action attribute should be non-empty').to.not.be.empty;
 
         // Call the function again
-        downloadRISFormSubmit(args);
+        handleRISFormSubmit(args);
       });
 
       it('should prevent the default form submission', function () {
@@ -245,7 +245,7 @@ describe('RIS', function () {
         expect(args.event.target.getAttribute('action'), 'the form action attribute should be empty').to.be.empty;
 
         // Call the function again
-        downloadRISFormSubmit(args);
+        handleRISFormSubmit(args);
       });
 
       it('should prevent the default form submission', function () {
@@ -260,20 +260,20 @@ describe('RIS', function () {
     });
   });
 
-  describe('downloadTemporaryListRIS()', function () {
-    let downloadRISFormSubmitSpy = null;
+  describe('downloadRISFormSubmit()', function () {
+    let handleRISFormSubmitSpy = null;
     let args = null;
     let event = null;
 
     beforeEach(function () {
-      downloadRISFormSubmitSpy = sinon.spy();
+      handleRISFormSubmitSpy = sinon.spy();
       args = {
-        download: downloadRISFormSubmitSpy,
+        download: handleRISFormSubmitSpy,
         list: global.temporaryList
       };
 
       // Call the function
-      downloadTemporaryListRIS(args);
+      downloadRISFormSubmit(args);
 
       // Dispatch the submit event
       event = new window.Event('submit', {
@@ -284,13 +284,13 @@ describe('RIS', function () {
     });
 
     afterEach(function () {
-      downloadRISFormSubmitSpy = null;
+      handleRISFormSubmitSpy = null;
       args = null;
       event = null;
     });
 
-    it('should call `downloadRISFormSubmit` with the correct arguments', function () {
-      expect(downloadRISFormSubmitSpy.calledOnceWithExactly({ event, list: args.list }), '`downloadRISFormSubmit` should be called with the correct arguments').to.be.true;
+    it('should call `handleRISFormSubmit` with the correct arguments', function () {
+      expect(handleRISFormSubmitSpy.calledOnceWithExactly({ event, list: args.list }), '`handleRISFormSubmit` should be called with the correct arguments').to.be.true;
     });
   });
 });

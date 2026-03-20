@@ -20,7 +20,7 @@ const generateRISDownloadAnchor = ({ generateFile = generateRISFile, generateFil
   URL.revokeObjectURL(anchor.href);
 };
 
-const downloadRISFormSubmit = ({ event, generateDownloadAnchor = generateRISDownloadAnchor, list }) => {
+const handleRISFormSubmit = ({ event, generateDownloadAnchor = generateRISDownloadAnchor, list }) => {
   // Prevent the default form submission behavior
   event.preventDefault();
 
@@ -33,7 +33,7 @@ const downloadRISFormSubmit = ({ event, generateDownloadAnchor = generateRISDown
   generateDownloadAnchor({ list });
 };
 
-const downloadTemporaryListRIS = ({ download = downloadRISFormSubmit, list }) => {
+const downloadRISFormSubmit = ({ download = handleRISFormSubmit, list }) => {
   // Add event listener to the RIS download form
   document.querySelector('form.action__ris').addEventListener('submit', (event) => {
     // Trigger the download on submit
@@ -43,8 +43,8 @@ const downloadTemporaryListRIS = ({ download = downloadRISFormSubmit, list }) =>
 
 export {
   downloadRISFormSubmit,
-  downloadTemporaryListRIS,
   generateRISDownloadAnchor,
   generateRISFile,
-  generateRISFileName
+  generateRISFileName,
+  handleRISFormSubmit
 };

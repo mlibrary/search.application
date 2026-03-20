@@ -155,7 +155,7 @@ describe('actions', function () {
     let initializeCitationsSpy = null;
     let emailActionSpy = null;
     let copyLinkSpy = null;
-    let downloadTemporaryListRISSpy = null;
+    let downloadRISFormSubmitSpy = null;
     let tabControlSpy = null;
     let textActionSpy = null;
     let toggleSelectedSpy = null;
@@ -165,7 +165,7 @@ describe('actions', function () {
       initializeCitationsSpy = sinon.spy();
       emailActionSpy = sinon.spy();
       copyLinkSpy = sinon.spy();
-      downloadTemporaryListRISSpy = sinon.spy();
+      downloadRISFormSubmitSpy = sinon.spy();
       tabControlSpy = sinon.spy();
       textActionSpy = sinon.spy();
       toggleSelectedSpy = sinon.spy();
@@ -174,7 +174,7 @@ describe('actions', function () {
         email: emailActionSpy,
         link: copyLinkSpy,
         list: global.temporaryList,
-        ris: downloadTemporaryListRISSpy,
+        ris: downloadRISFormSubmitSpy,
         tabControlFunction: tabControlSpy,
         text: textActionSpy,
         toggleSelected: toggleSelectedSpy
@@ -188,7 +188,7 @@ describe('actions', function () {
       initializeCitationsSpy = null;
       emailActionSpy = null;
       copyLinkSpy = null;
-      downloadTemporaryListRISSpy = null;
+      downloadRISFormSubmitSpy = null;
       tabControlSpy = null;
       textActionSpy = null;
       toggleSelectedSpy = null;
@@ -219,8 +219,8 @@ describe('actions', function () {
       expect(initializeCitationsSpy.calledOnceWithExactly({ list: args.list }), '`initializeCitations` should have been called with the correct arguments').to.be.true;
     });
 
-    it('should call `downloadTemporaryListRIS` with the correct arguments', function () {
-      expect(downloadTemporaryListRISSpy.calledOnceWithExactly({ list: args.list }), '`downloadTemporaryListRIS` should have been called with the correct arguments').to.be.true;
+    it('should call `downloadRISFormSubmit` with the correct arguments', function () {
+      expect(downloadRISFormSubmitSpy.calledOnceWithExactly({ list: args.list }), '`downloadRISFormSubmit` should have been called with the correct arguments').to.be.true;
     });
   });
 });
