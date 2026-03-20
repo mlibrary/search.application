@@ -1,6 +1,6 @@
 import { changeAlert } from './actions/_alert.js';
 import { copyLink } from './actions/action/_link.js';
-import { downloadTemporaryListRIS } from './actions/action/_ris.js';
+import { downloadTemporaryListRIS } from './actions/action/ris/_form.js';
 import { emailAction } from './actions/action/_email.js';
 import { initializeCitations } from './actions/action/_citation.js';
 import { someCheckboxesChecked } from '../results/partials/results-list/list-item/header/_checkbox.js';
