@@ -1,11 +1,11 @@
 import {
-  cacheCSLData,
-  cslData,
-  cslDataCache,
-  getCSLTextarea,
-  getSelectedCSLData,
-  updateCSLData
-} from '../../../../../../../assets/scripts/datastores/partials/actions/action/citation/_csl.js';
+  cacheRISData,
+  getRISTextarea,
+  getSelectedRISData,
+  risData,
+  risDataCache,
+  updateRISData
+} from '../../../../../../../assets/scripts/datastores/partials/actions/action/ris/_textarea.js';
 import { getCheckboxes, getCheckedCheckboxes } from '../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
 import { getDatastores } from '../../../../../../../assets/scripts/datastores/list/layout.js';
@@ -20,18 +20,18 @@ getDatastores({ list: global.temporaryList }).forEach((datastore) => {
   });
 });
 
-describe('csl', function () {
-  let listCSLData = null;
+describe('ris', function () {
+  let listRISData = null;
   let getTextArea = null;
 
   beforeEach(function () {
-    listCSLData = getListCitationData({ list: global.temporaryList, type: 'csl' });
+    listRISData = getListCitationData({ list: global.temporaryList, type: 'ris' });
 
     // Apply HTML to the body
     document.body.innerHTML = `
-      <div class="citation">
-        <textarea class="citation__csl">
-          ${JSON.stringify(listCSLData)}
+      <div class="action__ris">
+        <textarea class="citation__ris">
+          ${JSON.stringify(listRISData)}
         </textarea>
       </div>
       <ol class="list__items">
@@ -45,23 +45,23 @@ describe('csl', function () {
   });
 
   afterEach(function () {
-    listCSLData = null;
+    listRISData = null;
     getTextArea = null;
   });
 
-  describe('getCSLTextarea()', function () {
-    it('should return the CSL `textarea`', function () {
-      expect(getCSLTextarea(), 'the `textarea` that displays the CSL should have been returned').to.deep.equal(getTextArea());
+  describe('getRISTextarea()', function () {
+    it('should return the RIS `textarea`', function () {
+      expect(getRISTextarea(), 'the `textarea` that displays the RIS should have been returned').to.deep.equal(getTextArea());
     });
   });
 
-  describe('cslData()', function () {
-    it('should return the parsed CSL data from the textarea', function () {
-      expect(cslData(), 'the returned CSL data should match the expected data').to.deep.equal(JSON.parse(getTextArea().textContent));
+  describe('risData()', function () {
+    it('should return the parsed RIS data from the textarea', function () {
+      expect(risData(), 'the returned RIS data should match the expected data').to.deep.equal(JSON.parse(getTextArea().textContent));
     });
   });
 
-  describe('cacheCSLData()', function () {
+  describe('cacheRISData()', function () {
     let getListCitationDataStub = null;
     let args = null;
 
@@ -70,7 +70,7 @@ describe('csl', function () {
         return getListCitationData({ list, type });
       });
       args = {
-        data: cslData(),
+        data: risData(),
         getListData: getListCitationDataStub,
         list: global.temporaryList,
         textArea: getTextArea()
@@ -88,15 +88,15 @@ describe('csl', function () {
     describe('when not viewing My Temporary List', function () {
       beforeEach(function () {
         // Call the function
-        cacheCSLData({ ...args, temporaryList: false });
+        cacheRISData({ ...args, temporaryList: false });
       });
 
       it('should not call `getListCitationData`', function () {
         expect(getListCitationDataStub.notCalled, 'getListCitationData() should not have been called').to.be.true;
       });
 
-      it('should cache the CSL data from the textarea', function () {
-        expect(cslDataCache, 'the cached CSL data should match the expected data').to.deep.equal(args.data);
+      it('should cache the RIS data from the textarea', function () {
+        expect(risDataCache, 'the cached RIS data should match the expected data').to.deep.equal(args.data);
       });
 
       it('should clear the textarea content', function () {
@@ -107,15 +107,15 @@ describe('csl', function () {
     describe('when viewing My Temporary List', function () {
       beforeEach(function () {
         // Call the function
-        cacheCSLData({ ...args, temporaryList: true });
+        cacheRISData({ ...args, temporaryList: true });
       });
 
       it('should call `getListCitationData` with the correct arguments', function () {
-        expect(getListCitationDataStub.calledOnceWithExactly({ list: global.temporaryList, type: 'csl' }), 'getListCitationData() should have been called').to.be.true;
+        expect(getListCitationDataStub.calledOnceWithExactly({ list: global.temporaryList, type: 'ris' }), 'getListCitationData() should have been called').to.be.true;
       });
 
-      it('should cache the CSL data from session storage', function () {
-        expect(cslDataCache, 'the cached CSL data should match the expected data').to.deep.equal(listCSLData);
+      it('should cache the RIS data from session storage', function () {
+        expect(risDataCache, 'the cached RIS data should match the expected data').to.deep.equal(listRISData);
       });
 
       it('should clear the textarea content', function () {
@@ -124,12 +124,12 @@ describe('csl', function () {
     });
   });
 
-  describe('getSelectedCSLData()', function () {
+  describe('getSelectedRISData()', function () {
     let args = null;
 
     beforeEach(function () {
       args = {
-        cachedData: listCSLData,
+        cachedData: listRISData,
         checkboxes: getCheckboxes()
       };
     });
@@ -139,36 +139,36 @@ describe('csl', function () {
     });
 
     it('should return an array', function () {
-      expect(Array.isArray(getSelectedCSLData(args)), 'the returned selected CSL data should be an array').to.be.true;
+      expect(Array.isArray(getSelectedRISData(args)), 'the returned selected RIS data should be an array').to.be.true;
     });
 
     it('should return the an array the same length as the checked checkboxes', function () {
-      expect(getSelectedCSLData(args).length, 'the length of the returned selected CSL data should match the number of checked checkboxes').to.equal(getCheckedCheckboxes().length);
+      expect(getSelectedRISData(args).length, 'the length of the returned selected RIS data should match the number of checked checkboxes').to.equal(getCheckedCheckboxes().length);
     });
 
-    it('should return only the selected CSL data', function () {
+    it('should return only the selected RIS data', function () {
       // Call the function
-      const selectedData = getSelectedCSLData(args);
+      const selectedData = getSelectedRISData(args);
       // Loop through all the checkboxes
       args.checkboxes.forEach((checkbox, index) => {
         // Check if the checkbox is checked
         if (checkbox.checked) {
           // Check that the corresponding cached data is included in the returned data
-          expect(selectedData, 'the returned selected CSL data should include the expected data').to.deep.include(args.cachedData[index]);
+          expect(selectedData, 'the returned selected RIS data should include the expected data').to.deep.include(args.cachedData[index]);
         } else {
           // Check that the corresponding cached data is not included in the returned data
-          expect(selectedData, 'the returned selected CSL data should not include unselected data').to.not.deep.include(args.cachedData[index]);
+          expect(selectedData, 'the returned selected RIS data should not include unselected data').to.not.deep.include(args.cachedData[index]);
         }
       });
     });
   });
 
-  describe('updateCSLData()', function () {
+  describe('updateRISData()', function () {
     let args = null;
 
     beforeEach(function () {
       args = {
-        getCSLData: [listCSLData[0]],
+        getRISData: [listRISData[0]],
         textArea: getTextArea()
       };
 
@@ -179,15 +179,15 @@ describe('csl', function () {
       expect(args.textArea.textContent, 'the textarea content should be empty before calling the function').to.equal('');
 
       // Call the function
-      updateCSLData(args);
+      updateRISData(args);
     });
 
     afterEach(function () {
       args = null;
     });
 
-    it('should update the textarea with only the selected CSL data', function () {
-      expect(args.textArea.textContent, 'the textarea content should match the expected selected CSL data').to.equal(JSON.stringify(args.getCSLData));
+    it('should update the textarea with only the selected RIS data', function () {
+      expect(args.textArea.textContent, 'the textarea content should match the expected selected RIS data').to.equal(JSON.stringify(args.getRISData));
     });
   });
 });

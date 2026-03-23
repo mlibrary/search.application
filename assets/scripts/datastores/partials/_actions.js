@@ -1,8 +1,9 @@
+import { actionsPanelText } from './actions/_summary.js';
 import { changeAlert } from './actions/_alert.js';
 import { copyLink } from './actions/action/_link.js';
-import { downloadTemporaryListRIS } from './actions/action/_ris.js';
 import { emailAction } from './actions/action/_email.js';
 import { initializeCitations } from './actions/action/_citation.js';
+import { initializeRIS } from './actions/action/_ris.js';
 import { someCheckboxesChecked } from '../results/partials/results-list/list-item/header/_checkbox.js';
 import { textAction } from './actions/action/_text.js';
 import { toggleSelectedAction } from './actions/action/_toggle-selected.js';
@@ -63,11 +64,12 @@ const disableActionTabs = ({ someChecked = someCheckboxesChecked(true) } = {}) =
 };
 
 const initializeActions = ({
+  actionsText = actionsPanelText,
   citations = initializeCitations,
   email = emailAction,
   link = copyLink,
   list,
-  ris = downloadTemporaryListRIS,
+  ris = initializeRIS,
   tabControlFunction = tabControl,
   text = textAction,
   toggleSelected = toggleSelectedAction
@@ -88,11 +90,14 @@ const initializeActions = ({
   // Text
   text();
 
+  // Citations
+  citations({ list });
+
   // RIS
   ris({ list });
 
-  // Citations
-  citations({ list });
+  // Update actions panel text
+  actionsText();
 };
 
 export {

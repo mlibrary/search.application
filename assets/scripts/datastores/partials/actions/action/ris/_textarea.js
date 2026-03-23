@@ -2,38 +2,38 @@ import { getCheckboxes } from '../../../../results/partials/results-list/list-it
 import { getListCitationData } from '../_citation.js';
 import { viewingTemporaryList } from '../../../../list/layout.js';
 
-let cslDataCache = null;
+let risDataCache = null;
 
-const getCSLTextarea = () => {
-  return document.querySelector('.citation textarea.citation__csl');
+const getRISTextarea = () => {
+  return document.querySelector('textarea.citation__ris');
 };
 
-const cslData = ({ textArea = getCSLTextarea } = {}) => {
+const risData = ({ textArea = getRISTextarea } = {}) => {
   return JSON.parse(textArea().textContent);
 };
 
-const cacheCSLData = ({
-  data = cslData(),
+const cacheRISData = ({
+  data = risData(),
   getListData = getListCitationData,
   list,
   temporaryList = viewingTemporaryList(),
-  textArea = getCSLTextarea()
+  textArea = getRISTextarea()
 } = {}) => {
   // Check if currently viewing My Temporary List
   if (temporaryList) {
     // Cache the CSL data from the list
-    cslDataCache = getListData({ list, type: 'csl' });
+    risDataCache = getListData({ list, type: 'ris' });
   } else {
     // Cache the data from the textarea
-    cslDataCache = data;
+    risDataCache = data;
   }
 
   // Clear the textarea
   textArea.textContent = '';
 };
 
-const getSelectedCSLData = ({
-  cachedData = cslDataCache,
+const getSelectedRISData = ({
+  cachedData = risDataCache,
   checkboxes = getCheckboxes()
 } = {}) => {
   // Loop through all the checkboxes
@@ -43,19 +43,19 @@ const getSelectedCSLData = ({
   });
 };
 
-const updateCSLData = ({
-  getCSLData = getSelectedCSLData(),
-  textArea = getCSLTextarea()
+const updateRISData = ({
+  getRISData = getSelectedRISData(),
+  textArea = getRISTextarea()
 } = {}) => {
   // Update the textarea with the selected data
-  textArea.textContent = JSON.stringify(getCSLData);
+  textArea.textContent = JSON.stringify(getRISData);
 };
 
 export {
-  cacheCSLData,
-  cslData,
-  cslDataCache,
-  getCSLTextarea,
-  getSelectedCSLData,
-  updateCSLData
+  cacheRISData,
+  getRISTextarea,
+  getSelectedRISData,
+  risData,
+  risDataCache,
+  updateRISData
 };

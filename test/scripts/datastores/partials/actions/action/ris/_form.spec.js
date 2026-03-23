@@ -1,0 +1,311 @@
+import {
+  downloadRISFormSubmit,
+  generateRISDownloadAnchor,
+  generateRISFile,
+  generateRISFileName,
+  handleRISFormSubmit
+} from '../../../../../../../assets/scripts/datastores/partials/actions/action/ris/_form.js';
+import { expect } from 'chai';
+import { getListCitationData } from '../../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
+import { risData } from '../../../../../../../assets/scripts/datastores/partials/actions/action/ris/_textarea.js';
+import sinon from 'sinon';
+
+describe('RIS form', function () {
+  let listRISData = null;
+  let getForm = null;
+
+  beforeEach(function () {
+    listRISData = getListCitationData({ list: global.temporaryList, type: 'ris' });
+    document.body.innerHTML = `
+      <textarea class="citation__ris">
+        ${JSON.stringify(listRISData)}
+      </textarea>
+      <form method="post" action="/ris" class="action__ris">
+        <button type="submit">Download RIS</button>
+      </form>
+    `;
+
+    getForm = () => {
+      return document.querySelector('form.action__ris');
+    };
+  });
+
+  afterEach(function () {
+    listRISData = null;
+    getForm = null;
+  });
+
+  describe('generateRISFileName()', function () {
+    let datastore = null;
+    let currentDate = null;
+    let args = null;
+
+    beforeEach(function () {
+      datastore = 'catalog';
+      // Get today's date
+      const today = new Date();
+      currentDate = today.toISOString().slice(0, 10);
+      args = {
+        path: `/${datastore}`
+      };
+    });
+
+    afterEach(function () {
+      datastore = null;
+      currentDate = null;
+      args = null;
+    });
+
+    it('should return a filename with the correct datastore prefix when not viewing temporary list', function () {
+      expect(generateRISFileName({ ...args, viewingList: false }), '`generateRISFileName` should return the correct filename when not viewing temporary list').to.equal(`mlibrary-search-${datastore}-results-${currentDate}.ris`);
+    });
+
+    it('should return a filename with the temporary list prefix when viewing temporary list', function () {
+      expect(generateRISFileName({ ...args, viewingList: true }), '`generateRISFileName` should return the correct filename when viewing temporary list').to.equal(`mlibrary-search-temporary-list-${currentDate}.ris`);
+    });
+  });
+
+  describe('generateRISFile()', function () {
+    let risDataStub = null;
+    let args = null;
+
+    beforeEach(function () {
+      risDataStub = sinon.stub().callsFake(() => {
+        return risData();
+      });
+      args = {
+        data: risDataStub()
+      };
+    });
+
+    afterEach(function () {
+      risDataStub = null;
+      args = null;
+    });
+
+    it('should generate a Blob object', function () {
+      // Assign the function
+      const risFile = generateRISFile(args);
+
+      // Check that it's a Blob
+      expect(risFile instanceof Blob, 'the generated RIS file should be a Blob').to.be.true;
+    });
+
+    it('should call the citations function with correct arguments', function () {
+      // Call the function
+      generateRISFile(args);
+
+      // Check that the citations function was called with correct arguments
+      expect(risDataStub.calledOnceWithExactly(), 'the citations function should be called with the correct arguments').to.be.true;
+    });
+
+    it('should have the correct MIME type', function () {
+      // Assign the function
+      const risFile = generateRISFile(args);
+
+      // Check the MIME type
+      expect(risFile.type, 'the generated RIS file should have the correct MIME type').to.equal('application/x-research-info-systems');
+    });
+
+    it('should contain the correct content', function () {
+      // Assign the function
+      const risFile = generateRISFile(args);
+
+      // Read the Blob content
+      return risFile.text().then((text) => {
+        // Check the content
+        expect(text, 'the generated RIS file should contain the correct content').to.equal(listRISData.join('\n\n'));
+      });
+    });
+  });
+
+  describe('generateRISDownloadAnchor()', function () {
+    let createElementSpy = null;
+    let urlExample = null;
+    let createObjectURLStub = null;
+    let generateFileStub = null;
+    let fileNameExample = null;
+    let generateFileNameStub = null;
+    let revokeObjectURLStub = null;
+    let args = null;
+    let anchorElement = null;
+
+    beforeEach(function () {
+      createElementSpy = sinon.spy(document, 'createElement');
+      urlExample = 'blob:http://example.com/test-blob-url';
+      createObjectURLStub = sinon.stub(URL, 'createObjectURL').returns(urlExample);
+      generateFileStub = sinon.stub().returns(new Blob(['Test content'], { type: 'application/x-research-info-systems' }));
+      fileNameExample = 'TestFileName.ris';
+      generateFileNameStub = sinon.stub().returns(fileNameExample);
+      revokeObjectURLStub = sinon.stub(URL, 'revokeObjectURL');
+      args = {
+        generateFile: generateFileStub,
+        generateFileName: generateFileNameStub,
+        list: listRISData
+      };
+
+      // Resolve `Not implemented: navigation to another Document`
+      sinon.stub(window.HTMLAnchorElement.prototype, 'click').callsFake(() => {
+        // Do nothing
+      });
+
+      // Call the function
+      generateRISDownloadAnchor(args);
+
+      // Get the created anchor element
+      [anchorElement] = createElementSpy.returnValues;
+    });
+
+    afterEach(function () {
+      createElementSpy = null;
+      urlExample = null;
+      createObjectURLStub = null;
+      generateFileStub = null;
+      fileNameExample = null;
+      generateFileNameStub = null;
+      revokeObjectURLStub = null;
+      args = null;
+      anchorElement = null;
+
+      window.HTMLAnchorElement.prototype.click.restore();
+    });
+
+    it('should create an anchor element', function () {
+      // Check that and anchor was created
+      expect(createElementSpy.calledWith('a'), '`document.createElement` should be called with `a').to.be.true;
+    });
+
+    it('should call `generateFile` with correct arguments', function () {
+      // Check that generateFile was called with correct arguments
+      expect(generateFileStub.calledOnceWithExactly(), '`generateFile` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `generateFileName` with correct arguments', function () {
+      // Check that `generateFileName` was called
+      expect(generateFileNameStub.calledOnce, '`generateFileName` should be called once').to.be.true;
+    });
+
+    it('should call `URL.createObjectURL` with the generated Blob', function () {
+      // Get the generated Blob
+      const [generatedBlob] = generateFileStub.returnValues;
+
+      // Check that it was called with the correct Blob
+      expect(createObjectURLStub.calledOnceWithExactly(generatedBlob), '`URL.createObjectURL` should be called with the generated Blob').to.be.true;
+    });
+
+    it('should set the anchor `href` attribute correctly', function () {
+      // Check that the anchor's `href` attribute is set correctly
+      expect(anchorElement.href, 'the anchor href should be set correctly').to.equal(urlExample);
+    });
+
+    it('should set the anchor `download` attribute correctly', function () {
+      // Check that the anchor's `download` attribute is set correctly
+      expect(anchorElement.download, 'the anchor download attribute should be set correctly').to.equal(fileNameExample);
+    });
+
+    it('should call the anchor click method', function () {
+      // Check that the anchor's click method was called
+      expect(window.HTMLAnchorElement.prototype.click.calledOnce, 'the anchor click method should be called once').to.be.true;
+    });
+
+    it('should revoke the object URL after clicking', function () {
+      // Check that the object URL was revoked
+      expect(revokeObjectURLStub.calledOnceWithExactly(anchorElement.href), '`URL.revokeObjectURL` should be called with the anchor href').to.be.true;
+    });
+  });
+
+  describe('handleRISFormSubmit()', function () {
+    let generateRISDownloadAnchorSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      generateRISDownloadAnchorSpy = sinon.spy();
+      args = {
+        event: {
+          preventDefault: sinon.spy(),
+          target: getForm()
+        },
+        generateDownloadAnchor: generateRISDownloadAnchorSpy
+      };
+    });
+
+    afterEach(function () {
+      generateRISDownloadAnchorSpy = null;
+      args = null;
+    });
+
+    describe('when the form has a non-empty `action` attribute', function () {
+      beforeEach(function () {
+        // Check that the action attribute is non-empty
+        expect(args.event.target.getAttribute('action'), 'the form action attribute should be non-empty').to.not.be.empty;
+
+        // Call the function again
+        handleRISFormSubmit(args);
+      });
+
+      it('should not prevent the default form submission', function () {
+        // Check that preventDefault was called
+        expect(args.event.preventDefault.notCalled, '`event.preventDefault` should have been called once').to.be.true;
+      });
+
+      it('should not call `generateDownloadAnchor`', function () {
+        // Check that generateDownloadAnchor was not called
+        expect(generateRISDownloadAnchorSpy.notCalled, '`generateDownloadAnchor` should not be called').to.be.true;
+      });
+    });
+
+    describe('when the form has an empty `action` attribute', function () {
+      beforeEach(function () {
+        // Check that the action attribute is empty
+        args.event.target.setAttribute('action', '');
+        expect(args.event.target.getAttribute('action'), 'the form action attribute should be empty').to.be.empty;
+
+        // Call the function again
+        handleRISFormSubmit(args);
+      });
+
+      it('should prevent the default form submission', function () {
+        // Check that preventDefault was called
+        expect(args.event.preventDefault.calledOnce, '`event.preventDefault` should have been called once').to.be.true;
+      });
+
+      it('should call `generateDownloadAnchor` with correct arguments', function () {
+        // Check that generateDownloadAnchor was called with correct arguments
+        expect(generateRISDownloadAnchorSpy.calledOnceWithExactly(), '`generateDownloadAnchor` should be called with the correct arguments').to.be.true;
+      });
+    });
+  });
+
+  describe('downloadRISFormSubmit()', function () {
+    let handleRISFormSubmitSpy = null;
+    let args = null;
+    let event = null;
+
+    beforeEach(function () {
+      handleRISFormSubmitSpy = sinon.spy();
+      args = {
+        risFormSubmit: handleRISFormSubmitSpy
+      };
+
+      // Call the function
+      downloadRISFormSubmit(args);
+
+      // Dispatch the submit event
+      event = new window.Event('submit', {
+        bubbles: true,
+        cancelable: true
+      });
+      getForm().dispatchEvent(event);
+    });
+
+    afterEach(function () {
+      handleRISFormSubmitSpy = null;
+      args = null;
+      event = null;
+    });
+
+    it('should call `handleRISFormSubmit` with the correct arguments', function () {
+      expect(handleRISFormSubmitSpy.calledOnceWithExactly({ event }), '`handleRISFormSubmit` should be called with the correct arguments').to.be.true;
+    });
+  });
+});

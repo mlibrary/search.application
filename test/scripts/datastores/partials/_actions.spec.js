@@ -152,29 +152,32 @@ describe('actions', function () {
   });
 
   describe('initializeActions()', function () {
+    let actionsPanelTextSpy = null;
     let initializeCitationsSpy = null;
     let emailActionSpy = null;
     let copyLinkSpy = null;
-    let downloadTemporaryListRISSpy = null;
+    let initializeRISSpy = null;
     let tabControlSpy = null;
     let textActionSpy = null;
     let toggleSelectedSpy = null;
     let args = null;
 
     beforeEach(function () {
+      actionsPanelTextSpy = sinon.spy();
       initializeCitationsSpy = sinon.spy();
       emailActionSpy = sinon.spy();
       copyLinkSpy = sinon.spy();
-      downloadTemporaryListRISSpy = sinon.spy();
+      initializeRISSpy = sinon.spy();
       tabControlSpy = sinon.spy();
       textActionSpy = sinon.spy();
       toggleSelectedSpy = sinon.spy();
       args = {
+        actionsText: actionsPanelTextSpy,
         citations: initializeCitationsSpy,
         email: emailActionSpy,
         link: copyLinkSpy,
         list: global.temporaryList,
-        ris: downloadTemporaryListRISSpy,
+        ris: initializeRISSpy,
         tabControlFunction: tabControlSpy,
         text: textActionSpy,
         toggleSelected: toggleSelectedSpy
@@ -185,10 +188,11 @@ describe('actions', function () {
     });
 
     afterEach(function () {
+      actionsPanelTextSpy = null;
       initializeCitationsSpy = null;
       emailActionSpy = null;
       copyLinkSpy = null;
-      downloadTemporaryListRISSpy = null;
+      initializeRISSpy = null;
       tabControlSpy = null;
       textActionSpy = null;
       toggleSelectedSpy = null;
@@ -219,8 +223,12 @@ describe('actions', function () {
       expect(initializeCitationsSpy.calledOnceWithExactly({ list: args.list }), '`initializeCitations` should have been called with the correct arguments').to.be.true;
     });
 
-    it('should call `downloadTemporaryListRIS` with the correct arguments', function () {
-      expect(downloadTemporaryListRISSpy.calledOnceWithExactly({ list: args.list }), '`downloadTemporaryListRIS` should have been called with the correct arguments').to.be.true;
+    it('should call `initializeRIS` with the correct arguments', function () {
+      expect(initializeRISSpy.calledOnceWithExactly({ list: args.list }), '`initializeRIS` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `actionsPanelText` with the correct arguments', function () {
+      expect(actionsPanelTextSpy.calledOnceWithExactly(), '`actionsPanelText` should have been called with the correct arguments').to.be.true;
     });
   });
 });
