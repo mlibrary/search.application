@@ -29,6 +29,7 @@ describe('results layout', function () {
     let regenerateCitationsSpy = null;
     let selectAllCheckboxStateSpy = null;
     let updateCSLDataSpy = null;
+    let updateRISDataSpy = null;
     let updateSelectedCountSpy = null;
     let updateToggleSelectedActionSpy = null;
     let args = null;
@@ -41,6 +42,8 @@ describe('results layout', function () {
       updateSelectedCountSpy = sinon.spy();
       updateToggleSelectedActionSpy = sinon.spy();
       updateCSLDataSpy = sinon.spy();
+      updateRISDataSpy = sinon.spy();
+
       args = {
         actionsText: actionsPanelTextSpy,
         disableTabs: disableActionTabsSpy,
@@ -48,6 +51,7 @@ describe('results layout', function () {
         updateCSL: updateCSLDataSpy,
         updateCitations: regenerateCitationsSpy,
         updateCount: updateSelectedCountSpy,
+        updateRIS: updateRISDataSpy,
         updateToggleSelected: updateToggleSelectedActionSpy
       };
 
@@ -66,6 +70,7 @@ describe('results layout', function () {
       updateCSLDataSpy = null;
       updateSelectedCountSpy = null;
       updateToggleSelectedActionSpy = null;
+      updateRISDataSpy = null;
       args = null;
     });
 
@@ -89,6 +94,10 @@ describe('results layout', function () {
       expect(regenerateCitationsSpy.calledOnceWithExactly(), '`regenerateCitations` should have been called on change').to.be.true;
     });
 
+    it('should call `updateRISData` with the correct arguments', function () {
+      expect(updateRISDataSpy.calledOnceWithExactly(), '`updateRISData` should have been called on change').to.be.true;
+    });
+
     it('should call `selectAllCheckboxState` with the correct arguments', function () {
       expect(selectAllCheckboxStateSpy.calledOnceWithExactly(), '`selectAllCheckboxState` should have been called on change').to.be.true;
     });
@@ -100,7 +109,6 @@ describe('results layout', function () {
 
   describe('resultsList()', function () {
     let initializeActionsSpy = null;
-    let actionsPanelTextSpy = null;
     let disableActionTabsSpy = null;
     let handleSelectionChangeSpy = null;
     let selectAllSpy = null;
@@ -109,14 +117,12 @@ describe('results layout', function () {
 
     beforeEach(function () {
       initializeActionsSpy = sinon.spy();
-      actionsPanelTextSpy = sinon.spy();
       disableActionTabsSpy = sinon.spy();
       handleSelectionChangeSpy = sinon.spy();
       selectAllSpy = sinon.spy();
       temporaryListBannerSpy = sinon.spy();
       args = {
         actionsPanel: initializeActionsSpy,
-        actionsText: actionsPanelTextSpy,
         disableTabs: disableActionTabsSpy,
         handleChange: handleSelectionChangeSpy,
         initializeSelectAll: selectAllSpy,
@@ -127,7 +133,6 @@ describe('results layout', function () {
 
     afterEach(function () {
       initializeActionsSpy = null;
-      actionsPanelTextSpy = null;
       disableActionTabsSpy = null;
       handleSelectionChangeSpy = null;
       selectAllSpy = null;
@@ -147,10 +152,6 @@ describe('results layout', function () {
 
       it('should call `initializeActions` with the correct arguments', function () {
         expect(initializeActionsSpy.calledOnceWithExactly({ list: global.temporaryList }), '`initializeActions` should have been called with the correct arguments').to.be.true;
-      });
-
-      it('should call `actionsPanelText` with the correct arguments', function () {
-        expect(actionsPanelTextSpy.calledOnceWithExactly(), '`actionsPanelText` should have been called with the correct arguments').to.be.true;
       });
 
       it('should call `disableActionTabs` with the correct arguments', function () {
@@ -178,10 +179,6 @@ describe('results layout', function () {
 
       it('should not call `initializeActions`', function () {
         expect(initializeActionsSpy.notCalled, '`initializeActions` should not have been called').to.be.true;
-      });
-
-      it('should not call `actionsPanelText`', function () {
-        expect(actionsPanelTextSpy.notCalled, '`actionsPanelText` should not have been called').to.be.true;
       });
 
       it('should not call `disableActionTabs`', function () {

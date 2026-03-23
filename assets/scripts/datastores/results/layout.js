@@ -5,6 +5,7 @@ import { actionsPanelText } from '../partials/actions/_summary.js';
 import { regenerateCitations } from '../partials/actions/action/_citation.js';
 import { temporaryListBanner } from '../list/partials/_go-to.js';
 import { updateCSLData } from '../partials/actions/action/citation/_csl.js';
+import { updateRISData } from '../partials/actions/action/ris/_textarea.js';
 import { updateToggleSelectedAction } from '../partials/actions/action/_toggle-selected.js';
 
 const handleSelectionChange = ({
@@ -14,6 +15,7 @@ const handleSelectionChange = ({
   updateCitations = regenerateCitations,
   updateCount = updateSelectedCount,
   updateCSL = updateCSLData,
+  updateRIS = updateRISData,
   updateToggleSelected = updateToggleSelectedAction
 } = {}) => {
   // Watch for changes to the list and update accordingly
@@ -34,6 +36,9 @@ const handleSelectionChange = ({
       // Regenerate citations
       updateCitations();
 
+      // Update RIS data
+      updateRIS();
+
       // Update the state of the `Select All` checkbox
       selectAllCheckbox();
 
@@ -45,7 +50,6 @@ const handleSelectionChange = ({
 
 const resultsList = ({
   actionsPanel = initializeActions,
-  actionsText = actionsPanelText,
   checkboxCount = getCheckboxes().length,
   disableTabs = disableActionTabs,
   handleChange = handleSelectionChange,
@@ -63,9 +67,6 @@ const resultsList = ({
 
   // Actions panel
   actionsPanel({ list });
-
-  // Update the Actions panel text depending on how many records are selected
-  actionsText();
 
   // Disable action tabs until at least one record is selected
   disableTabs();

@@ -40,7 +40,7 @@ describe('RIS', function () {
     });
 
     it('should call `downloadRISFormSubmit` with the correct arguments', function () {
-      expect(downloadRISFormSubmitSpy.calledOnceWithExactly({ list: global.temporaryList }), '`downloadRISFormSubmit` should have been called once with the correct arguments').to.be.true;
+      expect(downloadRISFormSubmitSpy.calledOnceWithExactly(), '`downloadRISFormSubmit` should have been called once with the correct arguments').to.be.true;
     });
   });
 });

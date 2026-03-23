@@ -14,7 +14,7 @@ const initializeRIS = ({
   updateRISTextarea();
 
   // Initialize the RIS form
-  risFormSubmit({ list });
+  risFormSubmit();
 };
 
 export {

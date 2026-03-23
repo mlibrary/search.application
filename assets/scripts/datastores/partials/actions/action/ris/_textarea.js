@@ -5,7 +5,7 @@ import { viewingTemporaryList } from '../../../../list/layout.js';
 let risDataCache = null;
 
 const getRISTextarea = () => {
-  return document.querySelector('.action__ris textarea.citation__ris');
+  return document.querySelector('textarea.citation__ris');
 };
 
 const risData = ({ textArea = getRISTextarea } = {}) => {

@@ -3,7 +3,6 @@ import {
   getDatastores,
   getSessionStorage,
   handleSelectionChange,
-  initializeNonEmptyListFunctions,
   inTemporaryList,
   setSessionStorage,
   temporaryList,
@@ -436,6 +435,7 @@ describe('layout', function () {
         regenerateCitations: sinon.spy(),
         selectAllCheckboxState: sinon.spy(),
         updateCSLData: sinon.spy(),
+        updateRISData: sinon.spy(),
         updateSelectedCount: sinon.spy()
       };
 
@@ -503,47 +503,10 @@ describe('layout', function () {
     });
   });
 
-  describe('initializeNonEmptyListFunctions()', function () {
-    let actions = null;
-    let handleChange = null;
-    let args = null;
-
-    beforeEach(function () {
-      // Create spies
-      actions = {
-        actionsPanelText: sinon.spy(),
-        updateCSLData: sinon.spy()
-      };
-      handleChange = sinon.spy();
-      args = { actions, handleChange, list: global.temporaryList };
-
-      // Call the function
-      initializeNonEmptyListFunctions(args);
-    });
-
-    afterEach(function () {
-      actions = null;
-      handleChange = null;
-      args = null;
-    });
-
-    it('calls all action methods', function () {
-      // Check that all actions are called once with no arguments
-      Object.keys(actions).forEach((action) => {
-        expect(actions[action].calledOnceWithExactly(), `\`${action}()\` should have been called once with no arguments`).to.be.true;
-      });
-    });
-
-    it('should call `handleChange` with `actions` as argument', function () {
-      // Check that `handleChange` was called with actions
-      expect(handleChange.calledOnceWithExactly({ actions: args.actions }), '`handleChange` should have been called with `actions` once').to.be.true;
-    });
-  });
-
   describe('temporaryList()', function () {
     let getDatastoresStub = null;
     let initializeActionsSpy = null;
-    let initializeNonEmptyListFunctionsSpy = null;
+    let handleSelectionChangeSpy = null;
     let selectAllSpy = null;
     let toggleListElementsSpy = null;
     let updateResultsListsSpy = null;
@@ -554,14 +517,14 @@ describe('layout', function () {
         return getDatastores({ list });
       });
       initializeActionsSpy = sinon.spy();
-      initializeNonEmptyListFunctionsSpy = sinon.spy();
+      handleSelectionChangeSpy = sinon.spy();
       selectAllSpy = sinon.spy();
       toggleListElementsSpy = sinon.spy();
       updateResultsListsSpy = sinon.spy();
       args = {
         actionsPanel: initializeActionsSpy,
         datastores: getDatastoresStub,
-        initializeFunctions: initializeNonEmptyListFunctionsSpy,
+        handleChange: handleSelectionChangeSpy,
         initializeSelectAll: selectAllSpy,
         list: global.temporaryList,
         toggleElements: toggleListElementsSpy,
@@ -572,7 +535,7 @@ describe('layout', function () {
     afterEach(function () {
       getDatastoresStub = null;
       initializeActionsSpy = null;
-      initializeNonEmptyListFunctionsSpy = null;
+      handleSelectionChangeSpy = null;
       selectAllSpy = null;
       toggleListElementsSpy = null;
       updateResultsListsSpy = null;
@@ -608,8 +571,8 @@ describe('layout', function () {
         expect(selectAllSpy.calledOnceWithExactly(), '`selectAll` should have been called with the correct arguments').to.be.true;
       });
 
-      it('should call `initializeNonEmptyListFunctions` with the correct arguments', function () {
-        expect(initializeNonEmptyListFunctionsSpy.calledOnceWithExactly(), '`initializeNonEmptyListFunctions` should have been called with the correct arguments').to.be.true;
+      it('should call `handleSelectionChange` with the correct arguments', function () {
+        expect(handleSelectionChangeSpy.calledOnceWithExactly(), '`handleSelectionChange` should have been called with the correct arguments').to.be.true;
       });
     });
 
@@ -635,8 +598,8 @@ describe('layout', function () {
         expect(getDatastoresStub.calledOnceWithExactly({ list: args.list }), '`getDatastores` should have been called with the correct arguments').to.be.true;
       });
 
-      it('should not call `initializeNonEmptyListFunctions` if the temporary list is empty', function () {
-        expect(initializeNonEmptyListFunctionsSpy.calledOnce, '`initializeNonEmptyListFunctions` should not have been called').to.be.false;
+      it('should not call `handleSelectionChange` if the temporary list is empty', function () {
+        expect(handleSelectionChangeSpy.calledOnce, '`handleSelectionChange` should not have been called').to.be.false;
       });
 
       it('should not call `initializeActions` if the temporary list is empty', function () {

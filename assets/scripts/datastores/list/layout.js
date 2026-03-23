@@ -7,6 +7,7 @@ import { removeEmptyListMessage } from './partials/_empty.js';
 import { removeListResults } from './partials/_results.js';
 import { updateCSLData } from '../partials/actions/action/citation/_csl.js';
 import { updateResultsLists } from '../results/partials/_results-list.js';
+import { updateRISData } from '../partials/actions/action/ris/_textarea.js';
 
 const defaultTemporaryList = {
   articles: {},
@@ -108,10 +109,11 @@ const defaultActions = {
   regenerateCitations,
   selectAllCheckboxState,
   updateCSLData,
+  updateRISData,
   updateSelectedCount
 };
 
-const handleSelectionChange = ({ actions }) => {
+const handleSelectionChange = ({ actions = defaultActions } = {}) => {
   // Watch for changes to the list and update accordingly
   document.querySelector('.list').addEventListener('change', (event) => {
     if (event.target.matches(`input[type="checkbox"].record__checkbox, input[type="checkbox"].select-all__checkbox`)) {
@@ -121,23 +123,15 @@ const handleSelectionChange = ({ actions }) => {
       actions.disableActionTabs();
       actions.updateCSLData();
       actions.regenerateCitations();
+      actions.updateRISData();
     }
   });
-};
-
-const initializeNonEmptyListFunctions = ({ actions = defaultActions, handleChange = handleSelectionChange } = {}) => {
-  // Update Actions panel
-  actions.actionsPanelText();
-  actions.updateCSLData();
-
-  // `handleChange` is passed in for testing purposes
-  handleChange({ actions });
 };
 
 const temporaryList = ({
   actionsPanel = initializeActions,
   datastores = getDatastores,
-  initializeFunctions = initializeNonEmptyListFunctions,
+  handleChange = handleSelectionChange,
   initializeSelectAll = selectAll,
   list,
   toggleElements = toggleListElements,
@@ -160,8 +154,8 @@ const temporaryList = ({
   // Initialize select all partial
   initializeSelectAll();
 
-  // Initialize functions that should only run if My Temporary List is not empty
-  initializeFunctions();
+  // Handle selection changes
+  handleChange();
 };
 
 export {
@@ -169,7 +163,6 @@ export {
   getDatastores,
   getSessionStorage,
   handleSelectionChange,
-  initializeNonEmptyListFunctions,
   inTemporaryList,
   setSessionStorage,
   temporaryList,

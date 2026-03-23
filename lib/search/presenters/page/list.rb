@@ -24,7 +24,6 @@ class Search::Presenters::Page
     end
 
     def ris_action_url
-      "#{@uri}/ris"
     end
 
     def actions

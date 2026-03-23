@@ -6,13 +6,20 @@ import {
   handleRISFormSubmit
 } from '../../../../../../../assets/scripts/datastores/partials/actions/action/ris/_form.js';
 import { expect } from 'chai';
+import { getListCitationData } from '../../../../../../../assets/scripts/datastores/partials/actions/action/_citation.js';
+import { risData } from '../../../../../../../assets/scripts/datastores/partials/actions/action/ris/_textarea.js';
 import sinon from 'sinon';
 
-describe('RIS', function () {
+describe('RIS form', function () {
+  let listRISData = null;
   let getForm = null;
 
   beforeEach(function () {
+    listRISData = getListCitationData({ list: global.temporaryList, type: 'ris' });
     document.body.innerHTML = `
+      <textarea class="citation__ris">
+        ${JSON.stringify(listRISData)}
+      </textarea>
       <form method="post" action="/ris" class="action__ris">
         <button type="submit">Download RIS</button>
       </form>
@@ -24,6 +31,7 @@ describe('RIS', function () {
   });
 
   afterEach(function () {
+    listRISData = null;
     getForm = null;
   });
 
@@ -39,30 +47,20 @@ describe('RIS', function () {
   });
 
   describe('generateRISFile()', function () {
-    let citationsStub = null;
-    let risCitations = null;
-    let list = null;
+    let risDataStub = null;
     let args = null;
 
     beforeEach(function () {
-      list = global.temporaryList;
-      risCitations = Object.values(list).map((datastore) => {
-        return Object.values(datastore).map((record) => {
-          return record.citation.ris;
-        });
-      }
-      );
-      citationsStub = sinon.stub().returns(risCitations);
+      risDataStub = sinon.stub().callsFake(() => {
+        return risData();
+      });
       args = {
-        citations: citationsStub,
-        list
+        data: risDataStub()
       };
     });
 
     afterEach(function () {
-      citationsStub = null;
-      risCitations = null;
-      list = null;
+      risDataStub = null;
       args = null;
     });
 
@@ -79,7 +77,7 @@ describe('RIS', function () {
       generateRISFile(args);
 
       // Check that the citations function was called with correct arguments
-      expect(citationsStub.calledOnceWithExactly({ list: args.list, type: 'ris' }), 'the citations function should be called with the correct arguments').to.be.true;
+      expect(risDataStub.calledOnceWithExactly(), 'the citations function should be called with the correct arguments').to.be.true;
     });
 
     it('should have the correct MIME type', function () {
@@ -97,7 +95,7 @@ describe('RIS', function () {
       // Read the Blob content
       return risFile.text().then((text) => {
         // Check the content
-        expect(text, 'the generated RIS file should contain the correct content').to.equal(risCitations.join('\n\n'));
+        expect(text, 'the generated RIS file should contain the correct content').to.equal(listRISData.join('\n\n'));
       });
     });
   });
@@ -124,7 +122,7 @@ describe('RIS', function () {
       args = {
         generateFile: generateFileStub,
         generateFileName: generateFileNameStub,
-        list: global.temporaryList
+        list: listRISData
       };
 
       // Resolve `Not implemented: navigation to another Document`
@@ -160,7 +158,7 @@ describe('RIS', function () {
 
     it('should call `generateFile` with correct arguments', function () {
       // Check that generateFile was called with correct arguments
-      expect(generateFileStub.calledOnceWithExactly({ list: args.list }), '`generateFile` should be called with the correct arguments').to.be.true;
+      expect(generateFileStub.calledOnceWithExactly(), '`generateFile` should be called with the correct arguments').to.be.true;
     });
 
     it('should call `generateFileName` with correct arguments', function () {
@@ -208,8 +206,7 @@ describe('RIS', function () {
           preventDefault: sinon.spy(),
           target: getForm()
         },
-        generateDownloadAnchor: generateRISDownloadAnchorSpy,
-        list: global.temporaryList
+        generateDownloadAnchor: generateRISDownloadAnchorSpy
       };
     });
 
@@ -227,9 +224,9 @@ describe('RIS', function () {
         handleRISFormSubmit(args);
       });
 
-      it('should prevent the default form submission', function () {
+      it('should not prevent the default form submission', function () {
         // Check that preventDefault was called
-        expect(args.event.preventDefault.calledOnce, '`event.preventDefault` should have been called once').to.be.true;
+        expect(args.event.preventDefault.notCalled, '`event.preventDefault` should have been called once').to.be.true;
       });
 
       it('should not call `generateDownloadAnchor`', function () {
@@ -255,7 +252,7 @@ describe('RIS', function () {
 
       it('should call `generateDownloadAnchor` with correct arguments', function () {
         // Check that generateDownloadAnchor was called with correct arguments
-        expect(generateRISDownloadAnchorSpy.calledOnceWithExactly({ list: args.list }), '`generateDownloadAnchor` should be called with the correct arguments').to.be.true;
+        expect(generateRISDownloadAnchorSpy.calledOnceWithExactly(), '`generateDownloadAnchor` should be called with the correct arguments').to.be.true;
       });
     });
   });
@@ -268,8 +265,7 @@ describe('RIS', function () {
     beforeEach(function () {
       handleRISFormSubmitSpy = sinon.spy();
       args = {
-        download: handleRISFormSubmitSpy,
-        list: global.temporaryList
+        risFormSubmit: handleRISFormSubmitSpy
       };
 
       // Call the function
@@ -290,7 +286,7 @@ describe('RIS', function () {
     });
 
     it('should call `handleRISFormSubmit` with the correct arguments', function () {
-      expect(handleRISFormSubmitSpy.calledOnceWithExactly({ event, list: args.list }), '`handleRISFormSubmit` should be called with the correct arguments').to.be.true;
+      expect(handleRISFormSubmitSpy.calledOnceWithExactly({ event }), '`handleRISFormSubmit` should be called with the correct arguments').to.be.true;
     });
   });
 });
