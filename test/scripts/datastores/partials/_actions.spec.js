@@ -1,8 +1,17 @@
-import { disableActionTabs, getTabPanel, initializeActions, isSelected, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import {
+  disableActionTabs,
+  getActionsPanel,
+  getTabPanel,
+  initializeActions,
+  isSelected,
+  tabControl,
+  toggleActionsPanel
+} from '../../../../assets/scripts/datastores/partials/_actions.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
 describe('actions', function () {
+  let getDetails = null;
   let firstTab = null;
   let secondTab = null;
   let getTabs = null;
@@ -11,29 +20,36 @@ describe('actions', function () {
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
-      <div class="tabs">
-        <div class="actions__tablist" role="tablist">
-          <button type="button" role="tab" id="tab1" aria-selected="true" aria-controls="tabpanel1">
-            Tab 1
-          </button>
-          <button type="button" role="tab" id="tab2" aria-selected="false" aria-controls="tabpanel2">
-            Tab 2
-          </button>
-          <button type="button" role="tab" id="actions__link" aria-selected="false" aria-controls="actions__link--tabpanel">
-            Copy link
-          </button>
+      <details class="actions">
+        <summary>Actions Panel</summary>
+        <div class="tabs">
+          <div class="actions__tablist" role="tablist">
+            <button type="button" role="tab" id="tab1" aria-selected="true" aria-controls="tabpanel1">
+              Tab 1
+            </button>
+            <button type="button" role="tab" id="tab2" aria-selected="false" aria-controls="tabpanel2">
+              Tab 2
+            </button>
+            <button type="button" role="tab" id="actions__link" aria-selected="false" aria-controls="actions__link--tabpanel">
+              Copy link
+            </button>
+          </div>
+          <div id="tabpanel1" role="tabpanel">
+            <div class="alert alert__warning">This is a warning.</div>
+          </div>
+          <div id="tabpanel2" role="tabpanel">
+            Tab Panel 2
+          </div>
+          <div id="actions__link--tabpanel" role="tabpanel">
+            Copy link tab panel
+          </div>
         </div>
-        <div id="tabpanel1" role="tabpanel">
-          <div class="alert alert__warning">This is a warning.</div>
-        </div>
-        <div id="tabpanel2" role="tabpanel">
-          Tab Panel 2
-        </div>
-        <div id="actions__link--tabpanel" role="tabpanel">
-          Copy link tab panel
-        </div>
-      </div>
+      </details>
     `;
+
+    getDetails = () => {
+      return document.querySelector('details');
+    };
 
     firstTab = () => {
       return document.querySelector('[aria-controls="tabpanel1"]');
@@ -56,10 +72,47 @@ describe('actions', function () {
   });
 
   afterEach(function () {
+    getDetails = null;
     firstTab = null;
     secondTab = null;
     getAlert = null;
     getTabs = null;
+  });
+
+  describe('getActionsPanel()', function () {
+    it('should return the actions panel element', function () {
+      expect(getActionsPanel(), 'the actions panel should have been returned').to.equal(getDetails());
+    });
+  });
+
+  describe('toggleActionsPanel()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        actionsPanel: getDetails()
+      };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should open the actions panel if some checkboxes are checked', function () {
+      // Call the function
+      toggleActionsPanel({ ...args, someChecked: true });
+
+      // Make sure the actions panel is now open
+      expect(getDetails().hasAttribute('open'), 'the actions panel should be open').to.be.true;
+    });
+
+    it('should close the actions panel if no checkboxes are checked', function () {
+      // Call the function
+      toggleActionsPanel({ ...args, someChecked: false });
+
+      // Make sure the actions panel is now closed
+      expect(getDetails().hasAttribute('open'), 'the actions panel should be closed').to.be.false;
+    });
   });
 
   describe('isSelected()', function () {

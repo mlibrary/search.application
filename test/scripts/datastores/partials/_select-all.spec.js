@@ -1,5 +1,6 @@
 import {
   getSelectAllCheckbox,
+  handleSelectAllChange,
   selectAll,
   selectAllCheckboxState,
   updateSelectedCount,
@@ -248,6 +249,38 @@ describe('select all', function () {
     });
   });
 
+  describe('handleSelectAllChange()', function () {
+    let selectAllCheckboxStateSpy = null;
+    let updateSelectedCountSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      selectAllCheckboxStateSpy = sinon.spy();
+      updateSelectedCountSpy = sinon.spy();
+      args = {
+        selectAllCheckbox: selectAllCheckboxStateSpy,
+        updateCount: updateSelectedCountSpy
+      };
+
+      // Call the function
+      handleSelectAllChange(args);
+    });
+
+    afterEach(function () {
+      selectAllCheckboxStateSpy = null;
+      updateSelectedCountSpy = null;
+      args = null;
+    });
+
+    it('should call `selectAllCheckboxState` with the correct arguments', function () {
+      expect(selectAllCheckboxStateSpy.calledOnceWithExactly(), '`selectAllCheckboxState` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `updateSelectedCount` with the correct arguments', function () {
+      expect(updateSelectedCountSpy.calledOnceWithExactly(), '`updateSelectedCount` should be called with the correct arguments').to.be.true;
+    });
+  });
+
   describe('selectAll', function () {
     let updateSelectedCountSpy = null;
     let updateTotalCountSpy = null;
@@ -261,9 +294,9 @@ describe('select all', function () {
       args = {
         checkbox: getSelectAllCheckbox(),
         checkboxes: getCheckboxes(),
-        countSelected: updateSelectedCountSpy,
         countTotal: updateTotalCountSpy,
-        selectCheckboxState: selectAllCheckboxStateSpy
+        selectCheckboxState: selectAllCheckboxStateSpy,
+        updateCount: updateSelectedCountSpy
       };
 
       // Call the function

@@ -1,5 +1,4 @@
 import { actionsPanelText } from './actions/_summary.js';
-import { changeAlert } from './actions/_alert.js';
 import { copyLink } from './actions/action/_link.js';
 import { emailAction } from './actions/action/_email.js';
 import { initializeCitations } from './actions/action/_citation.js';
@@ -7,6 +6,14 @@ import { initializeRIS } from './actions/action/_ris.js';
 import { someCheckboxesChecked } from '../results/partials/results-list/list-item/header/_checkbox.js';
 import { textAction } from './actions/action/_text.js';
 import { toggleSelectedAction } from './actions/action/_toggle-selected.js';
+
+const getActionsPanel = () => {
+  return document.querySelector('details.actions');
+};
+
+const toggleActionsPanel = ({ actionsPanel = getActionsPanel(), someChecked = someCheckboxesChecked(true) } = {}) => {
+  actionsPanel.toggleAttribute('open', someChecked);
+};
 
 const isSelected = ({ tab }) => {
   return tab.getAttribute('aria-selected') === 'true';
@@ -63,6 +70,16 @@ const disableActionTabs = ({ someChecked = someCheckboxesChecked(true) } = {}) =
   });
 };
 
+/*
+Const handleActionsPanelChange = () => {
+  // Disable
+  // Text
+  // Toggle details open/close on actions panel
+  // Citations
+  // RIS
+};
+*/
+
 const initializeActions = ({
   actionsText = actionsPanelText,
   citations = initializeCitations,
@@ -101,10 +118,11 @@ const initializeActions = ({
 };
 
 export {
-  changeAlert,
   disableActionTabs,
+  getActionsPanel,
   getTabPanel,
   initializeActions,
   isSelected,
-  tabControl
+  tabControl,
+  toggleActionsPanel
 };

@@ -30,18 +30,29 @@ const updateTotalCount = ({ count, viewingList = viewingTemporaryList() }) => {
   selectedText.textContent = count === 1 ? 'item' : 'items';
 };
 
+const handleSelectAllChange = ({
+  selectAllCheckbox = selectAllCheckboxState,
+  updateCount = updateSelectedCount
+} = {}) => {
+  // Update the state of the checkbox
+  selectAllCheckbox();
+
+  // Update the selected count
+  updateCount();
+};
+
 const selectAll = ({
   checkbox = getSelectAllCheckbox(),
   checkboxes = getCheckboxes(),
-  countSelected = updateSelectedCount,
   countTotal = updateTotalCount,
-  selectCheckboxState = selectAllCheckboxState
+  selectCheckboxState = selectAllCheckboxState,
+  updateCount = updateSelectedCount
 } = {}) => {
   // Initialize the state of the checkbox
   selectCheckboxState({ checkbox });
 
   // Update the selected count
-  countSelected();
+  updateCount();
 
   // Update the total count
   countTotal({ count: checkboxes.length });
@@ -55,12 +66,13 @@ const selectAll = ({
     });
 
     // Update the selected count
-    countSelected();
+    updateCount();
   });
 };
 
 export {
   getSelectAllCheckbox,
+  handleSelectAllChange,
   selectAll,
   selectAllCheckboxState,
   updateSelectedCount,
