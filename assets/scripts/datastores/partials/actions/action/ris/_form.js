@@ -1,11 +1,22 @@
 import { risData } from './_textarea.js';
+import { viewingTemporaryList } from '../../../../list/layout.js';
 
-const generateRISFileName = () => {
+const generateRISFileName = ({ path = window.location.pathname, viewingList = viewingTemporaryList() } = {}) => {
+  let prefix = 'mlibrary-search-';
+  if (viewingList) {
+    // If viewing the temporary list, use that in the filename
+    prefix += 'temporary-list';
+  } else {
+    // Extract the datastore from the path for the filename
+    const [datastore] = path.split('/').filter(Boolean);
+    prefix += `${datastore}-results`;
+  }
+
   // Get today's date in YYYY-MM-DD format
   const today = new Date();
   const formattedDate = today.toISOString().slice(0, 10);
 
-  return `MyTemporaryList-${formattedDate}.ris`;
+  return `${prefix}-${formattedDate}.ris`;
 };
 
 const generateRISFile = ({ data = risData() } = {}) => {

@@ -36,13 +36,32 @@ describe('RIS form', function () {
   });
 
   describe('generateRISFileName()', function () {
-    it('should return a filename with today\'s date', function () {
+    let datastore = null;
+    let currentDate = null;
+    let args = null;
+
+    beforeEach(function () {
+      datastore = 'catalog';
       // Get today's date
       const today = new Date();
-      const formattedDate = today.toISOString().slice(0, 10);
-      const expectedFileName = `MyTemporaryList-${formattedDate}.ris`;
+      currentDate = today.toISOString().slice(0, 10);
+      args = {
+        path: `/${datastore}`
+      };
+    });
 
-      expect(generateRISFileName(), `the filename should be ${expectedFileName}`).to.equal(expectedFileName);
+    afterEach(function () {
+      datastore = null;
+      currentDate = null;
+      args = null;
+    });
+
+    it('should return a filename with the correct datastore prefix when not viewing temporary list', function () {
+      expect(generateRISFileName({ ...args, viewingList: false }), '`generateRISFileName` should return the correct filename when not viewing temporary list').to.equal(`mlibrary-search-${datastore}-results-${currentDate}.ris`);
+    });
+
+    it('should return a filename with the temporary list prefix when viewing temporary list', function () {
+      expect(generateRISFileName({ ...args, viewingList: true }), '`generateRISFileName` should return the correct filename when viewing temporary list').to.equal(`mlibrary-search-temporary-list-${currentDate}.ris`);
     });
   });
 
