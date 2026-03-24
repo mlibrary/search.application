@@ -33,6 +33,12 @@ describe('toggle selected', function () {
     `;
   });
 
+  describe('updatedList', function () {
+    it('should be null initially', function () {
+      expect(updatedList, '`updatedList` should be null initially').to.be.null;
+    });
+  });
+
   describe('updateListForTogglingRecords()', function () {
     let args = null;
 

@@ -33,6 +33,19 @@ describe('layout', function () {
     getElement = null;
   });
 
+  describe('defaultTemporaryList', function () {
+    it('should be an object', function () {
+      expect(defaultTemporaryList, '`defaultTemporaryList` should be an object').to.be.an('object');
+    });
+
+    it('should contain all datastores with empty objects', function () {
+      Object.keys(defaultTemporaryList).forEach((datastore) => {
+        expect(['articles', 'catalog', 'databases', 'everything', 'guidesandmore', 'onlinejournals'].includes(datastore), `\`${datastore}\` should be a valid datastore`).to.be.true;
+        expect(defaultTemporaryList[datastore], `\`${datastore}\` should be an empty object`).to.be.an('object').that.is.empty;
+      });
+    });
+  });
+
   describe('getSessionStorage()', function () {
     let getSessionStorageStub = null;
 

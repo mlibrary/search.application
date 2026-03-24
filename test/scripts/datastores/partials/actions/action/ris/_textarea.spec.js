@@ -49,6 +49,12 @@ describe('ris', function () {
     getTextArea = null;
   });
 
+  describe('risDataCache', function () {
+    it('should be null initially', function () {
+      expect(risDataCache, '`risDataCache` should be null initially').to.be.null;
+    });
+  });
+
   describe('getRISTextarea()', function () {
     it('should return the RIS `textarea`', function () {
       expect(getRISTextarea(), 'the `textarea` that displays the RIS should have been returned').to.deep.equal(getTextArea());

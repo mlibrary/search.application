@@ -643,6 +643,12 @@ describe('citation', function () {
     });
   });
 
+  describe('citationStyleCache', function () {
+    it('should be an empty array initially', function () {
+      expect(citationStyleCache, '`citationStyleCache` should be an empty array initially').to.be.an('array').that.is.empty;
+    });
+  });
+
   describe('generateCitations()', function () {
     let citationStyle = null;
     let tab = null;
