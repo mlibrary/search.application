@@ -2,7 +2,6 @@ import {
   defaultTemporaryList,
   getDatastores,
   getSessionStorage,
-  handleSelectionChange,
   inTemporaryList,
   setSessionStorage,
   temporaryList,
@@ -14,6 +13,8 @@ import { JSDOM } from 'jsdom';
 import sinon from 'sinon';
 
 describe('layout', function () {
+  let getElement = null;
+
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
@@ -22,6 +23,14 @@ describe('layout', function () {
         <input type="checkbox" class="select-all__checkbox" />
       </div>
     `;
+
+    getElement = () => {
+      return document.querySelector('.list');
+    };
+  });
+
+  afterEach(function () {
+    getElement = null;
   });
 
   describe('getSessionStorage()', function () {
@@ -420,93 +429,10 @@ describe('layout', function () {
     });
   });
 
-  describe('handleSelectionChange()', function () {
-    let actions = null;
-    let args = null;
-    let listElement = null;
-    let checkbox = null;
-    let selectAll = null;
-
-    beforeEach(function () {
-      // Create sinon stubs for the action methods
-      actions = {
-        actionsPanelText: sinon.spy(),
-        disableActionTabs: sinon.spy(),
-        regenerateCitations: sinon.spy(),
-        selectAllCheckboxState: sinon.spy(),
-        updateCSLData: sinon.spy(),
-        updateRISData: sinon.spy(),
-        updateSelectedCount: sinon.spy()
-      };
-
-      args = { actions };
-
-      // Initialize the function with the stubbed actions
-      handleSelectionChange(args);
-
-      listElement = () => {
-        return document.querySelector('.list');
-      };
-
-      checkbox = () => {
-        return document.querySelector('.record__checkbox');
-      };
-
-      selectAll = () => {
-        return document.querySelector('input[type="checkbox"].select-all__checkbox');
-      };
-    });
-
-    afterEach(function () {
-      actions = null;
-      args = null;
-      listElement = null;
-      checkbox = null;
-      selectAll = null;
-    });
-
-    it('should call all action functions when a list item checkbox changes', function () {
-      // Simulate a change event
-      const event = new window.Event('change', { bubbles: true });
-      checkbox().dispatchEvent(event);
-
-      // Check if all actions were called with the correct arguments
-      Object.keys(actions).forEach((key) => {
-        expect(actions[key].calledOnceWithExactly(), `\`${key}\` should have been called with the correct arguments`).to.be.true;
-      });
-    });
-
-    it('should call all action functions when the `Select all` checkbox changes', function () {
-      // Simulate a change event
-      const event = new window.Event('change', { bubbles: true });
-      selectAll().dispatchEvent(event);
-
-      // Check if all actions were called with the correct arguments
-      Object.keys(actions).forEach((key) => {
-        expect(actions[key].calledOnceWithExactly(), `\`${key}\` should have been called with the correct arguments`).to.be.true;
-      });
-    });
-
-    it('should not call action functions for irrelevant changes', function () {
-      // Create a `div` element
-      const div = document.createElement('div');
-      listElement().appendChild(div);
-
-      // Simulate a change event on the created element
-      const event = new window.Event('change', { bubbles: true });
-      div.dispatchEvent(event);
-
-      // Check if all actions were not called
-      Object.keys(actions).forEach((key) => {
-        expect(actions[key].called, `\`${key}\` should not have been called`).to.be.false;
-      });
-    });
-  });
-
   describe('temporaryList()', function () {
     let getDatastoresStub = null;
     let initializeActionsSpy = null;
-    let handleSelectionChangeSpy = null;
+    let handleActionsPanelChangeSpy = null;
     let selectAllSpy = null;
     let toggleListElementsSpy = null;
     let updateResultsListsSpy = null;
@@ -517,14 +443,14 @@ describe('layout', function () {
         return getDatastores({ list });
       });
       initializeActionsSpy = sinon.spy();
-      handleSelectionChangeSpy = sinon.spy();
+      handleActionsPanelChangeSpy = sinon.spy();
       selectAllSpy = sinon.spy();
       toggleListElementsSpy = sinon.spy();
       updateResultsListsSpy = sinon.spy();
       args = {
         actionsPanel: initializeActionsSpy,
         datastores: getDatastoresStub,
-        handleChange: handleSelectionChangeSpy,
+        handleActionsChange: handleActionsPanelChangeSpy,
         initializeSelectAll: selectAllSpy,
         list: global.temporaryList,
         toggleElements: toggleListElementsSpy,
@@ -535,7 +461,7 @@ describe('layout', function () {
     afterEach(function () {
       getDatastoresStub = null;
       initializeActionsSpy = null;
-      handleSelectionChangeSpy = null;
+      handleActionsPanelChangeSpy = null;
       selectAllSpy = null;
       toggleListElementsSpy = null;
       updateResultsListsSpy = null;
@@ -571,8 +497,8 @@ describe('layout', function () {
         expect(selectAllSpy.calledOnceWithExactly(), '`selectAll` should have been called with the correct arguments').to.be.true;
       });
 
-      it('should call `handleSelectionChange` with the correct arguments', function () {
-        expect(handleSelectionChangeSpy.calledOnceWithExactly(), '`handleSelectionChange` should have been called with the correct arguments').to.be.true;
+      it('should call `handleActionsPanelChange` with the correct arguments', function () {
+        expect(handleActionsPanelChangeSpy.calledOnceWithExactly({ element: getElement() }), '`handleActionsPanelChange` should have been called with the correct arguments').to.be.true;
       });
     });
 
@@ -598,16 +524,16 @@ describe('layout', function () {
         expect(getDatastoresStub.calledOnceWithExactly({ list: args.list }), '`getDatastores` should have been called with the correct arguments').to.be.true;
       });
 
-      it('should not call `handleSelectionChange` if the temporary list is empty', function () {
-        expect(handleSelectionChangeSpy.calledOnce, '`handleSelectionChange` should not have been called').to.be.false;
-      });
-
       it('should not call `initializeActions` if the temporary list is empty', function () {
-        expect(initializeActionsSpy.calledOnce, '`initializeActions` should not have been called').to.be.false;
+        expect(initializeActionsSpy.notCalled, '`initializeActions` should not have been called').to.be.true;
       });
 
       it('should not call `selectAll` if the temporary list is empty', function () {
-        expect(selectAllSpy.calledOnce, '`selectAll` should not have been called').to.be.false;
+        expect(selectAllSpy.notCalled, '`selectAll` should not have been called').to.be.true;
+      });
+
+      it('should not call `handleActionsPanelChange` if the temporary list is empty', function () {
+        expect(handleActionsPanelChangeSpy.notCalled, '`handleActionsPanelChange` should not have been called').to.be.true;
       });
     });
   });

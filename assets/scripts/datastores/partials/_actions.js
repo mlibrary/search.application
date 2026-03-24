@@ -1,11 +1,14 @@
+import { checkboxSelector, someCheckboxesChecked } from '../results/partials/results-list/list-item/header/_checkbox.js';
+import { initializeCitations, regenerateCitations } from './actions/action/_citation.js';
+import { toggleSelectedAction, updateToggleSelectedAction } from './actions/action/_toggle-selected.js';
 import { actionsPanelText } from './actions/_summary.js';
 import { copyLink } from './actions/action/_link.js';
 import { emailAction } from './actions/action/_email.js';
-import { initializeCitations } from './actions/action/_citation.js';
+import { handleSelectAllChange } from './_select-all.js';
 import { initializeRIS } from './actions/action/_ris.js';
-import { someCheckboxesChecked } from '../results/partials/results-list/list-item/header/_checkbox.js';
 import { textAction } from './actions/action/_text.js';
-import { toggleSelectedAction } from './actions/action/_toggle-selected.js';
+import { updateCSLData } from './actions/action/citation/_csl.js';
+import { updateRISData } from './actions/action/ris/_textarea.js';
 
 const getActionsPanel = () => {
   return document.querySelector('details.actions');
@@ -70,25 +73,62 @@ const disableActionTabs = ({ someChecked = someCheckboxesChecked(true) } = {}) =
   });
 };
 
-/*
-Const handleActionsPanelChange = () => {
-  // Disable
-  // Text
-  // Toggle details open/close on actions panel
-  // Citations
-  // RIS
+const actionChangeFunctions = {
+  actionsPanelText,
+  disableActionTabs,
+  handleSelectAllChange,
+  regenerateCitations,
+  toggleActionsPanel,
+  updateCSLData,
+  updateRISData,
+  updateToggleSelectedAction
 };
-*/
+
+const handleActionsPanelChange = ({
+  changeFunctions = actionChangeFunctions,
+  element
+}) => {
+  // Watch for changes to the list and update accordingly
+  element.addEventListener('change', (event) => {
+    if (event.target.matches(`${checkboxSelector}, input[type="checkbox"].select-all__checkbox`)) {
+      // Update the toggle selected action based on the current state of the checkboxes
+      changeFunctions.updateToggleSelectedAction();
+
+      // Update the Actions panel text depending on how many records are selected
+      changeFunctions.actionsPanelText();
+
+      // Disable action tabs if no checkboxes are selected
+      changeFunctions.disableActionTabs();
+
+      // Toggle the actions panel open or closed
+      changeFunctions.toggleActionsPanel();
+
+      // Update CSL data
+      changeFunctions.updateCSLData();
+
+      // Regenerate citations
+      changeFunctions.regenerateCitations();
+
+      // Update RIS data
+      changeFunctions.updateRISData();
+
+      // Update the state of the `Select All` partial
+      changeFunctions.handleSelectAllChange();
+    }
+  });
+};
 
 const initializeActions = ({
   actionsText = actionsPanelText,
   citations = initializeCitations,
+  disableActions = disableActionTabs,
   email = emailAction,
   link = copyLink,
   list,
   ris = initializeRIS,
   tabControlFunction = tabControl,
   text = textAction,
+  togglePanel = toggleActionsPanel,
   toggleSelected = toggleSelectedAction
 } = {}) => {
   // Actions panel
@@ -115,12 +155,19 @@ const initializeActions = ({
 
   // Update actions panel text
   actionsText();
+
+  // Disable action tabs if no checkboxes are selected
+  disableActions();
+
+  // Open or close the actions panel based on if any checkboxes are selected
+  togglePanel();
 };
 
 export {
   disableActionTabs,
   getActionsPanel,
   getTabPanel,
+  handleActionsPanelChange,
   initializeActions,
   isSelected,
   tabControl,

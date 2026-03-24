@@ -2,11 +2,13 @@ import {
   disableActionTabs,
   getActionsPanel,
   getTabPanel,
+  handleActionsPanelChange,
   initializeActions,
   isSelected,
   tabControl,
   toggleActionsPanel
 } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { checkboxSelector } from '../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -45,6 +47,7 @@ describe('actions', function () {
           </div>
         </div>
       </details>
+      <input type="checkbox" class="record__checkbox">
     `;
 
     getDetails = () => {
@@ -204,35 +207,82 @@ describe('actions', function () {
     });
   });
 
+  describe('handleActionsPanelChange()', function () {
+    let args = null;
+    let event = null;
+
+    beforeEach(function () {
+      args = {
+        changeFunctions: {
+          actionsPanelText: sinon.spy(),
+          disableActionTabs: sinon.spy(),
+          handleSelectAllChange: sinon.spy(),
+          regenerateCitations: sinon.spy(),
+          toggleActionsPanel: sinon.spy(),
+          updateCSLData: sinon.spy(),
+          updateRISData: sinon.spy(),
+          updateToggleSelectedAction: sinon.spy()
+        },
+        element: document.querySelector(checkboxSelector)
+      };
+
+      // Call the function
+      handleActionsPanelChange(args);
+
+      // Create a change event
+      event = new window.Event('change', { bubbles: true });
+
+      // Dispatch the change event
+      args.element.dispatchEvent(event);
+    });
+
+    afterEach(function () {
+      args = null;
+      event = null;
+    });
+
+    it('should call all change functions on change event with the correct arguments', function () {
+      Object.keys(args.changeFunctions).forEach((functionName) => {
+        expect(args.changeFunctions[functionName].calledOnceWithExactly(), `\`${functionName}\` should have been called once on change event with the correct arguments`).to.be.true;
+      });
+    });
+  });
+
   describe('initializeActions()', function () {
     let actionsPanelTextSpy = null;
     let initializeCitationsSpy = null;
+    let disableActionTabsSpy = null;
     let emailActionSpy = null;
     let copyLinkSpy = null;
     let initializeRISSpy = null;
     let tabControlSpy = null;
     let textActionSpy = null;
+    let toggleActionsPanelSpy = null;
     let toggleSelectedSpy = null;
     let args = null;
 
     beforeEach(function () {
       actionsPanelTextSpy = sinon.spy();
       initializeCitationsSpy = sinon.spy();
+      disableActionTabsSpy = sinon.spy();
       emailActionSpy = sinon.spy();
       copyLinkSpy = sinon.spy();
       initializeRISSpy = sinon.spy();
       tabControlSpy = sinon.spy();
       textActionSpy = sinon.spy();
+      toggleActionsPanelSpy = sinon.spy();
       toggleSelectedSpy = sinon.spy();
       args = {
         actionsText: actionsPanelTextSpy,
         citations: initializeCitationsSpy,
+        disableActions: disableActionTabsSpy,
         email: emailActionSpy,
         link: copyLinkSpy,
         list: global.temporaryList,
         ris: initializeRISSpy,
         tabControlFunction: tabControlSpy,
         text: textActionSpy,
+        togglePanel: toggleActionsPanelSpy,
         toggleSelected: toggleSelectedSpy
       };
 
@@ -243,11 +293,13 @@ describe('actions', function () {
     afterEach(function () {
       actionsPanelTextSpy = null;
       initializeCitationsSpy = null;
+      disableActionTabsSpy = null;
       emailActionSpy = null;
       copyLinkSpy = null;
       initializeRISSpy = null;
       tabControlSpy = null;
       textActionSpy = null;
+      toggleActionsPanelSpy = null;
       toggleSelectedSpy = null;
       args = null;
     });
@@ -282,6 +334,14 @@ describe('actions', function () {
 
     it('should call `actionsPanelText` with the correct arguments', function () {
       expect(actionsPanelTextSpy.calledOnceWithExactly(), '`actionsPanelText` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `disableActionTabs` with the correct arguments', function () {
+      expect(disableActionTabsSpy.calledOnceWithExactly(), '`disableActionTabs` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleActionsPanel` with the correct arguments', function () {
+      expect(toggleActionsPanelSpy.calledOnceWithExactly(), '`toggleActionsPanel` should have been called with the correct arguments').to.be.true;
     });
   });
 });

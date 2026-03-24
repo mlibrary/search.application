@@ -1,13 +1,9 @@
-import { disableActionTabs, initializeActions } from '../partials/_actions.js';
-import { selectAll, selectAllCheckboxState, updateSelectedCount } from '../partials/_select-all.js';
-import { actionsPanelText } from '../partials/actions/_summary.js';
-import { regenerateCitations } from '../partials/actions/action/_citation.js';
+import { handleActionsPanelChange, initializeActions } from '../partials/_actions.js';
 import { removeEmptyDatastoreSections } from './partials/results/_datastores.js';
 import { removeEmptyListMessage } from './partials/_empty.js';
 import { removeListResults } from './partials/_results.js';
-import { updateCSLData } from '../partials/actions/action/citation/_csl.js';
+import { selectAll } from '../partials/_select-all.js';
 import { updateResultsLists } from '../results/partials/_results-list.js';
-import { updateRISData } from '../partials/actions/action/ris/_textarea.js';
 
 const defaultTemporaryList = {
   articles: {},
@@ -100,38 +96,10 @@ const toggleListElements = ({
   }
 };
 
-// Bring in actions after DOM has been built
-const defaultActions = {
-  actionsPanelText,
-  disableActionTabs: () => {
-    return disableActionTabs();
-  },
-  regenerateCitations,
-  selectAllCheckboxState,
-  updateCSLData,
-  updateRISData,
-  updateSelectedCount
-};
-
-const handleSelectionChange = ({ actions = defaultActions } = {}) => {
-  // Watch for changes to the list and update accordingly
-  document.querySelector('.list').addEventListener('change', (event) => {
-    if (event.target.matches(`input[type="checkbox"].record__checkbox, input[type="checkbox"].select-all__checkbox`)) {
-      actions.actionsPanelText();
-      actions.selectAllCheckboxState();
-      actions.updateSelectedCount();
-      actions.disableActionTabs();
-      actions.updateCSLData();
-      actions.regenerateCitations();
-      actions.updateRISData();
-    }
-  });
-};
-
 const temporaryList = ({
   actionsPanel = initializeActions,
   datastores = getDatastores,
-  handleChange = handleSelectionChange,
+  handleActionsChange = handleActionsPanelChange,
   initializeSelectAll = selectAll,
   list,
   toggleElements = toggleListElements,
@@ -154,15 +122,14 @@ const temporaryList = ({
   // Initialize select all partial
   initializeSelectAll();
 
-  // Handle selection changes
-  handleChange();
+  // Watch for changes to the list and update accordingly
+  handleActionsChange({ element: document.querySelector('.list') });
 };
 
 export {
   defaultTemporaryList,
   getDatastores,
   getSessionStorage,
-  handleSelectionChange,
   inTemporaryList,
   setSessionStorage,
   temporaryList,
