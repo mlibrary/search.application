@@ -1,0 +1,1341 @@
+{
+  "records": [
+    {
+      "id": "99188029604306381",
+      "title": [
+        {
+          "original": {
+            "text": "Blah."
+          }
+        }
+      ],
+      "main_author": [],
+      "published": [
+        {
+          "original": {
+            "text": "London : [publisher not identified, approximately 1986]"
+          }
+        }
+      ],
+      "series": [],
+      "holdings": {
+        "hathi_trust_items": [],
+        "alma_digital_items": [],
+        "electronic_items": [
+          {
+            "url": "https://na04.alma.exlibrisgroup.com/view/uresolver/01UMICH_INST/openurl-UMAA?u.ignore_date_coverage=true&portfolio_pid=531307358130006381&Force_direct=true",
+            "campuses": [
+              "ann_arbor",
+              "flint"
+            ],
+            "interface_name": "AM (Adam Matthew)",
+            "collection_name": "1980s Culture and Society",
+            "note": "AM (Adam Matthew) 1980s Culture and Society. Authorized U-M users (+ guests in U-M Libraries)",
+            "is_available": true
+          }
+        ],
+        "physical": []
+      },
+      "citation": {
+        "tagged": [
+          {
+            "content": "BOOK",
+            "ris": [
+              "TY"
+            ],
+            "meta": []
+          },
+          {
+            "content": "U-M Catalog Search",
+            "ris": [
+              "DB"
+            ],
+            "meta": []
+          },
+          {
+            "content": "University of Michigan Library",
+            "ris": [
+              "DP"
+            ],
+            "meta": []
+          },
+          {
+            "content": "2026-04-13",
+            "ris": [
+              "Y2"
+            ],
+            "meta": [
+              "online_date"
+            ]
+          },
+          {
+            "content": "99188029604306381",
+            "ris": [
+              "ID"
+            ],
+            "meta": [
+              "id"
+            ]
+          },
+          {
+            "content": "University of Warwick. Library. Modern Records Centre, owner",
+            "ris": [
+              "AU"
+            ],
+            "meta": [
+              "author"
+            ]
+          },
+          {
+            "content": "1986",
+            "ris": [
+              "DA",
+              "PY",
+              "Y1"
+            ],
+            "meta": [
+              "date",
+              "publication_date",
+              "online_date",
+              "cover_date",
+              "year"
+            ]
+          },
+          {
+            "content": "Blah",
+            "ris": [
+              "JF",
+              "T1",
+              "TI"
+            ],
+            "meta": [
+              "title",
+              "journal_title"
+            ]
+          },
+          {
+            "content": "England -- London",
+            "ris": [
+              "KW"
+            ],
+            "meta": [
+              "keywords"
+            ]
+          },
+          {
+            "content": "English",
+            "ris": [
+              "LA"
+            ],
+            "meta": [
+              "language"
+            ]
+          },
+          {
+            "content": "1 online resource.",
+            "ris": [
+              "M1",
+              "NV"
+            ],
+            "meta": [
+              "id"
+            ]
+          },
+          {
+            "content": "Fanzine comprising of interviews and reviews of bands in the independent music scene, as well as discussions about youth culture, sport and social issues.",
+            "ris": [
+              "N2"
+            ],
+            "meta": [
+              "abstract"
+            ]
+          },
+          {
+            "content": "Please be aware that this document includes racist terminology which some people may find distressing or offensive.",
+            "ris": [
+              "N2"
+            ],
+            "meta": [
+              "abstract"
+            ]
+          },
+          {
+            "content": "[publisher not identified",
+            "ris": [
+              "PB"
+            ],
+            "meta": [
+              "publisher"
+            ]
+          },
+          {
+            "content": "",
+            "ris": [
+              "ER"
+            ],
+            "meta": []
+          }
+        ],
+        "csl": {
+          "id": "99188029604306381",
+          "type": "book",
+          "title": "Blah",
+          "publisher-place": "London",
+          "publisher": "[publisher not identified",
+          "issued": {
+            "literal": "1986"
+          },
+          "author": [
+            {
+              "literal": "University of Warwick. Library. Modern Records Centre"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "filters": [
+    {
+      "field": "author",
+      "values": [
+        {
+          "text": "Gershwin, George, 1898-1937",
+          "count": 20
+        },
+        {
+          "text": "Gershwin, Ira, 1896-1983",
+          "count": 12
+        },
+        {
+          "text": "Finnissy, Michael",
+          "count": 4
+        },
+        {
+          "text": "Walters, Richard",
+          "count": 4
+        },
+        {
+          "text": "Chaudhuri, Bibhu Bhusan, 1912-",
+          "count": 3
+        },
+        {
+          "text": "Kern, Jerome, 1885-1945",
+          "count": 3
+        },
+        {
+          "text": "Vignoles, Roger",
+          "count": 3
+        },
+        {
+          "text": "Walker, Sarah, 1943-",
+          "count": 3
+        },
+        {
+          "text": "Baker, David, 1931-2016",
+          "count": 2
+        },
+        {
+          "text": "Bernstein, Leonard, 1918-1990",
+          "count": 2
+        },
+        {
+          "text": "Blah, Edingson",
+          "count": 2
+        },
+        {
+          "text": "Blah, U. Edingson",
+          "count": 2
+        },
+        {
+          "text": "Bolcom, William",
+          "count": 2
+        },
+        {
+          "text": "Doherty, Thomas Patrick",
+          "count": 2
+        },
+        {
+          "text": "Dring, Madeleine",
+          "count": 2
+        },
+        {
+          "text": "Hawkins, Stan",
+          "count": 2
+        },
+        {
+          "text": "Kelly, Lois, 1955-",
+          "count": 2
+        },
+        {
+          "text": "Lehmann, Liza, 1862-1918",
+          "count": 2
+        },
+        {
+          "text": "Mayer, Timothy S",
+          "count": 2
+        },
+        {
+          "text": "Mayorga, Lincoln",
+          "count": 2
+        },
+        {
+          "text": "McLeod, Kembrew, 1970-",
+          "count": 2
+        },
+        {
+          "text": "Meddaugh, Susan",
+          "count": 2
+        },
+        {
+          "text": "Morad, Moshe",
+          "count": 2
+        },
+        {
+          "text": "Nicholas, Jeremy",
+          "count": 2
+        },
+        {
+          "text": "Nixon, Marni",
+          "count": 2
+        },
+        {
+          "text": "Porter, Cole, 1891-1964",
+          "count": 2
+        },
+        {
+          "text": "Ran, Amalia",
+          "count": 2
+        },
+        {
+          "text": "Schoenberg, Arnold, 1874-1951",
+          "count": 2
+        },
+        {
+          "text": "Stone, Peter, 1930-2003",
+          "count": 2
+        },
+        {
+          "text": "Stoneman, Elton",
+          "count": 2
+        },
+        {
+          "text": "Twentieth Century Fox Home Entertainment, Inc",
+          "count": 2
+        },
+        {
+          "text": "Wright, Geoffrey, 1912-2010",
+          "count": 2
+        },
+        {
+          "text": "100% Manmade Fibre",
+          "count": 1
+        },
+        {
+          "text": "Aberšek, B",
+          "count": 1
+        },
+        {
+          "text": "Adams, James L",
+          "count": 1
+        },
+        {
+          "text": "Alba, Jessica, 1981-",
+          "count": 1
+        },
+        {
+          "text": "Alien Brains",
+          "count": 1
+        },
+        {
+          "text": "Alive With Worms (Musical group)",
+          "count": 1
+        },
+        {
+          "text": "Alphapistola (Musical group)",
+          "count": 1
+        },
+        {
+          "text": "Alves, Josh",
+          "count": 1
+        },
+        {
+          "text": "American Theatre Orchestra",
+          "count": 1
+        },
+        {
+          "text": "Anderson, Richard",
+          "count": 1
+        },
+        {
+          "text": "Ardent Press",
+          "count": 1
+        },
+        {
+          "text": "Arlen, Harold, 1905-1986",
+          "count": 1
+        },
+        {
+          "text": "Arte Combo",
+          "count": 1
+        },
+        {
+          "text": "Ashenbach, Stanley",
+          "count": 1
+        },
+        {
+          "text": "Attrition (Musical group)",
+          "count": 1
+        },
+        {
+          "text": "Ballard, Alimi",
+          "count": 1
+        },
+        {
+          "text": "Barrett, Paul",
+          "count": 1
+        },
+        {
+          "text": "Barry, Julian",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "availability",
+      "values": [
+        {
+          "text": "Available Online",
+          "count": 60
+        },
+        {
+          "text": "Physical",
+          "count": 56
+        },
+        {
+          "text": "Hathi Trust",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "field": "location",
+      "values": [
+        {
+          "text": "Music",
+          "count": 22
+        },
+        {
+          "text": "Offsite Shelving",
+          "count": 11
+        },
+        {
+          "text": "Hatcher Graduate",
+          "count": 10
+        },
+        {
+          "text": "Special Collections",
+          "count": 5
+        },
+        {
+          "text": "Askwith Media Library",
+          "count": 4
+        },
+        {
+          "text": "Flint Thompson Library",
+          "count": 3
+        },
+        {
+          "text": "Art Architecture & Engineering",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "field": "collection",
+      "values": [
+        {
+          "text": "Main Collection",
+          "count": 18
+        },
+        {
+          "text": "Graduate Library Stacks",
+          "count": 8
+        },
+        {
+          "text": "Recordings",
+          "count": 7
+        },
+        {
+          "text": "Undergraduate stacks",
+          "count": 4
+        },
+        {
+          "text": "Room 2002 Shapiro",
+          "count": 3
+        },
+        {
+          "text": "Children's Literature Collection",
+          "count": 2
+        },
+        {
+          "text": "Joseph A. Labadie Collection",
+          "count": 2
+        },
+        {
+          "text": "Children's Literature",
+          "count": 1
+        },
+        {
+          "text": "General and Rare",
+          "count": 1
+        },
+        {
+          "text": "Offsite Shelving",
+          "count": 1
+        },
+        {
+          "text": "Philippine History Collection",
+          "count": 1
+        },
+        {
+          "text": "Video Games",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "format",
+      "values": [
+        {
+          "text": "Book",
+          "count": 69
+        },
+        {
+          "text": "Music",
+          "count": 39
+        },
+        {
+          "text": "Audio",
+          "count": 26
+        },
+        {
+          "text": "Audio (music)",
+          "count": 24
+        },
+        {
+          "text": "Musical Score",
+          "count": 13
+        },
+        {
+          "text": "Audio CD",
+          "count": 8
+        },
+        {
+          "text": "Encyclopedias",
+          "count": 5
+        },
+        {
+          "text": "Visual Material",
+          "count": 5
+        },
+        {
+          "text": "Dictionaries",
+          "count": 4
+        },
+        {
+          "text": "Video (DVD)",
+          "count": 4
+        },
+        {
+          "text": "Audio LP",
+          "count": 3
+        },
+        {
+          "text": "Biography",
+          "count": 3
+        },
+        {
+          "text": "Audio (spoken word)",
+          "count": 2
+        },
+        {
+          "text": "Photographs & Pictorial Works",
+          "count": 2
+        },
+        {
+          "text": "Data File",
+          "count": 1
+        },
+        {
+          "text": "Video Games",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "academic_discipline",
+      "values": [
+        {
+          "text": "Arts",
+          "count": 35
+        },
+        {
+          "text": "Humanities",
+          "count": 34
+        },
+        {
+          "text": "Music",
+          "count": 25
+        },
+        {
+          "text": "General and Comparative Literature",
+          "count": 20
+        },
+        {
+          "text": "Social Sciences",
+          "count": 17
+        },
+        {
+          "text": "English Language and Literature",
+          "count": 13
+        },
+        {
+          "text": "Business",
+          "count": 11
+        },
+        {
+          "text": "Business (General)",
+          "count": 10
+        },
+        {
+          "text": "Management",
+          "count": 8
+        },
+        {
+          "text": "International Studies",
+          "count": 7
+        },
+        {
+          "text": "Film and Video Studies",
+          "count": 6
+        },
+        {
+          "text": "Communication Studies",
+          "count": 5
+        },
+        {
+          "text": "Education",
+          "count": 5
+        },
+        {
+          "text": "Asian Studies",
+          "count": 4
+        },
+        {
+          "text": "Children's Literature",
+          "count": 4
+        },
+        {
+          "text": "Psychology",
+          "count": 4
+        },
+        {
+          "text": "Science",
+          "count": 4
+        },
+        {
+          "text": "Southeast Asian Studies",
+          "count": 4
+        },
+        {
+          "text": "American Culture",
+          "count": 3
+        },
+        {
+          "text": "Art History",
+          "count": 3
+        },
+        {
+          "text": "Art and Design",
+          "count": 3
+        },
+        {
+          "text": "Computer Science",
+          "count": 3
+        },
+        {
+          "text": "Engineering",
+          "count": 3
+        },
+        {
+          "text": "Marketing",
+          "count": 3
+        },
+        {
+          "text": "Biological Chemistry",
+          "count": 2
+        },
+        {
+          "text": "Chemistry",
+          "count": 2
+        },
+        {
+          "text": "Environment and Sustainability",
+          "count": 2
+        },
+        {
+          "text": "Health Sciences",
+          "count": 2
+        },
+        {
+          "text": "Latin American and Caribbean Studies",
+          "count": 2
+        },
+        {
+          "text": "Linguistics",
+          "count": 2
+        },
+        {
+          "text": "African Studies",
+          "count": 1
+        },
+        {
+          "text": "Anthropology",
+          "count": 1
+        },
+        {
+          "text": "Classical Studies",
+          "count": 1
+        },
+        {
+          "text": "Economics",
+          "count": 1
+        },
+        {
+          "text": "Finance",
+          "count": 1
+        },
+        {
+          "text": "Gay/Lesbian/Bisexual/Transgender Studies",
+          "count": 1
+        },
+        {
+          "text": "Government Information",
+          "count": 1
+        },
+        {
+          "text": "Government, Politics and Law",
+          "count": 1
+        },
+        {
+          "text": "International Government Information",
+          "count": 1
+        },
+        {
+          "text": "Philosophy",
+          "count": 1
+        },
+        {
+          "text": "Political Science",
+          "count": 1
+        },
+        {
+          "text": "Religious Studies",
+          "count": 1
+        },
+        {
+          "text": "Robotics",
+          "count": 1
+        },
+        {
+          "text": "Social Work",
+          "count": 1
+        },
+        {
+          "text": "Sociology",
+          "count": 1
+        },
+        {
+          "text": "Theatre and Drama",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "library",
+      "values": [
+        {
+          "text": "UM Ann Arbor Libraries",
+          "count": 113
+        },
+        {
+          "text": "University Library",
+          "count": 113
+        },
+        {
+          "text": "Flint Thompson Library",
+          "count": 55
+        }
+      ]
+    },
+    {
+      "field": "language",
+      "values": [
+        {
+          "text": "English",
+          "count": 101
+        },
+        {
+          "text": "No linguistic content",
+          "count": 6
+        },
+        {
+          "text": "Sino-Tibetan (Other)",
+          "count": 4
+        },
+        {
+          "text": "French",
+          "count": 3
+        },
+        {
+          "text": "Czech",
+          "count": 2
+        },
+        {
+          "text": "Danish",
+          "count": 2
+        },
+        {
+          "text": "Spanish",
+          "count": 2
+        },
+        {
+          "text": "Afrikaans",
+          "count": 1
+        },
+        {
+          "text": "German",
+          "count": 1
+        },
+        {
+          "text": "Multiple languages",
+          "count": 1
+        },
+        {
+          "text": "Undetermined",
+          "count": 1
+        },
+        {
+          "text": "Yiddish",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "place_of_publication",
+      "values": [
+        {
+          "text": "United States",
+          "count": 64
+        },
+        {
+          "text": "United States -- New York (State)",
+          "count": 28
+        },
+        {
+          "text": "United Kingdom",
+          "count": 18
+        },
+        {
+          "text": "United Kingdom -- England",
+          "count": 18
+        },
+        {
+          "text": "United States -- California",
+          "count": 11
+        },
+        {
+          "text": "United States -- New Jersey",
+          "count": 6
+        },
+        {
+          "text": "United States -- Wisconsin",
+          "count": 6
+        },
+        {
+          "text": "India",
+          "count": 4
+        },
+        {
+          "text": "United States -- Massachusetts",
+          "count": 4
+        },
+        {
+          "text": "Netherlands",
+          "count": 3
+        },
+        {
+          "text": "Switzerland",
+          "count": 3
+        },
+        {
+          "text": "Czech Republic",
+          "count": 2
+        },
+        {
+          "text": "Germany",
+          "count": 2
+        },
+        {
+          "text": "Canada",
+          "count": 1
+        },
+        {
+          "text": "Canada -- Ontario",
+          "count": 1
+        },
+        {
+          "text": "France",
+          "count": 1
+        },
+        {
+          "text": "Philippines",
+          "count": 1
+        },
+        {
+          "text": "United States -- Maryland",
+          "count": 1
+        },
+        {
+          "text": "United States -- New Hampshire",
+          "count": 1
+        },
+        {
+          "text": "United States -- North Carolina",
+          "count": 1
+        },
+        {
+          "text": "United States -- Ohio",
+          "count": 1
+        },
+        {
+          "text": "United States -- Washington (State)",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "date_of_publication",
+      "values": [
+        {
+          "text": "2010-2019",
+          "count": 41
+        },
+        {
+          "text": "2000-2009",
+          "count": 26
+        },
+        {
+          "text": "2020-2029",
+          "count": 17
+        },
+        {
+          "text": "1980-1989",
+          "count": 8
+        },
+        {
+          "text": "1990-1999",
+          "count": 8
+        },
+        {
+          "text": "2009",
+          "count": 8
+        },
+        {
+          "text": "2016",
+          "count": 8
+        },
+        {
+          "text": "2018",
+          "count": 8
+        },
+        {
+          "text": "1970-1979",
+          "count": 6
+        },
+        {
+          "text": "2012",
+          "count": 6
+        },
+        {
+          "text": "2013",
+          "count": 6
+        },
+        {
+          "text": "2014",
+          "count": 6
+        },
+        {
+          "text": "2007",
+          "count": 5
+        },
+        {
+          "text": "2022",
+          "count": 5
+        },
+        {
+          "text": "2000",
+          "count": 4
+        },
+        {
+          "text": "2023",
+          "count": 4
+        },
+        {
+          "text": "1986",
+          "count": 3
+        },
+        {
+          "text": "1996",
+          "count": 3
+        },
+        {
+          "text": "2002",
+          "count": 3
+        },
+        {
+          "text": "2004",
+          "count": 3
+        },
+        {
+          "text": "2010",
+          "count": 3
+        },
+        {
+          "text": "2024",
+          "count": 3
+        },
+        {
+          "text": "2025",
+          "count": 3
+        },
+        {
+          "text": "1900-1909",
+          "count": 2
+        },
+        {
+          "text": "1960",
+          "count": 2
+        },
+        {
+          "text": "1960-1969",
+          "count": 2
+        },
+        {
+          "text": "1970",
+          "count": 2
+        },
+        {
+          "text": "1983",
+          "count": 2
+        },
+        {
+          "text": "2011",
+          "count": 2
+        },
+        {
+          "text": "1880-1889",
+          "count": 1
+        },
+        {
+          "text": "1888",
+          "count": 1
+        },
+        {
+          "text": "1900",
+          "count": 1
+        },
+        {
+          "text": "1906",
+          "count": 1
+        },
+        {
+          "text": "1910-1919",
+          "count": 1
+        },
+        {
+          "text": "1913",
+          "count": 1
+        },
+        {
+          "text": "1920-1929",
+          "count": 1
+        },
+        {
+          "text": "1928",
+          "count": 1
+        },
+        {
+          "text": "1930-1939",
+          "count": 1
+        },
+        {
+          "text": "1936",
+          "count": 1
+        },
+        {
+          "text": "1971",
+          "count": 1
+        },
+        {
+          "text": "1973",
+          "count": 1
+        },
+        {
+          "text": "1976",
+          "count": 1
+        },
+        {
+          "text": "1979",
+          "count": 1
+        },
+        {
+          "text": "1985",
+          "count": 1
+        },
+        {
+          "text": "1988",
+          "count": 1
+        },
+        {
+          "text": "1989",
+          "count": 1
+        },
+        {
+          "text": "1991",
+          "count": 1
+        },
+        {
+          "text": "1992",
+          "count": 1
+        },
+        {
+          "text": "1994",
+          "count": 1
+        },
+        {
+          "text": "1998",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "subject",
+      "values": [
+        {
+          "text": "Popular music",
+          "count": 22
+        },
+        {
+          "text": "Musicals",
+          "count": 18
+        },
+        {
+          "text": "Musicals Excerpts Vocal scores with piano",
+          "count": 8
+        },
+        {
+          "text": "Motion picture music",
+          "count": 7
+        },
+        {
+          "text": "Excerpts",
+          "count": 6
+        },
+        {
+          "text": "Motion picture music Excerpts Vocal scores with piano",
+          "count": 5
+        },
+        {
+          "text": "Musicals Excerpts",
+          "count": 5
+        },
+        {
+          "text": "Piano music, Arranged",
+          "count": 5
+        },
+        {
+          "text": "Popular music 2001-2010",
+          "count": 5
+        },
+        {
+          "text": "Songs",
+          "count": 5
+        },
+        {
+          "text": "American poetry",
+          "count": 4
+        },
+        {
+          "text": "Operas",
+          "count": 4
+        },
+        {
+          "text": "Operas Excerpts Vocal scores with piano",
+          "count": 4
+        },
+        {
+          "text": "Songs (Medium voice) with piano",
+          "count": 4
+        },
+        {
+          "text": "Vocal scores",
+          "count": 4
+        },
+        {
+          "text": "American poetry 20th century History and criticism",
+          "count": 3
+        },
+        {
+          "text": "Downloadable audio file",
+          "count": 3
+        },
+        {
+          "text": "English language",
+          "count": 3
+        },
+        {
+          "text": "Music",
+          "count": 3
+        },
+        {
+          "text": "Popular culture",
+          "count": 3
+        },
+        {
+          "text": "Popular music United States",
+          "count": 3
+        },
+        {
+          "text": "Songs (High voice) with instrumental ensemble",
+          "count": 3
+        },
+        {
+          "text": "Songs (High voice) with piano",
+          "count": 3
+        },
+        {
+          "text": "Television comedies",
+          "count": 3
+        },
+        {
+          "text": "Video recordings for the hearing impaired",
+          "count": 3
+        },
+        {
+          "text": "American poetry 20th century History and criticism Theory, etc",
+          "count": 2
+        },
+        {
+          "text": "Application software",
+          "count": 2
+        },
+        {
+          "text": "Application software Development Automation",
+          "count": 2
+        },
+        {
+          "text": "Blondie (Musical group).",
+          "count": 2
+        },
+        {
+          "text": "Blondie (Musical group). Parallel lines",
+          "count": 2
+        },
+        {
+          "text": "Business communication",
+          "count": 2
+        },
+        {
+          "text": "Communication in marketing",
+          "count": 2
+        },
+        {
+          "text": "Computer software",
+          "count": 2
+        },
+        {
+          "text": "Computer software Installation",
+          "count": 2
+        },
+        {
+          "text": "Criticism",
+          "count": 2
+        },
+        {
+          "text": "Criticism United States History 20th century",
+          "count": 2
+        },
+        {
+          "text": "Cross-platform software development",
+          "count": 2
+        },
+        {
+          "text": "Docker (Computer file)",
+          "count": 2
+        },
+        {
+          "text": "Eating disorders",
+          "count": 2
+        },
+        {
+          "text": "Electronic books",
+          "count": 2
+        },
+        {
+          "text": "English language Dictionaries Khasi",
+          "count": 2
+        },
+        {
+          "text": "Environmentalism",
+          "count": 2
+        },
+        {
+          "text": "Essays",
+          "count": 2
+        },
+        {
+          "text": "Fiction television programs",
+          "count": 2
+        },
+        {
+          "text": "Gay men",
+          "count": 2
+        },
+        {
+          "text": "Gender identity in music",
+          "count": 2
+        },
+        {
+          "text": "Homosexuality and popular music",
+          "count": 2
+        },
+        {
+          "text": "Jews",
+          "count": 2
+        },
+        {
+          "text": "Jews Latin America Music History and criticism",
+          "count": 2
+        },
+        {
+          "text": "Jews United States Music History and criticism",
+          "count": 2
+        }
+      ]
+    }
+  ],
+  "limit": 1,
+  "offset": 0,
+  "total": 114
+}

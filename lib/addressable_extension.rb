@@ -3,7 +3,7 @@ module SearchExtensions
     module URI
       module QueryHash
         def query_hash
-          query_values(Array).sort_by { |entry| entry.first }.group_by { |entry| entry.first }.map do |key, value|
+          (query_values(Array) || []).sort_by { |entry| entry.first }.group_by { |entry| entry.first }.map do |key, value|
             values = value.map { |v| v[1] }
             result = [key]
             if values.count > 1
