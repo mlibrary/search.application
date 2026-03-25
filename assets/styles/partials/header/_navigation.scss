@@ -6,7 +6,7 @@
 // --------------------------------------------------
 //
 // # Navigation
-//   Styles to apply directly to `views/datastore/partials/_navigation.erb`.
+//   Styles to apply directly to `views/partials/header/_navigation.erb`.
 //
 // ## Table of Contents
 //   1. Variables
@@ -34,9 +34,6 @@ $class: 'primary-navigation';
 .#{$class} {
   background: var(--search-color-grey-100);
   border-bottom: 2px solid var(--search-color-grey-300);
-  @media print {
-    display: none;
-  }
   ul {
     @include utilities.flex($align: stretch, $wrap: true, $responsive: $breakpoint);
     & {

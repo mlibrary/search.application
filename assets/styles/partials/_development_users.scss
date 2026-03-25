@@ -29,9 +29,6 @@ $class: "development-users";
 .#{$class} {
   margin-top: 1rem;
   padding: 1rem;
-  @media print {
-    display: none;
-  }
   & > *:first-child {
     margin-top: 0;
   }

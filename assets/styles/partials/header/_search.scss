@@ -6,7 +6,7 @@
 // --------------------------------------------------
 //
 // # Navigation
-//   Styles to apply directly to `views/datastore/partials/_navigation.erb`.
+//   Styles to apply directly to `views/partials/header/_search.erb`.
 //
 // ## Table of Contents
 //   1. Variables
@@ -38,9 +38,6 @@ $class: 'search-form';
   background: var(--search-color-blue-200);
   border-bottom: 2px solid var(--search-color-blue-300);
   padding: 1rem 0;
-  @media print {
-    display: none;
-  }
 }
 
 

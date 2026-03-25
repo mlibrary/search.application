@@ -42,9 +42,6 @@ $class: '.list__go-to';
   &#{$class}--empty {
     display: none;
   }
-  @media print {
-    display: none;
-  }
 }
 
 

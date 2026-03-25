@@ -200,10 +200,4 @@ $padding: 0.5rem;
 
 #{$class}__table--toggle {
   margin-top: $padding;
-  body.no-javascript & {
-    display: none;
-  }
-  @media print {
-    display: none;
-  }
 }

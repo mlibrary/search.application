@@ -75,6 +75,10 @@ $class: 'record';
   border-radius: forms.$radius forms.$radius 0 0;
   border-top: 1rem solid var(--search-color-blue-200);
   padding: 1rem;
+  @media print {
+    border: none;
+    padding: 0;
+  }
 }
 
 
