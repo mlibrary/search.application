@@ -1,25 +1,22 @@
 name: Build latest from main and Auto-Deploy to Testing and Staging
-
 on:
   workflow_run:
-    workflows: [ 'Run Tests' ]
-    branches: [ 'main' ]
-    types: [ completed ]
-
+    workflows: ['Run Tests']
+    branches: ['main']
+    types: [completed]
 jobs:
   build-unstable:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    uses: mlibrary/platform-engineering-workflows/.github/workflows/build-unstable.yml@v1
+    uses: mlibrary/platform-engineering-workflows/.github/workflows/build-unstable.yml@24f3c20c73e4fe79718b09071bcd858d09be269b #v1.6.5
     with:
       image_name: ${{ vars.IMAGE_NAME }}
       tag: ${{ github.sha }}
       dockerfile: Dockerfile
     secrets: inherit
-      
   deploy-unstable:
     needs: build-unstable
     name: Deploy to workshop
-    uses: mlibrary/platform-engineering-workflows/.github/workflows/deploy.yml@v1
+    uses: mlibrary/platform-engineering-workflows/.github/workflows/deploy.yml@24f3c20c73e4fe79718b09071bcd858d09be269b #v1.6.5
     with:
       image: ${{ needs.build-unstable.outputs.image }}
       file: environments/application/workshop/web-image.txt
