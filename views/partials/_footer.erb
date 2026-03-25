@@ -30,7 +30,10 @@
           </li>
         </ul>
       </nav>
-      <p>&copy;<%= Time.now.year %> Regents of the University of Michigan. For details and exceptions, see the <%= link_to(body: "Copyright Policy", url: "https://lib.umich.edu/about-us/policies/copyright-policy") %>.</p>
+      <p class="footer__information--copyright">
+        <span>&copy;<%= Time.now.year %> Regents of the University of Michigan.</span>
+        <span>For details and exceptions, see the <%= link_to(body: "Copyright Policy", url: "https://lib.umich.edu/about-us/policies/copyright-policy") %>.</span>
+      </p>
     </div>
   </section>
   <m-chat id="chat" class="hide__print" tabindex="-1"></m-chat>

@@ -29,6 +29,10 @@ $class: '.filters__active';
 
 #{$class} {
   padding: 1rem;
+  @media print {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 
@@ -50,21 +54,23 @@ $class: '.filters__active';
 // *********************** //
 
 a#{$class}--link {
-  @include utilities.flex();
-  background-color: var(--color-green-100);
-  border: 1px solid var(--color-green-200);
-  border-radius: forms.$radius;
-  color: var(--search-color-green-300);
-  justify-content: space-between;
-  padding: 0.5rem;
-  text-decoration: none;
-  &:after {
-    @include icons.icon($icon: 'close');
-  }
-  &:hover {
-    border-color: var(--color-green-400);
-    #{$class}--link-text {
-      text-decoration: underline;
+  @media screen {
+    @include utilities.flex();
+    background-color: var(--color-green-100);
+    border: 1px solid var(--color-green-200);
+    border-radius: forms.$radius;
+    color: var(--search-color-green-300);
+    justify-content: space-between;
+    padding: 0.5rem;
+    text-decoration: none;
+    &:after {
+      @include icons.icon($icon: 'close');
+    }
+    &:hover {
+      border-color: var(--color-green-400);
+      #{$class}--link-text {
+        text-decoration: underline;
+      }
     }
   }
 }

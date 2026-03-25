@@ -55,11 +55,6 @@ $padding: 0.5rem;
 // * 2.1 OPEN * //
 // *          * //
 
-@media print {
-  #{$class}:not([open]) {
-    display: none;
-  }
-}
 #{$class}[open] summary {
   background-color: var(--color-blue-100);
 }

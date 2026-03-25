@@ -57,3 +57,15 @@ $class: "footer";
     }
   }
 }
+
+
+
+// *               * //
+// * 2.2 COPYRIGHT * //
+// *               * //
+
+#{$class} .#{$class}__information .footer__information--copyright {
+  span {
+    display: inline-block;
+  }
+}

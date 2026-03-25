@@ -12,7 +12,7 @@
   uri = URI.parse(request.fullpath)
   params_hash = CGI.parse(uri.query.to_s)
 %>
-<form method="get" action="/<%= @presenter.current_datastore %>" class="sort">
+<form method="get" action="/<%= @presenter.current_datastore %>" class="hide__print sort">
   <% params_hash.each do |key, value| %>
     <% unless key == "sort" %>
       <% value.each do |v| %>

@@ -16,7 +16,7 @@
     # Default to "U-M Ann Arbor Libraries" if no library is selected
     selected_library = params_hash["library"]&.first || libraries[1]
 %>
-  <form class="library-scope container__rounded--no-shadow" method="get" action="/<%= @presenter.current_datastore %>">
+  <form class="hide__print library-scope container__rounded--no-shadow" method="get" action="/<%= @presenter.current_datastore %>">
     <% params_hash.each do |key, value| %>
       <% unless key == "library" %>
         <% value.each do |v| %>

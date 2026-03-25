@@ -27,7 +27,28 @@ $class: '.filter__checkboxes';
 
 #{$class} {
   padding: 1rem;
+  @media print {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+  }
   & > * + * {
     margin-top: 0.5rem;
+  }
+}
+
+
+
+
+
+// **************** //
+// *** 3. LABEL *** //
+// **************** //
+
+@media print {
+  #{$class} .filter__checkbox {
+    &:has(input[type="checkbox"]:not(:checked)) {
+      display: none;
+    }
   }
 }

@@ -41,9 +41,6 @@ body {
 main {
   flex-grow: 1;
   padding-top: 1rem;
-  @media print {
-    padding: 0.5in;
-  }
 }
 
 

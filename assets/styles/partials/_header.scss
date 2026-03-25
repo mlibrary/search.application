@@ -99,8 +99,7 @@ body:not([class]) #{$component} nav {
 // ********************* //
 
 .logo__print {
-  padding: 0.5in;
-  padding-bottom: 0;
+  padding: 0.25in 0;
   @media screen {
     display: none;
   }
