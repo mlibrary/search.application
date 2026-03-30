@@ -1,6 +1,7 @@
 @use '../partials/breadcrumbs';
 @use '../list/partials/go-to';
 @use '../partials/actions';
+@use './partials/title';
 @use '../partials/metadata';
 @use '../partials/holdings';
 @use './partials/shelf-browse';
@@ -20,7 +21,6 @@
 //   3. Information
 //     3.1. Header
 //       3.1.1. Checkbox
-//       3.1.2. Title
 //   4. Date Last Indexed
 //
 // --------------------------------------------------
@@ -79,6 +79,12 @@ $class: 'record';
     border: none;
     padding: 0;
   }
+  & > *:first-child {
+    margin-top: 0;
+  }
+  & > *:last-child {
+    margin-bottom: 0;
+  }
 }
 
 
@@ -99,27 +105,6 @@ $class: 'record';
 .#{$class} .#{$class}__information--header > .record__checkbox {
   display: none;
   margin-top: 0.75rem;
-}
-
-// * 3.1.2. TITLE * //
-
-.#{$class} .#{$class}__information--header > .#{$class}__title {
-  font-size: 1.75rem;
-  font-weight: normal;
-  & > span {
-    display: block;
-    .truncate__text {
-      margin-right: 0.5rem;
-    }
-    .truncate__button {
-      bottom: 0.25rem;
-      display: inline-block;
-      position: relative;
-    }
-  }
-  & > .record__title-secondary {
-    color: var(--search-color-grey-500);
-  }
 }
 
 
