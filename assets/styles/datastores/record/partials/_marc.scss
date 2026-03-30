@@ -34,12 +34,6 @@ $table: '#{$class}__table';
 
 #{$class}__button {
   margin: 0 auto;
-  @media print {
-    display: none;
-  }
-  body.no-javascript & {
-    display: none;
-  }
 }
 
 
@@ -49,6 +43,12 @@ $table: '#{$class}__table';
 // **************** //
 // *** 3. TABLE *** //
 // **************** //
+
+#{$table} {
+  @media print {
+    break-before: page;
+  }
+}
 
 body:not(.no-javascript) #{$class}__button[aria-expanded="false"] + #{$table} {
   display: none;

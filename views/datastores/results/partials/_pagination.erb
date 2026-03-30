@@ -11,7 +11,7 @@
   params_hash["page"] = [current_page + 1]
   next_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
 %>
-<div class="container__rounded--no-shadow pagination">
+<div class="container__rounded--no-shadow hide__print pagination">
   <div class="pagination__link pagination__link--previous">
     <% if current_page > 1 %>
       <%= link_to(body: "Previous page", url: previous_url) %>

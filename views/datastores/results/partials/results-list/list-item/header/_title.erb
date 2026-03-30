@@ -1,7 +1,7 @@
 <h3 class="h4 results__list-item--title">
   <span class="results__list-item--title-truncate">
     <span class="results__list-item--title-number"><%= index %>.</span>
-    <%= link_to(body: record_title.first.text, url: "#{datastore}/record/#{record_id}", classes: ["results__list-item--title-original"]) %>
+    <%= link_to(body: record_title.first.text, url: record_url, classes: ["results__list-item--title-original"]) %>
   </span>
   <% if record_title.second %>
     <span class="h5 results__list-item--title-truncate results__list-item--title-transliterated">

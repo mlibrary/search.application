@@ -4,7 +4,7 @@ import shelfBrowse from './partials/_shelf-browse.js';
 import { temporaryListBanner } from '../list/partials/_go-to.js';
 import { toggleItems } from '../partials/_toggle.js';
 import toggleMARCData from './partials/_marc.js';
-import toggleTruncatedText from './partials/_title.js';
+import { truncateText } from '../partials/_truncate.js';
 
 // Get the temporary list from session storage
 const list = getSessionStorage({ defaultValue: defaultTemporaryList, itemName: 'temporaryList' });
@@ -15,8 +15,8 @@ temporaryListBanner({ list });
 // Actions panel
 initializeActions({ list });
 
-// Record Title
-toggleTruncatedText();
+// Truncate record title text
+truncateText();
 
 // Toggle Items (Metadata, Holdings, etc.)
 toggleItems();

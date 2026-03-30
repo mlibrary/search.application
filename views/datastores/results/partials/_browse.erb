@@ -1,5 +1,5 @@
 <% if ["onlinejournals", "databases"].include?(datastore) %>
-  <p>
+  <p class="hide__print">
     <%= link_to(body: "Browse all #{datastore}", url: "/#{slug}/browse") %> alphabetically or by academic discipline.
   </p>
 <% end %>

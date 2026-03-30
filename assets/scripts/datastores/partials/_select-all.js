@@ -30,22 +30,7 @@ const updateTotalCount = ({ count, viewingList = viewingTemporaryList() }) => {
   selectedText.textContent = count === 1 ? 'item' : 'items';
 };
 
-const selectAll = ({
-  checkbox = getSelectAllCheckbox(),
-  checkboxes = getCheckboxes(),
-  countSelected = updateSelectedCount,
-  countTotal = updateTotalCount,
-  selectCheckboxState = selectAllCheckboxState
-} = {}) => {
-  // Initialize the state of the checkbox
-  selectCheckboxState({ checkbox });
-
-  // Update the selected count
-  countSelected();
-
-  // Update the total count
-  countTotal({ count: checkboxes.length });
-
+const toggleAllCheckboxes = ({ checkbox = getSelectAllCheckbox(), checkboxes } = {}) => {
   // Add event listener
   checkbox.addEventListener('change', () => {
     // Check all checkboxes if `Select all` checkbox is checked
@@ -53,16 +38,42 @@ const selectAll = ({
     checkboxes.forEach((recordCheckbox) => {
       recordCheckbox.checked = checked;
     });
-
-    // Update the selected count
-    countSelected();
   });
+};
+
+const handleSelectAllChange = ({
+  selectAllCheckbox = selectAllCheckboxState,
+  updateCount = updateSelectedCount
+} = {}) => {
+  // Update the state of the checkbox
+  selectAllCheckbox();
+
+  // Update the selected count
+  updateCount();
+};
+
+const selectAll = ({
+  checkboxes = getCheckboxes(),
+  countTotal = updateTotalCount,
+  handleSelectAll = handleSelectAllChange,
+  toggleCheckboxes = toggleAllCheckboxes
+} = {}) => {
+  // Initialize the state of the `Select All` partial
+  handleSelectAll();
+
+  // Set up event listener to toggle all checkboxes
+  toggleCheckboxes({ checkboxes });
+
+  // Update the total count
+  countTotal({ count: checkboxes.length });
 };
 
 export {
   getSelectAllCheckbox,
+  handleSelectAllChange,
   selectAll,
   selectAllCheckboxState,
+  toggleAllCheckboxes,
   updateSelectedCount,
   updateTotalCount
 };

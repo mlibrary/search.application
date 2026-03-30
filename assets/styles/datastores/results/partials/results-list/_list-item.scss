@@ -23,12 +23,30 @@ $class: '.results__list-item';
 
 
 
+// ******************** //
+// *** 2. LIST ITEM *** //
+// ******************** //
+
+#{$class} {
+  @media print {
+    page-break-inside: avoid;
+  }
+}
+
+
+
+
+
 // ********************** //
 // *** 2. INFORMATION *** //
 // ********************** //
 
 #{$class}--information {
   padding: 1rem;
+  @media print {
+    padding-left: 0;
+    padding-right: 0;
+  }
   & > * + * {
     margin-top: 1rem;
   }

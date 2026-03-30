@@ -1,4 +1,5 @@
 import {
+  checkboxSelector,
   filterSelectedRecords,
   getCheckboxes,
   getCheckedCheckboxes,
@@ -49,6 +50,12 @@ describe('checkbox', function () {
   afterEach(function () {
     getListItem = null;
     getCheckbox = null;
+  });
+
+  describe('checkboxSelector', function () {
+    it('should be the correct selector string', function () {
+      expect(checkboxSelector, '`checkboxSelector` should be the correct selector string').to.equal('input[type="checkbox"].record__checkbox:not([value=""])');
+    });
   });
 
   describe('getCheckboxes()', function () {

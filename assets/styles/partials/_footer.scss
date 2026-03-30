@@ -7,10 +7,8 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Footer
-//     2.1 Feedback
-//     2.2 Information
-//       2.2.1 Navigation
+//   2. Information
+//     2.1. Navigation
 //
 // --------------------------------------------------
 
@@ -24,23 +22,9 @@ $class: "footer";
 
 
 
-// ***************** //
-// *** 2. FOOTER *** //
-// ***************** //
-
-// *              * //
-// * 2.1 FEEDBACK * //
-// *              * //
-
-#{$class} .#{$class}__feedback {
-  @media print {
-    display: none;
-  }
-}
-
-// *                 * //
-// * 2.2 INFORMATION * //
-// *                 * //
+// ********************** //
+// *** 2. INFORMATION *** //
+// ********************** //
 
 #{$class} .#{$class}__information {
   background: white;
@@ -58,12 +42,13 @@ $class: "footer";
   }
 }
 
-// * 2.1.1 NAVIGATION * //
+
+
+// *                * //
+// * 2.1 NAVIGATION * //
+// *                * //
 
 #{$class} .#{$class}__information nav {
-  @media print {
-    display: none;
-  }
   ul {
     @include utilities.flex($wrap: true, $responsive: 'md');
     & {
@@ -75,14 +60,12 @@ $class: "footer";
 
 
 
+// *               * //
+// * 2.2 COPYRIGHT * //
+// *               * //
 
-
-// ***************** //
-// *** 3. M-CHAT *** //
-// ***************** //
-
-m-chat {
-  @media print {
-    display: none;
+#{$class} .#{$class}__information .footer__information--copyright {
+  span {
+    display: inline-block;
   }
 }

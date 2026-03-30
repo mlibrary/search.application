@@ -1,7 +1,9 @@
 import {
   getSelectAllCheckbox,
+  handleSelectAllChange,
   selectAll,
   selectAllCheckboxState,
+  toggleAllCheckboxes,
   updateSelectedCount,
   updateTotalCount
 } from '../../../../assets/scripts/datastores/partials/_select-all.js';
@@ -248,53 +250,58 @@ describe('select all', function () {
     });
   });
 
-  describe('selectAll', function () {
-    let updateSelectedCountSpy = null;
-    let updateTotalCountSpy = null;
+  describe('handleSelectAllChange()', function () {
     let selectAllCheckboxStateSpy = null;
+    let updateSelectedCountSpy = null;
     let args = null;
 
     beforeEach(function () {
-      updateSelectedCountSpy = sinon.spy();
-      updateTotalCountSpy = sinon.spy();
       selectAllCheckboxStateSpy = sinon.spy();
+      updateSelectedCountSpy = sinon.spy();
       args = {
-        checkbox: getSelectAllCheckbox(),
-        checkboxes: getCheckboxes(),
-        countSelected: updateSelectedCountSpy,
-        countTotal: updateTotalCountSpy,
-        selectCheckboxState: selectAllCheckboxStateSpy
+        selectAllCheckbox: selectAllCheckboxStateSpy,
+        updateCount: updateSelectedCountSpy
       };
 
       // Call the function
-      selectAll(args);
+      handleSelectAllChange(args);
     });
 
     afterEach(function () {
-      updateSelectedCountSpy = null;
-      updateTotalCountSpy = null;
       selectAllCheckboxStateSpy = null;
+      updateSelectedCountSpy = null;
       args = null;
     });
 
-    it('should call `selectAllCheckboxState` once during initialization with the correct arguments', function () {
-      expect(selectAllCheckboxStateSpy.calledOnceWithExactly({ checkbox: args.checkbox }), '`selectAllCheckboxState` should be called once during initialization').to.be.true;
+    it('should call `selectAllCheckboxState` with the correct arguments', function () {
+      expect(selectAllCheckboxStateSpy.calledOnceWithExactly(), '`selectAllCheckboxState` should be called with the correct arguments').to.be.true;
     });
 
-    it('should call `updateSelectedCount` once during initialization with the correct arguments', function () {
-      expect(updateSelectedCountSpy.calledOnce, '`updateSelectedCount` should be called once during initialization').to.be.true;
+    it('should call `updateSelectedCount` with the correct arguments', function () {
+      expect(updateSelectedCountSpy.calledOnceWithExactly(), '`updateSelectedCount` should be called with the correct arguments').to.be.true;
+    });
+  });
+
+  describe('toggleAllCheckboxes()', function () {
+    let args = null;
+    let event = null;
+
+    beforeEach(function () {
+      args = {
+        checkbox: getSelectAllCheckbox(),
+        checkboxes: getCheckboxes()
+      };
+
+      // Call the function
+      toggleAllCheckboxes(args);
+
+      // Create a change event
+      event = new window.Event('change', { bubbles: true });
     });
 
-    it('should call `updateSelectedCount` again when the `Select all` checkbox is changed with the correct arguments', function () {
-      // Simulate a change event on the `Select all` checkbox
-      args.checkbox.dispatchEvent(new window.Event('change'));
-
-      // Check that `updateSelectedCount` was called again
-      expect(updateSelectedCountSpy.calledTwice, '`updateSelectedCount` should be called when the `Select all` checkbox is changed').to.be.true;
-    });
-
-    it('should call `updateTotalCount` once during initialization with the correct arguments', function () {
-      expect(updateTotalCountSpy.calledOnceWithExactly({ count: args.checkboxes.length }), '`updateTotalCount` should be called once during initialization').to.be.true;
+    afterEach(function () {
+      args = null;
+      event = null;
     });
 
     it('should check all record checkboxes when the `Select all` checkbox is initially checked on change', function () {
@@ -302,8 +309,8 @@ describe('select all', function () {
       args.checkbox.checked = true;
       expect(args.checkbox.checked, 'the `Select all` checkbox should be checked before the change event').to.be.true;
 
-      // Simulate a change event on the `Select all` checkbox
-      args.checkbox.dispatchEvent(new window.Event('change'));
+      // Dispatch the change event
+      args.checkbox.dispatchEvent(event);
 
       // Check that all record checkboxes are checked
       expect(Array.from(args.checkboxes).every((checkbox) => {
@@ -316,6 +323,7 @@ describe('select all', function () {
       args.checkboxes.forEach((checkbox) => {
         checkbox.checked = true;
       });
+
       expect(Array.from(args.checkboxes).every((checkbox) => {
         return checkbox.checked;
       }), 'all record checkboxes should be checked before the change event').to.be.true;
@@ -324,13 +332,54 @@ describe('select all', function () {
       args.checkbox.checked = false;
       expect(args.checkbox.checked, 'the `Select all` checkbox should be unchecked before the change event').to.be.false;
 
-      // Simulate a change event on the `Select all` checkbox
-      args.checkbox.dispatchEvent(new window.Event('change'));
+      // Dispatch the change event
+      args.checkbox.dispatchEvent(event);
 
       // Check that all record checkboxes are unchecked
       expect(Array.from(args.checkboxes).every((checkbox) => {
         return !checkbox.checked;
       }), 'all record checkboxes should be unchecked').to.be.true;
+    });
+  });
+
+  describe('selectAll', function () {
+    let updateTotalCountSpy = null;
+    let handleSelectAllChangeSpy = null;
+    let toggleAllCheckboxesSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      toggleAllCheckboxesSpy = sinon.spy();
+      updateTotalCountSpy = sinon.spy();
+      handleSelectAllChangeSpy = sinon.spy();
+      args = {
+        checkboxes: getCheckboxes(),
+        countTotal: updateTotalCountSpy,
+        handleSelectAll: handleSelectAllChangeSpy,
+        toggleCheckboxes: toggleAllCheckboxesSpy
+      };
+
+      // Call the function
+      selectAll(args);
+    });
+
+    afterEach(function () {
+      updateTotalCountSpy = null;
+      handleSelectAllChangeSpy = null;
+      toggleAllCheckboxesSpy = null;
+      args = null;
+    });
+
+    it('should call `handleSelectAllChange` with the correct arguments', function () {
+      expect(handleSelectAllChangeSpy.calledOnceWithExactly(), '`handleSelectAllChange` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleAllCheckboxes` with the correct arguments', function () {
+      expect(toggleAllCheckboxesSpy.calledOnceWithExactly({ checkboxes: args.checkboxes }), '`toggleAllCheckboxes` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `updateTotalCount` with the correct arguments', function () {
+      expect(updateTotalCountSpy.calledOnceWithExactly({ count: args.checkboxes.length }), '`updateTotalCount` should be called with the correct arguments').to.be.true;
     });
   });
 });

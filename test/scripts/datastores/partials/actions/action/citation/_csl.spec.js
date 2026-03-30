@@ -49,6 +49,12 @@ describe('csl', function () {
     getTextArea = null;
   });
 
+  describe('cslDataCache', function () {
+    it('should be null initially', function () {
+      expect(cslDataCache, '`cslDataCache` should be null initially').to.be.null;
+    });
+  });
+
   describe('getCSLTextarea()', function () {
     it('should return the CSL `textarea`', function () {
       expect(getCSLTextarea(), 'the `textarea` that displays the CSL should have been returned').to.deep.equal(getTextArea());

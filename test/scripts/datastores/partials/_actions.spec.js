@@ -1,8 +1,19 @@
-import { disableActionTabs, getTabPanel, initializeActions, isSelected, tabControl } from '../../../../assets/scripts/datastores/partials/_actions.js';
+import {
+  disableActionTabs,
+  getActionsPanel,
+  getTabPanel,
+  handleActionsPanelChange,
+  initializeActions,
+  isSelected,
+  tabControl,
+  toggleActionsPanel
+} from '../../../../assets/scripts/datastores/partials/_actions.js';
+import { checkboxSelector } from '../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_checkbox.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
 describe('actions', function () {
+  let getDetails = null;
   let firstTab = null;
   let secondTab = null;
   let getTabs = null;
@@ -11,29 +22,37 @@ describe('actions', function () {
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
-      <div class="tabs">
-        <div class="actions__tablist" role="tablist">
-          <button type="button" role="tab" id="tab1" aria-selected="true" aria-controls="tabpanel1">
-            Tab 1
-          </button>
-          <button type="button" role="tab" id="tab2" aria-selected="false" aria-controls="tabpanel2">
-            Tab 2
-          </button>
-          <button type="button" role="tab" id="actions__link" aria-selected="false" aria-controls="actions__link--tabpanel">
-            Copy link
-          </button>
+      <details class="actions">
+        <summary>Actions Panel</summary>
+        <div class="tabs">
+          <div class="actions__tablist" role="tablist">
+            <button type="button" role="tab" id="tab1" aria-selected="true" aria-controls="tabpanel1">
+              Tab 1
+            </button>
+            <button type="button" role="tab" id="tab2" aria-selected="false" aria-controls="tabpanel2">
+              Tab 2
+            </button>
+            <button type="button" role="tab" id="actions__link" aria-selected="false" aria-controls="actions__link--tabpanel">
+              Copy link
+            </button>
+          </div>
+          <div id="tabpanel1" role="tabpanel">
+            <div class="alert alert__warning">This is a warning.</div>
+          </div>
+          <div id="tabpanel2" role="tabpanel">
+            Tab Panel 2
+          </div>
+          <div id="actions__link--tabpanel" role="tabpanel">
+            Copy link tab panel
+          </div>
         </div>
-        <div id="tabpanel1" role="tabpanel">
-          <div class="alert alert__warning">This is a warning.</div>
-        </div>
-        <div id="tabpanel2" role="tabpanel">
-          Tab Panel 2
-        </div>
-        <div id="actions__link--tabpanel" role="tabpanel">
-          Copy link tab panel
-        </div>
-      </div>
+      </details>
+      <input type="checkbox" class="record__checkbox">
     `;
+
+    getDetails = () => {
+      return document.querySelector('details');
+    };
 
     firstTab = () => {
       return document.querySelector('[aria-controls="tabpanel1"]');
@@ -56,10 +75,47 @@ describe('actions', function () {
   });
 
   afterEach(function () {
+    getDetails = null;
     firstTab = null;
     secondTab = null;
     getAlert = null;
     getTabs = null;
+  });
+
+  describe('getActionsPanel()', function () {
+    it('should return the actions panel element', function () {
+      expect(getActionsPanel(), 'the actions panel should have been returned').to.equal(getDetails());
+    });
+  });
+
+  describe('toggleActionsPanel()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        actionsPanel: getDetails()
+      };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should open the actions panel if some checkboxes are checked', function () {
+      // Call the function
+      toggleActionsPanel({ ...args, someChecked: true });
+
+      // Make sure the actions panel is now open
+      expect(getDetails().hasAttribute('open'), 'the actions panel should be open').to.be.true;
+    });
+
+    it('should close the actions panel if no checkboxes are checked', function () {
+      // Call the function
+      toggleActionsPanel({ ...args, someChecked: false });
+
+      // Make sure the actions panel is now closed
+      expect(getDetails().hasAttribute('open'), 'the actions panel should be closed').to.be.false;
+    });
   });
 
   describe('isSelected()', function () {
@@ -151,35 +207,82 @@ describe('actions', function () {
     });
   });
 
+  describe('handleActionsPanelChange()', function () {
+    let args = null;
+    let event = null;
+
+    beforeEach(function () {
+      args = {
+        changeFunctions: {
+          actionsPanelText: sinon.spy(),
+          disableActionTabs: sinon.spy(),
+          handleSelectAllChange: sinon.spy(),
+          regenerateCitations: sinon.spy(),
+          toggleActionsPanel: sinon.spy(),
+          updateCSLData: sinon.spy(),
+          updateRISData: sinon.spy(),
+          updateToggleSelectedAction: sinon.spy()
+        },
+        element: document.querySelector(checkboxSelector)
+      };
+
+      // Call the function
+      handleActionsPanelChange(args);
+
+      // Create a change event
+      event = new window.Event('change', { bubbles: true });
+
+      // Dispatch the change event
+      args.element.dispatchEvent(event);
+    });
+
+    afterEach(function () {
+      args = null;
+      event = null;
+    });
+
+    it('should call all change functions on change event with the correct arguments', function () {
+      Object.keys(args.changeFunctions).forEach((functionName) => {
+        expect(args.changeFunctions[functionName].calledOnceWithExactly(), `\`${functionName}\` should have been called once on change event with the correct arguments`).to.be.true;
+      });
+    });
+  });
+
   describe('initializeActions()', function () {
     let actionsPanelTextSpy = null;
     let initializeCitationsSpy = null;
+    let disableActionTabsSpy = null;
     let emailActionSpy = null;
     let copyLinkSpy = null;
     let initializeRISSpy = null;
     let tabControlSpy = null;
     let textActionSpy = null;
+    let toggleActionsPanelSpy = null;
     let toggleSelectedSpy = null;
     let args = null;
 
     beforeEach(function () {
       actionsPanelTextSpy = sinon.spy();
       initializeCitationsSpy = sinon.spy();
+      disableActionTabsSpy = sinon.spy();
       emailActionSpy = sinon.spy();
       copyLinkSpy = sinon.spy();
       initializeRISSpy = sinon.spy();
       tabControlSpy = sinon.spy();
       textActionSpy = sinon.spy();
+      toggleActionsPanelSpy = sinon.spy();
       toggleSelectedSpy = sinon.spy();
       args = {
         actionsText: actionsPanelTextSpy,
         citations: initializeCitationsSpy,
+        disableActions: disableActionTabsSpy,
         email: emailActionSpy,
         link: copyLinkSpy,
         list: global.temporaryList,
         ris: initializeRISSpy,
         tabControlFunction: tabControlSpy,
         text: textActionSpy,
+        togglePanel: toggleActionsPanelSpy,
         toggleSelected: toggleSelectedSpy
       };
 
@@ -190,11 +293,13 @@ describe('actions', function () {
     afterEach(function () {
       actionsPanelTextSpy = null;
       initializeCitationsSpy = null;
+      disableActionTabsSpy = null;
       emailActionSpy = null;
       copyLinkSpy = null;
       initializeRISSpy = null;
       tabControlSpy = null;
       textActionSpy = null;
+      toggleActionsPanelSpy = null;
       toggleSelectedSpy = null;
       args = null;
     });
@@ -229,6 +334,14 @@ describe('actions', function () {
 
     it('should call `actionsPanelText` with the correct arguments', function () {
       expect(actionsPanelTextSpy.calledOnceWithExactly(), '`actionsPanelText` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `disableActionTabs` with the correct arguments', function () {
+      expect(disableActionTabsSpy.calledOnceWithExactly(), '`disableActionTabs` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `toggleActionsPanel` with the correct arguments', function () {
+      expect(toggleActionsPanelSpy.calledOnceWithExactly(), '`toggleActionsPanel` should have been called with the correct arguments').to.be.true;
     });
   });
 });

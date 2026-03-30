@@ -230,7 +230,6 @@ const initializeCitations = ({
 };
 
 export {
-  attachTheCitations,
   buildCiteprocEngine,
   citationStyleCache,
   createCiteprocEngine,

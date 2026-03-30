@@ -1,4 +1,4 @@
-<nav class="skip-links" aria-label="Skip links">
+<nav class="hide__print skip-links" aria-label="Skip links">
   <ul class="viewport-container">
     <li>
       <%= link_to(body: "Skip to main content", url: "#maincontent") %>
@@ -8,15 +8,15 @@
     </li>
   </ul>
 </nav>
-<m-universal-header></m-universal-header>
-<m-website-header name="Search" variant="dark">
+<m-universal-header class="hide__print"></m-universal-header>
+<m-website-header name="Search" variant="dark" class="hide__print">
   <nav aria-label="Utility" class="viewport-container">
     <%= erb :'partials/header/_logo' %>
     <ul class="utility__list">
       <li class="utility__list--item">
         <%= link_to(body: "Account", url: "https://account.lib.umich.edu/", classes: ["underline__none"]) %>
       </li>
-      <li class="utility__list--item utility__list--item-login">
+      <li class="hide__no-javascript utility__list--item utility__list--item-login">
         <%= login %>
       </li>
       <li class="utility__list--item">

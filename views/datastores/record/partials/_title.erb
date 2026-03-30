@@ -1,0 +1,9 @@
+<% titles.each do |title| %>
+  <span class="record__title--wrapper">
+    <% id = "full-record__#{title.css_class}" %>
+    <span class="record__<%= title.css_class %>" id="<%= id %>">
+      <%= title.text %>
+    </span>
+    <%= erb :"datastores/partials/_truncate", locals: { id: id, count: 300 } %>
+  </span>
+<% end %>

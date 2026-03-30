@@ -12,34 +12,17 @@
 //   Styles to apply directly to `views/partials/_header.erb`.
 //
 // ## Table of Contents
-//   1. Skip Links
-//   2. m-universal-header
-//   3. m-website-header
-//     3.1 Navigation
-//     3.2 Login
-//     3.3 JavaScript Enabled
-//   4. Print Logo
+//   1. m-universal-header
+//   2. m-website-header
+//     2.1 Navigation
+//     2.2 Login
+//     2.3 JavaScript Enabled
+//   3. Print Logo
 //
 // --------------------------------------------------
 
-// *********************** //
-// *** 1. PRINT STYLES *** //
-// *********************** //
-
-@media print {
-  .skip-links,
-  m-universal-header,
-  m-website-header {
-    display: none;
-  }
-}
-
-
-
-
-
 // ***************************** //
-// *** 2. M-UNIVERSAL-HEADER *** //
+// *** 1. M-UNIVERSAL-HEADER *** //
 // ***************************** //
 
 body:not([class]) m-universal-header {
@@ -51,7 +34,7 @@ body:not([class]) m-universal-header {
 
 
 // *************************** //
-// *** 3. M-WEBSITE-HEADER *** //
+// *** 2. M-WEBSITE-HEADER *** //
 // *************************** //
 
 $component: "m-website-header";
@@ -63,7 +46,7 @@ $component: "m-website-header";
 
 
 // *                * //
-// * 3.1 NAVIGATION * //
+// * 2.1 NAVIGATION * //
 // *                * //
 
 #{$component} {
@@ -81,12 +64,8 @@ $component: "m-website-header";
 
 
 // *           * //
-// * 3.2 LOGIN * //
+// * 2.2 LOGIN * //
 // *           * //
-
-body.no-javascript #{$component} .utility__list--item-login {
-  display: none;
-}
 
 #{$component} .login__form button {
   all: unset;
@@ -101,7 +80,7 @@ body.no-javascript #{$component} .utility__list--item-login {
 
 
 // *                        * //
-// * 3.3 JAVASCRIPT ENABLED * //
+// * 2.3 JAVASCRIPT ENABLED * //
 // *                        * //
 
 body:not([class]) #{$component} nav {
@@ -116,12 +95,11 @@ body:not([class]) #{$component} nav {
 
 
 // ********************* //
-// *** 4. PRINT LOGO *** //
+// *** 3. PRINT LOGO *** //
 // ********************* //
 
 .logo__print {
-  padding: 0.5in;
-  padding-bottom: 0;
+  padding: 0.25in 0;
   @media screen {
     display: none;
   }

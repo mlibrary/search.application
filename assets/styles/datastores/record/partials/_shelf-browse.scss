@@ -74,9 +74,6 @@ $directions: previous, next;
       "carousel carousel";
     grid-template-columns: 1fr auto;
   }
-  @media print {
-    display: none;
-  }
 }
 
 

@@ -30,9 +30,6 @@ $class: 'flint-message';
   background: var(--search-color-orange-100);
   border-bottom: 1px solid var(--search-color-orange-200);
   padding: 0.75rem 0;
-  @media print {
-    display: none;
-  }
   &,
   & * {
     color: var(--search-color-orange-300);

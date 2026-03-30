@@ -1,5 +1,5 @@
 <footer>
-  <section class="footer__feedback">
+  <section class="hide__print footer__feedback">
     <div class="container">
       <p>
         <%= link_to(body: "Give feedback about this page", url: "https://umich.qualtrics.com/jfe/form/SV_bCwYIKueEXs8wBf", open_in_new: true) %>
@@ -8,7 +8,7 @@
   </section>
   <section class="footer__information">
     <div class="viewport-container">
-      <nav aria-label="Footer">
+      <nav aria-label="Footer" class="hide__print">
         <ul>
           <li>
             <%= link_to(body: "Home", url: "/everything") %>
@@ -30,8 +30,11 @@
           </li>
         </ul>
       </nav>
-      <p>&copy;<%= Time.now.year %> Regents of the University of Michigan. For details and exceptions, see the <%= link_to(body: "Copyright Policy", url: "https://lib.umich.edu/about-us/policies/copyright-policy") %>.</p>
+      <p class="footer__information--copyright">
+        <span>&copy;<%= Time.now.year %> Regents of the University of Michigan.</span>
+        <span>For details and exceptions, see the <%= link_to(body: "Copyright Policy", url: "https://lib.umich.edu/about-us/policies/copyright-policy") %>.</span>
+      </p>
     </div>
   </section>
-  <m-chat id="chat" tabindex="-1"></m-chat>
+  <m-chat id="chat" class="hide__print" tabindex="-1"></m-chat>
 </footer>
