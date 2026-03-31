@@ -1,13 +1,5 @@
 class Search::Presenters::Page
   class DatastoreStatic < self
-    ACTIONS = [
-      ["email", "Email"],
-      ["text", "Text"],
-      ["citation", "Citation"],
-      ["ris", "Export&nbsp;Citation (EndNote,&nbsp;Zotero,&nbsp;etc.)"],
-      ["link", "Copy&nbsp;link"],
-      ["toggle-selected", "Toggle&nbsp;selected"]
-    ].map { |uid, text| Search::Presenters::Action.new(uid: uid, text: text) }
     def self.for(slug:, uri:, patron:)
       datastore = Search::Datastores.find(slug)
       new(datastore: datastore, uri: uri, patron: patron)
@@ -37,7 +29,7 @@ class Search::Presenters::Page
     end
 
     def actions
-      ACTIONS
+      Search::Presenters::Actions.new(nil)
     end
 
     private

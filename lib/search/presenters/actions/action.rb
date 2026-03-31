@@ -1,4 +1,4 @@
-class Search::Presenters::Action
+class Search::Presenters::Actions::Action
   attr_reader :uid, :text
   def initialize(uid:, text:)
     @uid = uid
