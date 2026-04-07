@@ -32,6 +32,10 @@ class Search::Presenters::Page
       Search::Presenters::Actions.new(nil)
     end
 
+    def citation
+      Search::Presenters::Actions::Action::Citation.new(nil)
+    end
+
     private
 
     def title_parts

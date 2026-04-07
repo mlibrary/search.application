@@ -35,12 +35,16 @@ class Search::Presenters::Page
       Search::Presenters::Breadcrumbs.new(current_page: CURRENT_PAGE, uri: @uri)
     end
 
-    def meta_tags
-      record.meta_tags
+    def citation
+      Search::Presenters::Actions::Action::Citation.new([@record])
     end
 
     def ris_action_url
       "#{@uri}/ris"
+    end
+
+    def meta_tags
+      record.meta_tags
     end
 
     private

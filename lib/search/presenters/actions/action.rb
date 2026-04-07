@@ -9,3 +9,5 @@ class Search::Presenters::Actions::Action
     text
   end
 end
+
+require "search/presenters/actions/action/citation"
