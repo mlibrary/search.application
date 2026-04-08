@@ -9,10 +9,10 @@ class Search::Presenters::Actions
   ]
 
   def initialize(exclude = [])
-    @exclude = exclude || []
-    @actions = ACTIONS
-      .reject { |uid, _| @exclude.include?(uid) }
-      .map { |uid, text| Action.new(uid: uid, text: text) }
+    exclude = Array(exclude)
+    @actions = ACTIONS.filter_map do |uid, text|
+      Action.new(uid: uid, text: text) unless exclude.include?(uid)
+    end
   end
 
   include Enumerable
