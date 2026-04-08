@@ -11,3 +11,4 @@ class Search::Presenters::Actions::Action
 end
 
 require "search/presenters/actions/action/citation"
+require "search/presenters/actions/action/link"
