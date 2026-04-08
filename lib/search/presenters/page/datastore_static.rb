@@ -36,6 +36,10 @@ class Search::Presenters::Page
       Search::Presenters::Actions::Action::Citation.new(nil)
     end
 
+    def copy_link
+      Search::Presenters::Actions::Action::Link.new(@uri)
+    end
+
     private
 
     def title_parts
