@@ -22,4 +22,15 @@ describe Search::Presenters::Page::Results do
       expect(subject).to eq(true)
     end
   end
+  context "#clear_filters_url" do
+    it "removes the filters from the link" do
+      uri = Addressable::URI.parse("#{S.base_url}/catalog?query=something&filter.availability=Hathi%20Trust&filter.subject=United%20States&page=1")
+      subject = described_class.new(datastore: Search::Datastores.find("catalog"), uri: uri, patron: nil, results: [])
+      param_keys = Addressable::URI.parse(subject.clear_filters_url).query_hash.keys
+      expect(param_keys).to include("query")
+      expect(param_keys).to include("page")
+      expect(param_keys).not_to include("filter.availability")
+      expect(param_keys).not_to include("filter.subject")
+    end
+  end
 end

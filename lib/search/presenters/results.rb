@@ -8,6 +8,19 @@ end
 require_relative "results/filters"
 
 class Search::Presenters::Results::Catalog
+  FILTER_ORDER = [
+    "availability",
+    "format",
+    "subject",
+    "date_of_publication",
+    "language",
+    "location",
+    "academic_discipline",
+    "author",
+    "place_of_publication",
+    "region",
+    "collection"
+  ]
   def self.for(uri)
     results_model_instance = Search::Models::Results::Catalog.for(uri)
     new(results_model_instance)
@@ -41,6 +54,8 @@ class Search::Presenters::Results::Catalog
     all_filters.map do |group|
       first = group.first
       OpenStruct.new(uid: first.uid, name: first.group_name, options: group.reject { |x| x.active? })
+    end.select { |x| FILTER_ORDER.include?(x.uid) }.sort_by do |f|
+      FILTER_ORDER.index(f.uid)
     end
   end
 
