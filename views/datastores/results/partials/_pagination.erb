@@ -4,8 +4,8 @@
   previous_url = ""
   next_url = ""
 
-  uri = URI.parse(request.fullpath)
-  params_hash = CGI.parse(uri.query.to_s)
+  uri = Addressable::URI.parse(request.fullpath)
+  params_hash = uri.query_hash
   params_hash["page"] = [current_page - 1]
   previous_url = "#{uri.path}?#{URI.encode_www_form(params_hash)}"
   params_hash["page"] = [current_page + 1]
@@ -20,8 +20,12 @@
   <form class="pagination__form" method="get" action="/<%= @presenter.current_datastore %>">
     <% params_hash.each do |key, value| %>
       <% unless key == "page" %>
-        <% value.each do |v| %>
-          <input type="hidden" name="<%= key %>" value="<%= v %>">
+        <% if value.is_a?(Array) %>
+          <% value.each do |v| %>
+            <input type="hidden" name="<%= key %>" value="<%= v %>">
+          <% end %>
+        <% else %>
+          <input type="hidden" name="<%= key %>" value="<%= value %>">
         <% end %>
       <% end %>
     <% end %>

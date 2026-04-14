@@ -7,8 +7,8 @@
       "Bentley Historical Library",
       "William L. Clements Library"
     ]
-    uri = URI.parse(request.fullpath)
-    params_hash = CGI.parse(uri.query.to_s)
+    uri = Addressable::URI.parse(request.fullpath)
+    params_hash = uri.query_hash
 
     # Remove "page" param to avoid issues with pagination when applying filters
     params_hash.delete("page")
@@ -19,8 +19,12 @@
   <form class="hide__print library-scope container__rounded--no-shadow" method="get" action="/<%= @presenter.current_datastore %>">
     <% params_hash.each do |key, value| %>
       <% unless key == "library" %>
-        <% value.each do |v| %>
-          <input type="hidden" name="<%= key %>" value="<%= v %>">
+        <% if value.is_a?(Array) %>
+          <% value.each do |v| %>
+            <input type="hidden" name="<%= key %>" value="<%= v %>">
+          <% end %>
+        <% else %>
+            <input type="hidden" name="<%= key %>" value="<%= value %>">
         <% end %>
       <% end %>
     <% end %>
