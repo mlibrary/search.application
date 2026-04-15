@@ -42,7 +42,9 @@ class Search::Presenters::Results::Catalog
 
   def boolean_filters
     [
-      OpenStruct.new(uid: "search_only", label: "View HathiTrust search-only materials", classes: ["underline__none", "filter__checkbox--link"], url: "https://")
+      Search::Presenters::Results::Filter.for(
+        uri: @results.originating_uri, uid: "search_only", value: true, label: "View HathiTrust search-only materials", count: nil
+      )
     ]
   end
 

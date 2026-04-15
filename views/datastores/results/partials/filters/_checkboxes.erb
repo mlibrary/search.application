@@ -2,7 +2,11 @@
   <ul class="list__no-style filter__checkboxes">
     <% @presenter.boolean_filters.each do | filter| %>
       <li class="checkbox filter__checkbox">
-        <%= link_to(body: filter.label, url:  filter.url, classes: filter.classes) %>
+        <%
+          classes = ["underline__none", "filter__checkbox--link"]
+          classes << "filter__checkbox--link-active" if filter.active?
+        %>
+        <%= link_to(body: filter.label, url:  filter.url, classes: classes) %>
       </li>
     <% end %>
   </ul>
