@@ -6,7 +6,7 @@ module Search::Presenters
     class Filter
       attr_reader :uid, :value, :label, :count
 
-      def self.for(uri:, uid:, value:, label: nil, count:)
+      def self.for(uri:, uid:, value:, count:, label: nil)
         result = Addressable::URI.parse(uri)
         query_values = result.query_values(Array) || []
         query_param = ["filter.#{uid}", value]
@@ -18,7 +18,7 @@ module Search::Presenters
         klass.new(uri: uri, uid: uid, value: value, label: label, count: count)
       end
 
-      def initialize(uri:, uid:, value:, label: nil, count:)
+      def initialize(uri:, uid:, value:, count:, label: nil)
         @uri = uri
         @uid = uid
         @value = value
