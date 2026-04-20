@@ -8,6 +8,7 @@ require "search/presenters/breadcrumbs"
 require "search/presenters/icons"
 require "search/presenters/record"
 require "search/presenters/results"
+require "search/presenters/browse"
 require "search/presenters/search_options"
 require "search/presenters/page"
 
@@ -39,6 +40,10 @@ module Search::Presenters
 
     def for_datastore_results(slug:, uri:, patron: nil)
       Page::Results.for(slug: slug, uri: uri, patron: patron)
+    end
+
+    def for_datastore_browse(slug:, uri:, patron: nil)
+      Page::Browse.for(slug: slug, uri: uri, patron: patron)
     end
   end
 end

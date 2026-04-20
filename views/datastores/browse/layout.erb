@@ -1,0 +1,29 @@
+<%= h1(body: "Browse all DATASTORE") %>
+
+<%= yield %>
+
+<section class="browse__titles">
+  <h2>Titles A-Z</h2>
+  <ul>
+    <li><%= link_to(body: "a", url: "#") %></li>
+  </ul>
+</section>
+
+<section class="browse__academic-discipline">
+  <h2>Academic Discipline</h2>
+  <ul>
+    <li>
+      <%= link_to(body: "Arts", url: "#") %>
+      <ul>
+        <li>
+          <%= link_to(body: "Arts", url: "#") %>
+          <ul>
+            <li>
+              <%= link_to(body: "Arts", url: "#") %>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</section>
