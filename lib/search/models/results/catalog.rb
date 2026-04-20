@@ -10,6 +10,7 @@ class Search::Models::Results::Catalog
   def self.get_filters(params)
     result = params.filter_map do |element|
       if element[0].match?(/^filter\./)
+        next if element[0] == "filter.search_only"
         field = element[0].split(".")[1]
         if element[1].is_a? String
           "#{field}:#{element[1]}"
@@ -23,15 +24,34 @@ class Search::Models::Results::Catalog
     result
   end
 
+  def self.ht_search_only(params)
+    value = params["filter.search_only"]
+    if value.is_a?(String) || value.nil?
+      value == "true"
+    elsif value&.any? { |x| x == "true" } # value is an array"
+      true
+    end
+  end
+
   def self.for(uri)
     qh = uri.query_hash
     current_page = (qh["page"] || 1).to_i
-    limit = (qh["limit"] || 10).to_i
-    offset = ((current_page - 1) * limit)
-    query = qh["query"] || ""
-    filters = get_filters(qh)
 
-    data = Search::Clients::CatalogAPI.new.get_results(offset: offset, limit: limit, query: query, filters: filters)
+    limit = (qh["limit"] || 10).to_i
+
+    qh["query"] || ""
+    get_filters(qh)
+
+    params = {
+      offset: ((current_page - 1) * limit),
+      limit: limit,
+      query: qh["query"] || "",
+      filters: get_filters(qh)
+    }
+
+    params[:ht_search_only] = true if ht_search_only(qh)
+
+    data = Search::Clients::CatalogAPI.new.get_results(**params)
     new(data: data, originating_uri: uri)
   end
 
