@@ -42,8 +42,8 @@ class Search::Presenters::Results::Catalog
 
   def boolean_filters
     [
-      Search::Presenters::Results::Filter.for(
-        uri: @results.originating_uri, uid: "search_only", value: true, label: "View HathiTrust search-only materials", count: nil
+      Search::Presenters::Results::BooleanFilter.for(
+        uri: @results.originating_uri, uid: "search_only", default: "false", label: "View HathiTrust search-only materials"
       )
     ]
   end
