@@ -22,10 +22,6 @@ class Search::Presenters::Page
       CURRENT_PAGE
     end
 
-    def scripts
-      super.push("datastores/browse/scripts.js")
-    end
-
     def breadcrumbs
       Search::Presenters::Breadcrumbs.new(current_page: CURRENT_PAGE, uri: @uri)
     end

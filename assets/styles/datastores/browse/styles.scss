@@ -1,0 +1,32 @@
+@use '../partials/breadcrumbs';
+@use './partials/titles';
+@use './partials/academic-discipline';
+
+// --------------------------------------------------
+//
+// # Browse
+//   Styles to apply directly to `views/datastores/browse/layout.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Browse
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: 'browse';
+
+
+
+
+
+// ***************** //
+// *** 2. BROWSE *** //
+// ***************** //
+
+.#{$class} > * + * {
+  margin-top: 1rem;
+}
