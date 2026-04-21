@@ -3,7 +3,7 @@
 
   <%= yield %>
 
-  <%= erb :'/datastores/browse/partials/_titles' %>
+  <%= erb :'/datastores/browse/partials/_titles', locals: { titles: @presenter.browse.titles } %>
 
   <%= erb :'/datastores/browse/partials/_academic-discipline' %>
 </div>

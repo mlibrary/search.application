@@ -8,7 +8,7 @@
     <aside class="results__sidebar">
       <%= erb :'/datastores/results/partials/_library-scope' %>
       <%= erb :'/datastores/results/partials/_filters' %>
-      <%= erb :'/datastores/results/partials/_browse', locals: { datastore: @presenter.page_title, slug: @presenter.current_datastore } %>
+      <%= erb :'/datastores/results/partials/_browse', locals: { browse: @presenter.browse } %>
     </aside>
 
     <h2 class="visually-hidden"><%= @presenter.page_title %> Results</h2>

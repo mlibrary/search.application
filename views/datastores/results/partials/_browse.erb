@@ -1,5 +1,5 @@
-<% if @presenter.browse.has_browse? %>
+<% if browse.has_browse? %>
   <p class="hide__print">
-    <%= link_to(body: "Browse all #{datastore}", url: @presenter.browse.url) %> alphabetically or by academic discipline.
+    <%= link_to(body: "Browse all #{datastore}", url: browse.url) %> alphabetically or by academic discipline.
   </p>
 <% end %>
