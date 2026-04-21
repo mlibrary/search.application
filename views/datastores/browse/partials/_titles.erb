@@ -32,7 +32,7 @@
 %>
 <section class="container__rounded--no-shadow content browse__titles">
   <h2>Titles A-Z</h2>
-  <ul class="list__no-style browse__titles--list">
+  <ul class="list__no-style text__large browse__titles--list">
     <% titles.each do |title| %>
       <li class="browse__titles--list-item">
         <%= link_to(body: title, url: "?query=browse_starts_with%3A#{title}&sort=title_asc", classes: ["strong", "underline__none"]) %>
