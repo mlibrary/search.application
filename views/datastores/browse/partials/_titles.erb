@@ -1,41 +1,9 @@
-<%
-  titles = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-    "0-9",
-    "Other"
-  ]
-%>
 <section class="container__rounded--no-shadow content browse__titles">
   <h2>Titles A-Z</h2>
   <ul class="list__no-style text__large browse__titles--list">
-    <% titles.each do |title| %>
+    <% @presenter.browse.titles.each do |title| %>
       <li class="browse__titles--list-item">
-        <%= link_to(body: title, url: "?query=browse_starts_with%3A#{title}&sort=title_asc", classes: ["strong", "underline__none"]) %>
+        <%= link_to(body: title.title, url: title.url, classes: ["strong", "underline__none"]) %>
       </li>
     <% end %>
   </ul>

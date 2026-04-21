@@ -1,3 +1,5 @@
+require "search/presenters/browse/titles"
+
 module Search::Presenters
   class Browse
     attr_reader :datastore
@@ -12,6 +14,10 @@ module Search::Presenters
 
     def url
       "/#{@datastore}/browse"
+    end
+
+    def titles
+      Search::Presenters::Browse::Titles.new(datastore: @datastore)
     end
   end
 end

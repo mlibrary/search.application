@@ -26,6 +26,10 @@ class Search::Presenters::Page
       Search::Presenters::Breadcrumbs.new(current_page: CURRENT_PAGE, uri: @uri)
     end
 
+    def browse
+      Search::Presenters::Browse.new(datastore: @slug)
+    end
+
     private
 
     def title_parts
