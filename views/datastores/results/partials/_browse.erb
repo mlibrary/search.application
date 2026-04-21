@@ -1,4 +1,4 @@
-<% if ["onlinejournals", "databases"].include?(datastore) %>
+<% if @presenter.has_browse? %>
   <p class="hide__print">
     <%= link_to(body: "Browse all #{datastore}", url: "/#{slug}/browse") %> alphabetically or by academic discipline.
   </p>

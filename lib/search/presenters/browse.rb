@@ -1,7 +1,14 @@
 module Search::Presenters
   class Browse
-    def self.for(datastore:, uri:)
-      "Search::Presenters::Browse::#{datastore.capitalize}".constantize.for(uri)
+      attr_reader :datastore
+
+      def initialize(datastore:)
+        @datastore = datastore
+      end
+
+
+    def has_browse?
+      ["databases", "onlinejournals"].include?(@datastore)
     end
   end
 end

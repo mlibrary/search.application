@@ -9,16 +9,18 @@ class Search::Presenters::Page
     def self.for(slug:, uri:, patron:)
       datastore = Search::Datastores.find(slug)
       results = Search::Presenters::Results.for(datastore: slug, uri: uri)
-      new(datastore: datastore, uri: uri, patron: patron, results: results)
+      browse = Search::Presenters::Browse.new(datastore: slug)
+      new(datastore: datastore, uri: uri, patron: patron, results: results, browse: browse)
     end
 
-    def initialize(datastore:, uri:, patron:, results:)
+    def initialize(datastore:, uri:, patron:, results:, browse:)
       @description = datastore.description
       @slug = datastore.slug
       @datastore = datastore # datastore object
       @uri = uri
       @patron = patron
       @results = results
+      @browse = browse
     end
 
     def styles
@@ -55,6 +57,10 @@ class Search::Presenters::Page
         .select { |qv| !qv[0].starts_with?("filter") }
       result.query_values = query_values
       result.display_uri.to_s
+    end
+
+    def has_browse?
+      @browse.has_browse?
     end
 
     def pagination
