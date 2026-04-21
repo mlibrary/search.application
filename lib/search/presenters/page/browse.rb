@@ -19,7 +19,7 @@ class Search::Presenters::Page
     end
 
     def page_title
-      CURRENT_PAGE
+      CURRENT_PAGE + " all " + @datastore.title
     end
 
     def breadcrumbs
