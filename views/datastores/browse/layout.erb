@@ -5,5 +5,5 @@
 
   <%= erb :'/datastores/browse/partials/_titles', locals: { titles: @presenter.browse.titles } %>
 
-  <%= erb :'/datastores/browse/partials/_academic-discipline' %>
+  <%= erb :'/datastores/browse/partials/_academic-discipline', locals: { academic_discipline: @presenter.browse.academic_discipline } %>
 </div>

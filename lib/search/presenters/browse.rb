@@ -1,4 +1,5 @@
 require "search/presenters/browse/titles"
+require "search/presenters/browse/academic_discipline"
 
 module Search::Presenters
   class Browse
@@ -18,6 +19,10 @@ module Search::Presenters
 
     def titles
       Search::Presenters::Browse::Titles.new(datastore: @datastore)
+    end
+
+    def academic_discipline
+      Search::Presenters::Browse::AcademicDisciplines.new(datastore: @datastore)
     end
   end
 end

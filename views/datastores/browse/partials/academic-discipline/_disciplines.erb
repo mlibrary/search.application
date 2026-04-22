@@ -1,7 +1,7 @@
 <ul class="list__no-style browse__academic-discipline--sublist">
   <% Array(disciplines).each do |d| %>
     <li class="browse__academic-discipline--sublist-item">
-      <%= link_to(body: d.name, url: "?query=filter.academic_discipline%3A%22#{d.name}%22&sort=title_asc", classes: ["underline__none"]) %>
+      <%= link_to(body: d.name, url: d.url, classes: ["underline__none"]) %>
       (<%= d.count %>)
       <% if d.respond_to?(:disciplines) && d.disciplines && !d.disciplines.empty? %>
         <%= erb :"datastores/browse/partials/academic-discipline/_disciplines", locals: { disciplines: d.disciplines } %>

@@ -1,7 +1,7 @@
 module Search::Presenters
   class Browse
     class Title
-      attr_reader :title, :slug
+      attr_reader :title
 
       def initialize(title:, slug:)
         @title = title
@@ -9,7 +9,13 @@ module Search::Presenters
       end
 
       def url
-        "/##{@slug}?query=browse_starts_with%3A#{@title}&sort=title_asc"
+        Addressable::URI.new(
+          path: "/#{@slug}",
+          query_values: {
+            "browse_starts_with" => @title,
+            "sort" => "title_asc"
+          }
+        ).to_s
       end
     end
 

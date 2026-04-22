@@ -1,104 +1,10 @@
-<%
-  disciplines = [
-    OpenStruct.new(
-      name: "Arts",
-      count: 5200,
-      disciplines: [
-        OpenStruct.new(
-          name: "Architecture",
-          count: 709
-        ),
-        OpenStruct.new(
-          name: "Art and Design",
-          count: 1939
-        ),
-        OpenStruct.new(
-          name: "Art History",
-          count: 2763
-        ),
-        OpenStruct.new(
-          name: "Dance",
-          count: 71,
-          disciplines: [
-            OpenStruct.new(
-              name: "Ballet",
-              count: 11
-            ),
-            OpenStruct.new(
-              name: "Modern Dance",
-              count: 17
-            ),
-            OpenStruct.new(
-              name: "World Dance",
-              count: 12
-            )
-          ]
-        ),
-        OpenStruct.new(
-          name: "Film and Video Studies",
-          count: 626
-        ),
-        OpenStruct.new(
-          name: "Landscape Architecture",
-          count: 141
-        ),
-        OpenStruct.new(
-          name: "Music",
-          count: 814
-        ),
-        OpenStruct.new(
-          name: "Theatre and Drama",
-          count: 416
-        )
-      ]
-    ),
-    OpenStruct.new(
-      name: "Business",
-      count: 17474,
-      disciplines: [
-        OpenStruct.new(
-          name: "Business (General)",
-          count: 11205
-        ),
-        OpenStruct.new(
-          name: "Careers",
-          count: 218
-        ),
-        OpenStruct.new(
-          name: "Companies and Industry",
-          count: 8134
-        ),
-        OpenStruct.new(
-          name: "Entrepreneurship",
-          count: 740
-        ),
-        OpenStruct.new(
-          name: "Finance",
-          count: 2427
-        ),
-        OpenStruct.new(
-          name: "International Business",
-          count: 3017
-        ),
-        OpenStruct.new(
-          name: "Management",
-          count: 2655
-        ),
-        OpenStruct.new(
-          name: "Marketing",
-          count: 553
-        )
-      ]
-    )
-  ]
-%>
 <section class="container__rounded--no-shadow content browse__academic-discipline">
   <h2>Academic Discipline</h2>
   <ul class="list__no-style text__large browse__academic-discipline--list">
-    <% disciplines.each do |discipline| %>
+    <% academic_discipline.each do |discipline| %>
       <li class="browse__academic-discipline--list-item">
         <span class="strong">
-          <%= link_to(body: discipline.name, url: "?query=filter.academic_discipline%3A%22#{discipline.name}%22&sort=title_asc", classes: ["underline__none"]) %>
+          <%= link_to(body: discipline.name, url: discipline.url, classes: ["underline__none"]) %>
           (<%= discipline.count %>)
         </span>
         <%= erb :"datastores/browse/partials/academic-discipline/_disciplines", locals: { disciplines: discipline.disciplines } %>
