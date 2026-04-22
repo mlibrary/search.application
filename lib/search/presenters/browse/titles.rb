@@ -20,11 +20,8 @@ module Search::Presenters
     end
 
     class Titles
-      BROWSE_STARTS_WITH = [
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
-        "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-        "0-9", "Other"
-      ]
+      BROWSE_STARTS_WITH = ('a'..'z').to_a + ["0-9", "Other"]
+
       include Enumerable
 
       def initialize(datastore:)
