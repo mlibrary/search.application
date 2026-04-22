@@ -127,7 +127,7 @@ module Search::Presenters
       ]
       include Enumerable
 
-      def initialize(disciplines: ACADEMIC_DISCIPLINES, datastore:)
+      def initialize(datastore:, disciplines: ACADEMIC_DISCIPLINES)
         @disciplines = disciplines || []
         @datastore = datastore
       end
