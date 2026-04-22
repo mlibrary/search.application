@@ -3,8 +3,6 @@ require "search/presenters/browse/academic_discipline"
 
 module Search::Presenters
   class Browse
-    attr_reader :datastore
-
     def initialize(datastore:)
       @datastore = datastore
     end

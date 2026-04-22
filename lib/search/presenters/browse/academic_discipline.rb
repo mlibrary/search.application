@@ -39,6 +39,18 @@ module Search::Presenters
           count: 5200,
           disciplines: [
             OpenStruct.new(
+              name: "Film and Video Studies",
+              count: 626
+            ),
+            OpenStruct.new(
+              name: "Landscape Architecture",
+              count: 141
+            ),
+            OpenStruct.new(
+              name: "Music",
+              count: 814
+            ),
+            OpenStruct.new(
               name: "Architecture",
               count: 709
             ),
@@ -55,30 +67,18 @@ module Search::Presenters
               count: 71,
               disciplines: [
                 OpenStruct.new(
-                  name: "Ballet",
-                  count: 11
-                ),
-                OpenStruct.new(
                   name: "Modern Dance",
                   count: 17
+                ),
+                OpenStruct.new(
+                  name: "Ballet",
+                  count: 11
                 ),
                 OpenStruct.new(
                   name: "World Dance",
                   count: 12
                 )
               ]
-            ),
-            OpenStruct.new(
-              name: "Film and Video Studies",
-              count: 626
-            ),
-            OpenStruct.new(
-              name: "Landscape Architecture",
-              count: 141
-            ),
-            OpenStruct.new(
-              name: "Music",
-              count: 814
             ),
             OpenStruct.new(
               name: "Theatre and Drama",
@@ -133,7 +133,8 @@ module Search::Presenters
       end
 
       def all
-        @disciplines.map { |d| AcademicDiscipline.new(discipline: d, slug: @datastore) }
+        sorted_by_name = @disciplines.sort_by { |d| d.name.to_s }
+        sorted_by_name.map { |d| AcademicDiscipline.new(discipline: d, slug: @datastore) }
       end
 
       def each(&block)
