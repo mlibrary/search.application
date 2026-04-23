@@ -1,43 +1,12 @@
 describe Search::Presenters::Browse::AcademicDiscipline do
   before(:each) do
-    @discipline = OpenStruct.new(
-      name: "Arts",
-      count: 5200,
-      disciplines: [
-        OpenStruct.new(
-          name: "Architecture",
-          count: 709
-        ),
-        OpenStruct.new(
-          name: "Art and Design",
-          count: 1939
-        ),
-        OpenStruct.new(
-          name: "Art History",
-          count: 2763
-        ),
-        OpenStruct.new(
-          name: "Dance",
-          count: 71,
-          disciplines: [
-            OpenStruct.new(
-              name: "Ballet",
-              count: 11
-            ),
-            OpenStruct.new(
-              name: "Modern Dance",
-              count: 60
-            )
-          ]
-        )
-      ]
-    )
-    @disciplines = @discipline.disciplines
-    @slug = "onlinejournals"
+    @discipline = Search::Presenters::Browse::AcademicDisciplines::ACADEMIC_DISCIPLINES.disciplines.sort_by { |discipline| discipline.name.to_s }.first
+    @disciplines = @discipline.disciplines || []
+    @datastore = "onlinejournals"
   end
 
   subject do
-    described_class.new(discipline: @discipline, slug: @slug)
+    described_class.new(discipline: @discipline, datastore: @datastore)
   end
 
   context "#name" do
@@ -54,7 +23,7 @@ describe Search::Presenters::Browse::AcademicDiscipline do
 
   context "#url" do
     it "generates a URL with the correct query parameters" do
-      expect(subject.url).to eq( "/#{@slug}?filter.academic_discipline=#{@discipline.name}&sort=title_asc")
+      expect(subject.url).to eq( "/#{@datastore}?filter.academic_discipline=#{subject.name}&sort=title_asc")
     end
   end
 
@@ -69,7 +38,9 @@ describe Search::Presenters::Browse::AcademicDiscipline do
 
     it "returns disciplines with the correct names and counts" do
       subject_disciplines = subject.disciplines
-      @disciplines.each_with_index do |discipline, index|
+      sorted_by_name = @disciplines.sort_by { |d| d.name.to_s }
+
+      sorted_by_name.each_with_index do |discipline, index|
         expect(subject_disciplines[index].name).to eq(discipline.name)
         expect(subject_disciplines[index].count).to eq(discipline.count)
       end
@@ -78,13 +49,10 @@ describe Search::Presenters::Browse::AcademicDiscipline do
 end
 
 describe Search::Presenters::Browse::AcademicDisciplines do
-  before(:each) do
-    @datastore = "onlinejournals"
-    @disciplines = Search::Presenters::Browse::AcademicDisciplines::ACADEMIC_DISCIPLINES
-  end
+  let(:datastore) { "onlinejournals" }
 
   subject do
-    described_class.new(datastore: @datastore)
+    described_class.new(datastore: datastore, disciplines: Search::Presenters::Browse::AcademicDisciplines::ACADEMIC_DISCIPLINES)
   end
 
   context "#all" do
@@ -95,12 +63,12 @@ describe Search::Presenters::Browse::AcademicDisciplines do
 
   context "#each" do
     it "iterates over the academic disciplines" do
-      academic_disciplines = []
+      academic_discipline_names = []
       subject.each do |academic_discipline|
-        academic_disciplines << academic_discipline
+        academic_discipline_names << academic_discipline.name
       end
 
-      expect(academic_disciplines).to eq(subject.all)
+      expect(academic_discipline_names).to eq(subject.all.map(&:name))
     end
   end
 end
