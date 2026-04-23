@@ -16,7 +16,7 @@ describe Search::Presenters::Browse::Title do
 
   context "#url" do
     it "generates a URL with the correct query parameters" do
-      expect(subject.url).to eq( "/#{@slug}?browse_starts_with=#{@title}&sort=title_asc")
+      expect(subject.url).to eq("/#{@slug}?browse_starts_with=#{@title}&sort=title_asc")
     end
   end
 end

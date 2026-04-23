@@ -23,7 +23,7 @@ describe Search::Presenters::Browse::AcademicDiscipline do
 
   context "#url" do
     it "generates a URL with the correct query parameters" do
-      expect(subject.url).to eq( "/#{@datastore}?filter.academic_discipline=#{subject.name}&sort=title_asc")
+      expect(subject.url).to eq("/#{@datastore}?filter.academic_discipline=#{subject.name}&sort=title_asc")
     end
   end
 

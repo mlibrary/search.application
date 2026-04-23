@@ -20,7 +20,7 @@ module Search::Presenters
     end
 
     class Titles
-      BROWSE_STARTS_WITH = ('a'..'z').to_a + ["0-9", "Other"]
+      BROWSE_STARTS_WITH = ("a".."z").to_a + ["0-9", "Other"]
 
       include Enumerable
 
