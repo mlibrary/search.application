@@ -1,0 +1,14 @@
+<section class="container__rounded--no-shadow content browse__academic-discipline">
+  <h2>Academic Discipline</h2>
+  <ul class="list__no-style text__large browse__academic-discipline--list">
+    <% academic_discipline.each do |discipline| %>
+      <li class="browse__academic-discipline--list-item">
+        <span class="strong">
+          <%= link_to(body: discipline.name, url: discipline.url, classes: ["underline__none"]) %>
+          (<%= discipline.count %>)
+        </span>
+        <%= erb :"datastores/browse/partials/academic-discipline/_disciplines", locals: { disciplines: discipline.disciplines } %>
+      </li>
+    <% end %>
+  </ul>
+</section>
