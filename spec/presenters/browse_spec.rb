@@ -13,8 +13,7 @@ RSpec.describe Search::Presenters::Browse do
     end
 
     it "returns false for datastores that do not support browse" do
-      datastore = "unsupported_datastore"
-      subject = described_class.new(datastore: datastore)
+      @datastore = "unsupported_datastore"
       expect(subject.has_browse?).to be false
     end
   end

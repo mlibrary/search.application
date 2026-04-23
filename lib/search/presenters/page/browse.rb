@@ -6,14 +6,6 @@ class Search::Presenters::Page
       new(datastore: datastore, uri: uri, patron: patron)
     end
 
-    def initialize(datastore:, uri:, patron:)
-      @description = description
-      @slug = datastore.slug
-      @datastore = datastore # datastore object
-      @patron = patron
-      @uri = uri
-    end
-
     def styles
       super.push("datastores/browse/styles.css")
     end
