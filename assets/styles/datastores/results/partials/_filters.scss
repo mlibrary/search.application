@@ -28,6 +28,7 @@ $class: '.filters';
 // ******************** //
 
 #{$class} {
+  padding: 0;
   @media screen {
     & > * + * {
       border-top: 1px solid var(--color-neutral-100);

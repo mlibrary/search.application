@@ -1,11 +1,13 @@
 <% if @presenter.boolean_filters.any? %>
-  <form class="filter__checkboxes" method="get" action="/<%= @presenter.current_datastore %>">
+  <ul class="list__no-style filter__checkboxes">
     <% @presenter.boolean_filters.each do | filter| %>
-      <label class="checkbox filter__checkbox">
-        <input type="checkbox" name="<%= filter.uid %>" value="<%= filter.value %>" <%= "checked" if filter.checked? %>>
-        <%= filter.label %>
-      </label>
+      <li class="checkbox filter__checkbox">
+        <%
+          classes = ["underline__none", "filter__checkbox--link"]
+          classes << "filter__checkbox--link-active" if filter.active?
+        %>
+        <%= link_to(body: filter.label, url:  filter.url, classes: classes) %>
+      </li>
     <% end %>
-    <button type="submit" class="hide__javascript hide__print filter__checkboxes--submit">Apply</button>
-  </form>
+  </ul>
 <% end %>
