@@ -1,6 +1,6 @@
 describe Search::Presenters::Browse::AcademicDiscipline do
   before(:each) do
-    @discipline = Search::Presenters::Browse::AcademicDisciplines::ACADEMIC_DISCIPLINES.disciplines.sort_by { |discipline| discipline.name.to_s }.first
+    @discipline = Search::Presenters::Browse::AcademicDisciplines::ACADEMIC_DISCIPLINES.disciplines.min_by { |discipline| discipline.name.to_s }
     @disciplines = @discipline.disciplines || []
     @datastore = "onlinejournals"
   end
