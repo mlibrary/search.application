@@ -6,9 +6,17 @@
   <div class="container results__container">
     <h2 class="visually-hidden"><%= @presenter.page_title %> Filter Options</h2>
     <aside class="results__sidebar">
-      <%= erb :'/datastores/results/partials/_library-scope' %>
-      <%= erb :'/datastores/results/partials/_filters' %>
-      <%= erb :'/datastores/results/partials/_browse', locals: { datastore: @presenter.page_title, slug: @presenter.current_datastore } %>
+      <details open class="results__sidebar--filters">
+        <summary class="results__sidebar--filters-summary<% if @presenter.active_filters.size > 1 %> results__sidebar--filters-summary-active<% end %>">
+          Filters
+          <% if @presenter.active_filters.size > 1 %>
+            (<%= @presenter.active_filters.size %>)
+          <% end %>
+        </summary>
+        <%= erb :'/datastores/results/partials/_library-scope' %>
+        <%= erb :'/datastores/results/partials/_filters' %>
+        <%= erb :'/datastores/results/partials/_browse', locals: { datastore: @presenter.page_title, slug: @presenter.current_datastore } %>
+      </details>
     </aside>
 
     <h2 class="visually-hidden"><%= @presenter.page_title %> Results</h2>
