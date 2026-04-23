@@ -154,7 +154,7 @@ class Search::Application < Sinatra::Base
     end
     if datastore.slug == "onlinejournals" || datastore.slug == "databases"
       get "/#{datastore.slug}/browse" do
-        # headers "metrics.datastore" => datastore.slug, "metrics.route" => "browse"
+        headers "metrics.datastore" => datastore.slug, "metrics.route" => "browse"
         @presenter = Search::Presenters.for_datastore_browse(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
         erb :"datastores/browse/layout", layout: :layout do
           erb :"datastores/browse/#{datastore.slug}"
@@ -163,7 +163,7 @@ class Search::Application < Sinatra::Base
     end
     if datastore.slug == "everything"
       get "/#{datastore.slug}/list" do
-        # headers "metrics.datastore" => datastore.slug, "metrics.route" => "list"
+        headers "metrics.datastore" => datastore.slug, "metrics.route" => "list"
         @presenter = Search::Presenters.for_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
         erb :"datastores/list/layout", layout: :layout do
           erb :"datastores/list/#{datastore.slug}"
