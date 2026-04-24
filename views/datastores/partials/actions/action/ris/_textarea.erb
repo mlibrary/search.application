@@ -1,9 +1,1 @@
-<%
-  ris = []
-  if @record
-    ris = [@record.ris]
-  elsif defined?(@presenter.entries)
-    ris = @presenter.entries.map { |entry| entry.ris }
-  end
-%>
-<textarea class="citation__ris" readonly><%= ris.to_json %></textarea>
+<textarea class="citation__ris" readonly><%= @presenter.citation&.ris&.to_json %></textarea>

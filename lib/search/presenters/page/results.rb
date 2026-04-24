@@ -33,6 +33,10 @@ class Search::Presenters::Page
       super.push("datastores/results/scripts.js")
     end
 
+    def citation
+      Search::Presenters::Actions::Action::Citation.new(entries)
+    end
+
     def ris_action_url
     end
 
