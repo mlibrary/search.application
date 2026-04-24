@@ -71,3 +71,21 @@ class Search::Presenters::Results::Catalog
     end
   end
 end
+
+class Search::Presenters::Results::Onlinejournals < Search::Presenters::Results::Catalog
+  FILTER_ORDER = [
+    "subject",
+    "language",
+    "place_of_publication",
+    "academic_discipline"
+  ]
+
+  def filters
+    all_filters.map do |group|
+      first = group.first
+      OpenStruct.new(uid: first.uid, name: first.group_name, options: group.reject { |x| x.active? })
+    end.select { |x| FILTER_ORDER.include?(x.uid) }.sort_by do |f|
+      FILTER_ORDER.index(f.uid)
+    end
+  end
+end
