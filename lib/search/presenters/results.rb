@@ -148,4 +148,10 @@ class Search::Presenters::Results::Onlinejournals < Search::Presenters::Results:
   def boolean_filters
     []
   end
+
+  def records
+    @results.records.map do |record|
+      Search::Presenters::Record::Onlinejournals::Brief.new(record)
+    end
+  end
 end
