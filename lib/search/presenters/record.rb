@@ -9,3 +9,4 @@ module Search
 end
 
 require "search/presenters/record/catalog"
+require "search/presenters/record/onlinejournals"
