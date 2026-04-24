@@ -53,11 +53,12 @@ class Search::Presenters::Results::Catalog
   end
 
   def filters
+    filter_order = self.class::FILTER_ORDER
     all_filters.map do |group|
       first = group.first
       OpenStruct.new(uid: first.uid, name: first.group_name, options: group.reject { |x| x.active? })
-    end.select { |x| FILTER_ORDER.include?(x.uid) }.sort_by do |f|
-      FILTER_ORDER.index(f.uid)
+    end.select { |x| filter_order.include?(x.uid) }.sort_by do |f|
+      filter_order.index(f.uid)
     end
   end
 
@@ -80,12 +81,7 @@ class Search::Presenters::Results::Onlinejournals < Search::Presenters::Results:
     "academic_discipline"
   ]
 
-  def filters
-    all_filters.map do |group|
-      first = group.first
-      OpenStruct.new(uid: first.uid, name: first.group_name, options: group.reject { |x| x.active? })
-    end.select { |x| FILTER_ORDER.include?(x.uid) }.sort_by do |f|
-      FILTER_ORDER.index(f.uid)
-    end
+  def boolean_filters
+    []
   end
 end
