@@ -1,5 +1,4 @@
 import { defaultTemporaryList, getSessionStorage } from '../list/layout.js';
-import { checkboxFilters } from './partials/filters/_checkboxes.js';
 import { hideInfo } from './partials/_info.js';
 import { libraryScope } from './partials/_library-scope.js';
 import { resultsList } from './layout.js';
@@ -14,9 +13,6 @@ hideInfo();
 
 // Library Scope
 libraryScope();
-
-// Checkbox Filters
-checkboxFilters();
 
 // Toggle filters
 toggleItems();

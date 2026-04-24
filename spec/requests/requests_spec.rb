@@ -102,7 +102,7 @@ RSpec.describe "requests" do
   end
   context "catalog search results" do
     it "shows the results page when there is a query parameter" do
-      stub_request(:get, "#{S.catalog_api_url}/search?offset=0&query=title:(test)&limit=10")
+      stub_request(:get, "#{S.catalog_api_url}/search?offset=0&query=title:(test)&limit=10&filters=library:aa&ht_search_only=false")
         .to_return(status: 200, body: base_results.to_json, headers: {content_type: "application/json"})
       get "/catalog?query=title:(test)"
       expect(last_response.body).to include("Catalog results")
@@ -132,8 +132,7 @@ RSpec.describe "requests" do
     context "searching with a different option selected" do
       it "redirects to `search.lib.umich.edu` with the query wrapped" do
         search_option = "title"
-        get "/articles"
-        post "/search", @params.merge(search_option: search_option)
+        post "/search", @params.merge(search_option: search_option, search_datastore: "catalog")
         location = last_response.location
         uri = URI.parse(location)
         query_params = URI.decode_www_form(uri.query).to_h

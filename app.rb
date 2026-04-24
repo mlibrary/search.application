@@ -152,9 +152,18 @@ class Search::Application < Sinatra::Base
         end
       end
     end
+    if datastore.slug == "onlinejournals" || datastore.slug == "databases"
+      get "/#{datastore.slug}/browse" do
+        headers "metrics.datastore" => datastore.slug, "metrics.route" => "browse"
+        @presenter = Search::Presenters.for_datastore_browse(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+        erb :"datastores/browse/layout", layout: :layout do
+          erb :"datastores/browse/#{datastore.slug}"
+        end
+      end
+    end
     if datastore.slug == "everything"
       get "/#{datastore.slug}/list" do
-        # headers "metrics.datastore" => datastore.slug, "metrics.route" => "list"
+        headers "metrics.datastore" => datastore.slug, "metrics.route" => "list"
         @presenter = Search::Presenters.for_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
         erb :"datastores/list/layout", layout: :layout do
           erb :"datastores/list/#{datastore.slug}"
@@ -232,16 +241,23 @@ class Search::Application < Sinatra::Base
     # TODO: Keep `library` query parameter on `catalog` datastore when making a search.
     # Sending both parameters to current site erases the `library` parameter.
     option = params[:search_option]
-    query = URI.encode_www_form_component(params[:search_text])
+    q_params = {}
+    library = request.referrer ? Addressable::URI.parse(request.referrer).query_hash["library"] : nil
+    uri = Addressable::URI.parse("/#{params[:search_datastore]}")
+    if library
+      q_params["library"] = library
+    end
+    q_params["query"] = URI.encode_www_form_component(params[:search_text])
+
     if option != "keyword"
       # The query gets wrapped if the selected search option is not `keyword`
-      query = "#{option}:(#{query})"
-    elsif query.empty?
+      q_params["query"] = "#{option}:(#{q_params["query"]})"
+    elsif q_params["query"].empty?
       # Redirect to landing page if query is empty and search option is `keyword`
-      redirect "/#{params[:search_datastore]}"
+      redirect uri
     end
-    # Make a search in the current site
-    redirect "/#{params[:search_datastore]}?query=#{query}"
+    uri.query_values = q_params
+    redirect uri
   end
 
   if S.workshop?

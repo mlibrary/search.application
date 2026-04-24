@@ -9,16 +9,21 @@
     "title_asc" => "Title (A-Z)",
     "title_desc" => "Title (Z-A)"
   }
-  uri = URI.parse(request.fullpath)
-  params_hash = CGI.parse(uri.query.to_s)
+  uri = Addressable::URI.parse(request.fullpath)
+  params_hash = uri.query_hash
 %>
 <form method="get" action="/<%= @presenter.current_datastore %>" class="hide__print sort">
   <% params_hash.each do |key, value| %>
     <% unless key == "sort" %>
-      <% value.each do |v| %>
-        <input type="hidden" name="<%= key %>" value="<%= v %>">
+      <% if value.is_a?(Array) %>
+        <% value.each do |v| %>
+          <input type="hidden" name="<%= key %>" value="<%= v %>">
+        <% end %>
+      <% else %>
+        <input type="hidden" name="<%= key %>" value="<%= value %>">
       <% end %>
     <% end %>
+
   <% end %>
   <label for="sort__select" class="sort__label">Sort by</label>
   <select name="sort" class="sort__select" id="sort__select" autocomplete="off">

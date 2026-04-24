@@ -1,10 +1,57 @@
 class Search::Models::Results::Catalog
+  LIBRARY_MAP = {
+    "All libraries" => "all",
+    "U-M Ann Arbor Libraries" => "aa",
+    "Flint Thompson Library" => "flint",
+    "Bentley Historical Library" => "bentley",
+    "William L. Clements Library" => "clements"
+
+  }
+  def self.get_filters(params)
+    result = params.filter_map do |element|
+      if element[0].match?(/^filter\./)
+        next if element[0] == "filter.search_only"
+        field = element[0].split(".")[1]
+        if element[1].is_a? String
+          "#{field}:#{element[1]}"
+        else
+          element[1].map { |value| "#{field}:#{value}" }
+        end
+      end
+    end.flatten
+    library = LIBRARY_MAP[params["library"]] || "aa"
+    result.push("library:#{library}")
+    result
+  end
+
+  def self.ht_search_only(params)
+    value = params["filter.search_only"]
+    if value.is_a?(String) || value.nil?
+      value == "true"
+    elsif value&.any? { |x| x == "true" } # value is an array"
+      true
+    end
+  end
+
   def self.for(uri)
-    current_page = (uri.query_hash["page"] || 1).to_i
-    limit = (uri.query_hash["limit"] || 10).to_i
-    offset = ((current_page - 1) * limit)
-    query = uri.query_hash["query"] || ""
-    data = Search::Clients::CatalogAPI.new.get_results(offset: offset, limit: limit, query: query)
+    qh = uri.query_hash
+    current_page = (qh["page"] || 1).to_i
+
+    limit = (qh["limit"] || 10).to_i
+
+    qh["query"] || ""
+    get_filters(qh)
+
+    params = {
+      offset: ((current_page - 1) * limit),
+      limit: limit,
+      query: qh["query"] || "",
+      filters: get_filters(qh)
+    }
+
+    params[:ht_search_only] = true if ht_search_only(qh)
+
+    data = Search::Clients::CatalogAPI.new.get_results(**params)
     new(data: data, originating_uri: uri)
   end
 
@@ -36,7 +83,7 @@ class Search::Models::Results::Catalog
   end
 
   def filters
-    @data["filters"].map { |x| Filter.new(x) }
+    @data["filters"].filter_map { |x| Filter.new(x) if x["values"].present? }
   end
 end
 

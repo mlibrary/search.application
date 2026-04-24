@@ -3,14 +3,30 @@ import { getCheckboxes } from './partials/results-list/list-item/header/_checkbo
 import { selectAll } from '../partials/_select-all.js';
 import { temporaryListBanner } from '../list/partials/_go-to.js';
 
+const toggleFiltersDetails = ({ details = document.querySelector('.results__sidebar--filters') } = {}) => {
+  if (!details) {
+    return;
+  }
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 980 && !details.hasAttribute('open')) {
+      details.setAttribute('open', '');
+    }
+  });
+};
+
 const resultsList = ({
   actionsPanel = initializeActions,
   checkboxCount = getCheckboxes().length,
   handleActionsChange = handleActionsPanelChange,
   initializeSelectAll = selectAll,
   list,
-  showBanner = temporaryListBanner
+  showBanner = temporaryListBanner,
+  toggleFiltersDropdown = toggleFiltersDetails
 } = {}) => {
+  // Toggle filters dropdown on mobile
+  toggleFiltersDropdown();
+
   // Return early if no checkboxes are found
   if (checkboxCount === 0) {
     return;
@@ -29,4 +45,4 @@ const resultsList = ({
   handleActionsChange({ element: document.querySelector('.results__content') });
 };
 
-export { resultsList };
+export { resultsList, toggleFiltersDetails };

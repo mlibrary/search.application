@@ -54,6 +54,15 @@ class Search::Presenters::Page
 
     def clear_filters_url
       @uri.to_s
+      result = @uri.dup
+      query_values = (result.query_values(Array) || [])
+        .select { |qv| !qv[0].starts_with?("filter") }
+      result.query_values = query_values
+      result.display_uri.to_s
+    end
+
+    def browse
+      Search::Presenters::Browse.new(datastore: @slug)
     end
 
     def pagination

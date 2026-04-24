@@ -96,6 +96,8 @@ services:
       - 0.0.0.0
   parser:
     image: ghcr.io/mlibrary/search.parser-unstable:latest
+    ports:
+      - 4000:4567
     environment:
       - APP_ENV=production
     env_file:
