@@ -1,0 +1,10 @@
+<section class="container__rounded--no-shadow content browse__titles">
+  <h2>Titles A-Z</h2>
+  <ul class="list__no-style text__large browse__titles--list">
+    <% @presenter.browse.titles.each do |title| %>
+      <li class="browse__titles--list-item">
+        <%= link_to(body: title.title, url: title.url, classes: ["strong", "underline__none"]) %>
+      </li>
+    <% end %>
+  </ul>
+</section>
