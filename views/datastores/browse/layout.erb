@@ -1,0 +1,9 @@
+<div class="container browse">
+  <%= h1(body: @presenter.page_title) %>
+
+  <%= yield %>
+
+  <%= erb :'/datastores/browse/partials/_titles', locals: { titles: @presenter.browse.titles } %>
+
+  <%= erb :'/datastores/browse/partials/_academic-discipline', locals: { academic_discipline: @presenter.browse.academic_discipline } %>
+</div>

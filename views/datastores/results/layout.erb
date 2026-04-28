@@ -15,7 +15,7 @@
         </summary>
         <%= erb :'/datastores/results/partials/_library-scope' %>
         <%= erb :'/datastores/results/partials/_filters' %>
-        <%= erb :'/datastores/results/partials/_browse', locals: { datastore: @presenter.page_title, slug: @presenter.current_datastore } %>
+        <%= erb :'/datastores/results/partials/_browse', locals: { browse: @presenter.browse } %>
       </details>
     </aside>
 

@@ -1,0 +1,68 @@
+@use "../../../media";
+
+// --------------------------------------------------
+//
+// # Academic Discipline
+//   Styles to apply directly to `views/datastores/browse/partials/_academic-discipline.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Academic Discipline
+//   3. List
+//     3.1. Sublist
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.browse__academic-discipline';
+
+
+
+
+
+// ****************************** //
+// *** 2. ACADEMIC DISCIPLINE *** //
+// ****************************** //
+
+#{$class} {
+  padding: 2rem;
+}
+
+
+
+
+
+// *************** //
+// *** 3. LIST *** //
+// *************** //
+
+#{$class}--list {
+  color: var(--search-color-grey-600);
+  @include media.breakpoint('sm') {
+    columns: 2;
+    column-gap: 2rem;
+  }
+  & > li {
+    break-inside: avoid;
+    & + li {
+      margin-top: 2rem;
+    }
+  }
+}
+
+
+
+//                * //
+// * 3.1. SUBLIST * //
+//                * //
+
+#{$class}--sublist {
+  font-size: 0.9em;
+  margin-left: 1rem;
+  &-item {
+    margin-top: 0.5rem;
+  }
+}

@@ -57,6 +57,10 @@ class Search::Presenters::Page
       result.display_uri.to_s
     end
 
+    def browse
+      Search::Presenters::Browse.new(datastore: @slug)
+    end
+
     def pagination
       @results.pagination
     end
