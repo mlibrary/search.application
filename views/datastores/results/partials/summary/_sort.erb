@@ -1,14 +1,4 @@
 <%
-  sort_options = {
-    "relevance" => "Relevance",
-    "date_asc" => "Published/Created Date (oldest first)",
-    "date_desc" => "Published/Created Date (newest first)",
-    "author_asc" => "Author (A-Z)",
-    "author_desc" => "Author (Z-A)",
-    "date_added" => "Date added (Newest First)",
-    "title_asc" => "Title (A-Z)",
-    "title_desc" => "Title (Z-A)"
-  }
   uri = Addressable::URI.parse(request.fullpath)
   params_hash = uri.query_hash
 %>
@@ -27,8 +17,8 @@
   <% end %>
   <label for="sort__select" class="sort__label">Sort by</label>
   <select name="sort" class="sort__select" id="sort__select" autocomplete="off">
-    <% sort_options.each do |key, value| %>
-      <option value="<%= key %>" <%= "selected" if (params_hash["sort"]&.first == key) %>><%= value %></option>
+    <% @presenter.sort_options.each do |option| %>
+      <option value="<%= option.uid %>" <%= option.selected %>><%= option.name %></option>
     <% end %>
   </select>
   <button type="submit" class="sort__submit hide__javascript">Apply</button>
