@@ -1,4 +1,11 @@
 <article class="container__rounded everything-results__datastore">
   <%= erb :"datastores/results/partials/everything/datastore/_description", locals: { datastore: datastore.slug } %>
-  <%= datastore.slug %>
+  <% if datastore.respond_to?(:results) && datastore.results.length > 0 %>
+    <% if datastore.slug == "articles" %>
+      <%= erb :"datastores/results/partials/results-list/_keyword-switch" %>
+    <% end %>
+    RESULTS
+  <% else %>
+    <%= erb :"datastores/results/partials/everything/datastore/_no-results", locals: { datastore: datastore.slug } %>
+  <% end %>
 </article>

@@ -1,0 +1,43 @@
+@use '../../../../utilities';
+
+// --------------------------------------------------
+//
+// # Keyword Switch
+//   Styles to apply directly to `views/datastores/results/partials/results-list/_keyword-switch.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Container
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.results__list-item--keyword-switch';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} {
+  @include utilities.flex($align: baseline);
+  border-left: 4px solid var(--color-maize-400);
+  padding: 0.5rem;
+  .material-symbols-rounded {
+    color: var(--color-maize-400);
+    position: relative;
+    top: 0.25rem;
+  }
+  #{$class}-content {
+    & > * {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+  }
+}

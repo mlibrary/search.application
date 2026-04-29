@@ -1,1 +1,8 @@
-No results.
+<p><span class="strong">No results</span> match your search.</p>
+<% if datastore == "catalog" %>
+  <p>Place an <%= link_to(body: "Interlibrary Loan request", url: "https://ill.lib.umich.edu/") %> if you need something we don't have. We'll get it from another institution.</p>
+<% elsif datastore == "databases" %>
+  <p>Try our <%= link_to(body: "Browse Databases page", url: "/#{datastore}/browse") %> to view all titles alphabetically or by academic discipline.</p>
+<% elsif datastore == "onlinejournals" %>
+  <p>Try our <%= link_to(body: "Browse Online Journals page", url: "/#{datastore}/browse") %> to view all titles alphabetically or by academic discipline.</p>
+<% end %>
