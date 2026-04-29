@@ -1,0 +1,18 @@
+@use './datastore/description';
+
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/results/partials/everything/_datastore.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   1. Datastore
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.everything-results__datastore';

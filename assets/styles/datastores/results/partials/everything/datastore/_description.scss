@@ -1,0 +1,35 @@
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/results/partials/everything/datastore/_description.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   1. Description
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.everything-results__datastore--description';
+
+
+
+
+
+// ********************** //
+// *** 2. DESCRIPTION *** //
+// ********************** //
+
+#{$class} {
+  background: var(--search-color-blue-200);
+  padding: .75rem 1rem;
+  & > *:first-child {
+    margin-top: 0;
+  }
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+}

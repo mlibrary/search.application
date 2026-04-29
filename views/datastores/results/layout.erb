@@ -35,4 +35,15 @@
       <% end %>
     </section>
   </div>
+<% else %>
+  <section class="container everything-results__container">
+    <% @datastores.each_with_index do |datastore, index| %>
+      <% if index == 3 %>
+        <%= erb :"datastores/results/partials/results-list/_specialists" %>
+      <% end %>
+      <% if datastore.slug != "everything" %>
+        <%= erb :"datastores/results/partials/everything/_datastore", locals: { datastore: datastore } %>
+      <% end %>
+    <% end %>
+  </section>
 <% end %>

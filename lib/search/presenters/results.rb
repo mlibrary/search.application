@@ -71,3 +71,9 @@ class Search::Presenters::Results::Catalog
     end
   end
 end
+
+class Search::Presenters::Results::Everything
+  def self.for(uri)
+    new()
+  end
+end
