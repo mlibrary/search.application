@@ -46,7 +46,8 @@ class Search::Models::Results::Catalog
       offset: ((current_page - 1) * limit),
       limit: limit,
       query: query_values["query"] || "",
-      filters: get_filters(qh)
+      filters: get_filters(qh),
+      sort: query_values["sort"] || "relevance"
     }
 
     params[:ht_search_only] = true if ht_search_only(qh)
