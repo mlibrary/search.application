@@ -44,6 +44,10 @@ class Search::Presenters::Page
       @results.active_filters
     end
 
+    def sort_options
+      @results.sort_options
+    end
+
     def boolean_filters
       @results.boolean_filters
     end

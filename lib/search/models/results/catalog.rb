@@ -34,19 +34,20 @@ class Search::Models::Results::Catalog
   end
 
   def self.for(uri)
-    qh = uri.query_hash
-    current_page = (qh["page"] || 1).to_i
+    qh = uri.query_hash # duplicate values can be arrays
+    query_values = uri.query_values # flattens duplicate values
 
-    limit = (qh["limit"] || 10).to_i
+    current_page = (query_values["page"] || 1).to_i
 
-    qh["query"] || ""
+    limit = (query_values["limit"] || 10).to_i
     get_filters(qh)
 
     params = {
       offset: ((current_page - 1) * limit),
       limit: limit,
-      query: qh["query"] || "",
-      filters: get_filters(qh)
+      query: query_values["query"] || "",
+      filters: get_filters(qh),
+      sort: query_values["sort"] || "relevance"
     }
 
     params[:ht_search_only] = true if ht_search_only(qh)
