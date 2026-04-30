@@ -1,9 +1,31 @@
+<%
+  # Get the current URL path
+  current_path = request.path
+  # Get the `query` parameter from the URL, if it exists
+  query = params[:query]
+  # Check if `everything` search
+  is_everything = current_path.include?("everything")
+  is_contains = query.include?("contains:(") || query.include?("keyword:(") || !query.include?(":(")
+  link_text = is_everything ? "Try an Articles search that contains these terms." : "Broaden your search to include items that contain these terms and related words."
+  
+  if is_contains
+    link_text = is_everything ? "Try an exact phrase Articles search." : "Try your search as an exact phrase search."
+  end
+%>
 <div class="results__list-item--keyword-switch">
+  <%= current_path %>
+  <%= query %>
   <span class="material-symbols-rounded" aria-hidden="true">
     info
   </span>
   <div class="results__list-item--keyword-switch-content">
-    <p>Seeing less precise results than you expected?</p>
-    <p><%= link_to(body: "Try your search as an exact phrase search.", url: "") %></p>
+    <p>
+      <% if !is_everything && is_contains %>
+        Seeing less precise results than you expected?
+      <% else %>
+        Not seeing the results you expected?
+      <% end %>
+    </p>
+    <p><%= link_to(body: link_text, url: "#{current_path}?exact=true") %></p>
   </div>
 </div>
