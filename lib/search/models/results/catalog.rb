@@ -52,7 +52,7 @@ class Search::Models::Results::Catalog
 
     params[:ht_search_only] = true if ht_search_only(qh)
 
-    data = Search::Clients::CatalogAPI.new.get_results(**params)
+    data = Search::Clients::CatalogAPI.new.get_catalog_results(**params)
     new(data: data, originating_uri: uri)
   end
 
