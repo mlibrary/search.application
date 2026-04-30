@@ -21,6 +21,17 @@ class Search::Presenters::Results::Catalog
     "region",
     "collection"
   ]
+
+  SORT_OPTIONS = [
+    {uid: "relevance", name: "Relevance"},
+    {uid: "date_asc", name: "Published/Created Date (oldest first)"},
+    {uid: "date_desc", name: "Published/Created Date (newest first)"},
+    {uid: "author_asc", name: "Author (A-Z)"},
+    {uid: "author_desc", name: "Author (Z-A)"},
+    {uid: "date_added", name: "Date added (Newest First)"},
+    {uid: "title_asc", name: "Title (A-Z)"},
+    {uid: "title_desc", name: "Title (Z-A)"}
+  ]
   def self.for(uri)
     results_model_instance = Search::Models::Results::Catalog.for(uri)
     new(results_model_instance)
@@ -65,9 +76,34 @@ class Search::Presenters::Results::Catalog
     @results.pagination
   end
 
+  def sort_options
+    SORT_OPTIONS.map do |option|
+      SortOption.new(**option, uri: @results.originating_uri)
+    end
+  end
+
   def records
     @results.records.map do |record|
       Search::Presenters::Record::Catalog::Brief.new(record)
+    end
+  end
+
+  class SortOption
+    attr_reader :uid, :name
+    def initialize(uid:, name:, uri:)
+      @uid = uid
+      @name = name
+      @uri = uri
+    end
+
+    def selected
+      # This will take the first of the sort matches
+      sort_value = (@uri.query_values || {})["sort"]
+      if (sort_value.nil? && uid == "relevance") || sort_value == uid
+        "selected"
+      else
+        ""
+      end
     end
   end
 end
