@@ -12,7 +12,7 @@ describe Search::Actions::Email::Worker::Record do
       catalog: [bib_id]
     }
 
-    stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
+    stub_request(:get, "#{S.catalog_api_url}/catalog/records/#{bib_id}")
       .to_return(status: 200, body: api_resp_body.to_json, headers: {content_type: "application/json"})
 
     described_class.new.perform("from@default.invalid", "to@default.invalid", data)
@@ -39,7 +39,7 @@ describe Search::Actions::Email::Worker::List do
       catalog: [bib_id]
     }
 
-    stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
+    stub_request(:get, "#{S.catalog_api_url}/catalog/records/#{bib_id}")
       .to_return(status: 200, body: api_resp_body.to_json, headers: {content_type: "application/json"})
 
     described_class.new.perform("from@default.invalid", "to@default.invalid", data)

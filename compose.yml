@@ -91,7 +91,7 @@ services:
       - python
       - -m
       - uvicorn
-      - catalog_api.main:app
+      - api.main:app
       - --host
       - 0.0.0.0
   parser:
