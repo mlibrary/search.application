@@ -13,12 +13,12 @@ module Search
         end
       end
 
-      def get_record(id)
-        @conn.get("records/#{id}").body
+      def get_catalog_record(id)
+        @conn.get("catalog/records/#{id}").body
       end
 
-      def get_results(limit: 10, offset: 0, query: "*", filters: [], ht_search_only: false, sort: "")
-        @conn.get("search", offset: offset, limit: limit, query: query, ht_search_only: ht_search_only, filters: filters, sort: sort).body
+      def get_catalog_results(limit: 10, offset: 0, query: "*", filters: [], ht_search_only: false, sort: "")
+        @conn.get("catalog/search", offset: offset, limit: limit, query: query, ht_search_only: ht_search_only, filters: filters, sort: sort).body
       end
     end
   end

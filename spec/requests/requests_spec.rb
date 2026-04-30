@@ -102,7 +102,7 @@ RSpec.describe "requests" do
   end
   context "catalog search results" do
     it "shows the results page when there is a query parameter" do
-      stub_request(:get, "#{S.catalog_api_url}/search?offset=0&query=title:(test)&limit=10&filters=library:aa&ht_search_only=false&sort=relevance")
+      stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=0&query=title:(test)&limit=10&filters=library:aa&ht_search_only=false&sort=relevance")
         .to_return(status: 200, body: base_results.to_json, headers: {content_type: "application/json"})
       get "/catalog?query=title:(test)"
       expect(last_response.body).to include("Catalog results")
@@ -170,7 +170,7 @@ RSpec.describe "requests" do
       bib_id = "9912345"
       data = base_api_record
       call_number = data["call_number"][0]["text"]
-      stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
+      stub_request(:get, "#{S.catalog_api_url}/catalog/records/#{bib_id}")
         .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
       stub_request(:get, "#{S.catalog_browse_url}/carousel?query=#{call_number}")
         .to_return(status: 200, body: [], headers: {})
@@ -217,7 +217,7 @@ RSpec.describe "requests" do
       data = base_api_record
       bib_id = data["id"]
       data["citation"] = citation["citation"]
-      stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
+      stub_request(:get, "#{S.catalog_api_url}/catalog/records/#{bib_id}")
         .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
       get "/catalog/record/#{bib_id}/ris"
       expect(last_response.headers["Content-Type"]).to eq("application/x-research-info-systems")
@@ -225,7 +225,7 @@ RSpec.describe "requests" do
     end
     it "redirects to past activity when there is network timeout" do
       bib_id = "9912345"
-      stub_request(:get, "#{S.catalog_api_url}/records/#{bib_id}")
+      stub_request(:get, "#{S.catalog_api_url}/catalog/records/#{bib_id}")
         .to_timeout
       get "/catalog/record/#{bib_id}/ris"
       expect(last_response.status).to eq(302)
