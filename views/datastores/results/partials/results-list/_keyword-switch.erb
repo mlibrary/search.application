@@ -5,16 +5,18 @@
   query = params[:query]
   # Check if `everything` search
   is_everything = current_path.include?("everything")
-  is_contains = query.include?("contains:(") || query.include?("keyword:(") || !query.include?(":(")
+  has_option = query.include?(":(")
+  is_contains = query.include?("contains:(") || query.include?("keyword:(") || !has_option
   link_text = is_everything ? "Try an Articles search that contains these terms." : "Broaden your search to include items that contain these terms and related words."
-  
+
   if is_contains
     link_text = is_everything ? "Try an exact phrase Articles search." : "Try your search as an exact phrase search."
   end
+
+  stripped_query = has_option ? query[(query.index('(') + 1)..-2] : query
+  updated_query = query.include?("exact:(") ? stripped_query : "exact:(#{stripped_query})"
 %>
 <div class="results__list-item--keyword-switch">
-  <%= current_path %>
-  <%= query %>
   <span class="material-symbols-rounded" aria-hidden="true">
     info
   </span>
@@ -26,6 +28,6 @@
         Not seeing the results you expected?
       <% end %>
     </p>
-    <p><%= link_to(body: link_text, url: "#{current_path}?exact=true") %></p>
+    <p><%= link_to(body: link_text, url: "#{current_path}?query=#{updated_query}") %></p>
   </div>
 </div>
