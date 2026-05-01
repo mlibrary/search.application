@@ -110,6 +110,6 @@ end
 
 class Search::Presenters::Results::Everything
   def self.for(uri)
-    new()
+    new
   end
 end

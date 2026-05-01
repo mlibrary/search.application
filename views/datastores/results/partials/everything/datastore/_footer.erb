@@ -1,0 +1,8 @@
+<%= link_to(
+  body: "
+    <span class=\"everything-results__datastore--footer-text\">View all #{datastore.title} results</span>
+    <span class=\"material-symbols-rounded\" aria-hidden=\"true\">arrow_forward</span>
+  ",
+  url: "/#{datastore.slug}?query=#{params[:query]}",
+  classes: ["everything-results__datastore--footer"]
+) %>

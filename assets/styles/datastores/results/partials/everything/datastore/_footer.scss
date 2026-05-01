@@ -1,0 +1,42 @@
+@use '../../../../../utilities';
+
+// --------------------------------------------------
+//
+// # Footer
+//   Styles to apply directly to `views/datastores/results/partials/everything/datastore/_footer.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   1. Footer
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.everything-results__datastore--footer';
+
+
+
+
+
+// ***************** //
+// *** 2. FOOTER *** //
+// ***************** //
+
+#{$class} {
+  @include utilities.flex($wrap: true);
+  background: var(--search-color-grey-100);
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  &:not(:hover) {
+    text-decoration: none;
+  }
+  &:hover {
+    text-decoration: none;
+    #{$class}-text {
+      text-decoration: underline;
+    }
+  }
+}

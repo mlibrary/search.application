@@ -84,7 +84,7 @@ class Search::Presenters::Page
     end
 
     def extra_icons
-      EXTRA_ICONS
+      EXTRA_ICONS + ["arrow_forward"]
     end
   end
 end

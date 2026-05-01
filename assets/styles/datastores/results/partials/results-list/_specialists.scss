@@ -67,7 +67,6 @@ $class: '.specialists';
 
 #{$class}__list {
   @include utilities.flex($align: start, $responsive: 'xl', $wrap: true);
-  padding: 0 1rem;
   text-align: left;
 }
 
@@ -80,7 +79,7 @@ $class: '.specialists';
 #{$class}__list > #{$class}__list--item {
   @include utilities.flex($align: start);
   flex: 1 1 0;
-  padding: 1rem 0;
+  padding: 1rem;
   width: 100%;
   @include media.breakpoint('xl') {
     max-width: calc(33.333% - 2rem);

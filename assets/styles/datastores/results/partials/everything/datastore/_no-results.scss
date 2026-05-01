@@ -1,0 +1,34 @@
+// --------------------------------------------------
+//
+// # No Results
+//   Styles to apply directly to `views/datastores/results/partials/everything/datastore/_no-results.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   1. No Results
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.everything-results__datastore--no-results';
+
+
+
+
+
+// ********************* //
+// *** 2. NO RESULTS *** //
+// ********************* //
+
+#{$class} {
+  padding: 1rem;
+  & > *:first-child {
+    margin-top: 0;
+  }
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+}

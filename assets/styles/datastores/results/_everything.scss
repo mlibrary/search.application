@@ -1,3 +1,4 @@
+@use '../../media';
 @use './partials/everything/datastore';
 
 // --------------------------------------------------
@@ -26,5 +27,16 @@ $class: '.everything-results__container';
 // ******************** //
 
 #{$class} {
+  align-items: start;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(0, 100%));
+  justify-content: center;
   max-width: 100%;
+  @include media.breakpoint('sm') {
+    grid-template-columns: repeat(auto-fit, minmax(0, calc(50% - 1rem)));
+  }
+  @include media.breakpoint('lg') {
+    grid-template-columns: repeat(auto-fit, minmax(0, 20rem));
+  }
 }

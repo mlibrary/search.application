@@ -1,4 +1,7 @@
+@use './datastore/header';
 @use './datastore/description';
+@use './datastore/no-results';
+@use './datastore/footer';
 
 // --------------------------------------------------
 //
@@ -16,3 +19,15 @@
 // ******************** //
 
 $class: '.everything-results__datastore';
+
+
+
+
+
+// ******************** //
+// *** 2. DATASTORE *** //
+// ******************** //
+
+#{$class} {
+  overflow: hidden;
+}
