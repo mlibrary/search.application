@@ -1,3 +1,44 @@
+<%
+  fake_data = JSON.parse('{
+    "id": "1337",
+    "title": [
+      {
+        "original": {
+          "text": "Original Title"
+        },
+        "transliterated": {
+          "text": "Transliterated Title"
+        }
+      }
+    ],
+    "published": [
+      {
+        "transliterated": {
+          "text": "Original Data"
+        },
+        "original": {
+          "text": "Transliterated Data"
+        }
+      }
+    ],
+    "holdings": {
+      "alma_digital_items": [],
+      "electronic_items": [],
+      "physical": []
+    }
+  }')
+  results = []
+  # Add results to datastore
+  if datastore.slug == "articles"
+    datastore.define_singleton_method(:results) do
+      results = [
+        Search::Presenters::Record::Catalog::Brief.new(
+          Search::Models::Record::Catalog.new(fake_data)
+        )
+      ]
+    end
+  end
+%>
 <article class="container__rounded everything-results__datastore">
     <%= erb :"datastores/results/partials/everything/datastore/_header", locals: { datastore: datastore } %>
   <%= erb :"datastores/results/partials/everything/datastore/_description", locals: { datastore: datastore.slug } %>
@@ -5,7 +46,23 @@
     <% if datastore.slug == "articles" %>
       <%= erb :"datastores/results/partials/results-list/_keyword-switch" %>
     <% end %>
-    RESULTS
+    <ol class="list__no-style everything-results__datastore--results">
+      <% results.each do |result| %>
+        <li class="everything-results__datastore--results-item">
+          <h3 class="h5 results__list-item--title">
+            <span class="results__list-item--title-truncate">
+              <%= link_to(body: result.title.first.text, url: result.url, classes: ["results__list-item--title-original"]) %>
+            </span>
+            <% if result.title.second %>
+              <span class="h5 results__list-item--title-truncate results__list-item--title-transliterated">
+                <%= result.title.second.text %>
+              </span>
+            <% end %>
+          </h3>
+          <%= erb :"/datastores/partials/_metadata", locals: { metadata: result.metadata } %>
+        </li>
+      <% end %>
+    </ol>
     <%= erb :"datastores/results/partials/everything/datastore/_footer", locals: { datastore: datastore } %>
   <% else %>
     <%= erb :"datastores/results/partials/everything/datastore/_no-results", locals: { datastore: datastore } %>

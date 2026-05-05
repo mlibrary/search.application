@@ -36,6 +36,7 @@
     </section>
   </div>
 <% else %>
+  <h2 class="visually-hidden"><%= @presenter.page_title %> Results</h2>
   <section class="container everything-results__container">
     <% @datastores.each_with_index do |datastore, index| %>
       <% if index == 3 %>
