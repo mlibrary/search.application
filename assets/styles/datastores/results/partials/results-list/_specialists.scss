@@ -52,6 +52,9 @@ $class: '.specialists';
   justify-content: space-between;
   padding: 1rem;
   text-align: left;
+  @media print {
+    padding: 1rem 0;
+  }
   & > * {
     flex: 0 0 auto;
     margin: 0;
@@ -85,6 +88,9 @@ $class: '.specialists';
   @include utilities.flex($align: start);
   padding: 1rem;
   width: 100%;
+  @media print {
+    padding: 1rem 0;
+  }
   & + #{$class}__list--item {
     border-top: 1px solid var(--search-color-grey-400);
     @container (min-width: 52rem) {

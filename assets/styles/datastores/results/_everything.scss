@@ -28,14 +28,24 @@ $class: '.everything-results__container';
 
 #{$class} {
   max-width: 100%;
-  @include media.breakpoint('xs') {
-    align-items: start;
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(2, 1fr);
-    justify-content: center;
+  @media only screen {
+    @include media.breakpoint('xs') {
+      align-items: start;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(2, 1fr);
+      justify-content: center;
+    }
+    @include media.breakpoint('lg') {
+      grid-template-columns: repeat(auto-fit, minmax(0, 20rem));
+    }
   }
-  @include media.breakpoint('lg') {
-    grid-template-columns: repeat(auto-fit, minmax(0, 20rem));
+  @media print {
+    & > * {
+      page-break-inside: avoid;
+    }
+    & > * + * {
+      margin-top: 1rem;
+    }
   }
 }

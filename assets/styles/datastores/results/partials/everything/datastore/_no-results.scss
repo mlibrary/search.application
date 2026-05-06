@@ -25,6 +25,9 @@ $class: '.everything-results__datastore--no-results';
 
 #{$class} {
   padding: 1rem;
+  @media print {
+    padding: 1rem 0;
+  }
   & > *:first-child {
     margin-top: 0;
   }

@@ -30,9 +30,15 @@ $class: '.everything-results__datastore--header';
   background: var(--search-color-blue-400);
   justify-content: space-between;
   padding: 0.5rem 1rem;
+  @media print {
+    background: none;
+    padding: 0.5rem 0;
+  }
   &,
   & * {
-    color: white;
+    @media only screen {
+      color: white;
+    }
     margin: 0;
   }
 }

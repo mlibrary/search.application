@@ -45,6 +45,9 @@ $class: '.everything-results__datastore';
   & > li {
     border-top: 1px solid var(--search-color-grey-400);
     padding: 1rem;
+    @media print {
+      padding: 1rem 0;
+    }
     th {
       clip-path: rect(1px 1px 1px 1px);
       height: 1px;

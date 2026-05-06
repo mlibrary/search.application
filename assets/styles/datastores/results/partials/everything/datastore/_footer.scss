@@ -30,6 +30,9 @@ $class: '.everything-results__datastore--footer';
   background: var(--search-color-grey-100);
   justify-content: space-between;
   padding: 0.5rem 1rem;
+  @media print {
+    padding: 0.5rem 0;
+  }
   &:not(:hover) {
     text-decoration: none;
   }
