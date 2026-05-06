@@ -118,7 +118,7 @@ services:
   js:
     build:
       context: .
-      target: development
+      target: assets
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
@@ -133,7 +133,7 @@ services:
   css:
     build:
       context: .
-      target: development
+      target: assets
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
