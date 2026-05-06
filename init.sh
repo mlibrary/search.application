@@ -13,11 +13,14 @@ fi
 echo "🚢 Build docker images"
 docker compose build
 
+echo "⬇️ Pull dependent service images"
+docker compose pull
+
 echo "📦 Installing Gems"
 docker compose run --rm app bundle
 
 echo "📦 Installing Node modules"
-docker compose run --rm web npm install
+docker compose run --rm js npm install
 
 echo "📦 Building js and css"
-docker compose run --rm web npm run build
+docker compose run --rm js npm run build

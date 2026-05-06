@@ -1,12 +1,36 @@
 ################################################################################
+# Node Assets
+################################################################################
+FROM node:25.9.0@sha256:c69f4e0640e5b065f2694579793e4309f1e0e49868b0f2fea29c44d9c0dc2caf AS assets
+
+# Use non-root "app" user in directory /app
+ARG UID=1000
+ARG GID=1000
+
+RUN groupadd -g ${GID} -o app
+RUN useradd -m -d /app -u ${UID} -g ${GID} -o -s /bin/bash app
+
+USER app
+
+WORKDIR /app
+
+# Install packages
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY eslint.config.js ./
+COPY ./assets ./assets
+COPY ./test ./test
+
+RUN npm run build
+
+################################################################################
 # BASE
 ################################################################################
 FROM ruby:4.0-slim AS base
 
 ARG UID=1000
 ARG GID=1000
-ARG NODE_MAJOR=lts
-
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   build-essential \
@@ -17,13 +41,6 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   vim\
   git
 
-
-RUN mkdir -p /etc/apt/keyrings
-RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends nodejs
-
-RUN npm install -g npm
 
 RUN groupadd -g ${GID} -o app
 RUN useradd -m -d /app -u ${UID} -g ${GID} -o -s /bin/bash app
@@ -70,6 +87,5 @@ USER app
 
 RUN bundle install
 
-RUN npm ci
-RUN npm run build
-
+COPY --chown=${UID}:{GID} --from=assets /app/public/scripts /app/public/scripts
+COPY --chown=${UID}:{GID} --from=assets /app/public/styles /app/public/styles
