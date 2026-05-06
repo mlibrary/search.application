@@ -1,0 +1,51 @@
+@use '../../media';
+@use './partials/everything/datastore';
+
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/results/_everything.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   1. Container
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.everything-results__container';
+
+
+
+
+
+// ******************** //
+// *** 2. CONTAINER *** //
+// ******************** //
+
+#{$class} {
+  max-width: 100%;
+  @media only screen {
+    @include media.breakpoint('xs') {
+      align-items: start;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(2, 1fr);
+      justify-content: center;
+    }
+    @include media.breakpoint('lg') {
+      grid-template-columns: repeat(auto-fit, minmax(0, 20rem));
+    }
+  }
+  @media print {
+    & > * {
+      page-break-inside: avoid;
+    }
+    & > * + * {
+      margin-top: 1rem;
+    }
+  }
+}

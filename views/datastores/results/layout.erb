@@ -35,4 +35,18 @@
       <% end %>
     </section>
   </div>
+<% else %>
+  <h2 class="visually-hidden"><%= @presenter.page_title %> Results</h2>
+  <section class="container everything-results__container">
+    <% @datastores.each_with_index do |datastore, index| %>
+      <% if index == 3 %>
+        <div class="container__rounded everything-results__specialists">
+          <%= erb :"datastores/results/partials/results-list/_specialists" %>
+        </div>
+      <% end %>
+      <% if datastore.slug != "everything" %>
+        <%= erb :"datastores/results/partials/everything/_datastore", locals: { datastore: datastore } %>
+      <% end %>
+    <% end %>
+  </section>
 <% end %>

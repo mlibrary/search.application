@@ -144,18 +144,25 @@ class Search::Application < Sinatra::Base
       end
     else
       get "/#{datastore.slug}" do
-        headers "metrics.datastore" => datastore.slug, "metrics.route" => "static_page"
-        Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
-        @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
-        erb :"datastores/layout", layout: :layout do
-          erb :"datastores/#{datastore.slug}"
+        if params.any?
+          @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: full_uri, patron: @patron)
+          erb :"datastores/results/layout", layout: :layout do
+            erb :"datastores/results/#{datastore.slug}"
+          end
+        else
+          headers "metrics.datastore" => datastore.slug, "metrics.route" => "static_page"
+          Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
+          @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: full_uri, patron: @patron)
+          erb :"datastores/layout", layout: :layout do
+            erb :"datastores/#{datastore.slug}"
+          end
         end
       end
     end
     if datastore.slug == "onlinejournals" || datastore.slug == "databases"
       get "/#{datastore.slug}/browse" do
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "browse"
-        @presenter = Search::Presenters.for_datastore_browse(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+        @presenter = Search::Presenters.for_datastore_browse(slug: datastore.slug, uri: full_uri, patron: @patron)
         erb :"datastores/browse/layout", layout: :layout do
           erb :"datastores/browse/#{datastore.slug}"
         end
@@ -164,7 +171,7 @@ class Search::Application < Sinatra::Base
     if datastore.slug == "everything"
       get "/#{datastore.slug}/list" do
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "list"
-        @presenter = Search::Presenters.for_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+        @presenter = Search::Presenters.for_list(slug: datastore.slug, uri: full_uri, patron: @patron)
         erb :"datastores/list/layout", layout: :layout do
           erb :"datastores/list/#{datastore.slug}"
         end

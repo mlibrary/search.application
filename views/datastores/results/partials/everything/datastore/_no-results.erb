@@ -1,0 +1,8 @@
+<div class="everything-results__datastore--no-results">
+  <p><span class="strong">No results</span> match your search.</p>
+  <% if datastore.slug == "catalog" %>
+    <p>Place an <%= link_to(body: "Interlibrary Loan request", url: "https://ill.lib.umich.edu/") %> if you need something we don't have. We'll get it from another institution.</p>
+  <% elsif datastore.slug == "databases" || datastore.slug == "onlinejournals" %>
+    <p>Try our <%= link_to(body: "Browse #{datastore.title} page", url: "/#{datastore.slug}/browse") %> to view all titles alphabetically or by academic discipline.</p>
+  <% end %>
+</div>

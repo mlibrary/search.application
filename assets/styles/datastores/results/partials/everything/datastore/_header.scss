@@ -1,0 +1,44 @@
+@use '../../../../../utilities';
+
+// --------------------------------------------------
+//
+// # Header
+//   Styles to apply directly to `views/datastores/results/partials/everything/datastore/_header.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   1. Header
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.everything-results__datastore--header';
+
+
+
+
+
+// ***************** //
+// *** 2. HEADER *** //
+// ***************** //
+
+#{$class} {
+  @include utilities.flex($wrap: true);
+  background: var(--search-color-blue-400);
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  @media print {
+    background: none;
+    padding: 0.5rem 0;
+  }
+  &,
+  & * {
+    @media only screen {
+      color: white;
+    }
+    margin: 0;
+  }
+}

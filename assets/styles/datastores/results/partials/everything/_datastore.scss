@@ -1,0 +1,60 @@
+@use './datastore/header';
+@use './datastore/description';
+@use './datastore/no-results';
+@use './datastore/footer';
+
+// --------------------------------------------------
+//
+// # Add To
+//   Styles to apply directly to `views/datastores/results/partials/everything/_datastore.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   1. Datastore
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.everything-results__datastore';
+
+
+
+
+
+// ******************** //
+// *** 2. DATASTORE *** //
+// ******************** //
+
+#{$class} {
+  overflow: hidden;
+}
+
+
+
+
+
+// ****************** //
+// *** 3. RESULTS *** //
+// ****************** //
+
+#{$class}--results {
+  border-bottom: 1px solid var(--search-color-grey-400);
+  & > li {
+    border-top: 1px solid var(--search-color-grey-400);
+    padding: 1rem;
+    @media print {
+      padding: 1rem 0;
+    }
+    th {
+      clip-path: rect(1px 1px 1px 1px);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+  }
+}
