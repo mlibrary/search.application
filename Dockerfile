@@ -5,7 +5,7 @@ FROM ruby:4.0-slim AS base
 
 ARG UID=1000
 ARG GID=1000
-ARG NODE_MAJOR=20
+ARG NODE_MAJOR=lts
 
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
