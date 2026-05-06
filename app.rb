@@ -254,7 +254,7 @@ class Search::Application < Sinatra::Base
     if library
       q_params["library"] = library
     end
-    q_params["query"] = URI.encode_www_form_component(params[:search_text])
+    q_params["query"] = params[:search_text]
 
     if option != "keyword"
       # The query gets wrapped if the selected search option is not `keyword`

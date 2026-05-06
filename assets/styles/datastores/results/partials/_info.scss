@@ -27,7 +27,7 @@ $class: '.results__info';
 // *************** //
 
 #{$class} {
-  @include utilities.flex($align: start);
+  @include utilities.flex($align: baseline);
   margin-bottom: 1rem;
 }
 
