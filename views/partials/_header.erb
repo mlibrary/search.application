@@ -25,8 +25,13 @@
     </ul>
   </nav>
 </m-website-header>
-<%= erb :'partials/header/_search' %>
-<%= erb :'partials/header/_navigation' %>
+<%
+  # Check if path does not contain "/advanced"
+  if !request.path.include?("/advanced")
+%>
+  <%= erb :'partials/header/_search' %>
+  <%= erb :'partials/header/_navigation' %>
+<% end %>
 <%= erb :'partials/header/_flint-message' %>
 <div class="logo__print">
   <%= erb :'partials/header/_logo' %>

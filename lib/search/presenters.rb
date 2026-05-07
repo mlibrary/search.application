@@ -26,6 +26,10 @@ module Search::Presenters
       Page::Static.for(slug: "404", uri: uri, patron: patron)
     end
 
+    def for_advanced_search(slug:, uri:, patron:)
+      Page::AdvancedSearch.for(slug: slug, uri: uri, patron: patron)
+    end
+
     def for_datastore(slug:, uri:, patron: nil)
       Page::DatastoreStatic.for(slug: slug, uri: uri, patron: patron)
     end
