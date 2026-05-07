@@ -5,6 +5,7 @@ require "webmock/rspec"
 require "httpx/adapters/webmock"
 require "simplecov"
 require "faker"
+require "rspec/temp_dir"
 SimpleCov.start
 
 ENV["APP_ENV"] = "test"

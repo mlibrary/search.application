@@ -38,6 +38,7 @@ group :test do
   gem "simplecov"
   gem "simplecov-lcov"
   gem "webmock"
+  gem "rspec-temp_dir"
 end
 
 group :development do
