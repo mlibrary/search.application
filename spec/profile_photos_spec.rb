@@ -29,4 +29,11 @@ describe Search::ProfilePhotos::Person do
       expect(subject.local_image_missing?).to eq(false)
     end
   end
+
+  context "#local_image_out_of_date?" do
+    it "is true when the local image is older than the date in the header of the remote image" do
+      stub_request(:head, "https://example.lib.umich.edu/staff_photos/portrait.jpg").to_return(headers: {"last-modified" => "Mon, 27 Jul 2020 11:08:13 GMT"})
+      expect(subject.local_image_out_of_date?).to eq(true)
+    end
+  end
 end
