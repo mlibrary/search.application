@@ -1,0 +1,7 @@
+<% search_options.each do |option| %>
+  <p class="viewport-container search-form__tip" data-value="<%= option.value %>">
+    <span class="search-form__tip--content">
+      <span class="strong"><%= option.group.capitalize %> Tip:</span> <%= option.tip %>
+    </span>
+  </p>
+<% end %>

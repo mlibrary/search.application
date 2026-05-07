@@ -1,0 +1,27 @@
+// --------------------------------------------------
+//
+// # Add Field
+//   Styles to apply directly to `views/advanced/partials/search-fields/_add-field.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Add Field
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".advanced-search__add-field";
+
+
+
+// ******************** //
+// *** 2. ADD FIELD *** //
+// ******************** //
+
+#{$class} {
+  margin-left: auto;
+  margin-right: auto;
+}

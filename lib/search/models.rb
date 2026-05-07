@@ -4,4 +4,5 @@ end
 require "search/models/record"
 require "search/models/results"
 require "search/models/specialists"
+require "search/models/advanced"
 require "search/models/browse"

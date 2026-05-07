@@ -1,0 +1,19 @@
+<select aria-label="<%= defined?(index) ? "Select an option for search field #{index}" : "Select an option" %>" class="search-form__inputs--select" name="search_option" autocomplete="off">
+  <% if search_options.no_optgroups? %>
+    <% search_options.each do |search_option| %>
+      <option value="<%= search_option.value %>" <%= search_options.selected_attribute(search_option.value) %>>
+        <%= search_option.text %>
+      </option>
+    <% end %>
+  <% else %>
+    <% search_options.each do |optgroup|%>
+      <optgroup label="<%= optgroup.optgroup.capitalize %> by">
+        <% optgroup.options.each do |option| %>
+          <option value="<%= option.value %>" <%=  search_options.selected_attribute(option.value) %>>
+            <%= option.text %>
+          </option>
+        <% end %>
+      </optgroup>
+    <% end %>
+  <% end %>
+</select>
