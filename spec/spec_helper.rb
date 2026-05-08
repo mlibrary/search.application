@@ -67,8 +67,12 @@ RSpec.configure do |config|
   end
 end
 
+def fixture_path
+  "./spec/fixtures"
+end
+
 def fixture(path)
-  File.read("./spec/fixtures/#{path}")
+  File.read(File.join(fixture_path, path))
 end
 
 class FakeTwilioClient
