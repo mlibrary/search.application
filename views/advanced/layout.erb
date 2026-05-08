@@ -1,6 +1,10 @@
 <div class="container advanced-search">
   <%= h1(body: @presenter.page_title) %>
   <p class="text__large">Select a search category below for associated advanced search options.</p>
-  <%= erb :"advanced/partials/_tabs", locals: { current_datastore: @presenter.current_datastore } %>
-  <%= yield %>
+  <%= erb :"advanced/partials/_tabs" %>
+  <form class="container__rounded page advanced-search__form">
+    <h2><%= @presenter.current_datastore.title %> Search</h2>
+    <%= yield %>
+    <%= erb :"advanced/partials/_button" %>
+  </form>
 </div>

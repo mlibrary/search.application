@@ -18,16 +18,16 @@ class Search::Presenters::Page
       super.push("advanced/styles.css")
     end
 
-    def page_title
-      CURRENT_PAGE
-    end
-
     def scripts
       super.push("advanced/scripts.js")
     end
 
+    def page_title
+      CURRENT_PAGE
+    end
+
     def current_datastore
-      @datastore.slug
+      @datastore
     end
 
     private
