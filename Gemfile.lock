@@ -100,6 +100,8 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mini_magick (5.3.1)
+      logger
     mini_mime (1.1.5)
     minitest (6.0.2)
       drb (~> 2.0)
@@ -356,6 +358,7 @@ DEPENDENCIES
   debug
   faker
   mail
+  mini_magick
   omniauth
   omniauth_openid_connect
   ostruct

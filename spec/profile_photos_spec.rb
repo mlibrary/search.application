@@ -9,10 +9,6 @@ describe Search::ProfilePhotos::Person do
   let(:create_local_webp_image) do
     FileUtils.touch(File.join(@specialists_dir, "emcard.webp"))
   end
-  let(:tmp_dir_path) { File.join(temp_dir, "tmp") }
-  let(:create_tmp_dir) do
-    FileUtils.mkdir(tmp_dir_path)
-  end
   subject do
     described_class.new(@data, @specialists_dir)
   end
@@ -48,40 +44,28 @@ describe Search::ProfilePhotos::Person do
       expect(subject.local_image_out_of_date?).to eq(false)
     end
   end
-  context "#pull(dir)" do
-    it "requests a download of the file to temp directory named with file extension based on content-type jpeg" do
-      create_tmp_dir
-
-      stub_request(:get, remote_photo_path)
-        .to_return(body: File.new(File.join(fixture_path, "profile_photos", "tiny.png")), status: 200, headers: {"content-type" => "image/jpeg"})
-
-      file_name = subject.pull(tmp_dir_path)
-
-      expect(File.exist?(File.join(tmp_dir_path, "source.jpg"))).to eq(true)
-      expect(file_name).to eq("source.jpg")
-    end
-    it "requests a download of the file to temp directory named with file extension based on content-type png" do
-      create_tmp_dir
-
-      stub_request(:get, remote_photo_path)
-        .to_return(body: File.new(File.join(fixture_path, "profile_photos", "tiny.png")), status: 200, headers: {"content-type" => "image/png"})
-
-      file_name = subject.pull(tmp_dir_path)
-
-      expect(File.exist?(File.join(tmp_dir_path, "source.png"))).to eq(true)
-      expect(file_name).to eq("source.png")
-    end
-  end
   context "#convert" do
-  end
-  context "#move" do
-    it "moves the webp and jpg images to the specialists directory" do
-      create_tmp_dir
-      FileUtils.touch(File.join(tmp_dir_path, "emcard.jpg"))
-      FileUtils.touch(File.join(tmp_dir_path, "emcard.webp"))
-      subject.move(tmp_dir_path)
-      expect(File.exist?(File.join(@specialists_dir, "emcard.jpg"))).to eq(true)
-      expect(File.exist?(File.join(@specialists_dir, "emcard.webp"))).to eq(true)
+    it "converts the source image to jpg and webp with uniqname names of correct dimensions" do
+      stub_request(:get, remote_photo_path)
+        .to_return(body: File.new(File.join(fixture_path, "profile_photos", "sample.png")), status: 200, headers: {"content-type" => "image/jpeg"})
+
+      subject.convert
+
+      jpg_path = File.join(@specialists_dir, "emcard.jpg")
+      webp_path = File.join(@specialists_dir, "emcard.webp")
+
+      expect(File.exist?(jpg_path)).to eq(true)
+      expect(File.exist?(webp_path)).to eq(true)
+      jpg_file = MiniMagick::Image.open(jpg_path)
+      webp_file = MiniMagick::Image.open(webp_path)
+
+      expect(jpg_file.width).to eq(128)
+      expect(jpg_file.height).to eq(150)
+      expect(jpg_file.type).to eq("JPEG")
+
+      expect(webp_file.width).to eq(128)
+      expect(webp_file.height).to eq(150)
+      expect(webp_file.type).to eq "WEBP"
     end
   end
 end

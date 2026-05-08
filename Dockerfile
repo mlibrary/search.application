@@ -39,7 +39,8 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   curl \
   gpg \
   vim\
-  git
+  git \
+  imagemagick
 
 
 RUN groupadd -g ${GID} -o app

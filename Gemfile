@@ -20,6 +20,7 @@ gem "twilio-ruby"
 gem "mail"
 gem "addressable"
 gem "debug"
+gem "mini_magick"
 
 group :metrics do
   gem "yabeda-puma-plugin"

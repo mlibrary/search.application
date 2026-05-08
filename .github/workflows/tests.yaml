@@ -9,12 +9,15 @@ jobs:
         run: cat env.* > .env
       - name: Load .env file
         uses: xom9ikk/dotenv@ac290ca23a42155a0cba1031d23afa46240116a9 #v2.3.0
-
       - name: Set up Ruby 4.0
         uses: ruby/setup-ruby@c4e5b1316158f92e3d49443a9d58b31d25ac0f8f # v1.306.0
         with:
           ruby-version: '4.0'
           bundler-cache: true
+      - name: Install ImageMagick
+        uses: mfinelli/setup-imagemagick@e5a049b136cb833d5c0474b38d166f0bdb0e4497 # v7.0.1
+        with:
+          cache: true
       - name: Run linter for Ruby
         run: bundle exec standardrb
       - name: Run tests
