@@ -1,5 +1,17 @@
 require "mini_magick"
 module Search::ProfilePhotos
+  def self.update
+    S.logger.info("Fetching profiles")
+    response = Faraday.get("https://cms.lib.umich.edu/api/solr/staff")
+    profiles = JSON.parse(response.body)
+    profiles.each do |profile|
+      Person.new(profile).update
+    end
+  rescue Faraday::Error, JSON::ParserError => e
+    puts "Failed to fetch profile photos: #{e.message}"
+    abort("Unable to fetch profile photos")
+  end
+
   class Person
     def initialize(
       data,
