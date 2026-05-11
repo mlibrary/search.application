@@ -67,5 +67,14 @@ describe Search::ProfilePhotos::Person do
       expect(webp_file.height).to eq(150)
       expect(webp_file.type).to eq "WEBP"
     end
+
+    it "handles overwriting an existing photo" do
+      stub_request(:get, remote_photo_path)
+        .to_return(body: File.new(File.join(fixture_path, "profile_photos", "sample.png")), status: 200, headers: {"content-type" => "image/jpeg"})
+      create_local_webp_image
+      subject.convert
+      webp_file = MiniMagick::Image.open(File.join(@specialists_dir, "emcard.webp"))
+      expect(webp_file.size).to be > 0
+    end
   end
 end
