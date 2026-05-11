@@ -1,5 +1,6 @@
 require "bundler"
 Bundler.require
+Bundler.require(:metrics)
 require_relative "lib/search"
 desc "Download and update profile photos"
 task :get_profile_photos do

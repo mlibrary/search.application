@@ -1,12 +1,50 @@
 require "mini_magick"
 module Search::ProfilePhotos
+  def self.configure_metrics!
+    Yabeda.configure do
+      group :search_update_profile_photos do
+        gauge :updated_count, comment: "Number of specialist images updated for this run"
+        gauge :skipped_count, comment: "Number of specialist images skipped during this run"
+        gauge :last_success, comment: "Time of last successful run of profile photo update job"
+        gauge :job_duration_seconds, comment: "Time spent running profile photo update job"
+      end
+    end
+    Yabeda.configure!
+  end
+
+  def self.metrics
+    Yabeda.search_update_profile_photos
+  end
+
+  def self.push_metrics
+    # The env var needs to be set to the push gateway url
+    if ENV["PROMETHEUS_PUSH_GATEWAY"]&.match?(URI::DEFAULT_PARSER.make_regexp)
+      Yabeda::Prometheus.push_gateway.add(Yabeda::Prometheus.registry)
+      S.logger.info("Metrics sent to the push gateway")
+    else
+      S.logger.warn("PROMETHEUS_PUSH_GATEWAY env var not set. Metrics not sent to the push gateway")
+    end
+  end
+
+  def self.print_metrics
+    Prometheus::Client::Formats::Text.marshal(Yabeda::Prometheus.registry)
+  end
+
   def self.update
-    S.logger.info("Fetching profiles")
+    start = Time.now
+    S.logger.info("start")
+    configure_metrics!
+    S.logger.info("Fetching profiles data from library website cms")
     response = Faraday.get("https://cms.lib.umich.edu/api/solr/staff")
     profiles = JSON.parse(response.body)
     profiles.each do |profile|
       Person.new(profile).update
     end
+    metrics.job_duration_seconds.set({}, Time.now - start)
+    metrics.last_success.set({}, Time.now.to_i)
+    push_metrics
+    puts print_metrics
+    S.logger.info("end")
   rescue Faraday::Error, JSON::ParserError => e
     puts "Failed to fetch profile photos: #{e.message}"
     abort("Unable to fetch profile photos")
@@ -25,8 +63,10 @@ module Search::ProfilePhotos
       if local_image_out_of_date?
         S.logger.info("update_image", uniqname: uniqname)
         convert
+        Search::ProfilePhotos.metrics.updated_count.increment
       else
         S.logger.debug("skipping_image_update", uniqname: uniqname)
+        Search::ProfilePhotos.metrics.skipped_count.increment
       end
     end
 
