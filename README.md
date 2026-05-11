@@ -1,6 +1,4 @@
-# ruby-starter
-
-Boilerplate code for starting a ruby project with docker / docker-compose
+# Library Search Application
 
 ## Set up
 
