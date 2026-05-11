@@ -1,5 +1,5 @@
 require "bundler"
-Bundler.require
+Bundler.require(:default)
 Bundler.require(:metrics)
 require_relative "lib/search"
 desc "Download and update profile photos"

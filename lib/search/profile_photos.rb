@@ -35,7 +35,7 @@ module Search::ProfilePhotos
     S.logger.info("start")
     configure_metrics!
     S.logger.info("Fetching profiles data from library website cms")
-    response = Faraday.get("https://cms.lib.umich.edu/api/solr/staff")
+    response = Faraday.get(S.profile_photo_data_url)
     profiles = JSON.parse(response.body)
     profiles.each do |profile|
       Person.new(profile).update
