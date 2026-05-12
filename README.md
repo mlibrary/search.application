@@ -1,12 +1,10 @@
-# ruby-starter
-
-Boilerplate code for starting a ruby project with docker / docker-compose
+# Library Search Application
 
 ## Set up
 
 Run the setup script
 
-```
+```bash
 ./init.sh
 ```
 
@@ -17,8 +15,18 @@ This will:
   those lines in `.git/hooks/precommit` to enable running tests.
 * build the docker image
 * install the gems
+* pull the staff photos into `public/images/specialists` (if there aren't already images in that directory)
 
 The script does not overwrite `.env` or `/git/hooks/precommit`.
+
+## Update profile photos for specialists
+
+The `init.sh` script will load the photos once if they don't already exist. To
+update photos on demand you can run the rake task in the terminal:
+
+```bash
+docker compose run --rm app rake update_profile_photos
+```
 
 ## Tests
 

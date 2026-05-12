@@ -43,6 +43,8 @@ S.register(:twilio_messaging_service_sid) do
   ENV["TWILIO_MESSAGING_SERVICE_SID"] || "twilio_messaging_service_sid"
 end
 
+S.register(:profile_photo_data_url) { ENV["PROFILE_PHOTO_DATA_URL"] || "https://cms.lib.umich.edu/api/solr/staff" }
+
 S.register(:log_stream) do
   $stdout.sync = true
   $stdout

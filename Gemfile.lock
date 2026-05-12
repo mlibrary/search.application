@@ -100,6 +100,8 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mini_magick (5.3.1)
+      logger
     mini_mime (1.1.5)
     minitest (6.0.2)
       drb (~> 2.0)
@@ -221,6 +223,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.6)
+    rspec-temp_dir (1.1.2)
+      rspec (>= 3.0)
     rubocop (1.84.2)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -354,6 +358,7 @@ DEPENDENCIES
   debug
   faker
   mail
+  mini_magick
   omniauth
   omniauth_openid_connect
   ostruct
@@ -362,6 +367,7 @@ DEPENDENCIES
   rack-test
   rackup
   rspec
+  rspec-temp_dir
   ruby-lsp
   ruby-prof
   semantic_logger
@@ -378,4 +384,4 @@ DEPENDENCIES
   yabeda-puma-plugin
 
 BUNDLED WITH
-   2.7.2
+  4.0.11
