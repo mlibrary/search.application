@@ -81,7 +81,7 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.19.4)
+    json (2.19.5)
     json-jwt (1.17.0)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -100,6 +100,8 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mini_magick (5.3.1)
+      logger
     mini_mime (1.1.5)
     minitest (6.0.2)
       drb (~> 2.0)
@@ -119,21 +121,21 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.5)
-    nokogiri (1.19.2-aarch64-linux-gnu)
+    nokogiri (1.19.3-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.2-aarch64-linux-musl)
+    nokogiri (1.19.3-aarch64-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.19.2-arm-linux-gnu)
+    nokogiri (1.19.3-arm-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.2-arm-linux-musl)
+    nokogiri (1.19.3-arm-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.19.2-arm64-darwin)
+    nokogiri (1.19.3-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.2-x86_64-darwin)
+    nokogiri (1.19.3-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.2-x86_64-linux-gnu)
+    nokogiri (1.19.3-x86_64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.2-x86_64-linux-musl)
+    nokogiri (1.19.3-x86_64-linux-musl)
       racc (~> 1.4)
     omniauth (2.1.4)
       hashie (>= 3.4.6)
@@ -202,7 +204,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    redis-client (0.28.0)
+    redis-client (0.29.0)
       connection_pool
     regexp_parser (2.11.3)
     reline (0.6.3)
@@ -221,6 +223,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.6)
+    rspec-temp_dir (1.1.2)
+      rspec (>= 3.0)
     rubocop (1.84.2)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -252,7 +256,7 @@ GEM
     securerandom (0.4.1)
     semantic_logger (4.18.0)
       concurrent-ruby (~> 1.0)
-    sidekiq (8.1.3)
+    sidekiq (8.1.4)
       connection_pool (>= 3.0.0)
       json (>= 2.16.0)
       logger (>= 1.7.0)
@@ -301,8 +305,8 @@ GEM
     tilt (2.6.1)
     timeout (0.6.0)
     tsort (0.2.0)
-    twilio-ruby (7.10.5)
-      faraday (>= 0.9, < 3.0)
+    twilio-ruby (7.10.7)
+      faraday (>= 2.0, < 3.0)
       jwt (>= 1.5, < 4.0)
       nokogiri (>= 1.6, < 2.0)
     tzinfo (2.0.6)
@@ -354,6 +358,7 @@ DEPENDENCIES
   debug
   faker
   mail
+  mini_magick
   omniauth
   omniauth_openid_connect
   ostruct
@@ -362,6 +367,7 @@ DEPENDENCIES
   rack-test
   rackup
   rspec
+  rspec-temp_dir
   ruby-lsp
   ruby-prof
   semantic_logger
@@ -378,4 +384,4 @@ DEPENDENCIES
   yabeda-puma-plugin
 
 BUNDLED WITH
-   2.7.2
+  4.0.11

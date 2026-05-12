@@ -1,0 +1,190 @@
+{
+  "uid": [
+    {
+      "value": 999999
+    }
+  ],
+  "uuid": [
+    {
+      "value": "uuid"
+    }
+  ],
+  "langcode": [
+    {
+      "value": "en"
+    }
+  ],
+  "name": [
+    {
+      "value": "emcard"
+    }
+  ],
+  "created": [
+    {
+      "value": "2020-06-22T11:09:28+00:00",
+      "format": "Y-m-d\\TH:i:sP"
+    }
+  ],
+  "changed": [
+    {
+      "value": "2026-05-06T11:44:51+00:00",
+      "format": "Y-m-d\\TH:i:sP"
+    }
+  ],
+  "default_langcode": [
+    {
+      "value": true
+    }
+  ],
+  "path": [
+    {
+      "alias": "/users/emcard",
+      "pid": 999999,
+      "langcode": "en"
+    }
+  ],
+  "field_bluesky": [],
+  "field_collecting_areas": [],
+  "field_facebook": [],
+  "field_health_sciences": [],
+  "field_instagram": [],
+  "field_languages_spoken": [
+    {
+      "value": "en"
+    }
+  ],
+  "field_linkedin": [],
+  "field_mailing_address": [
+    {
+      "langcode": "en",
+      "country_code": "US",
+      "administrative_area": "MI",
+      "locality": "Ann Arbor",
+      "dependent_locality": "",
+      "postal_code": "48109-1190",
+      "sorting_code": "",
+      "address_line1": "300 Hatcher North",
+      "address_line2": "",
+      "organization": "Library Info Tech - AIM",
+      "given_name": "Emily",
+      "additional_name": "",
+      "family_name": "Card"
+    }
+  ],
+  "field_make_profile_public": [
+    {
+      "value": true
+    }
+  ],
+  "field_media_audio": [],
+  "field_media_image": [
+    {
+      "target_id": 9999,
+      "target_type": "media",
+      "target_uuid": "some_target_uuid",
+      "url": "/media/1131"
+    }
+  ],
+  "field_name_pronunciation": [],
+  "field_office_location": [
+    {
+      "target_id": 89999,
+      "target_type": "node",
+      "target_uuid": "another_target_uuid",
+      "url": "/locations-and-hours/hatcher-library"
+    }
+  ],
+  "field_physical_address_public_": [
+    {
+      "value": false
+    }
+  ],
+  "field_slideshare": [],
+  "field_twitter": [],
+  "field_user_academic_discipline": [],
+  "field_user_department": [
+    {
+      "target_id": 7999,
+      "target_type": "node",
+      "target_uuid": "yet_another_target_uuid",
+      "url": "/about-us/our-divisions-and-departments/library-information-technology"
+    },
+    {
+      "target_id": 6999,
+      "target_type": "node",
+      "target_uuid": "more_target_uuids",
+      "url": "/about-us/our-divisions-and-departments/library-information-technology/automation-indexing-and"
+    }
+  ],
+  "field_user_deptid": [
+    {
+      "value": 888888
+    }
+  ],
+  "field_user_display_name": [
+    {
+      "value": "Emily Card"
+    }
+  ],
+  "field_user_email": [
+    {
+      "value": "emcard@umich.edu"
+    }
+  ],
+  "field_user_fax": [],
+  "field_user_first_name": [
+    {
+      "value": "Emily"
+    }
+  ],
+  "field_user_last_name": [
+    {
+      "value": "Card"
+    }
+  ],
+  "field_user_library_expertise": [],
+  "field_user_make_an_appointment": [],
+  "field_user_office": [
+    {
+      "value": "<p>Library Info Tech - AIM<br><br>\n300 Hatcher North<br><br>\nAnn Arbor, MI 48109-1190</p>\n",
+      "format": "filtered_html",
+      "processed": "<p>Library Info Tech - AIM<br><br><br>\n300 Hatcher North<br><br><br>\nAnn Arbor, MI 48109-1190</p>\n"
+    }
+  ],
+  "field_user_orcid_id": [],
+  "field_user_phone": [
+    {
+      "value": "999-999-9999"
+    }
+  ],
+  "field_user_photo_display": [
+    {
+      "target_id": 98765,
+      "alt": "Emily Card&#039;s Photo",
+      "title": null,
+      "width": 1958,
+      "height": 2611,
+      "target_type": "file",
+      "target_uuid": "e9d661b5-49e5-402c-9fe2-fb3171005d57",
+      "url": "https://example.lib.umich.edu/staff_photos/portrait.jpg"
+    }
+  ],
+  "field_user_pro_about": [
+    {
+      "value": "",
+      "format": "filtered_html",
+      "processed": ""
+    }
+  ],
+  "field_user_pronoun_dependent_pos": [],
+  "field_user_pronoun_independent_p": [],
+  "field_user_pronoun_object": [],
+  "field_user_pronoun_subject": [],
+  "field_user_room": [],
+  "field_user_url": [],
+  "field_user_work_title": [
+    {
+      "value": "Some job title"
+    }
+  ]
+}

@@ -20,3 +20,5 @@ require "search/models"
 require "search/presenters"
 require "search/actions"
 require "search/routes"
+
+require "search/profile_photos"
