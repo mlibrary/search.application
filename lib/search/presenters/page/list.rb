@@ -27,7 +27,7 @@ class Search::Presenters::Page
     end
 
     def actions
-      ACTIONS.reject { |action| action.uid == "link" }
+      Search::Presenters::Actions.new(["link"])
     end
 
     def show_holdings?
