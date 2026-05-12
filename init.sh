@@ -28,10 +28,10 @@ docker compose run --rm js npm run build
 echo "📦 Installing Gems"
 docker compose run --rm app bundle
 
-staff_photos_count=`find public/images/specialists/. -maxdepth 1 -type f -name *.jpg | wc -l`
-if [ $staff_photos_count != 0 ]; then
-  echo "🖼️ staff photos already exist. Not rerunning"
+specialist_photos_count=`find public/images/specialists/. -maxdepth 1 -type f -name *.jpg | wc -l`
+if [ $specialist_photos_count != 0 ]; then
+  echo "🖼️ specialist photos already exist. Not rerunning"
 else
-  echo "🖼️ pulling staff photos"
-  docker compose run --rm app rake get_profile_photos
+  echo "🖼️ pulling specialist photos"
+  docker compose run --rm app rake update_profile_photos
 fi
