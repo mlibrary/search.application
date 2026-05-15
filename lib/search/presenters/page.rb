@@ -62,6 +62,7 @@ class Search::Presenters::Page
 end
 
 require_relative "page/static"
+require_relative "page/advanced"
 require_relative "page/datastore_static"
 require_relative "page/list"
 require_relative "page/record"

@@ -1,0 +1,34 @@
+@use '../utilities';
+@use './partials/tabs';
+@use './partials/button';
+
+// --------------------------------------------------
+//
+// # Advanced Search
+//   Styling for advanced search.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Form
+//
+// --------------------------------------------------
+
+
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.advanced-search';
+
+
+
+// *************** //
+// *** 2. FORM *** //
+// *************** //
+
+#{$class}__form {
+  h2 {
+    margin-top: 0;
+  }
+}
