@@ -11,17 +11,18 @@
 //   1. Variables and Mixins
 //     1.1. Variables
 //     1.2. Mixins
-//   2. Inputs
-//     2.1. Checkboxes
-//       2.1.1. Label Wrapped
-//     2.2. Radio Buttons
-//   3. Select
-//   4. Textarea
-//   5. Buttons
-//     5.1. Primary
-//     5.2. Ghost
-//       5.2.1 Active
-//     5.3. Link
+//   2. Fieldset
+//   3. Inputs
+//     3.1. Checkboxes
+//       3.1.1. Label Wrapped
+//     3.2. Radio Buttons
+//   4. Select
+//   5. Textarea
+//   6. Buttons
+//     6.1. Primary
+//     6.2. Ghost
+//       6.2.1 Active
+//     6.3. Link
 //
 // --------------------------------------------------
 
@@ -102,8 +103,22 @@ $radius: 4px;
 
 
 
+// ******************* //
+// *** 2. FIELDSET *** //
+// ******************* //
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+
+
 // ***************** //
-// *** 2. INPUTS *** //
+// *** 3. INPUTS *** //
 // ***************** //
 
 input:not([type="checkbox"], [type="radio"]),
@@ -115,7 +130,7 @@ input:not([type="checkbox"], [type="radio"]),
 
 
 // *                * //
-// * 2.1 CHECKBOXES * //
+// * 3.1 CHECKBOXES * //
 // *                * //
 
 input[type="checkbox"] {
@@ -152,7 +167,7 @@ input[type="checkbox"] {
   }
 }
 
-// * 2.1.1. LABEL WRAPPED * //
+// * 3.1.1. LABEL WRAPPED * //
 
 .checkbox {
   @include utilities.flex($align: baseline);
@@ -169,7 +184,7 @@ input[type="checkbox"] {
 
 
 // *                   * //
-// * 2.2 RADIO BUTTONS * //
+// * 3.2 RADIO BUTTONS * //
 // *                   * //
 
 input[type="radio"] {
@@ -188,6 +203,12 @@ input[type="radio"] {
   &:disabled:checked:before {
     filter: $filter;
   }
+  @media print {
+    &:checked {
+      border-color: colors.$color-anchor;
+      border-width: 0.5rem;
+    }
+  }
 }
 
 
@@ -195,7 +216,7 @@ input[type="radio"] {
 
 
 // ***************** //
-// *** 3. SELECT *** //
+// *** 4. SELECT *** //
 // ***************** //
 
 select {
@@ -209,7 +230,7 @@ select {
 
 
 // ******************* //
-// *** 4. TEXTAREA *** //
+// *** 5. TEXTAREA *** //
 // ******************* //
 
 textarea {
@@ -222,11 +243,11 @@ textarea {
 
 
 // ****************** //
-// *** 5. BUTTONS *** //
+// *** 6. BUTTONS *** //
 // ****************** //
 
 // *             * //
-// * 5.1 PRIMARY * //
+// * 6.1 PRIMARY * //
 // *             * //
 
 button,
@@ -240,6 +261,9 @@ input[type="submit"],
     border-bottom: 3px solid var(--search-color-blue-500);
     color: $background;
     padding: 0.5rem 1rem;
+    @media print {
+      box-shadow: inset 0 0 0 100rem var(--search-color-blue-400);
+    }
   }
   &:not(:disabled):hover {
     background: var(--search-color-blue-500);
@@ -250,7 +274,7 @@ input[type="submit"],
 
 
 // *           * //
-// * 5.2 GHOST * //
+// * 6.2 GHOST * //
 // *           * //
 
 .button__ghost {
@@ -272,7 +296,7 @@ input[type="submit"],
   }
 }
 
-// * 5.2.1 ACTIVE * //
+// * 6.2.1 ACTIVE * //
 
 .button__ghost--active {
   background: var(--search-color-blue-200);
@@ -285,7 +309,7 @@ input[type="submit"],
 
 
 // *          * //
-// * 5.3 LINK * //
+// * 6.3 LINK * //
 // *          * //
 
 .button__link {

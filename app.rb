@@ -175,7 +175,7 @@ class Search::Application < Sinatra::Base
       end
     end
     get "/advanced/#{datastore.slug}" do
-      headers "metrics.datastore" => datastore.slug, "metrics.route" => "static_page"
+      headers "metrics.datastore" => datastore.slug, "metrics.route" => "advanced"
       Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
       @presenter = Search::Presenters.for_advanced_search(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
       erb :"advanced/layout", layout: :layout do

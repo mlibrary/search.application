@@ -3,7 +3,8 @@
   <p class="text__large">Select a search category below for associated advanced search options.</p>
   <%= erb :"advanced/partials/_tabs" %>
   <form class="container__rounded page advanced-search__form">
-    <h2><%= @presenter.current_datastore.title %> Search</h2>
+    <h2><%= @presenter.form_title %></h2>
+    <%= erb :"advanced/partials/_search-fields" %>
     <%= yield %>
     <%= erb :"advanced/partials/_button" %>
   </form>

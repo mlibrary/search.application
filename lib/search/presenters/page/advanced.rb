@@ -1,6 +1,7 @@
 class Search::Presenters::Page
-  class AdvancedSearch < self
+  class AdvancedSearch < DatastoreStatic
     CURRENT_PAGE = "Advanced Search"
+    EXTRA_ICONS = ["close"]
     def self.for(slug:, uri:, patron:)
       datastore = Search::Datastores.find(slug)
       new(datastore: datastore, uri: uri, patron: patron)
@@ -26,8 +27,8 @@ class Search::Presenters::Page
       CURRENT_PAGE
     end
 
-    def current_datastore
-      @datastore
+    def form_title
+      @datastore.title + " Search"
     end
 
     private
@@ -36,8 +37,8 @@ class Search::Presenters::Page
       [CURRENT_PAGE, @datastore.title]
     end
 
-    def params
-      Addressable::URI.parse(@uri).query_values || {}
+    def extra_icons
+      EXTRA_ICONS
     end
   end
 end
