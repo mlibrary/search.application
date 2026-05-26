@@ -5,7 +5,7 @@ class Search::Models::Specialists
     query_values = uri.query_values
     params = {
       query: query_values["query"] || "",
-      filters: Search::Models::Results::Catalog.get_filters(params),
+      filters: Search::Models::Results::Catalog.get_filters(uri.query_hash),
       sort: query_values["sort"] || "relevance"
     }
     ht_search_only = Search::Models::Results::Catalog.ht_search_only(uri.query_hash)
@@ -20,12 +20,12 @@ class Search::Models::Specialists
   end
 
   def specialists
-    @specialists ||= @data.map do |entry|
+    @specialists ||= @data["specialists"].map do |entry|
       OpenStruct.new(name: entry["name"], title: entry["title"], uniqname: entry["uniqname"], phone: entry["phone"])
     end
   end
 
   def each(&block)
-    @specialists.each(&block)
+    specialists.each(&block)
   end
 end
