@@ -35,15 +35,18 @@ class Search::Presenters::Results::Catalog
   def self.for(uri)
     results_model_instance = Search::Models::Results::Catalog.for(uri)
     specialists = if results_model_instance.pagination.offset == 0
-      Search::Models::Specialists::Catalog.for(uri)
+      Search::Models::Specialists.for_catalog(uri)
     else
       []
     end
     new(results_model_instance, specialists)
   end
 
+  attr_reader :specialists
+
   def initialize(results, specialists = [])
     @results = results
+    @specialists = specialists
   end
 
   def all_filters
@@ -85,9 +88,6 @@ class Search::Presenters::Results::Catalog
     SORT_OPTIONS.map do |option|
       SortOption.new(**option, uri: @results.originating_uri)
     end
-  end
-
-  def specialists
   end
 
   def records

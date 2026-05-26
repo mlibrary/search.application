@@ -6,6 +6,9 @@ RSpec.describe Search::Models::Specialists do
     expect(specialist.name).to eq("So and So")
     expect(specialist.title).to eq("Bird specialist")
     expect(specialist.phone).to eq("999-999-9999")
+    expect(specialist.uniqname).to eq("soandso")
+    expect(specialist.email).to eq("soandso@umich.edu")
+    expect(specialist.image_url).to eq("images/specialists/soandso.webp")
   end
 
   it "can get specialists for the catalog" do

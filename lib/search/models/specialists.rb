@@ -21,7 +21,14 @@ class Search::Models::Specialists
 
   def specialists
     @specialists ||= @data["specialists"].map do |entry|
-      OpenStruct.new(name: entry["name"], title: entry["title"], uniqname: entry["uniqname"], phone: entry["phone"])
+      OpenStruct.new(
+        name: entry["name"],
+        title: entry["title"],
+        uniqname: entry["uniqname"],
+        phone: entry["phone"],
+        email: "#{entry["uniqname"]}@umich.edu",
+        image_url: "images/specialists/#{entry["uniqname"]}.webp"
+      )
     end
   end
 

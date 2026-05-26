@@ -43,18 +43,18 @@
     <%= link_to(body: "Find more specialists", url: "https://www.lib.umich.edu/research-and-scholarship/help-research/find-specialist", open_in_new: true) %>
   </div>
   <ol class="list__no-style specialists__list" id="specialists__list">
-  <% specialists.each do |specialist| %>
+  <% @presenter.specialists.each do |specialist| %>
     <li class="specialists__list--item">
       <% if specialist[:img] %>
-        <img src="<%= specialist[:img] %>" alt="Image of <%= specialist[:name] %>" class="specialists__list--item-image">
+        <img src="<%= specialist.img_url %>" alt="Image of <%= specialist.name %>" class="specialists__list--item-image">
       <% end %>
       <div class="content specialists__list--item-content">
-        <h4 class="h5"><%= link_to(body: specialist[:name], url: "https://www.lib.umich.edu/users/#{specialist[:uniqname]}", open_in_new: true) %></h4>
-        <p><%= specialist[:title] %></p>
+        <h4 class="h5"><%= link_to(body: specialist.name, url: "https://www.lib.umich.edu/users/#{specialist[:uniqname]}", open_in_new: true) %></h4>
+        <p><%= specialist.title %></p>
         <% if specialist[:phone] && specialist[:phone] != "000-000-0000" %>
-          <p><%= link_to(body: specialist[:phone], url: "tel:+1-#{specialist[:phone]}") %></p>
+          <p><%= link_to(body: specialist.phone, url: "tel:+1-#{specialist.phone}") %></p>
         <% end %>
-        <p><%= link_to(body: "#{specialist[:uniqname]}@umich.edu", url: "mailto:#{specialist[:uniqname]}@umich.edu") %></p>
+        <p><%= link_to(body: "#{specialist.uniqname}@umich.edu", url: "mailto:#{specialist.uniqname}@umich.edu") %></p>
       </div>
     </li>
   <% end %>

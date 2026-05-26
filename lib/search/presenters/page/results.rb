@@ -73,6 +73,10 @@ class Search::Presenters::Page
       @results.records
     end
 
+    def specialists
+      @results.specialists
+    end
+
     def show_holdings?
       true
     end
