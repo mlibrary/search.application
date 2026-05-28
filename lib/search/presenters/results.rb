@@ -90,10 +90,30 @@ class Search::Presenters::Results::Catalog
     end
   end
 
+  def show_specialists?(index)
+    if pagination.offset == 0 && specialists_count > 0
+      index == if records_count < 3
+        records_count - 1
+      else
+        2
+      end
+    else
+      false
+    end
+  end
+
   def records
     @results.records.map do |record|
       Search::Presenters::Record::Catalog::Brief.new(record)
     end
+  end
+
+  def records_count
+    @records_count ||= @results.records.count
+  end
+
+  def specialists_count
+    @specialists_count ||= @specialists.count
   end
 
   class SortOption

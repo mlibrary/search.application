@@ -77,6 +77,10 @@ class Search::Presenters::Page
       @results.specialists
     end
 
+    def show_specialists?(index)
+      @results.show_specialists?(index)
+    end
+
     def show_holdings?
       true
     end
