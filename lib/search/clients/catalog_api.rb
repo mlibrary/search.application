@@ -20,6 +20,10 @@ module Search
       def get_catalog_results(limit: 10, offset: 0, query: "*", filters: [], ht_search_only: false, sort: "")
         @conn.get("catalog/search", offset: offset, limit: limit, query: query, ht_search_only: ht_search_only, filters: filters, sort: sort).body
       end
+
+      def get_catalog_specialists(query: "*", filters: [], ht_search_only: false, sort: "")
+        @conn.get("catalog/specialists", query: query, ht_search_only: ht_search_only, filters: filters, sort: sort).body
+      end
     end
   end
 end
