@@ -8,9 +8,9 @@
     <li class="specialists__list--item">
       <img src="<%= specialist.image_url %>" alt="Image of <%= specialist.name %>" class="specialists__list--item-image">
       <div class="content specialists__list--item-content">
-        <h4 class="h5"><%= link_to(body: specialist.name, url: "https://www.lib.umich.edu/users/#{specialist[:uniqname]}", open_in_new: true) %></h4>
+        <h4 class="h5"><%= link_to(body: specialist.name, url: "https://www.lib.umich.edu/users/#{specialist.uniqname}", open_in_new: true) %></h4>
         <p><%= specialist.title %></p>
-        <% if specialist[:phone] && specialist[:phone] != "000-000-0000" %>
+        <% if specialist.phone && specialist.phone != "000-000-0000" %>
           <p><%= link_to(body: specialist.phone, url: "tel:+1-#{specialist.phone}") %></p>
         <% end %>
         <p><%= link_to(body: "#{specialist.uniqname}@umich.edu", url: "mailto:#{specialist.uniqname}@umich.edu") %></p>
