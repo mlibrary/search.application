@@ -34,11 +34,19 @@ class Search::Presenters::Results::Catalog
   ]
   def self.for(uri)
     results_model_instance = Search::Models::Results::Catalog.for(uri)
-    new(results_model_instance)
+    specialists = if results_model_instance.pagination.offset == 0
+      Search::Models::Specialists.for_catalog(uri)
+    else
+      []
+    end
+    new(results_model_instance, specialists)
   end
 
-  def initialize(results)
+  attr_reader :specialists
+
+  def initialize(results, specialists = [])
     @results = results
+    @specialists = specialists
   end
 
   def all_filters
@@ -82,10 +90,30 @@ class Search::Presenters::Results::Catalog
     end
   end
 
+  def show_specialists?(index)
+    if pagination.offset == 0 && specialists_count > 0
+      index == if records_count < 3
+        records_count - 1
+      else
+        2
+      end
+    else
+      false
+    end
+  end
+
   def records
     @results.records.map do |record|
       Search::Presenters::Record::Catalog::Brief.new(record)
     end
+  end
+
+  def records_count
+    @records_count ||= @results.records.count
+  end
+
+  def specialists_count
+    @specialists_count ||= @specialists.count
   end
 
   class SortOption

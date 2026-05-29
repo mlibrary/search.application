@@ -64,7 +64,7 @@ class Search::Models::Results::Catalog
   end
 
   def records
-    @data["records"].map { |x| Search::Models::Record::Catalog.new(x) }
+    @records ||= @data["records"].map { |x| Search::Models::Record::Catalog.new(x) }
   end
 
   def pagination

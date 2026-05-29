@@ -96,10 +96,12 @@ module Search::ProfilePhotos
       end
 
       image.format "jpeg"
-      image.write(File.join(@local_images_directory, jpg_filename))
+      image.write(local_jpg_path)
+      FileUtils.chmod("a+r", local_jpg_path)
 
       image.format "webp"
-      image.write(File.join(@local_images_directory, webp_filename))
+      image.write(local_webp_path)
+      FileUtils.chmod("a+r", local_webp_path)
     end
 
     private
@@ -114,6 +116,10 @@ module Search::ProfilePhotos
 
     def local_webp_path
       File.join(@local_images_directory, webp_filename)
+    end
+
+    def local_jpg_path
+      File.join(@local_images_directory, jpg_filename)
     end
 
     def remote_image_address

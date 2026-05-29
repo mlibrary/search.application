@@ -1,0 +1,18 @@
+{
+  "specialists": [
+    { 
+      "name": "So and So", 
+      "title": "Bird specialist", 
+      "uniqname": "soandso", 
+      "phone": "999-999-9999", 
+      "academic_disciplines": [
+        "Name"
+      ]
+    }
+  ],
+  "academic_disciplines": [
+    { "discipline": "Name",
+      "count": "number"
+    }
+  ]
+}

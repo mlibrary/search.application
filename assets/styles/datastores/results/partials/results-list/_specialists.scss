@@ -33,6 +33,7 @@ $class: '.specialists';
 // ******************** //
 
 #{$class} {
+  container-type: inline-size;
   text-align: center;
 }
 
@@ -66,9 +67,13 @@ $class: '.specialists';
 // *************** //
 
 #{$class}__list {
-  @include utilities.flex($align: start, $responsive: 'xl', $wrap: true);
   padding: 0 1rem;
   text-align: left;
+  @container (min-width: 45rem) {
+    display: grid;
+    gap: 0.5rem 1rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 
@@ -82,12 +87,9 @@ $class: '.specialists';
   flex: 1 1 0;
   padding: 1rem 0;
   width: 100%;
-  @include media.breakpoint('xl') {
-    max-width: calc(33.333% - 2rem);
-  }
   & + #{$class}__list--item {
     border-top: 1px solid var(--search-color-grey-400);
-    @include media.breakpoint('xl') {
+    @container (min-width: 45rem) {
       border-top: none;
     }
   }

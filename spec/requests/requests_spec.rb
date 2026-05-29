@@ -104,8 +104,11 @@ RSpec.describe "requests" do
     it "shows the results page when there is a query parameter" do
       stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=0&query=title:(test)&limit=10&filters=library:aa&ht_search_only=false&sort=relevance")
         .to_return(status: 200, body: base_results.to_json, headers: {content_type: "application/json"})
+      stub_request(:get, "#{S.catalog_api_url}/catalog/specialists?&query=title:(test)&filters=library:aa&ht_search_only=false&sort=relevance")
+        .to_return(status: 200, body: fixture("results/specialists.json"), headers: {content_type: "application/json"})
       get "/catalog?query=title:(test)"
       expect(last_response.body).to include("Catalog results")
+      expect(last_response.body).to include("So and So")
     end
   end
   context "post /search" do
