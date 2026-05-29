@@ -40,7 +40,7 @@
       <span class="material-symbols-rounded" aria-hidden="true">search</span>
       <span class="visually-hidden">Search</span>
     </button>
-    <%= link_to(body: "Advanced", url: "/#{@presenter.current_datastore}/advanced", classes: ["underline__none", "strong"]) %>
+    <%= link_to(body: "Advanced", url: "/advanced/#{@presenter.current_datastore}", classes: ["underline__none", "strong"]) %>
   </div>
   <% search_options.flat_list.each do |option| %>
     <p class="viewport-container search-form__tip" data-value="<%= option.value %>">
