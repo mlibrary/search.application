@@ -1,17 +1,17 @@
 class Search::Presenters::Actions
   ACTIONS = [
-    ["email", "Email"],
-    ["text", "Text"],
-    ["citation", "Citation"],
-    ["ris", "Export&nbsp;Citation (EndNote,&nbsp;Zotero,&nbsp;etc.)"],
-    ["link", "Copy&nbsp;link"],
-    ["toggle-selected", "Toggle&nbsp;selected"]
+    {uid: "email", text: "Email"},
+    {uid: "text", text: "Text"},
+    {uid: "citation", text: "Citation"},
+    {uid: "ris", text: "Export&nbsp;Citation (EndNote,&nbsp;Zotero,&nbsp;etc.)"},
+    {uid: "link", text: "Copy&nbsp;link"},
+    {uid: "toggle-selected", text: "Toggle&nbsp;selected"}
   ]
 
   def initialize(exclude = [])
     exclude = Array(exclude)
-    @actions = ACTIONS.filter_map do |uid, text|
-      Action.new(uid: uid, text: text) unless exclude.include?(uid)
+    @actions = ACTIONS.filter_map do |a|
+      Action.new(**a) unless exclude.include?(a[:uid])
     end
   end
 
