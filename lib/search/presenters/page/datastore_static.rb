@@ -29,11 +29,11 @@ class Search::Presenters::Page
     end
 
     def actions
-      Search::Presenters::Actions.new(nil)
+      Search::Presenters::Actions.new
     end
 
     def citation
-      Search::Presenters::Actions::Action::Citation.new(nil)
+      Search::Presenters::Actions::Action::Citation.new
     end
 
     def copy_link

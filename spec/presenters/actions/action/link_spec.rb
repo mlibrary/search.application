@@ -1,7 +1,7 @@
 RSpec.describe Search::Presenters::Actions::Action::Link do
   url = "/catalog?query=example"
   before(:each) do
-    @uri = URI.parse(url)
+    @uri = Addressable::URI.parse(url)
   end
 
   subject do
@@ -14,8 +14,8 @@ RSpec.describe Search::Presenters::Actions::Action::Link do
     end
 
     it "returns the URI without query parameters if it contains `/record`" do
-      @uri = URI.parse("/record/123?query=example")
-      expect(subject.uri).to eq("/record/123")
+      @uri = Addressable::URI.parse("catalog/record/123?query=example")
+      expect(subject.uri).to eq("catalog/record/123")
     end
   end
 end

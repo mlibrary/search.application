@@ -35,7 +35,7 @@ class Search::Presenters::Actions::Action
 end
 
 class Search::Presenters::Actions::Action::Citation
-  def initialize(results)
+  def initialize(results = [])
     @results = results || []
   end
 
@@ -54,11 +54,12 @@ class Search::Presenters::Actions::Action::Link
   end
 
   def uri
-    if @uri.path.include?("/record")
+    result = if @uri.path.include?("/record")
       # Remove query parameters if the URI contains `/record`
-      Addressable::URI.parse(@uri).tap { |u| u.query = nil }.to_s
+      Addressable::URI.parse(@uri).tap { |u| u.query = nil }
     else
-      @uri.to_s
+      @uri
     end
+    result.to_s
   end
 end
