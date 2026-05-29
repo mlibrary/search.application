@@ -1,4 +1,4 @@
-class Search::Models::Advanced::Everything < Search::Models::Advanced
+class Search::Models::Advanced::Catalog < Search::Models::Advanced
   def self.for(uri)
     new(uri)
   end

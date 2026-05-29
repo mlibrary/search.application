@@ -31,6 +31,10 @@ class Search::Presenters::Page
       @datastore.title + " Search"
     end
 
+    def advanced_search_options
+      Search::Presenters::Advanced.for(datastore: @datastore.slug, uri: @uri)
+    end
+
     private
 
     def title_parts
