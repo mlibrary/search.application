@@ -48,6 +48,11 @@ class Search::Models::Record::Catalog::Holdings::Physical
       end
     end
 
+    def due_back_at
+      return if @item["due_back_at"].nil?
+      Time.parse(@item["due_back_at"])
+    end
+
     def physical_location
       PhysicalLocation.new(@item["physical_location"])
     end
