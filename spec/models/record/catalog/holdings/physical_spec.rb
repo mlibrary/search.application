@@ -119,11 +119,13 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Physical::Item do
       "call_number" => Faker::Lorem.word,
       "public_note" => Faker::Lorem.word,
       "process_type" => Faker::Lorem.word,
+      "due_back_at" => Faker::Time.between(from: Time.current, to: Time.current + 1.week).utc.iso8601,
       "item_policy" => Faker::Lorem.word,
       "description" => Faker::Lorem.word,
       "inventory_number" => Faker::Lorem.word,
       "material_type" => Faker::Lorem.word,
       "url" => Faker::Internet.url
+
     }
   end
   subject do
@@ -142,6 +144,15 @@ RSpec.describe Search::Models::Record::Catalog::Holdings::Physical::Item do
       it "returns a boolean" do
         expect(subject.physical_location.temporary?).to eq(false)
       end
+    end
+  end
+  context "#due_back_at" do
+    it "returns a time" do
+      expect(subject.due_back_at.class).to eq(Time)
+    end
+    it "returns nil if there's no due_back_at" do
+      @data.delete("due_back_at")
+      expect(subject.due_back_at).to be_nil
     end
   end
 end

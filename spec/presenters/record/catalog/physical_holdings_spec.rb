@@ -197,6 +197,16 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
             expect(subject.status.to_s).to include("On reserve at #{item.physical_location.text}")
             expect(subject.status.intent).to eq("success")
           end
+          hour_loans.each do |policy|
+            context "Policy: #{policy[:desc]}" do
+              it "returns reserves status and length of time" do
+                allow(item.physical_location.code).to receive(:location).and_return(location)
+                allow(item).to receive(:item_policy).and_return(policy[:value])
+                expect(subject.status.to_s).to include("On reserve at #{item.physical_location.text} (#{policy[:desc]})")
+                expect(subject.status.intent).to eq("success")
+              end
+            end
+          end
         end
       end
       context "temporarily located item" do
@@ -295,6 +305,7 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
     context "process_type: LOAN" do
       before(:each) do
         allow(item).to receive(:process_type).and_return("LOAN")
+        allow(item).to receive(:due_back_at).and_return(nil)
       end
       context "Basic loan" do
         it "returns Checkout out warning" do
@@ -302,22 +313,56 @@ RSpec.describe Search::Presenters::Record::Catalog::Holdings::Physical::Item do
           expect(subject.status.intent).to eq("warning")
           expect(subject.status.icon).to eq("warning")
         end
+        it "returns the due date when there is a due_back_at" do
+          allow(item).to receive(:due_back_at).and_return(Time.parse("2026-08-28"))
+          expect(subject.status.to_s).to eq("Checked out: due Aug 28, 2026")
+        end
       end
       context "reserves item" do
         # SEARCH-1444
         ["CAR", "RESI", "RESP", "RESC"].each do |location|
-          it "returns reserves success status for #{location}" do
+          before(:each) do
             allow(item.physical_location.code).to receive(:location).and_return(location)
+          end
+          it "returns reserves success status for #{location}" do
             expect(subject.status.to_s).to include("Checked out: On reserve at #{item.physical_location.text}")
             expect(subject.status.intent).to eq("warning")
+          end
+          it "returns due back date when there is a a due back" do
+            allow(item).to receive(:due_back_at).and_return(Time.parse("2026-08-28"))
+            expect(subject.status.to_s).to eq("Checked out: On reserve at #{item.physical_location.text} due Aug 28, 2026")
+            expect(subject.status.intent).to eq("warning")
+          end
+          hour_loans.each do |policy|
+            context "Policy: #{policy[:desc]}" do
+              before(:each) do
+                allow(item).to receive(:item_policy).and_return(policy[:value])
+              end
+              it "returns Checked out, and reserve info when there is no due back" do
+                expect(subject.status.to_s).to eq("Checked out: On reserve at #{item.physical_location.text} (#{policy[:desc]})")
+                expect(subject.status.intent).to eq("warning")
+              end
+              it "returns Checked out, reseve info, due back" do
+                allow(item).to receive(:due_back_at).and_return(Time.parse("2023-07-28T22:00:00Z"))
+                expect(subject.status.to_s).to eq("Checked out: On reserve at #{item.physical_location.text} due Jul 28, 2023 at 10:00 PM")
+                expect(subject.status.intent).to eq("warning")
+              end
+            end
           end
         end
       end
       hour_loans.each do |policy|
         context "Policy: #{policy[:desc]}" do
-          it "returns On shelf and length of time" do
+          before(:each) do
             allow(item).to receive(:item_policy).and_return(policy[:value])
+          end
+          it "returns Checked out and length of time" do
             expect(subject.status.to_s).to eq("Checked out: (#{policy[:desc]})")
+            expect(subject.status.intent).to eq("warning")
+          end
+          it "returns the due time when there is no due_back_at" do
+            allow(item).to receive(:due_back_at).and_return(Time.parse("2023-07-28T22:00:00Z"))
+            expect(subject.status.to_s).to eq("Checked out: due Jul 28, 2023 at 10:00 PM")
             expect(subject.status.intent).to eq("warning")
           end
         end

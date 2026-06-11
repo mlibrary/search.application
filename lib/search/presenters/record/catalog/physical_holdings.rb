@@ -166,13 +166,25 @@ class Search::Presenters::Record::Catalog::Holdings::Physical <
       if in_reading_room_library?
         Status::Success.new("Reading Room use only")
       elsif checked_out?
+        context = []
+
         if in_reserves?
-          Status::Warning.new("Checked out: On reserve at #{@item.physical_location.text}")
-        elsif hour_loan?
-          Status::Warning.new("Checked out: (#{hour_loan_policy_text})")
-        else
-          Status::Warning.new("Checked out")
+          context.push("On reserve at #{@item.physical_location.text}")
         end
+
+        if @item.due_back_at.present?
+          context.push("due #{@item.due_back_at.strftime("%b %d, %Y")}")
+          if hour_loan?
+            context.push("at #{@item.due_back_at.strftime("%l:%M %p")}")
+          end
+        elsif hour_loan?
+          context.push("(#{hour_loan_policy_text})")
+        end
+
+        context_string = context.empty? ? nil : context.join(" ")
+        text = ["Checked out", context_string].compact.join(": ")
+
+        Status::Warning.new(text)
       elsif @item.process_type.present?
         if game_work_order?
           Status::Error.new("Unavailable")
@@ -188,7 +200,9 @@ class Search::Presenters::Record::Catalog::Holdings::Physical <
           Status::Success.new("Building use only")
         end
       elsif in_reserves?
-        Status::Success.new("On reserve at #{@item.physical_location.text}")
+        text = "On reserve at #{@item.physical_location.text}"
+        text += " (#{hour_loan_policy_text})" if hour_loan?
+        Status::Success.new(text)
       elsif @item.physical_location.temporary?
         if in_language_research_center?
           Status::Error.new("Unavailable")
