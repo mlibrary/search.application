@@ -64,7 +64,7 @@ class Search::Models::Results::Catalog
   end
 
   def records
-    @records ||= @data["records"].map { |x| Search::Models::Record::Catalog.new(x) }
+    @records ||= @data["records"].each_with_index.map { |x, index| Search::Models::Record::Catalog.new(x, position: position(index)) }
   end
 
   def pagination
@@ -85,6 +85,12 @@ class Search::Models::Results::Catalog
 
   def filters
     @data["filters"].filter_map { |x| Filter.new(x) if x["values"].present? }
+  end
+
+  private
+
+  def position(index)
+    offset + index
   end
 end
 

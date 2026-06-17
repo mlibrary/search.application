@@ -25,6 +25,14 @@ module Search
       "<a #{attributes.join(" ")}>#{body}</a>"
     end
 
+    def search_result_url(entry:, request_url:)
+      result = Addressable::URI.parse(entry.url)
+      request_qv = Addressable::URI.parse(request_url).query_values(Array) || []
+      request_qv.append(["position", entry.position]) unless entry.position.nil?
+      result.query_values = request_qv
+      result.display_uri.to_s
+    end
+
     def h1(body:, classes: [], rest: nil)
       attributes = [
         "id=\"maincontent\"",

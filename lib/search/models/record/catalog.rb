@@ -15,8 +15,11 @@ class Search::Models::Record::Catalog
     new(data)
   end
 
-  def initialize(data)
+  attr_reader :position
+
+  def initialize(data, position: nil)
     @data = data
+    @position = position
   end
 
   def bib
