@@ -73,6 +73,13 @@ describe Search::Presenters::Page::Record::Pagination do
     end
   end
   context ".for" do
+    context "no position query param" do
+      it "returns Empty pagination" do
+        uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=title:(test)&&filters=library:aa&ht_search_only=false&sort=relevance")
+        subject = described_class.for(uri: uri)
+        expect(subject.class.name).to include("Empty")
+      end
+    end
     context "middle item" do
       before(:each) do
         @uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=title:(test)&&filters=library:aa&ht_search_only=false&sort=relevance&position=6")

@@ -11,14 +11,16 @@ class Search::Presenters::Page
     def self.for(slug:, uri:, patron:, record_id:)
       datastore = Search::Datastores.find(slug)
       record = Search::Presenters::Record.for_datastore(datastore: slug, id: record_id)
-      new(datastore: datastore, uri: uri, patron: patron, record: record)
+      pagination = Pagination.for(uri: uri)
+      new(datastore: datastore, uri: uri, patron: patron, record: record, pagination: pagination)
     end
 
-    def initialize(datastore:, uri:, patron:, record:)
+    def initialize(datastore:, uri:, patron:, record:, pagination:)
       @description = description
       @slug = datastore.slug
       @datastore = datastore # datastore object
       @patron = patron
+      @pagination = pagination
       @uri = uri
       @record = record
     end
@@ -59,11 +61,11 @@ class Search::Presenters::Page
 
     class Pagination
       def self.for(uri:)
-        query_values = uri.query_values # flatten duplicate values
+        query_values = uri.query_values || {} # flatten duplicate values
+        return Empty.new if query_values["position"].nil?
         position = query_values["position"].to_i
         record_id = uri.path.split("/").last
 
-        Empty.new if position.nil?
         records = []
         if position == 0
           records = Search::Models::Results::Catalog.for(uri, limit: 2, offset: 0).records
