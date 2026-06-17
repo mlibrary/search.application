@@ -355,6 +355,7 @@ DEPENDENCIES
   alma_rest_client!
   benchmark
   canister
+  concurrent-ruby
   debug
   faker
   mail

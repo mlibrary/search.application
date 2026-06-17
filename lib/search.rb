@@ -7,6 +7,7 @@ require "active_support"
 require "sidekiq"
 require "addressable"
 require "addressable_extension"
+require "concurrent"
 
 module Search
 end

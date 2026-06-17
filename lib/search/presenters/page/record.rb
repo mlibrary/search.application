@@ -8,11 +8,16 @@ class Search::Presenters::Page
       "arrow_back_ios", "arrow_forward_ios"
     ]
     attr_reader :record
+
+    extend Forwardable
+
+    def_delegators :@pagination, :next_url, :previous_url
+
     def self.for(slug:, uri:, patron:, record_id:)
       datastore = Search::Datastores.find(slug)
+      future = Concurrent::Promises.future { Pagination.for(uri: uri) }
       record = Search::Presenters::Record.for_datastore(datastore: slug, id: record_id)
-      pagination = Pagination.for(uri: uri)
-      new(datastore: datastore, uri: uri, patron: patron, record: record, pagination: pagination)
+      new(datastore: datastore, uri: uri, patron: patron, record: record, pagination: future.value)
     end
 
     def initialize(datastore:, uri:, patron:, record:, pagination:)
@@ -97,7 +102,7 @@ class Search::Presenters::Page
           path = result.path.split("/")
           path[-1] = @records[0].bib.id
           result.path = path.join("/")
-          result
+          result.display_uri.to_s
         end
       end
 
@@ -110,7 +115,7 @@ class Search::Presenters::Page
           path = result.path.split("/")
           path[-1] = @records.last.bib.id
           result.path = path.join("/")
-          result
+          result.display_uri.to_s
         end
       end
 
