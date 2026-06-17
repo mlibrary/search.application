@@ -33,17 +33,17 @@ class Search::Models::Results::Catalog
     end
   end
 
-  def self.for(uri)
+  def self.for(uri, limit: nil, offset: nil)
     qh = uri.query_hash # duplicate values can be arrays
     query_values = uri.query_values # flattens duplicate values
 
     current_page = (query_values["page"] || 1).to_i
 
-    limit = (query_values["limit"] || 10).to_i
+    limit ||= (query_values["limit"] || 10).to_i
     get_filters(qh)
 
     params = {
-      offset: ((current_page - 1) * limit),
+      offset: offset || ((current_page - 1) * limit),
       limit: limit,
       query: query_values["query"] || "",
       filters: get_filters(qh),

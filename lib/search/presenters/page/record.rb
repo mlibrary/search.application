@@ -56,5 +56,82 @@ class Search::Presenters::Page
     def extra_icons
       record.icons + EXTRA_ICONS
     end
+
+    class Pagination
+      def self.for(uri:)
+        query_values = uri.query_values # flatten duplicate values
+        position = query_values["position"].to_i
+        record_id = uri.path.split("/").last
+
+        Empty.new if position.nil?
+        records = []
+        if position == 0
+          records = Search::Models::Results::Catalog.for(uri, limit: 2, offset: 0).records
+          return Empty.new if records.count == 1 || records[0]&.bib&.id != record_id
+          if records.count == 1
+            records.append(nil)
+          end
+          records.prepend(nil)
+        else
+          records = Search::Models::Results::Catalog.for(uri, limit: 3, offset: position - 1).records
+          return Empty.new if records[1]&.bib&.id != record_id
+        end
+        new(records: records, uri: uri)
+      end
+
+      def initialize(records:, uri:)
+        @records = records
+        @uri = uri
+        @query_values = uri.query_values
+        @position = @query_values["position"].to_i
+      end
+
+      def previous_url
+        if not_first_record?
+          result = @uri.dup
+          qv = result.query_values
+          qv["position"] = @position - 1
+          result.query_values = qv
+          path = result.path.split("/")
+          path[-1] = @records[0].bib.id
+          result.path = path.join("/")
+          result
+        end
+      end
+
+      def next_url
+        unless @records[2].nil?
+          result = @uri.dup
+          qv = result.query_values
+          qv["position"] = @position + 1
+          result.query_values = qv
+          path = result.path.split("/")
+          path[-1] = @records.last.bib.id
+          result.path = path.join("/")
+          result
+        end
+      end
+
+      private
+
+      def first_record?
+        @position == 0
+      end
+
+      def not_first_record?
+        !first_record?
+      end
+
+      class Empty < self
+        def initialize
+        end
+
+        def previous_url
+        end
+
+        def next_url
+        end
+      end
+    end
   end
 end
