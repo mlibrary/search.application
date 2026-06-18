@@ -2,18 +2,16 @@
   <nav class="record-pagination" aria-label="Record pagination">
     <ul class="record-pagination__list">
       <% if @presenter.previous_url %>
-        <li class="record-pagination__list-item">
+        <li class="record-pagination__list-item record-pagination__list-item--previous">
           <a href="<%= @presenter.previous_url %>">
-            <span class="material-symbols-rounded" aria-hidden="true">arrow_back_ios</span>
-            Previous Record
+            <span class="material-symbols-rounded" aria-hidden="true">arrow_back_ios</span><span>Previous Record</span>
           </a>
         </li>
       <% end %>
       <% if @presenter.next_url %>
-        <li class="record-pagination__list-item">
+        <li class="record-pagination__list-item record-pagination__list-item--next">
           <a href="<%= @presenter.next_url %>">
-            Next Record
-            <span class="material-symbols-rounded" aria-hidden="true">arrow_forward_ios</span>
+            <span>Next Record</span><span class="material-symbols-rounded" aria-hidden="true">arrow_forward_ios</span>
           </a>
         </li>
       <% end %>
