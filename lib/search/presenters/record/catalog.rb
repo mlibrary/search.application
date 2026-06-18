@@ -111,12 +111,16 @@ module Search
             @record.bib.id
           end
 
+          def datastore
+            "catalog"
+          end
+
           def position
             @record.position
           end
 
           def url
-            "#{S.base_url}/catalog/record/#{id}"
+            "#{S.base_url}/#{datastore}/record/#{id}"
           end
 
           def title

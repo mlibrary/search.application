@@ -17,6 +17,10 @@ module Search
     module Record
       module Onlinejournals
         class Full < CATALOG_PRESENTER::Full
+          def datastore
+            "onlinejournals"
+          end
+
           def url
             "#{S.base_url}/onlinejournals/record/#{id}"
           end
@@ -36,6 +40,14 @@ module Search
             :published,
             :summary
           ]
+
+          def datastore
+            "onlinejournals"
+          end
+
+          def holdings
+            Holdings.new(@record)
+          end
         end
       end
     end
