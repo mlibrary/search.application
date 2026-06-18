@@ -1,4 +1,4 @@
-class Search::Models::Results::OnlineJournals < Search::Models::Results::Catalog
+class Search::Models::Results::Onlinejournals < Search::Models::Results::Catalog
   def self.get_filters(params)
     params.filter_map do |element|
       if element[0].match?(/^filter\./)
@@ -33,6 +33,6 @@ class Search::Models::Results::OnlineJournals < Search::Models::Results::Catalog
   end
 
   def records
-    @records ||= @data["records"].each_with_index.map { |x, index| Search::Models::Record::OnlineJournals.new(x, position: position(index)) }
+    @records ||= @data["records"].each_with_index.map { |x, index| Search::Models::Record::Onlinejournals.new(x, position: position(index)) }
   end
 end

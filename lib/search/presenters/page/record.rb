@@ -97,8 +97,6 @@ class Search::Presenters::Page
           return Empty.new if records[1]&.bib&.id != record_id
         end
         new(records: records, uri: uri)
-      rescue
-        Empty.new
       end
 
       attr_reader :position

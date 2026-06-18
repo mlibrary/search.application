@@ -30,7 +30,8 @@ module Search
       end
 
       def get_onlinejournals_results(limit: 10, offset: 0, query: "*", filters: [], sort: "")
-        get_catalog_results(limit: limit, offset: offset, query: query, filters: [], ht_search_only: false, sort: sort)
+        filters.push("library:aa")
+        get_catalog_results(limit: limit, offset: offset, query: query, filters: filters, ht_search_only: false, sort: sort)
       end
     end
   end
