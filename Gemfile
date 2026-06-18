@@ -21,6 +21,7 @@ gem "mail"
 gem "addressable"
 gem "debug"
 gem "mini_magick"
+gem "concurrent-ruby", require: "concurrent"
 
 group :metrics do
   gem "yabeda-puma-plugin"

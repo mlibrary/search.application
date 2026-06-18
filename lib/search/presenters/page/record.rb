@@ -8,17 +8,24 @@ class Search::Presenters::Page
       "arrow_back_ios", "arrow_forward_ios"
     ]
     attr_reader :record
+
+    extend Forwardable
+
+    def_delegators :@pagination, :next_url, :previous_url, :position
+
     def self.for(slug:, uri:, patron:, record_id:)
       datastore = Search::Datastores.find(slug)
+      future = Concurrent::Promises.future { Pagination.for(uri: uri) }
       record = Search::Presenters::Record.for_datastore(datastore: slug, id: record_id)
-      new(datastore: datastore, uri: uri, patron: patron, record: record)
+      new(datastore: datastore, uri: uri, patron: patron, record: record, pagination: future.value)
     end
 
-    def initialize(datastore:, uri:, patron:, record:)
+    def initialize(datastore:, uri:, patron:, record:, pagination:)
       @description = description
       @slug = datastore.slug
       @datastore = datastore # datastore object
       @patron = patron
+      @pagination = pagination
       @uri = uri
       @record = record
     end
@@ -32,7 +39,7 @@ class Search::Presenters::Page
     end
 
     def breadcrumbs
-      Search::Presenters::Breadcrumbs.new(current_page: CURRENT_PAGE, uri: @uri)
+      Search::Presenters::Breadcrumbs.new(current_page: CURRENT_PAGE, uri: breadcrumb_uri)
     end
 
     def citation
@@ -55,6 +62,97 @@ class Search::Presenters::Page
 
     def extra_icons
       record.icons + EXTRA_ICONS
+    end
+
+    def breadcrumb_uri
+      result = @uri.dup
+      qv = result.query_values(Array) || []
+      qv.reject! { |x| x[0] == "position" }
+      result.query_values = qv
+      result
+    end
+
+    class Pagination
+      def self.for(uri:)
+        query_values = uri.query_values || {} # flatten duplicate values
+        position = query_values["position"].to_i
+
+        return Empty.new unless position >= 1
+
+        record_id = uri.path.split("/").last
+        records = []
+
+        # index in the list of solr records. It starts at 0.
+        index = position - 1
+        if index == 0
+          records = Search::Models::Results::Catalog.for(uri, limit: 2, offset: 0).records
+          return Empty.new if records.count == 1 || records[0]&.bib&.id != record_id
+          if records.count == 1
+            records.append(nil)
+          end
+          records.prepend(nil)
+        else
+          records = Search::Models::Results::Catalog.for(uri, limit: 3, offset: index - 1).records
+          return Empty.new if records[1]&.bib&.id != record_id
+        end
+        new(records: records, uri: uri)
+      end
+
+      attr_reader :position
+
+      def initialize(records:, uri:)
+        @records = records
+        @uri = uri
+        @query_values = uri.query_values
+        @position = @query_values["position"].to_i
+      end
+
+      def previous_url
+        if not_first_record?
+          result = @uri.dup
+          qv = result.query_values
+          qv["position"] = @position - 1
+          result.query_values = qv
+          path = result.path.split("/")
+          path[-1] = @records[0].bib.id
+          result.path = path.join("/")
+          result.display_uri.to_s
+        end
+      end
+
+      def next_url
+        unless @records[2].nil?
+          result = @uri.dup
+          qv = result.query_values
+          qv["position"] = @position + 1
+          result.query_values = qv
+          path = result.path.split("/")
+          path[-1] = @records.last.bib.id
+          result.path = path.join("/")
+          result.display_uri.to_s
+        end
+      end
+
+      private
+
+      def first_record?
+        @position == 1
+      end
+
+      def not_first_record?
+        !first_record?
+      end
+
+      class Empty < self
+        def initialize
+        end
+
+        def previous_url
+        end
+
+        def next_url
+        end
+      end
     end
   end
 end
