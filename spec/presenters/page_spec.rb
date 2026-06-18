@@ -35,6 +35,19 @@ describe Search::Presenters::Page::Results do
   end
 end
 
+describe Search::Presenters::Page::Record do
+  context "breadcrumbs" do
+    it "does not contain the position in the uri" do
+      uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=something&filter.availability=Hathi%20Trust&filter.subject=United%20States&page=1&position=1")
+      subject = described_class.new(datastore: Search::Datastores.find("catalog"), uri: uri, patron: nil, record: nil, pagination: Search::Presenters::Page::Record::Pagination::Empty).breadcrumbs
+
+      catalog_url = Addressable::URI.parse(subject.map { |x| x }.first.url)
+
+      expect(catalog_url.query_hash["position"]).to be_nil
+    end
+  end
+end
+
 describe Search::Presenters::Page::Record::Pagination do
   context "#previous_url" do
     it "given position greater than 1, returns url with a position of n-1" do

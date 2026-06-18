@@ -39,7 +39,7 @@ class Search::Presenters::Page
     end
 
     def breadcrumbs
-      Search::Presenters::Breadcrumbs.new(current_page: CURRENT_PAGE, uri: @uri)
+      Search::Presenters::Breadcrumbs.new(current_page: CURRENT_PAGE, uri: breadcrumb_uri)
     end
 
     def citation
@@ -62,6 +62,14 @@ class Search::Presenters::Page
 
     def extra_icons
       record.icons + EXTRA_ICONS
+    end
+
+    def breadcrumb_uri
+      result = @uri.dup
+      qv = result.query_values(Array)
+      qv.reject! { |x| x[0] == "position" }
+      result.query_values = qv
+      result
     end
 
     class Pagination
