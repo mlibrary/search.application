@@ -6,7 +6,7 @@
     <section class="record__information">
       <div class="record__information--header">
         <%= erb :'datastores/results/partials/results-list/list-item/header/_checkbox', locals: { checked: true, disabled: true, datastore: @presenter.current_datastore, record_id: @record.id, record_title: @record.title.first.text } %>
-        <%= h1(body: erb(:'datastores/record/partials/_title', locals: { titles: @record.title }), classes: ["record__title"]) %>
+        <%= h1(body: erb(:'datastores/record/partials/_title', locals: { position: @presenter.position, titles: @record.title }), classes: ["record__title"]) %>
       </div>
       <h2 class="visually-hidden">Record info:</h2>
       <%= erb :'datastores/partials/_metadata', locals: { metadata: @record.metadata } %>
