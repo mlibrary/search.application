@@ -9,28 +9,23 @@ module Search
   end
 end
 
+require_relative "onlinejournals/holdings"
+
 module Search
   module Presenters
     module Record
       module Onlinejournals
-        class Base  < Search::Presenters::Record::Catalog::Base
-        end
-
         class Full < Search::Presenters::Record::Catalog::Full
           def url
             "#{S.base_url}/onlinejournals/record/#{id}"
           end
 
-          def method_missing(method, *args, **kwargs, &block)
-            super unless respond_to_missing?(method)
-            S.logger.debug("#{method} not defined in Presenters::Record::Onlinejournals::Full")
+          def shelf_browse
             nil
           end
 
-          def shelf_browse
-            @shelf_browse ||= begin
-              result = nil
-            end
+          def holdings
+            Holdings.new(@record)
           end
         end
 

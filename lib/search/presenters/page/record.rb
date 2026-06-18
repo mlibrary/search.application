@@ -15,7 +15,7 @@ class Search::Presenters::Page
 
     def self.for(slug:, uri:, patron:, record_id:)
       datastore = Search::Datastores.find(slug)
-      future = Concurrent::Promises.future { Pagination.for(uri: uri) }
+      future = Concurrent::Promises.future { Pagination.for(datastore: slug, uri: uri) }
       record = Search::Presenters::Record.for_datastore(datastore: slug, id: record_id)
       new(datastore: datastore, uri: uri, patron: patron, record: record, pagination: future.value)
     end
@@ -73,7 +73,8 @@ class Search::Presenters::Page
     end
 
     class Pagination
-      def self.for(uri:)
+      def self.for(uri:, datastore: "catalog")
+        results_model_klass = "Search::Models::Results::#{datastore.capitalize}".constantize
         query_values = uri.query_values || {} # flatten duplicate values
         position = query_values["position"].to_i
 
@@ -85,17 +86,19 @@ class Search::Presenters::Page
         # index in the list of solr records. It starts at 0.
         index = position - 1
         if index == 0
-          records = Search::Models::Results::Catalog.for(uri, limit: 2, offset: 0).records
+          records = results_model_klass.for(uri, limit: 2, offset: 0).records
           return Empty.new if records.count == 1 || records[0]&.bib&.id != record_id
           if records.count == 1
             records.append(nil)
           end
           records.prepend(nil)
         else
-          records = Search::Models::Results::Catalog.for(uri, limit: 3, offset: index - 1).records
+          records = results_model_klass.for(uri, limit: 3, offset: index - 1).records
           return Empty.new if records[1]&.bib&.id != record_id
         end
         new(records: records, uri: uri)
+      rescue
+        Empty.new
       end
 
       attr_reader :position
