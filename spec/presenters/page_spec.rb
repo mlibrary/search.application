@@ -45,6 +45,11 @@ describe Search::Presenters::Page::Record do
 
       expect(catalog_url.query_hash["position"]).to be_nil
     end
+    it "handles having no position in the url" do
+      uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id")
+      subject = described_class.new(datastore: Search::Datastores.find("catalog"), uri: uri, patron: nil, record: nil, pagination: Search::Presenters::Page::Record::Pagination::Empty).breadcrumbs
+      expect(subject).not_to be_nil
+    end
   end
 end
 

@@ -66,7 +66,7 @@ class Search::Presenters::Page
 
     def breadcrumb_uri
       result = @uri.dup
-      qv = result.query_values(Array)
+      qv = result.query_values(Array) || []
       qv.reject! { |x| x[0] == "position" }
       result.query_values = qv
       result

@@ -11,7 +11,7 @@ RSpec.describe Search::Presenters::Breadcrumbs do
   end
 
   subject do
-    described_class.new(current_page: @current_page, uri: URI.parse(@url))
+    described_class.new(current_page: @current_page, uri: Addressable::URI.parse(@url))
   end
 
   context "#any?" do
