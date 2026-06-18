@@ -90,7 +90,7 @@ class Search::Models::Results::Catalog
   private
 
   def position(index)
-    offset + index
+    offset + index + 1
   end
 end
 

@@ -37,25 +37,25 @@ end
 
 describe Search::Presenters::Page::Record::Pagination do
   context "#previous_url" do
-    it "has position 0 and the correct mms_id" do
-      uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=something&filter.availability=Hathi%20Trust&filter.subject=United%20States&page=1&position=1")
+    it "given position greater than 1, returns url with a position of n-1" do
+      uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=something&filter.availability=Hathi%20Trust&filter.subject=United%20States&page=1&position=3")
       records = (1..3).map { create(:catalog_record) }
       subject = Addressable::URI.parse(described_class.new(uri: uri, records: records).previous_url)
 
-      expect(subject.query_values["position"]).to eq("0")
+      expect(subject.query_values["position"]).to eq("2")
       expect(subject.query_values["query"]).to eq("something")
       id = subject.path.split("/").last
       expect(id).to eq(records[0].bib.id)
     end
-    it "is nil if the original uri has position 0" do
-      uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=something&filter.availability=Hathi%20Trust&filter.subject=United%20States&page=1&position=0")
+    it "is nil if the original uri has position 1" do
+      uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=something&filter.availability=Hathi%20Trust&filter.subject=United%20States&page=1&position=1")
       records = (1..3).map { create(:catalog_record) }
       subject = described_class.new(uri: uri, records: records).previous_url
       expect(subject).to be_nil
     end
   end
   context "#next_url" do
-    it "has position 1 greater than given position and the correct mms_id" do
+    it "returns a position n+1 when there are three catalog records" do
       uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=something&filter.availability=Hathi%20Trust&filter.subject=United%20States&page=1&position=5")
       records = (1..3).map { create(:catalog_record) }
       subject = Addressable::URI.parse(described_class.new(uri: uri, records: records).next_url)
@@ -66,7 +66,7 @@ describe Search::Presenters::Page::Record::Pagination do
       expect(id).to eq(records[2].bib.id)
     end
     it "is nil if the record has a nil 3rd record" do
-      uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=something&filter.availability=Hathi%20Trust&filter.subject=United%20States&page=1&position=0")
+      uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=something&filter.availability=Hathi%20Trust&filter.subject=United%20States&page=1&position=1")
       records = (1..2).map { create(:catalog_record) }
       subject = described_class.new(uri: uri, records: records).next_url
       expect(subject).to be_nil
@@ -90,14 +90,14 @@ describe Search::Presenters::Page::Record::Pagination do
       it "returns valid pagination when given an in the middle item" do
         @results["records"][1]["id"] = "some_mms_id"
 
-        stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=5&limit=3&query=title:(test)&&filters=library:aa&ht_search_only=false&sort=relevance")
+        stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=4&limit=3&query=title:(test)&&filters=library:aa&ht_search_only=false&sort=relevance")
           .to_return(status: 200, body: @results.to_json, headers: {content_type: "application/json"})
         subject = described_class.for(uri: @uri)
         expect(subject.next_url).not_to be_nil
         expect(subject.previous_url).not_to be_nil
       end
       it "returns Empty pagination when the mms_id isn't in the results" do
-        stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=5&limit=3&query=title:(test)&&filters=library:aa&ht_search_only=false&sort=relevance")
+        stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=4&limit=3&query=title:(test)&&filters=library:aa&ht_search_only=false&sort=relevance")
           .to_return(status: 200, body: @results.to_json, headers: {content_type: "application/json"})
         subject = described_class.for(uri: @uri)
         expect(subject.class.name).to include("Empty")
@@ -105,7 +105,7 @@ describe Search::Presenters::Page::Record::Pagination do
     end
     context "#first item" do
       before(:each) do
-        @uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=title:(test)&&filters=library:aa&ht_search_only=false&sort=relevance&position=0")
+        @uri = Addressable::URI.parse("#{S.base_url}/catalog/record/some_mms_id?query=title:(test)&&filters=library:aa&ht_search_only=false&sort=relevance&position=1")
         @results = create(:catalog_api_one_result)
         @results["records"].push(create(:catalog_api_record, fields: [:id]))
       end

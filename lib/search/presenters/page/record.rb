@@ -11,7 +11,7 @@ class Search::Presenters::Page
 
     extend Forwardable
 
-    def_delegators :@pagination, :next_url, :previous_url
+    def_delegators :@pagination, :next_url, :previous_url, :position
 
     def self.for(slug:, uri:, patron:, record_id:)
       datastore = Search::Datastores.find(slug)
@@ -67,12 +67,16 @@ class Search::Presenters::Page
     class Pagination
       def self.for(uri:)
         query_values = uri.query_values || {} # flatten duplicate values
-        return Empty.new if query_values["position"].nil?
         position = query_values["position"].to_i
-        record_id = uri.path.split("/").last
 
+        return Empty.new unless position >= 1
+
+        record_id = uri.path.split("/").last
         records = []
-        if position == 0
+
+        # index in the list of solr records. It starts at 0.
+        index = position - 1
+        if index == 0
           records = Search::Models::Results::Catalog.for(uri, limit: 2, offset: 0).records
           return Empty.new if records.count == 1 || records[0]&.bib&.id != record_id
           if records.count == 1
@@ -80,11 +84,13 @@ class Search::Presenters::Page
           end
           records.prepend(nil)
         else
-          records = Search::Models::Results::Catalog.for(uri, limit: 3, offset: position - 1).records
+          records = Search::Models::Results::Catalog.for(uri, limit: 3, offset: index - 1).records
           return Empty.new if records[1]&.bib&.id != record_id
         end
         new(records: records, uri: uri)
       end
+
+      attr_reader :position
 
       def initialize(records:, uri:)
         @records = records
@@ -122,7 +128,7 @@ class Search::Presenters::Page
       private
 
       def first_record?
-        @position == 0
+        @position == 1
       end
 
       def not_first_record?
