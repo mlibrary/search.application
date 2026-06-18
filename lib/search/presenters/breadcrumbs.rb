@@ -6,7 +6,7 @@ module Search
       end
 
       def initialize(current_page:, uri:)
-        @uri = uri
+        @uri = Addressable::URI.parse(uri)
         @current_page = current_page
         @breadcrumbs = breadcrumbs
       end
@@ -43,16 +43,14 @@ module Search
       end
 
       def breadcrumbs
-        debugger
         crumbs = []
         latest_index = 0
         path = ""
         subdirectories.each do |subdirectory|
           # Add each subdirectory to the path
           path += "/#{subdirectory}"
-          result_uri = Addressable::URI.parse(path)
+          result_uri = @uri.join(Addressable::URI.parse(path))
           result_uri.query_values = query_values
-          path + query_string
           # Check if the subdirectory contains numerals (e.g. full record uids or barcodes for Get This)
           if subdirectory.match(/^\d+$/) && latest_index > 0
             crumbs[latest_index - 1].url = result_uri.display_uri.to_s

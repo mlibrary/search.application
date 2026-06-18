@@ -65,7 +65,7 @@ RSpec.describe Search::Presenters::Breadcrumbs do
       expect(subject.send(:breadcrumbs)).to eq([
         OpenStruct.new(
           body: "Guides and More",
-          url: "/guidesandmore#{@query_string}"
+          url: "#{@url_part["start"]}#{@query_string}"
         )
       ])
     end
