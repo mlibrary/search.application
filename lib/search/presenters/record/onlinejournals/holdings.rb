@@ -1,4 +1,5 @@
 class Search::Presenters::Record::Onlinejournals::Holdings < Search::Presenters::Record::Catalog::Holdings
+  CATALOG_PRESENTER = Search::Presenters::Record::Catalog
   def list
     [online].reject { |x| x.empty? }
   end
@@ -7,7 +8,7 @@ class Search::Presenters::Record::Onlinejournals::Holdings < Search::Presenters:
     @online ||= Online.new(@holdings)
   end
 
-  class Online < Search::Presenters::Record::Catalog::Holdings::Online
+  class Online < CATALOG_PRESENTER::Holdings::Online
     def items
       @items ||= Electronic.new(@holdings.electronic.items).items
     end
@@ -15,7 +16,7 @@ class Search::Presenters::Record::Onlinejournals::Holdings < Search::Presenters:
     def table_headings
       result = ["Action"]
       result.push("Description")
-      result.map { |x| Search::Presenters::Record::Catalog::Holdings::TableHeading.new(x) }
+      result.map { |x| CATALOG_PRESENTER::Holdings::TableHeading.new(x) }
     end
 
     def rows
@@ -26,7 +27,7 @@ class Search::Presenters::Record::Onlinejournals::Holdings < Search::Presenters:
     end
   end
 
-  class Electronic < Search::Presenters::Record::Catalog::Holdings::Electronic
+  class Electronic < CATALOG_PRESENTER::Holdings::Electronic
     def availability_text(item)
       if item.available?
         "Go to online journal"
@@ -36,5 +37,3 @@ class Search::Presenters::Record::Onlinejournals::Holdings < Search::Presenters:
     end
   end
 end
-
-require_relative "email_holdings"

@@ -422,4 +422,5 @@ module Search
     end
   end
 end
+
 require_relative "catalog/email"

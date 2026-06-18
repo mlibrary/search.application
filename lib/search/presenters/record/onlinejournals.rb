@@ -4,6 +4,7 @@ module Search
   module Presenters
     module Record
       module Onlinejournals
+        CATALOG_PRESENTER = Search::Presenters::Record::Catalog
       end
     end
   end
@@ -15,7 +16,7 @@ module Search
   module Presenters
     module Record
       module Onlinejournals
-        class Full < Search::Presenters::Record::Catalog::Full
+        class Full < CATALOG_PRESENTER::Full
           def url
             "#{S.base_url}/onlinejournals/record/#{id}"
           end
@@ -29,17 +30,15 @@ module Search
           end
         end
 
-        class Brief < Search::Presenters::Record::Catalog::Brief
+        class Brief < CATALOG_PRESENTER::Brief
           METADATA_METHODS = [
             :contributors,
             :published,
             :summary
           ]
         end
-
-        class Field < Search::Presenters::Record::Catalog::Field
-        end
       end
     end
   end
 end
+require_relative "onlinejournals/email"
