@@ -145,6 +145,16 @@ class Search::Presenters::Results::Onlinejournals < Search::Presenters::Results:
     "academic_discipline"
   ]
 
+  def self.for(uri)
+    results_model_instance = Search::Models::Results::Onlinejournals.for(uri)
+    specialists = if results_model_instance.pagination.offset == 0
+      Search::Models::Specialists.for_onlinejournals(uri)
+    else
+      []
+    end
+    new(results_model_instance, specialists)
+  end
+
   def boolean_filters
     []
   end
