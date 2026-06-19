@@ -1,0 +1,65 @@
+@use '../../../utilities';
+
+// --------------------------------------------------
+//
+// # MARC Data
+//   Styles to apply directly to `views/datastores/record/partials/_pagination.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Wrapper
+//   3. List
+//    3.1. Next Record
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.record-pagination';
+
+
+
+
+
+// ****************** //
+// *** 2. WRAPPER *** //
+// ****************** //
+
+#{$class} {
+  margin: 1rem 0;
+}
+
+
+
+
+
+// *************** //
+// *** 3. LIST *** //
+// *************** //
+
+#{$class}__list {
+  @include utilities.flex($wrap: true, $align: center);
+  & > li > a {
+    span + span {
+      margin-left: 0.25rem;
+    }
+    .material-symbols-rounded {
+      font-size: 1rem;
+      position: relative;
+      text-decoration: none;
+      top: 0.125rem;
+    }
+  }
+}
+
+
+
+// *                  * //
+// * 3.1. NEXT RECORD * //
+// *                  * //
+
+#{$class}__list-item--next {
+  margin-left: auto;
+}

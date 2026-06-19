@@ -11,7 +11,7 @@ RSpec.describe Search::Presenters::Breadcrumbs do
   end
 
   subject do
-    described_class.new(current_page: @current_page, uri: URI.parse(@url))
+    described_class.new(current_page: @current_page, uri: Addressable::URI.parse(@url))
   end
 
   context "#any?" do
@@ -65,7 +65,7 @@ RSpec.describe Search::Presenters::Breadcrumbs do
       expect(subject.send(:breadcrumbs)).to eq([
         OpenStruct.new(
           body: "Guides and More",
-          url: "/guidesandmore#{@query_string}"
+          url: "#{@url_part["start"]}#{@query_string}"
         )
       ])
     end

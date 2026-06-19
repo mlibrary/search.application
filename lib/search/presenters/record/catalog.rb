@@ -111,6 +111,10 @@ module Search
             @record.bib.id
           end
 
+          def position
+            @record.position
+          end
+
           def url
             "#{S.base_url}/catalog/record/#{id}"
           end

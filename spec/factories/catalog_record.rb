@@ -94,8 +94,8 @@ module Factories::CatalogRecord
       physical: "physical_holdings"
     }
 
-    def record(bib_fields: [], other_fields: [], holdings: [])
-      result = instance_double(Search::Models::Record::Catalog, bib: bib(fields: bib_fields), holdings: holdings(kinds: holdings))
+    def record(bib_fields: [], other_fields: [], holdings: [], position: nil)
+      result = instance_double(Search::Models::Record::Catalog, bib: bib(fields: bib_fields), holdings: holdings(kinds: holdings), position: position)
       other_fields.each do |f|
         allow(result).to receive(f).and_return(send(f))
       end

@@ -8,8 +8,10 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Wrapper
-//   3. Type
-//   4. Truncate
+//   3. Position
+//   4. Content
+//     4.1. Type
+//     4.2. Truncate
 //
 // --------------------------------------------------
 
@@ -17,7 +19,7 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: '.record__title--wrapper';
+$class: '.record__title';
 
 
 
@@ -28,20 +30,22 @@ $class: '.record__title--wrapper';
 // ****************** //
 
 #{$class} {
-  display: block;
+  @include utilities.flex($align: baseline);
   font-size: 1.75rem;
   font-weight: normal;
+  gap: 0.5rem;
 }
 
 
 
 
 
-// *************** //
-// *** 3. TYPE *** //
-// *************** //
 
-#{$class} > .record__title-secondary {
+// ******************* //
+// *** 3. POSITION *** //
+// ******************* //
+
+#{$class}--position {
   color: var(--search-color-grey-500);
 }
 
@@ -49,9 +53,30 @@ $class: '.record__title--wrapper';
 
 
 
-// ******************* //
-// *** 4. TRUNCATE *** //
-// ******************* //
+
+// ****************** //
+// *** 4. CONTENT *** //
+// ****************** //
+
+#{$class}--content {
+  display: block;
+}
+
+
+
+// *           * //
+// * 4.1. TYPE * //
+// *           * //
+
+#{$class} .record__title-secondary {
+  color: var(--search-color-grey-500);
+}
+
+
+
+// *               * //
+// * 4.2. TRUNCATE * //
+// *               * //
 
 #{$class} button[data-truncate] {
   bottom: .25rem;

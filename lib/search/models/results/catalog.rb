@@ -33,17 +33,17 @@ class Search::Models::Results::Catalog
     end
   end
 
-  def self.for(uri)
+  def self.for(uri, limit: nil, offset: nil)
     qh = uri.query_hash # duplicate values can be arrays
     query_values = uri.query_values # flattens duplicate values
 
     current_page = (query_values["page"] || 1).to_i
 
-    limit = (query_values["limit"] || 10).to_i
+    limit ||= (query_values["limit"] || 10).to_i
     get_filters(qh)
 
     params = {
-      offset: ((current_page - 1) * limit),
+      offset: offset || ((current_page - 1) * limit),
       limit: limit,
       query: query_values["query"] || "",
       filters: get_filters(qh),
@@ -64,7 +64,7 @@ class Search::Models::Results::Catalog
   end
 
   def records
-    @records ||= @data["records"].map { |x| Search::Models::Record::Catalog.new(x) }
+    @records ||= @data["records"].each_with_index.map { |x, index| Search::Models::Record::Catalog.new(x, position: position(index)) }
   end
 
   def pagination
@@ -85,6 +85,12 @@ class Search::Models::Results::Catalog
 
   def filters
     @data["filters"].filter_map { |x| Filter.new(x) if x["values"].present? }
+  end
+
+  private
+
+  def position(index)
+    offset + index + 1
   end
 end
 
