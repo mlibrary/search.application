@@ -7,6 +7,6 @@
     <%= erb :"advanced/partials/_search-fields" %>
     <%= yield %>
     <%= erb :"advanced/partials/_button" %>
-    <%= erb :"advanced/partials/_additional-options", locals: { advanced_search_options: @presenter.advanced_search_options } %>
+    <%= erb :"advanced/partials/_additional-options", locals: { advanced_search_options: @presenter.advanced_search } %>
   </form>
 </div>

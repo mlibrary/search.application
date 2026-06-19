@@ -4,6 +4,11 @@ module Search::Presenters
       "Search::Presenters::Advanced::#{datastore.capitalize}".constantize.for(uri)
     end
 
+    def initialize(datastore:, uri:)
+      @datastore = datastore
+      @uri = uri
+    end
+
     def boolean_filters
       []
     end

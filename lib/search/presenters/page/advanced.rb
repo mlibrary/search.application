@@ -31,7 +31,13 @@ class Search::Presenters::Page
       @datastore.title + " Search"
     end
 
-    def advanced_search_options
+    def search_options
+      super.tap do |options|
+        options.define_singleton_method(:no_optgroups?) { true }
+      end
+    end
+
+    def advanced_search
       Search::Presenters::Advanced.for(datastore: @datastore.slug, uri: @uri)
     end
 

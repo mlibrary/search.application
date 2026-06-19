@@ -1,5 +1,4 @@
-<% search_options = @presenter.search_options %>
-<select aria-label="Select an option for field <%= index %>" class="search-form__inputs--select" name="search_option" autocomplete="off">
+<select aria-label="Select an option" class="search-form__inputs--select" name="search_option" autocomplete="off">
   <% if search_options.no_optgroups? %>
     <% search_options.each do |search_option| %>
       <option value="<%= search_option.value %>" <%= search_options.selected_attribute(search_option.value) %>>
