@@ -17,7 +17,7 @@ module Search
     module Record
       module Onlinejournals
         class Full < CATALOG_PRESENTER::Full
-          def datastore
+          def self.datastore
             "onlinejournals"
           end
 

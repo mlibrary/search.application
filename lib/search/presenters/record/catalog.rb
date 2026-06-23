@@ -99,8 +99,12 @@ module Search
           ]
 
           def self.for(id)
-            record = Search::Models::Record::Catalog.for(id)
+            record = "Search::Models::Record::#{datastore.capitalize}".constantize.for(id)
             new(record)
+          end
+
+          def self.datastore
+            "catalog"
           end
 
           def initialize(record)
@@ -112,7 +116,7 @@ module Search
           end
 
           def datastore
-            "catalog"
+            self.class.datastore
           end
 
           def position

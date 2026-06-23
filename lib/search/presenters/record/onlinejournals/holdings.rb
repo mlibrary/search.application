@@ -13,6 +13,10 @@ class Search::Presenters::Record::Onlinejournals::Holdings < Search::Presenters:
       @items ||= Electronic.new(@holdings.electronic.items).items
     end
 
+    def count
+      @holdings.electronic.count
+    end
+
     def table_headings
       result = ["Action"]
       result.push("Description")
