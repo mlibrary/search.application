@@ -56,6 +56,7 @@ $class: ".advanced-search__search-field";
 
 #{$class}--inputs {
   @include media.breakpoint('xs') {
+    grid-template-areas: "dropdown input button";
     grid-template-columns: 15rem 1fr auto;
   }
   #search-field-0 & {
