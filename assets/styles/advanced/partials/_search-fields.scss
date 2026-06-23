@@ -1,5 +1,6 @@
 @use '../../utilities';
 @use '../../media';
+@use '../../partials/header/search';
 
 // --------------------------------------------------
 //
@@ -54,43 +55,22 @@ $class: ".advanced-search__search-field";
 // *             * //
 
 #{$class}--inputs {
-  display: grid;
-  grid-template-areas:
-    "select select"
-    "input button";
-  grid-template-columns: 1fr auto;
-  gap: 0.5rem 0;
   @include media.breakpoint('xs') {
-    grid-template-areas: "select input button";
     grid-template-columns: 15rem 1fr auto;
   }
   #search-field-0 & {
     grid-template-areas:
-      "select"
+      "dropdown"
       "input";
     grid-template-columns: 1fr;
     @include media.breakpoint('xs') {
-      grid-template-areas: "select input";
+      grid-template-areas: "dropdown input";
       grid-template-columns: 15rem 1fr;
     }
   }
-  select {
-    grid-area: select;
+  .advanced-search__remove-field {
     @include media.breakpoint('xs') {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
+      margin-left: 0.75rem;
     }
-  }
-  input {
-    grid-area: input;
-    @include media.breakpoint('xs') {
-      border-left: 0;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-  }
-  button {
-    grid-area: button;
-    margin-left: 0.5rem;
   }
 }

@@ -7,9 +7,9 @@
     <% if index > 0 %>
       <%= erb :"advanced/partials/search-fields/_booleans", locals: { index: index } %>
     <% end %>
-    <div class="advanced-search__search-field--inputs">
-      <%= erb :"partials/header/search/_search-options", locals: { search_options: search_options } %>
-      <input type="text" aria-label="Query input for search field <%= index %>" name="search-field-<%= index %>" class="advanced-search__search-field--term-input" value="" autocomplete="on">
+    <div class="search-form__inputs advanced-search__search-field--inputs">
+      <%= erb :"partials/header/search/_search-options", locals: { search_options: search_options, index: index } %>
+      <input type="search" aria-label="Query input for search field <%= index %>" name="search-field-<%= index %>" class="advanced-search__search-field--term-input" value="" autocomplete="on">
       <% if index > 0 %>
         <button type="button" class="button__ghost advanced-search__remove-field" data-field="<%= search_field_id %>">
           <span class="material-symbols-rounded" aria-hidden="true">close</span>
