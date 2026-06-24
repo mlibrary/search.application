@@ -1,4 +1,4 @@
-describe Search::Models::Browse do
+describe Search::Models::Browse::AcademicDisciplines do
   it "has academic disciplines" do
     data = [
       {"name" => "Business",
@@ -10,7 +10,7 @@ describe Search::Models::Browse do
 
        ]}
     ]
-    subject = described_class.new(data).academic_disciplines
+    subject = described_class.new(data).list
     expect(subject.first.name).to eq("Business")
     expect(subject.first.count).to eq(9999)
     subdiscipline = subject.first.disciplines.first

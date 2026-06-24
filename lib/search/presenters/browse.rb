@@ -20,7 +20,7 @@ module Search::Presenters
     end
 
     def academic_discipline
-      Search::Presenters::Browse::AcademicDisciplines.new(datastore: @datastore)
+      Search::Presenters::Browse::AcademicDisciplines.for(datastore: @datastore)
     end
   end
 end
