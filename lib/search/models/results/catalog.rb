@@ -40,7 +40,6 @@ class Search::Models::Results::Catalog
     current_page = (query_values["page"] || 1).to_i
 
     limit ||= (query_values["limit"] || 10).to_i
-    get_filters(qh)
 
     params = {
       offset: offset || ((current_page - 1) * limit),

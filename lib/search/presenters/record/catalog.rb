@@ -99,8 +99,12 @@ module Search
           ]
 
           def self.for(id)
-            record = Search::Models::Record::Catalog.for(id)
+            record = "Search::Models::Record::#{datastore.capitalize}".constantize.for(id)
             new(record)
+          end
+
+          def self.datastore
+            "catalog"
           end
 
           def initialize(record)
@@ -111,12 +115,16 @@ module Search
             @record.bib.id
           end
 
+          def datastore
+            self.class.datastore
+          end
+
           def position
             @record.position
           end
 
           def url
-            "#{S.base_url}/catalog/record/#{id}"
+            "#{S.base_url}/#{datastore}/record/#{id}"
           end
 
           def title
@@ -422,4 +430,5 @@ module Search
     end
   end
 end
+
 require_relative "catalog/email"

@@ -13,7 +13,7 @@ RSpec.describe Search::Models::Specialists do
 
   it "can get specialists for the catalog" do
     uri = Addressable::URI.parse("#{S.base_url}/catalog?query=whatever")
-    stub_request(:get, "#{S.catalog_api_url}/catalog/specialists?&query=whatever&filters=library:aa&ht_search_only=false&sort=relevance")
+    stub_request(:get, "#{S.catalog_api_url}/catalog/specialists?&query=whatever&filters=library:aa&ht_search_only=false")
       .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
 
     specialists = described_class.for_catalog(uri)

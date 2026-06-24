@@ -30,6 +30,10 @@ class Search::Presenters::Page
       Search::Presenters::Actions.new(["link"])
     end
 
+    def show_specialists?(index)
+      false
+    end
+
     def show_holdings?
       false
     end
