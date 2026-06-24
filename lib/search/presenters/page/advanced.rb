@@ -38,7 +38,7 @@ class Search::Presenters::Page
     end
 
     def advanced_search
-      Search::Presenters::Advanced.for(datastore: @datastore.slug, uri: @uri)
+      Search::Presenters::Advanced.for(datastore: @datastore.slug, uri: @uri, search_options: search_options)
     end
 
     private

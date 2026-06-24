@@ -1,12 +1,17 @@
 module Search::Presenters
   class Advanced
-    def self.for(datastore:, uri:)
-      "Search::Presenters::Advanced::#{datastore.capitalize}".constantize.for(uri)
+    def self.for(datastore:, uri:, search_options:)
+      "Search::Presenters::Advanced::#{datastore.capitalize}".constantize.for(uri:, search_options:)
     end
 
-    def initialize(datastore:, uri:)
+    def initialize(datastore:, uri:, search_options:)
       @datastore = datastore
       @uri = uri
+      @search_options = search_options
+    end
+
+    def checked_search_options
+      @search_options.first(3)
     end
 
     def boolean_filters
