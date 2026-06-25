@@ -1,11 +1,12 @@
 <fieldset class="advanced-search__search-field--booleans">
   <legend class="visually-hidden">Select a boolean operator for field <%= index %></legend>
   <%
-    ["AND", "OR", "NOT"].each do |boolean|
-    input_id = "#{boolean.downcase}-#{index}"
+    booleans = @presenter.search_options.booleans
+    booleans.each do |boolean|
+      input_id = "#{boolean}-#{index}"
   %>
     <div class="checkbox">
-      <input type="radio" id="<%= input_id %>" name="boolean-<%= index %>" value="<%= boolean %>" <%= 'checked' if boolean == "AND" %>>
+      <input type="radio" id="<%= input_id %>" name="boolean-<%= index %>" value="<%= boolean %>" <%= 'checked' if boolean == booleans.first %>>
       <label for="<%= input_id %>"><%= boolean %></label>
     </div>
   <% end %>

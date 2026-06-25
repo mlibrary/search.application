@@ -1,4 +1,4 @@
-<select aria-label="<%= index ? "Select an option for search field #{index}" : "Select an option" %>" class="search-form__inputs--select" name="search_option" autocomplete="off">
+<select aria-label="<%= defined?(index) ? "Select an option for search field #{index}" : "Select an option" %>" class="search-form__inputs--select" name="search_option" autocomplete="off">
   <% if search_options.no_optgroups? %>
     <% search_options.each do |search_option| %>
       <option value="<%= search_option.value %>" <%= search_options.selected_attribute(search_option.value) %>>

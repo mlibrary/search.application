@@ -177,6 +177,7 @@ class Search::Application < Sinatra::Base
         end
       end
     end
+
     get "/advanced/#{datastore.slug}" do
       headers "metrics.datastore" => datastore.slug, "metrics.route" => "advanced"
       Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
@@ -184,6 +185,12 @@ class Search::Application < Sinatra::Base
       erb :"advanced/layout", layout: :layout do
         erb :"advanced/#{datastore.slug}"
       end
+    end
+
+    post "/advanced/#{datastore.slug}" do
+      query = "Search example"
+
+      redirect "/#{datastore.slug}?#{URI.encode_www_form(query: query)}"
     end
   end
 

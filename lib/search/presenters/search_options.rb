@@ -31,6 +31,7 @@ module Search
     end
 
     class BaseSearchOptions
+      BOOLEANS = ["AND", "OR", "NOT"]
       SEARCH_OPTIONS = Search::YamlErb.load_file(File.join(S.config_path, "search_options.yaml.erb")).map do |data|
         SearchOption.new(data)
       end
@@ -73,6 +74,10 @@ module Search
       def optgroups?
         options.count > 1
       end
+
+      def booleans
+        BOOLEANS
+      end
     end
 
     class SearchOptions
@@ -108,7 +113,7 @@ module Search
       end
 
       def no_optgroups?
-        base_search_options.no_optgroups? || search_only?
+        search_only? || base_search_options.no_optgroups?
       end
 
       def show_optgroups?
@@ -125,7 +130,7 @@ module Search
 
         query_string = params["query"]
 
-        return my_option.value if ["AND", "OR", "NOT"].any? { |x| query_string&.match?(x) }
+        return my_option.value if base_search_options.booleans.any? { |x| query_string&.match?(x) }
 
         option_value_from_query = query_string&.split(":(")&.first
 
@@ -137,7 +142,9 @@ module Search
       end
 
       def search_only?
-        @uri.path.split("/").last == "advanced"
+        split_path = @uri.path.split("/")
+        split_path.reject!(&:empty?)
+        split_path.first == "advanced"
       end
 
       def params
@@ -146,6 +153,10 @@ module Search
         else
           {}
         end
+      end
+
+      def booleans
+        base_search_options.booleans
       end
     end
   end
