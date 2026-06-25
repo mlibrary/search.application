@@ -40,6 +40,10 @@ module Search
         params[:filters] = filters unless filters.empty?
         @conn.get("onlinejournals/specialists", **params).body
       end
+
+      def get_onlinejournals_academic_disciplines
+        @conn.get("onlinejournals/academic_disciplines").body
+      end
     end
   end
 end
