@@ -3,6 +3,7 @@ module Search
   end
 end
 require "search/presenters/actions"
+require "search/presenters/advanced"
 require "search/presenters/affiliations"
 require "search/presenters/breadcrumbs"
 require "search/presenters/icons"
@@ -24,6 +25,10 @@ module Search::Presenters
 
     def for_404_page(uri:, patron:)
       Page::Static.for(slug: "404", uri: uri, patron: patron)
+    end
+
+    def for_advanced_search(slug:, uri:, patron:)
+      Page::AdvancedSearch.for(slug: slug, uri: uri, patron: patron)
     end
 
     def for_datastore(slug:, uri:, patron: nil)

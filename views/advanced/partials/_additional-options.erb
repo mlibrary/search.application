@@ -1,0 +1,12 @@
+<% if advanced_search_options.has_additional_options? %>
+  <h3>Additional search options</h3>
+  <div class="advanced-search__additional-options">
+    <% advanced_search_options.additional_options.each do |additional_option| %>
+      <div class="advanced-search__additional-option">
+        <h4><%= additional_option.title %></h4>
+        <%= erb :"advanced/partials/additional-options/_#{additional_option.partial}", locals: { data: additional_option.data } %>
+      </div>
+    <% end %>
+  </div>
+  <%= erb :"advanced/partials/_button" %>
+<% end %>

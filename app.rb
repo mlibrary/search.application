@@ -93,6 +93,10 @@ class Search::Application < Sinatra::Base
     redirect to("/everything")
   end
 
+  get "/advanced" do
+    redirect to("/advanced/everything")
+  end
+
   Search::Datastores.each do |datastore|
     if ["catalog", "onlinejournals"].include?(datastore.slug)
       get "/#{datastore.slug}/record/:id" do
@@ -172,6 +176,21 @@ class Search::Application < Sinatra::Base
           erb :"datastores/list/#{datastore.slug}"
         end
       end
+    end
+
+    get "/advanced/#{datastore.slug}" do
+      headers "metrics.datastore" => datastore.slug, "metrics.route" => "advanced"
+      Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
+      @presenter = Search::Presenters.for_advanced_search(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+      erb :"advanced/layout", layout: :layout do
+        erb :"advanced/#{datastore.slug}"
+      end
+    end
+
+    post "/advanced/#{datastore.slug}" do
+      query = "Search example"
+
+      redirect "/#{datastore.slug}?#{URI.encode_www_form(query: query)}"
     end
   end
 

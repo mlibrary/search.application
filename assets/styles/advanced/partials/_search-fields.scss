@@ -1,0 +1,77 @@
+@use '../../utilities';
+@use '../../media';
+@use '../../partials/header/search';
+
+// --------------------------------------------------
+//
+// # Search Fields
+//   Styles to apply directly to `views/advanced/partials/_search-fields.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Search Fields
+//     2.1. Search Field
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".advanced-search__search-field";
+
+
+
+
+
+// ************************ //
+// *** 2. SEARCH FIELDS *** //
+// ************************ //
+
+#{$class} {
+  & > * + * {
+    margin-top: 1rem;
+  }
+}
+
+
+
+// *               * //
+// * 2.1. BOOLEANS * //
+// *               * //
+
+#{$class}--booleans {
+  @include utilities.flex();
+  justify-content: center;
+  .checkbox {
+    align-items: center;
+  }
+}
+
+
+
+// *             * //
+// * 2.2. INPUTS * //
+// *             * //
+
+#{$class}--inputs {
+  @include media.breakpoint('xs') {
+    grid-template-areas: "dropdown input button";
+    grid-template-columns: 15rem 1fr auto;
+  }
+  #search-field-0 & {
+    grid-template-areas:
+      "dropdown"
+      "input";
+    grid-template-columns: 1fr;
+    @include media.breakpoint('xs') {
+      grid-template-areas: "dropdown input";
+      grid-template-columns: 15rem 1fr;
+    }
+  }
+  .advanced-search__remove-field {
+    @include media.breakpoint('xs') {
+      margin-left: 0.75rem;
+    }
+  }
+}
