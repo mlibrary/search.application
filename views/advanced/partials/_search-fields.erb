@@ -8,7 +8,7 @@
       <%= erb :"partials/header/search/_search-options", locals: { search_options: @presenter.search_options, index: index } %>
       <input type="search" aria-label="Query input for search field <%= index %>" name="search-field-<%= index %>" class="advanced-search__search-field--term-input" value="" autocomplete="on">
       <% if index > 0 %>
-        <button type="button" class="hide__no-javascript button__ghost advanced-search__remove-field" data-field="<%= search_field_id %>">
+        <button type="button" class="hide__no-javascript button__ghost advanced-search__remove-field" data-field-id="<%= search_field_id %>">
           <span class="material-symbols-rounded" aria-hidden="true">close</span>
           <span class="visually-hidden">Remove search field <%= index %></span>
         </button>
