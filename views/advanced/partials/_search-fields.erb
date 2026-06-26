@@ -1,19 +1,12 @@
 <% @presenter.advanced_search.checked_search_options.each_with_index do |option, index| %>
   <% search_field_id = "search-field-#{index}" %>
   <div class="advanced-search__search-field" id="<%= search_field_id %>">
-    <% if index > 0 %>
-      <%= erb :"advanced/partials/search-fields/_booleans", locals: { index: index } %>
-    <% end %>
+    <%= erb :"advanced/partials/search-fields/_booleans", locals: { index: index } %>
     <div class="search-form__inputs advanced-search__search-field--inputs">
       <%= erb :"partials/header/search/_search-options", locals: { search_options: @presenter.search_options, index: index } %>
       <input type="search" aria-label="Query input for search field <%= index %>" name="search-field-<%= index %>" class="advanced-search__search-field--term-input" value="" autocomplete="on">
-      <% if index > 0 %>
-        <button type="button" class="hide__no-javascript button__ghost advanced-search__remove-field" data-field-id="<%= search_field_id %>">
-          <span class="material-symbols-rounded" aria-hidden="true">close</span>
-          <span class="visually-hidden">Remove search field <%= index %></span>
-        </button>
-      <% end %>
+      <%= erb :"advanced/partials/search-fields/_remove-field", locals: { index: index, search_field_id: search_field_id } %>
     </div>
   </div>
 <% end %>
-<button class="hide__no-javascript button__ghost advanced-search__add-field">Add another field</button>
+<%= erb :"advanced/partials/search-fields/_add-field" %>

@@ -1,6 +1,9 @@
 @use '../../utilities';
 @use '../../media';
 @use '../../partials/header/search';
+@use './search-fields/booleans';
+@use './search-fields/remove-field';
+@use './search-fields/add-field';
 
 // --------------------------------------------------
 //
@@ -10,7 +13,7 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Search Fields
-//     2.1. Search Field
+//     2.1. Inputs
 //
 // --------------------------------------------------
 
@@ -36,22 +39,8 @@ $class: ".advanced-search__search-field";
 
 
 
-// *               * //
-// * 2.1. BOOLEANS * //
-// *               * //
-
-#{$class}--booleans {
-  @include utilities.flex();
-  justify-content: center;
-  .checkbox {
-    align-items: center;
-  }
-}
-
-
-
 // *             * //
-// * 2.2. INPUTS * //
+// * 2.1. INPUTS * //
 // *             * //
 
 #{$class}--inputs {
@@ -67,11 +56,6 @@ $class: ".advanced-search__search-field";
     @include media.breakpoint('xs') {
       grid-template-areas: "dropdown input";
       grid-template-columns: 15rem 1fr;
-    }
-  }
-  .advanced-search__remove-field {
-    @include media.breakpoint('xs') {
-      margin-left: 0.75rem;
     }
   }
 }
