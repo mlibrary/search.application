@@ -3,6 +3,7 @@
 @use '../../icons';
 @use '../../utilities';
 @use './search/search-options';
+@use './search/tip';
 
 // --------------------------------------------------
 //
@@ -18,7 +19,6 @@
 //     3.2 Button
 //       3.2.1 Search Form
 //     3.3 Advanced
-//   4. Tip
 //
 // --------------------------------------------------
 
@@ -121,28 +121,4 @@ $class: 'search-form';
   align-self: center;
   grid-area: advanced;
   text-align: center;
-}
-
-
-
-
-
-// ************** //
-// *** 4. TIP *** //
-// ************** //
-
-.#{$class}__tip {
-  @include utilities.flex();
-  align-items: start;
-  display: none;
-  margin-bottom: 0;
-  &:before {
-    @include icons.icon($icon: 'info', $fill: false);
-    & {
-      flex: none;
-    }
-  }
-  .search-form__tip--content {
-    flex-grow: 1;
-  }
 }

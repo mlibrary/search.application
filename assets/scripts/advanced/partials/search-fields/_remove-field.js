@@ -1,14 +1,16 @@
-import { getSearchField } from '../_search-fields.js';
-
 const removeButtonQuery = 'button.advanced-search__remove-field';
 
-const getRemoveSearchFieldButtons = () => {
+const getAllRemoveSearchFieldButtons = () => {
   return document.querySelectorAll(removeButtonQuery);
 };
 
-const handleRemoveSearchField = ({ id, searchField = getSearchField } = {}) => {
+const getRemoveSearchFieldButton = ({ searchField } = {}) => {
+  return searchField.querySelector(removeButtonQuery);
+};
+
+const handleRemoveSearchField = ({ id } = {}) => {
   // Get the search field
-  const field = searchField({ id });
+  const field = document.getElementById(id);
   // Check if the field exists
   if (field) {
     // Remove the field from the DOM
@@ -16,7 +18,7 @@ const handleRemoveSearchField = ({ id, searchField = getSearchField } = {}) => {
   }
 };
 
-const removeSearchField = ({ handleRemoveField = handleRemoveSearchField, removeSearchFieldButtons = getRemoveSearchFieldButtons() } = {}) => {
+const removeSearchField = ({ handleRemoveField = handleRemoveSearchField, removeSearchFieldButtons = getAllRemoveSearchFieldButtons() } = {}) => {
   // Loop through all remove field buttons
   removeSearchFieldButtons.forEach((removeSearchFieldButton) => {
     // Add a `click` event listener
@@ -32,7 +34,8 @@ const removeSearchField = ({ handleRemoveField = handleRemoveSearchField, remove
 };
 
 export {
-  getRemoveSearchFieldButtons,
+  getAllRemoveSearchFieldButtons,
+  getRemoveSearchFieldButton,
   handleRemoveSearchField,
   removeSearchField
 };

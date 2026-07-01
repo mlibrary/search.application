@@ -6,12 +6,7 @@ const getLastSearchField = () => {
   return getAllSearchFields()[getAllSearchFields().length - 1];
 };
 
-const getSearchField = ({ id } = {}) => {
-  return document.getElementById(id);
-};
-
 export {
   getAllSearchFields,
-  getLastSearchField,
-  getSearchField
+  getLastSearchField
 };

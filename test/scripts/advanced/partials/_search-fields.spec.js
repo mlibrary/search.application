@@ -1,7 +1,6 @@
 import {
   getAllSearchFields,
-  getLastSearchField,
-  getSearchField
+  getLastSearchField
 } from '../../../../assets/scripts/advanced/partials/_search-fields.js';
 import { expect } from 'chai';
 
@@ -46,15 +45,6 @@ describe('search fields', function () {
   describe('getLastSearchField()', function () {
     it('should return the last search field', function () {
       expect(getLastSearchField(), '`getLastSearchField` should return the last search field').to.deep.equal(searchFields()[searchFields().length - 1]);
-    });
-  });
-
-  describe('getSearchField()', function () {
-    it('should return the search field element', function () {
-      // Get the ID of the first search field
-      const searchFieldId = searchFields()[0].id;
-      // Check that `getSearchField` returns the correct element
-      expect(getSearchField({ id: searchFieldId }), '`getSearchField` should return the correct search field element').to.deep.equal(document.getElementById(searchFieldId));
     });
   });
 });

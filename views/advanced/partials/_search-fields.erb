@@ -4,7 +4,7 @@
     <%= erb :"advanced/partials/search-fields/_booleans", locals: { index: index } %>
     <div class="search-form__inputs advanced-search__search-field--inputs">
       <%= erb :"partials/header/search/_search-options", locals: { search_options: @presenter.search_options, index: index } %>
-      <input type="search" aria-label="Query input for search field <%= index %>" name="search-field-<%= index %>" class="advanced-search__search-field--term-input" value="" autocomplete="on">
+      <%= erb :"advanced/partials/search-fields/_search", locals: { value: nil, index: index } %>
       <%= erb :"advanced/partials/search-fields/_remove-field", locals: { index: index, search_field_id: search_field_id } %>
     </div>
   </div>

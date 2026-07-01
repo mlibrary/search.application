@@ -24,11 +24,5 @@
     </button>
     <%= link_to(body: "Advanced", url: "/advanced/#{@presenter.current_datastore}", classes: ["underline__none", "strong"]) %>
   </div>
-  <% search_options.flat_list.each do |option| %>
-    <p class="viewport-container search-form__tip" data-value="<%= option.value %>">
-      <span class="search-form__tip--content">
-        <span class="strong"><%= option.group.capitalize %> Tip:</span> <%= option.tip %>
-      </span>
-    </p>
-  <% end %>
+  <%= erb :"/partials/header/search/_tip", locals: { search_options: search_options.flat_list } %>
 </form>
