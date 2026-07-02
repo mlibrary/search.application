@@ -161,18 +161,18 @@ describe('search fields', function () {
   });
 
   describe('resetSearchFieldValues()', function () {
-    let emptySearchInputSpy = null;
+    let resetSearchInputSpy = null;
     let updateBooleanGroupSpy = null;
     let resetSearchOptionsDropdownSpy = null;
     let args = null;
 
     beforeEach(function () {
-      emptySearchInputSpy = sinon.spy();
+      resetSearchInputSpy = sinon.spy();
       updateBooleanGroupSpy = sinon.spy();
       resetSearchOptionsDropdownSpy = sinon.spy();
       args = {
-        emptyInput: emptySearchInputSpy,
         lastSearchField: getLastSearchField(),
+        resetInput: resetSearchInputSpy,
         resetSearchOptions: resetSearchOptionsDropdownSpy,
         updateBoolean: updateBooleanGroupSpy
       };
@@ -182,7 +182,7 @@ describe('search fields', function () {
     });
 
     afterEach(function () {
-      emptySearchInputSpy = null;
+      resetSearchInputSpy = null;
       updateBooleanGroupSpy = null;
       resetSearchOptionsDropdownSpy = null;
       args = null;
@@ -196,8 +196,8 @@ describe('search fields', function () {
       expect(resetSearchOptionsDropdownSpy.calledWith({ searchField: args.lastSearchField }), '`updateSearchOptions` should be called with the correct arguments').to.be.true;
     });
 
-    it('should call `emptyInput` with the correct arguments', function () {
-      expect(emptySearchInputSpy.calledWith({ searchField: args.lastSearchField }), '`emptyInput` should be called with the correct arguments').to.be.true;
+    it('should call `resetSearchInput` with the correct arguments', function () {
+      expect(resetSearchInputSpy.calledWith({ searchField: args.lastSearchField }), '`resetSearchInput` should be called with the correct arguments').to.be.true;
     });
   });
 
