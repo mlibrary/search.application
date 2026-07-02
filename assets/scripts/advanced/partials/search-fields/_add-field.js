@@ -1,8 +1,8 @@
 import { getAllSearchFields, getLastSearchField } from '../_search-fields.js';
 import { emptySearchInput } from './_search.js';
 import { getRemoveSearchFieldButton } from './_remove-field.js';
+import { resetSearchOptionsDropdown } from '../../../partials/header/search/_search-options.js';
 import { updateBooleanGroup } from './_booleans.js';
-import { updateSearchOptionsDropdown } from '../../../partials/header/search/_search-options.js';
 
 /*
   - [x] Get add search field button
@@ -10,10 +10,10 @@ import { updateSearchOptionsDropdown } from '../../../partials/header/search/_se
   - [x] Append the copied field to the DOM
 
   - [x] Update all id and data-field-id values
+    - [] Update all labels and aria-labels if necessary
   - [] Check the first boolean
   - [] Set select option to default
   - [] Remove any possible value in input
-  - [] Update labels and aria-labels if necessary
   - [] Run `removeFields` after click
 */
 
@@ -49,13 +49,13 @@ const resetSearchFieldValues = ({
   emptyInput = emptySearchInput,
   lastSearchField = getLastSearchField(),
   updateBoolean = updateBooleanGroup,
-  updateSearchOptions = updateSearchOptionsDropdown
+  resetSearchOptions = resetSearchOptionsDropdown
 }) => {
   // Check the first boolean input and uncheck the others
   updateBoolean({ searchField: lastSearchField });
 
   // Update the select option to default
-  updateSearchOptions({ searchField: lastSearchField });
+  resetSearchOptions({ searchField: lastSearchField });
 
   // Empty the search input value
   emptyInput({ searchField: lastSearchField });

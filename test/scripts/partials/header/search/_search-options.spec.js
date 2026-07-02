@@ -1,7 +1,8 @@
 import {
   getSearchOptions,
   getSearchOptionsDropdown,
-  updateSearchOptionsDropdown
+  resetSearchOptionsDropdown,
+  updateSearchOptionsDropdownLabel
 } from '../../../../../assets/scripts/partials/header/search/_search-options.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -13,7 +14,7 @@ describe('search options dropdown', function () {
     // Apply HTML to the body
     document.body.innerHTML = `
       <form class="advanced-search__search-field">
-        <select class="search-form__inputs--select">
+        <select class="search-form__inputs--select" aria-label="Select an option for search field 1">
           <option value="keyword">Keyword</option>
           <option value="title" selected>Title</option>
           <option value="author">Author</option>
@@ -42,7 +43,39 @@ describe('search options dropdown', function () {
     });
   });
 
-  describe('updateSearchOptionsDropdown()', function () {
+  describe('updateSearchOptionsDropdownLabel()', function () {
+    let getSearchOptionsDropdownStub = null;
+    let args = null;
+
+    beforeEach(function () {
+      getSearchOptionsDropdownStub = sinon.stub().callsFake((getSearchOptionsDropdownStubArgs) => {
+        return getSearchOptionsDropdown({ searchField: getSearchOptionsDropdownStubArgs.searchField });
+      });
+      args = {
+        index: 5,
+        searchField: searchField(),
+        searchOptionsDropdown: getSearchOptionsDropdownStub
+      };
+
+      // Call the function
+      updateSearchOptionsDropdownLabel(args);
+    });
+
+    afterEach(function () {
+      getSearchOptionsDropdownStub = null;
+      args = null;
+    });
+
+    it('should call `getSearchOptionsDropdown` with the correct arguments', function () {
+      expect(getSearchOptionsDropdownStub.calledWith({ searchField: searchField() }), '`getSearchOptionsDropdown` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should update the `aria-label` attribute of the dropdown to reflect the new index', function () {
+      expect(document.querySelector('select').getAttribute('aria-label'), '`aria-label` attribute should be updated to reflect the new index').to.equal(`Select an option for search field ${args.index}`);
+    });
+  });
+
+  describe('resetSearchOptionsDropdown()', function () {
     let getSearchOptionsStub = null;
     let args = null;
 
@@ -57,7 +90,7 @@ describe('search options dropdown', function () {
       expect(args.searchOptions()[0].selected, 'the first option should not be selected before calling the function').to.be.false;
 
       // Call the function
-      updateSearchOptionsDropdown(args);
+      resetSearchOptionsDropdown(args);
     });
 
     afterEach(function () {
