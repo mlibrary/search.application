@@ -1,8 +1,8 @@
 module Search::Presenters::Record::Articles
   class Full < Search::Presenters::Record::Base
     METADATA_METHODS = [
-      :author,
       :abstract,
+      :author,
       :published_in,
       :publisher,
       :genre,
@@ -71,6 +71,48 @@ module Search::Presenters::Record::Articles
 
     def holdings
       OpenStruct.new(list: [])
+    end
+  end
+
+  class Brief < Full
+    METADATA_METHODS = [
+      :author,
+      :published_in
+    ]
+
+    def to_h
+      {
+        title: {
+          original: @record.bib.title.text
+        },
+        metadata: metadata.map do |f|
+          {
+            field: f.field,
+            original: f.values&.first&.text
+          }
+        end,
+        url: url,
+        citation: {
+          ris: ris,
+          csl: csl
+        },
+        holding: {
+          call_number: nil,
+          location: nil
+        }
+      }
+    end
+
+    def to_json
+      to_h.to_json
+    end
+
+    private
+
+    def holding
+      if holdings.physical.count == 1
+        holdings.physical.first.holding
+      end
     end
   end
 end

@@ -129,7 +129,7 @@ class Search::Application < Sinatra::Base
       end
 
       get "/#{datastore.slug}" do
-        if params.any? || datastore.slug != "articles"
+        if params.any? && datastore.slug != "articles"
           @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: full_uri, patron: @patron)
           erb :"datastores/results/layout", layout: :layout do
             erb :"datastores/results/#{datastore.slug}"

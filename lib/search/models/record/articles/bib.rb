@@ -8,7 +8,9 @@ class Search::Models::Record::Articles::Bib
   end
 
   [:id, :peer_reviewed].each do |uid|
-    define_method(uid) { @data[uid] }
+    define_method(uid) do
+      @data[uid.to_s]
+    end
   end
 
   def title

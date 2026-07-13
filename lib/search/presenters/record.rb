@@ -20,7 +20,7 @@ module Search
           @record = record
         end
 
-        [:id, :title, :metadata].each do |m|
+        [:title, :metadata].each do |m|
           define_method m do
             raise NotImplementedError
           end
