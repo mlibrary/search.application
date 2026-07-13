@@ -2,6 +2,7 @@ class Search::Models::Record::Articles
 end
 
 require "search/models/record/articles/bib"
+require "search/models/record/articles/holdings"
 
 class Search::Models::Record::Articles
   def self.for(id)

@@ -84,7 +84,7 @@ module Search::Presenters::Record::Articles
     end
 
     def holdings
-      OpenStruct.new(list: [])
+      Holdings.new(@record)
     end
   end
 
@@ -126,6 +126,99 @@ module Search::Presenters::Record::Articles
     def holding
       if holdings.physical.count == 1
         holdings.physical.first.holding
+      end
+    end
+  end
+
+  class Holdings
+    def initialize(data)
+      @holdings = data.holdings
+    end
+
+    def list
+      [Holding.new(@holdings)]
+    end
+  end
+
+  class Holding
+    include Search::Presenters::Record::Holdings
+
+    def initialize(data)
+      @holdings = data
+    end
+
+    def kind
+      "article"
+    end
+
+    def heading
+      "Availability"
+    end
+
+    def icon
+      "devices"
+    end
+
+    def empty?
+      count == 0
+    end
+
+    def count
+      @holdings.count
+    end
+
+    def table_headings
+      result = ["Action", "Description"]
+      result.push("Improving Access") if full_text?
+      result.map do |x|
+        table_heading_for(x)
+      end
+    end
+
+    def rows
+      [lib_key_row, alma_row].compact
+    end
+
+    private
+
+    def full_text?
+      alma_entry.availability == "full_text"
+    end
+
+    def get(source)
+      @holdings.items.find { |x| x.source == source }
+    end
+
+    def alma_entry
+      get("alma")
+    end
+
+    def lib_key_entry
+      get("lib_key")
+    end
+
+    def lib_key_row
+      if lib_key_entry
+        [
+          link_to_cell_for(text: "View PDF", url: lib_key_entry.url),
+          success_cell_for("Full text available"),
+          plain_text_cell_for("Full text link not working? Report a problem")
+        ]
+      end
+    end
+
+    def alma_row
+      if full_text?
+        [
+          link_to_cell_for(text: "Go to item", url: alma_entry.url),
+          success_cell_for("Full text available"),
+          plain_text_cell_for("Full text link not working? Report a problem")
+        ]
+      else
+        [
+          link_to_cell_for(text: "Go to item", url: alma_entry.url),
+          error_cell_for("Citation only")
+        ]
       end
     end
   end
