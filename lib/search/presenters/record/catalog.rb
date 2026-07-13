@@ -14,15 +14,7 @@ module Search
   module Presenters
     module Record
       module Catalog
-        class Base
-          [:id, :title, :icons, :metadata].each do |m|
-            define_method m do
-              raise NotImplementedError
-            end
-          end
-        end
-
-        class Full < Base
+        class Full < Search::Presenters::Record::Base
           METADATA_METHODS = [
             :format, # 00-catalog mirlyn_format
             :main_author,
@@ -98,33 +90,20 @@ module Search
             :extended_summary
           ]
 
-          def self.for(id)
-            record = "Search::Models::Record::#{datastore.capitalize}".constantize.for(id)
-            new(record)
-          end
+          LINK_TO_METHODS = [
+            {uid: :new_title, field: "New Title"},
+            {uid: :other_titles, field: "Other Titles"},
+            {uid: :preferred_title, field: "Preferred Title"},
+            {uid: :previous_title, field: "Previous Title"},
+            {uid: :related_title, field: "Related Title"}
+          ]
 
           def self.datastore
             "catalog"
           end
 
-          def initialize(record)
-            @record = record
-          end
-
-          def id
-            @record.bib.id
-          end
-
-          def datastore
-            self.class.datastore
-          end
-
           def position
             @record.position
-          end
-
-          def url
-            "#{S.base_url}/#{datastore}/record/#{id}"
           end
 
           def title
@@ -143,30 +122,8 @@ module Search
             end
           end
 
-          def respond_to_missing?(method, *args, **kwargs, &block)
-            self.class::METADATA_METHODS.any?(method)
-          end
-
-          def method_missing(method, *args, **kwargs, &block)
-            super unless respond_to_missing?(method)
-            S.logger.debug("#{method} not defined in Presenters::Record::Catalog::Full")
-            nil
-          end
-
-          def metadata
-            self.class::METADATA_METHODS.map { |field| public_send(field) }.compact
-          end
-
           def holdings
             Holdings.new(@record)
-          end
-
-          def ris
-            @record.citation.ris
-          end
-
-          def csl
-            @record.citation.csl
           end
 
           def shelf_browse
@@ -188,7 +145,7 @@ module Search
           end
 
           def format
-            Field.for(
+            field_for(
               uid: "format",
               field: "Formats",
               partial: "format",
@@ -202,7 +159,7 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
-                Field.for(
+                field_for(
                   uid: f[:uid],
                   field: f[:field],
                   partial: "browse",
@@ -219,7 +176,7 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
-                Field.for(
+                field_for(
                   uid: f[:uid],
                   field: f[:field],
                   partial: "browse",
@@ -238,7 +195,7 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
-                Field.for(
+                field_for(
                   uid: f[:uid],
                   field: f[:field],
                   partial: "link_to",
@@ -302,7 +259,7 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
-                Field.for(
+                field_for(
                   uid: f[:uid],
                   field: f[:field],
                   partial: "plain_text",
@@ -320,7 +277,7 @@ module Search
           ].each do |f|
             define_method(f[:uid]) do
               if @record.bib.public_send(f[:uid]).present?
-                Field.for(
+                field_for(
                   uid: f[:uid],
                   field: f[:field],
                   partial: "plain_text",
@@ -342,7 +299,7 @@ module Search
             {uid: :other_subjects, field: "Subjects (Other)"}
           ].each do |f|
             define_method(f[:uid]) do
-              Field.for(field: f[:field],
+              field_for(field: f[:field],
                 uid: f[:uid],
                 partial: "plain_text",
                 values: @record.bib.public_send(f[:uid]))
@@ -350,7 +307,7 @@ module Search
           end
 
           def academic_discipline
-            Field.for(
+            field_for(
               uid: "academic_discipline",
               field: "Academic Discipline",
               partial: "academic_discipline",
@@ -405,25 +362,6 @@ module Search
             if holdings.physical.count == 1
               holdings.physical.first.holding
             end
-          end
-        end
-
-        class Field
-          def self.for(field:, partial:, values:, uid: nil)
-            new(uid: uid, field: field, partial: partial, values: values) if values.present?
-          end
-          attr_reader :uid, :field, :partial, :values
-          def initialize(field:, partial:, values:, uid: nil)
-            @field = field
-            @partial = partial
-            @values = values
-            @uid = uid
-          end
-
-          include Enumerable
-
-          def each(&block)
-            @values.each(&block)
           end
         end
       end

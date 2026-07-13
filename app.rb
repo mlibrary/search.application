@@ -94,7 +94,7 @@ class Search::Application < Sinatra::Base
   end
 
   Search::Datastores.each do |datastore|
-    if ["catalog", "onlinejournals"].include?(datastore.slug)
+    if ["catalog", "onlinejournals", "articles"].include?(datastore.slug)
       get "/#{datastore.slug}/record/:id" do
         # profile = RubyProf::Profile.new
         # profile.start
@@ -129,7 +129,7 @@ class Search::Application < Sinatra::Base
       end
 
       get "/#{datastore.slug}" do
-        if params.any?
+        if params.any? || datastore.slug != "articles"
           @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: full_uri, patron: @patron)
           erb :"datastores/results/layout", layout: :layout do
             erb :"datastores/results/#{datastore.slug}"

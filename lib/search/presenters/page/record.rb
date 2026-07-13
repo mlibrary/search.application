@@ -74,6 +74,7 @@ class Search::Presenters::Page
 
     class Pagination
       def self.for(uri:, datastore: "catalog")
+        return Empty.new if datastore == "articles"
         results_model_klass = "Search::Models::Results::#{datastore.capitalize}".constantize
         query_values = uri.query_values || {} # flatten duplicate values
         position = query_values["position"].to_i

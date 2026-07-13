@@ -45,13 +45,13 @@ module Search::Models::Record::Metadata
     end
   end
 
-  # to include this, the class needs to have @data with a "search" key
+  # to include this, the class needs to have @data with a "search" key and a @datastore
   module SearchUrl
     def url
       query_string = @data["search"].map do |x|
         "#{x["field"]}:\"#{x["value"]}\""
       end.join(" AND ")
-      "#{S.base_url}/catalog?" + {query: query_string}.to_query
+      "#{S.base_url}/#{@datstore}?" + {query: query_string}.to_query
     end
   end
 
@@ -86,10 +86,14 @@ module Search::Models::Record::Metadata
 
   class LinkToItem < Item
     include SearchUrl
+
+    def initialize(data:, datastore:)
+      @data = data
+      @datstore = datastore
+    end
   end
 
-  class AuthorBrowseItem < Item
-    include SearchUrl
+  class AuthorBrowseItem < LinkToItem
     include BrowseUrl
 
     def kind

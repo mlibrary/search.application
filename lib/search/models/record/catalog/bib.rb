@@ -5,6 +5,7 @@ class Search::Models::Record::Catalog::Bib
 
   def initialize(data)
     @data = data
+    @datastore = self.class.name.split("::")[-2].downcase
   end
 
   def id
@@ -43,27 +44,27 @@ class Search::Models::Record::Catalog::Bib
 
   def main_author
     map_paired_field("main_author") do |ma|
-      AuthorBrowseItem.new(ma)
+      AuthorBrowseItem.new(data: ma, datastore: @datastore)
     end
   end
 
   [:new_title, :other_titles, :previous_title, :preferred_title, :releated_title].each do |uid|
     define_method(uid) do
       map_paired_field(uid.to_s) do |item|
-        LinkToItem.new(item)
+        LinkToItem.new(data: item, datastore: @datastore)
       end
     end
   end
 
   def related_title
     map_paired_field("related_title") do |item|
-      LinkToItem.new(item)
+      LinkToItem.new(data: item, datastore: @datastore)
     end
   end
 
   def contributors
     map_paired_field("contributors") do |item|
-      AuthorBrowseItem.new(item)
+      AuthorBrowseItem.new(data: item, datastore: @datastore)
     end
   end
 
