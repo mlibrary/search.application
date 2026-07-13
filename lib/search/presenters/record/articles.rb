@@ -2,6 +2,7 @@ module Search::Presenters::Record::Articles
   class Full < Search::Presenters::Record::Base
     METADATA_METHODS = [
       :abstract,
+      :retraction,
       :author,
       :published_in,
       :publisher,
@@ -24,6 +25,19 @@ module Search::Presenters::Record::Articles
 
     def title
       [OpenStruct.new(text: @record.bib.title.text, css_class: "title-primary")]
+    end
+
+    def retraction
+      if @record.bib.retraction_notice_url
+        field_for(
+          uid: :retraction,
+          field: "Retracted",
+          partial: "link_to",
+          values: [
+            OpenStruct.new(to_s: "This article has been retracted.", url: @record.bib.retraction_notice_url)
+          ]
+        )
+      end
     end
 
     [

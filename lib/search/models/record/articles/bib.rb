@@ -7,7 +7,7 @@ class Search::Models::Record::Articles::Bib
     @datastore = "articles"
   end
 
-  [:id, :peer_reviewed].each do |uid|
+  [:id, :peer_reviewed, :retraction_notice_url].each do |uid|
     define_method(uid) do
       @data[uid.to_s]
     end
