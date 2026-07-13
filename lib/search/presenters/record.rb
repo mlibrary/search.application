@@ -107,6 +107,7 @@ module Search
   end
 end
 
+require "search/presenters/record/holdings"
 require "search/presenters/record/catalog"
 require "search/presenters/record/onlinejournals"
 require "search/presenters/record/articles"

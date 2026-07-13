@@ -42,6 +42,8 @@ class Search::Presenters::Record::Catalog::Holdings
   end
 
   class HathiTrust
+    include Search::Presenters::Record::Holdings
+
     #
     # <Description>
     # This will just be ::Holdings::HathiTrust
@@ -87,7 +89,7 @@ class Search::Presenters::Record::Catalog::Holdings
       result = ["Link"]
       result.push("Description") if has_description?
       result.push("Source")
-      result.map { |x| TableHeading.new(x) }
+      result.map { |x| table_heading_for(x) }
     end
 
     def rows
@@ -119,6 +121,8 @@ class Search::Presenters::Record::Catalog::Holdings
   end
 
   class Online
+    include Search::Presenters::Record::Holdings
+
     def initialize(holdings)
       @holdings = holdings
     end
@@ -151,7 +155,7 @@ class Search::Presenters::Record::Catalog::Holdings
       result = ["Link"]
       result.push("Description") if has_description?
       result.push("Source")
-      result.map { |x| TableHeading.new(x) }
+      result.map { |x| table_heading_for(x) }
     end
 
     def rows
@@ -222,6 +226,8 @@ class Search::Presenters::Record::Catalog::Holdings
   end
 
   class ElectronicItem
+    include Search::Presenters::Record::Holdings
+
     def initialize(url:, availability_text:, description:, source:)
       @url = url
       @availability_text = availability_text
@@ -230,15 +236,15 @@ class Search::Presenters::Record::Catalog::Holdings
     end
 
     def link
-      ItemCell::LinkTo.new(text: @availability_text, url: @url)
+      link_to_cell_for(text: @availability_text, url: @url)
     end
 
     def description
-      ItemCell::PlainText.new(@description)
+      plain_text_cell_for(@description)
     end
 
     def source
-      ItemCell::PlainText.new(@source)
+      plain_text_cell_for(@source)
     end
 
     def to_a
@@ -258,43 +264,6 @@ class Search::Presenters::Record::Catalog::Holdings
 
     def to_s
       text
-    end
-  end
-
-  class ItemCell
-    def text
-      raise NotImplementedError
-    end
-
-    def partial
-      raise NotImplementedError
-    end
-
-    def to_s
-      text
-    end
-
-    class PlainText < ItemCell
-      attr_reader :text
-      def initialize(text)
-        @text = text
-      end
-
-      def partial
-        "plain_text"
-      end
-    end
-
-    class LinkTo < ItemCell
-      attr_reader :text, :url
-      def initialize(text:, url:)
-        @text = text
-        @url = url
-      end
-
-      def partial
-        "link_to"
-      end
     end
   end
 end

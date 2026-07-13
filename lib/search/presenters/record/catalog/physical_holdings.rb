@@ -1,5 +1,6 @@
 class Search::Presenters::Record::Catalog::Holdings::PhysicalBase
-  TableHeading = Search::Presenters::Record::Catalog::Holdings::TableHeading
+  include Search::Presenters::Record::Holdings
+
   def initialize(holding)
     @holding = holding
   end
@@ -34,7 +35,7 @@ class Search::Presenters::Record::Catalog::Holdings::PhysicalBase
     result.push("Description") if has_description?
     result.push("Status")
     result.push("Call Number")
-    result.map { |x| TableHeading.new(x) }
+    result.map { |x| table_heading_for(x) }
   end
 
   def rows
@@ -49,75 +50,22 @@ class Search::Presenters::Record::Catalog::Holdings::PhysicalBase
 end
 
 class Search::Presenters::Record::Catalog::Holdings::ItemBase
-  ItemCell = Search::Presenters::Record::Catalog::Holdings::ItemCell
+  include Search::Presenters::Record::Holdings
+
   def initialize(item:)
     @item = item
   end
 
   def description
-    ItemCell::PlainText.new(@item.description)
+    plain_text_cell_for(@item.description)
   end
 
   def call_number
-    ItemCell::PlainText.new(@item.call_number)
+    plain_text_cell_for(@item.call_number)
   end
   [:action, :status].each do |m|
     define_method m do
       raise NotImplementedError
-    end
-  end
-  class Status < ItemCell
-    attr_reader :text, :intent, :icon
-    def initialize(intent:, text:, icon:)
-      @intent = intent
-      @text = text
-      @icon = icon
-    end
-
-    def partial
-      "status"
-    end
-
-    class Success < self
-      def initialize(text)
-        @text = text
-      end
-
-      def intent
-        "success"
-      end
-
-      def icon
-        "check_circle"
-      end
-    end
-
-    class Warning < self
-      def initialize(text)
-        @text = text
-      end
-
-      def intent
-        "warning"
-      end
-
-      def icon
-        "warning"
-      end
-    end
-
-    class Error < self
-      def initialize(text)
-        @text = text
-      end
-
-      def intent
-        "error"
-      end
-
-      def icon
-        "error"
-      end
     end
   end
 end
@@ -153,18 +101,17 @@ class Search::Presenters::Record::Catalog::Holdings::Physical <
   class Item < Search::Presenters::Record::Catalog::Holdings::ItemBase
     def action
       if no_action?
-        ItemCell::PlainText.new("N/A")
+        plain_text_cell_for("N/A")
       elsif in_reading_room_library?
-        ItemCell::LinkTo.new(text: "Request This", url: @item.url)
+        link_to_cell_for(text: "Request This", url: @item.url)
       else # Get This
-        ItemCell::LinkTo.new(text: "Get This",
-          url: @item.url)
+        link_to_cell_for(text: "Get This", url: @item.url)
       end
     end
 
     def status
       if in_reading_room_library?
-        Status::Success.new("Reading Room use only")
+        success_cell_for("Reading Room use only")
       elsif checked_out?
         context = []
 
@@ -184,37 +131,37 @@ class Search::Presenters::Record::Catalog::Holdings::Physical <
         context_string = context.empty? ? nil : context.join(" ")
         text = ["Checked out", context_string].compact.join(": ")
 
-        Status::Warning.new(text)
+        warning_cell_for(text)
       elsif @item.process_type.present?
         if game_work_order?
-          Status::Error.new("Unavailable")
+          error_cell_for("Unavailable")
         elsif error_process?
-          Status::Error.new(process_type_text)
+          error_cell_for(process_type_text)
         else
-          Status::Warning.new(process_type_text)
+          warning_cell_for(process_type_text)
         end
       elsif building_use_only?
         if @item.physical_location.temporary?
-          Status::Success.new("Temporary location: #{@item.physical_location.text}; Building use only")
+          success_cell_for("Temporary location: #{@item.physical_location.text}; Building use only")
         else
-          Status::Success.new("Building use only")
+          success_cell_for("Building use only")
         end
       elsif in_reserves?
         text = "On reserve at #{@item.physical_location.text}"
         text += " (#{hour_loan_policy_text})" if hour_loan?
-        Status::Success.new(text)
+        success_cell_for(text)
       elsif @item.physical_location.temporary?
         if in_language_research_center?
-          Status::Error.new("Unavailable")
+          error_cell_for("Unavailable")
         else
-          Status::Success.new("Temporary location: #{@item.physical_location.text}")
+          success_cell_for("Temporary location: #{@item.physical_location.text}")
         end
       elsif in_game?
-        Status::Success.new("CVGA room use only; check out required")
+        success_cell_for("CVGA room use only; check out required")
       elsif hour_loan?
-        Status::Success.new("On shelf (#{hour_loan_policy_text})")
+        success_cell_for("On shelf (#{hour_loan_policy_text})")
       else
-        Status::Success.new("On shelf")
+        success_cell_for("On shelf")
       end
     end
 
