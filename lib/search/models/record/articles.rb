@@ -25,6 +25,10 @@ class Search::Models::Record::Articles
     Bib.new(@data)
   end
 
+  def retracted?
+    !!bib.retraction_notice_url
+  end
+
   def holdings
     Holdings.new(@data)
   end

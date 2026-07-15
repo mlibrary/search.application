@@ -28,7 +28,7 @@ module Search::Presenters::Record::Articles
     end
 
     def retraction
-      if @record.bib.retraction_notice_url
+      if retracted?
         field_for(
           uid: :retraction,
           field: "Retracted",
@@ -38,6 +38,10 @@ module Search::Presenters::Record::Articles
           ]
         )
       end
+    end
+
+    def retracted?
+      @record.retracted?
     end
 
     def published_in
@@ -159,11 +163,11 @@ module Search::Presenters::Record::Articles
 
   class Holdings
     def initialize(data)
-      @holdings = data.holdings
+      @data = data
     end
 
     def list
-      [Holding.new(@holdings)]
+      [Holding.new(@data)]
     end
   end
 
@@ -171,7 +175,8 @@ module Search::Presenters::Record::Articles
     include Search::Presenters::Record::Holdings
 
     def initialize(data)
-      @holdings = data
+      @holdings = data.holdings
+      @data = data
     end
 
     def kind
@@ -228,7 +233,8 @@ module Search::Presenters::Record::Articles
       if lib_key_entry
         [
           link_to_cell_for(text: "View PDF", url: lib_key_entry.url),
-          success_cell_for("Full text available"),
+          # we will never get a citation only retracted pdf because we don't have full text access. (should it be that way??)
+          @data.retracted? ? retracted_cell : success_cell_for("Full text available"),
           plain_text_cell_for("Full text link not working? Report a problem")
         ]
       end
@@ -238,15 +244,19 @@ module Search::Presenters::Record::Articles
       if full_text?
         [
           link_to_cell_for(text: "Go to item", url: alma_entry.url),
-          success_cell_for("Full text available"),
+          @data.retracted? ? retracted_cell : success_cell_for("Full text available"),
           plain_text_cell_for("Full text link not working? Report a problem")
         ]
       else
         [
           link_to_cell_for(text: "Go to item", url: alma_entry.url),
-          error_cell_for("Citation only")
+          @data.retracted? ? retracted_cell : warning_cell_for("Citation only")
         ]
       end
+    end
+
+    def retracted_cell
+      error_cell_for("Retracted")
     end
   end
 end
