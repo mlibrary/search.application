@@ -40,6 +40,34 @@ module Search::Presenters::Record::Articles
       end
     end
 
+    def published_in
+      text = [
+        {uid: :journal_title, prefix: nil},
+        {uid: :volume, prefix: "Volume"},
+        {uid: :issue, prefix: "Issue"},
+        {uid: :publication_date, prefix: ""},
+        {uid: :pages, prefix: "pp."}
+
+      ].map do |part|
+        value = @record.bib.public_send(part[:uid])&.first&.text
+        if value
+          if part[:prefix]
+            "#{part[:prefix]} #{value}"
+          else
+            value
+          end
+        end
+      end.compact.join(", ")
+      field_for(
+        uid: :published_in,
+        field: "Published in",
+        partial: "plain_text",
+        values: [
+          OpenStruct.new(to_s: text, text: text)
+        ]
+      )
+    end
+
     [
       {uid: :author, field: "Author"}
     ].each do |f|
@@ -57,7 +85,6 @@ module Search::Presenters::Record::Articles
 
     [
       {uid: :abstract, field: "Abstract"},
-      {uid: :published_in, field: "Published in"},
       {uid: :publisher, field: "Publisher"},
       {uid: :genre, field: "Genre"},
       {uid: :issn, field: "ISSN"},

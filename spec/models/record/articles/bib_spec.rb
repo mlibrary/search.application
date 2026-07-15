@@ -21,8 +21,9 @@ RSpec.describe Search::Models::Record::Articles::Bib do
     end
   end
   [
-    :abstract, :abstract, :published_in, :publisher, :genre, :issn, :eissn,
-    :isbn, :eisbn, :doi, :oclc, :pmid, :language, :subject, :edition
+    :abstract, :abstract, :journal_title, :issue, :volume, :pages,
+    :publication_date, :publisher, :genre, :issn, :eissn, :isbn, :eisbn, :doi,
+    :oclc, :pmid, :language, :subject, :edition
   ].each do |uid|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do

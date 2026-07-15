@@ -24,7 +24,7 @@ class Search::Models::Record::Articles::Bib
   end
 
   [
-    :abstract, :published_in, :publisher, :genre, :issn, :eissn,
+    :abstract, :journal_title, :issue, :volume, :pages, :publication_date, :publisher, :genre, :issn, :eissn,
     :isbn, :eisbn, :doi, :oclc, :pmid, :language, :subject, :edition
   ].each do |uid|
     define_method(uid) { map_text_field(uid.to_s) }

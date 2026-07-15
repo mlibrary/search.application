@@ -22,7 +22,27 @@
       ]
     }
   ],
-  "published_in": [
+  "journal_title": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "issue": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "volume": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "pages": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "publication_date": [
     {
       "text": "2012"
     }
