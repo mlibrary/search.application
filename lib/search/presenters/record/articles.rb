@@ -1,8 +1,8 @@
 module Search::Presenters::Record::Articles
   class Full < Search::Presenters::Record::Base
     METADATA_METHODS = [
-      :abstract,
       :retraction,
+      :abstract,
       :author,
       :published_in,
       :publisher,
