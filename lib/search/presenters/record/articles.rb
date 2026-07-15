@@ -65,7 +65,7 @@ module Search::Presenters::Record::Articles
       field_for(
         uid: :published_in,
         field: "Published in",
-        partial: "plain_text",
+        partial: "peer_review",
         values: [
           OpenStruct.new(to_s: text, text: text)
         ]
