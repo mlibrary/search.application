@@ -121,6 +121,7 @@ module Search::Presenters::Record::Articles
 
   class Brief < Full
     METADATA_METHODS = [
+      :retraction,
       :author,
       :published_in
     ]
@@ -155,7 +156,7 @@ module Search::Presenters::Record::Articles
 
   class Email < Brief
     def holdings
-      OpenStruct.new(list: [EmailHolding.new(@record)])
+      OpenStruct.new(any?: true, too_many?: false, list: [EmailHolding.new(@record)])
     end
   end
 
@@ -267,6 +268,10 @@ module Search::Presenters::Record::Articles
   end
 
   class EmailHolding < Holding
+    def table_headings
+      ["Action", "Description"]
+    end
+
     private
 
     def lib_key_row
