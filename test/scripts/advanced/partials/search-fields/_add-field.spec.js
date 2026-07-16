@@ -1,7 +1,6 @@
 import {
   addSearchField,
   appendClonedSearchField,
-  cloneLastSearchField,
   getAddSearchFieldButton,
   handleAddSearchField,
   resetSearchFieldValues,
@@ -60,31 +59,8 @@ describe('search fields', function () {
     });
   });
 
-  describe('cloneLastSearchField()', function () {
-    let args = null;
-    let clonedField = null;
-
-    beforeEach(function () {
-      args = {
-        searchField: getLastSearchField()
-      };
-
-      // Call the function
-      clonedField = cloneLastSearchField(args);
-    });
-
-    afterEach(function () {
-      args = null;
-      clonedField = null;
-    });
-
-    it('should clone the last search field', function () {
-      expect(clonedField.isEqualNode(args.searchField), '`cloneLastSearchField` should clone the last search field').to.be.true;
-    });
-  });
-
   describe('appendClonedSearchField()', function () {
-    let cloneLastSearchFieldStub = null;
+    let cloneSearchFieldStub = null;
     let stubArgs = null;
     let args = null;
     let searchFieldCount = null;
@@ -93,12 +69,12 @@ describe('search fields', function () {
       stubArgs = {
         searchField: getAllSearchFields()[1]
       };
-      cloneLastSearchFieldStub = sinon.stub().callsFake(({ searchField = stubArgs.searchField } = {}) => {
+      cloneSearchFieldStub = sinon.stub().callsFake(({ searchField = stubArgs.searchField } = {}) => {
         return searchField.cloneNode(true);
       });
 
       args = {
-        clonedSearchField: cloneLastSearchFieldStub,
+        clonedSearchField: cloneSearchFieldStub,
         lastSearchField: getLastSearchField(),
         ...stubArgs
       };
@@ -111,7 +87,7 @@ describe('search fields', function () {
     });
 
     afterEach(function () {
-      cloneLastSearchFieldStub = null;
+      cloneSearchFieldStub = null;
       stubArgs = null;
       args = null;
       searchFieldCount = null;

@@ -1,15 +1,21 @@
-<% if index > 0 %>
-  <fieldset class="advanced-search__search-field--booleans">
-    <legend class="visually-hidden">Select a boolean operator for field <%= index %></legend>
-    <%
-      booleans = @presenter.search_options.booleans
-      booleans.each do |boolean|
-        input_id = "#{boolean}-#{index}"
-    %>
-      <div class="checkbox">
-        <input type="radio" id="<%= input_id %>" name="boolean-<%= index %>" value="<%= boolean %>" <%= 'checked' if boolean == booleans.first %>>
-        <label for="<%= input_id %>"><%= boolean %></label>
-      </div>
-    <% end %>
-  </fieldset>
-<% end %>
+<%
+  boolean_attributes = {
+    class: "advanced-search__search-field--booleans"
+  }
+  if index == 0
+    boolean_attributes[:style] = "display: none;"
+  end
+%>
+<fieldset <%= boolean_attributes.map { |key, value| "#{key}=\"#{value}\"" }.join(" ") %>>
+  <legend class="visually-hidden">Select a boolean operator for field <%= index %></legend>
+  <%
+    booleans = @presenter.search_options.booleans
+    booleans.each do |boolean|
+      input_id = "#{boolean}-#{index}"
+  %>
+    <label class="label-wrapper">
+      <input type="radio" name="boolean-<%= index %>" value="<%= boolean %>" <%= 'checked' if boolean == booleans.first %>>
+      <span class="label-wrapper__text"><%= boolean %></span>
+    </label>
+  <% end %>
+</fieldset>

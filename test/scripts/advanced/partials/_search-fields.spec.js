@@ -1,4 +1,5 @@
 import {
+  cloneSearchField,
   getAllSearchFields,
   getLastSearchField
 } from '../../../../assets/scripts/advanced/partials/_search-fields.js';
@@ -45,6 +46,29 @@ describe('search fields', function () {
   describe('getLastSearchField()', function () {
     it('should return the last search field', function () {
       expect(getLastSearchField(), '`getLastSearchField` should return the last search field').to.deep.equal(searchFields()[searchFields().length - 1]);
+    });
+  });
+
+  describe('cloneSearchField()', function () {
+    let args = null;
+    let clonedField = null;
+
+    beforeEach(function () {
+      args = {
+        searchField: getLastSearchField()
+      };
+
+      // Call the function
+      clonedField = cloneSearchField(args);
+    });
+
+    afterEach(function () {
+      args = null;
+      clonedField = null;
+    });
+
+    it('should clone the last search field', function () {
+      expect(clonedField.isEqualNode(args.searchField), '`cloneSearchField` should clone the last search field').to.be.true;
     });
   });
 });

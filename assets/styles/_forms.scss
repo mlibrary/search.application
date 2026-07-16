@@ -86,7 +86,8 @@ $radius: 4px;
   background: $background;
   border: 2px solid var(--search-color-grey-600);
   position: relative;
-  &:checked:before {
+  &:checked:not(:default):before,
+  &:checked:default:before {
     content: '';
     left: 50%;
     position: absolute;
@@ -129,9 +130,28 @@ input:not([type="checkbox"], [type="radio"]),
 
 
 
-// *                * //
-// * 3.1 CHECKBOXES * //
-// *                * //
+// *                                   * //
+// * 3.1. CHECKBOXES AND RADIO BUTTONS * //
+// *                                   * //
+
+.label-wrapper {
+  @include utilities.flex($align: baseline);
+  gap: 0.5rem;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  & > input[type="checkbox"],
+  & > input[type="radio"] {
+    flex-shrink: 0;
+  }
+  & > .label-wrapper__text {
+    position: relative;
+    top: -0.375em;
+  }
+}
+
+// * 3.1.1. CHECKBOXES * //
 
 input[type="checkbox"] {
   @include check();
@@ -167,25 +187,7 @@ input[type="checkbox"] {
   }
 }
 
-// * 3.1.1. LABEL WRAPPED * //
-
-.checkbox {
-  @include utilities.flex($align: baseline);
-  gap: 0.5rem;
-  &:hover {
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  & > input[type="checkbox"] {
-    flex-shrink: 0;
-  }
-}
-
-
-
-// *                   * //
-// * 3.2 RADIO BUTTONS * //
-// *                   * //
+// * 3.2.1. RADIO BUTTONS * //
 
 input[type="radio"] {
   @include check();

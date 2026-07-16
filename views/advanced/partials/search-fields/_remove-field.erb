@@ -1,6 +1,14 @@
-<% if index > 0 %>
-  <button type="button" class="hide__no-javascript button__ghost advanced-search__remove-field" data-field-id="<%= search_field_id %>">
-    <span class="material-symbols-rounded" aria-hidden="true">close</span>
-    <span class="visually-hidden">Remove search field <%= index %></span>
-  </button>
-<% end %>
+<%
+  remove_field_button_attributes = {
+    class: "hide__no-javascript button__ghost advanced-search__remove-field",
+    "data-field-id": search_field_id,
+    type: "button"
+  }
+  if index == 0
+    remove_field_button_attributes[:style] = "display: none;"
+  end
+%>
+<button <%= remove_field_button_attributes.map { |key, value| "#{key}=\"#{value}\"" }.join(" ") %>>
+  <span class="material-symbols-rounded" aria-hidden="true">close</span>
+  <span class="visually-hidden">Remove search field <%= index %></span>
+</button>
