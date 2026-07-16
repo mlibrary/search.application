@@ -270,15 +270,14 @@ module Search::Presenters::Record::Articles
     private
 
     def lib_key_row
-      result = super
-      if result.is_a?(Array) && result.count == 3
-        result.pop
-      end
-      result
+      remove_improving_access(super)
     end
 
     def alma_row
-      result = super
+      remove_improving_access(super)
+    end
+
+    def remove_improving_access(result)
       if result.is_a?(Array) && result.count == 3
         result.pop
       end
