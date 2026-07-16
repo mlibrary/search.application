@@ -122,9 +122,25 @@ module Search::Presenters::Record::Articles
   class Brief < Full
     METADATA_METHODS = [
       :retraction,
+      :abstract,
       :author,
       :published_in
     ]
+
+    def abstract
+      text = @record.bib.abstract&.first&.text
+      return nil if text.nil?
+      if text.length > 300
+        text = text[0, 240] + "..."
+      end
+
+      field_for(
+        uid: :abstract,
+        field: "Abstract",
+        partial: "plain_text",
+        values: [OpenStruct.new(to_s: text, text: text)]
+      )
+    end
 
     def to_h
       {
