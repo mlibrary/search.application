@@ -115,7 +115,7 @@ module Search::Presenters::Record::Articles
     end
 
     def holdings
-      Holdings.new(@record)
+      OpenStruct.new(list: [Holding.new(@record)])
     end
   end
 
@@ -151,23 +151,11 @@ module Search::Presenters::Record::Articles
     def to_json
       to_h.to_json
     end
-
-    private
-
-    def holding
-      if holdings.physical.count == 1
-        holdings.physical.first.holding
-      end
-    end
   end
 
-  class Holdings
-    def initialize(data)
-      @data = data
-    end
-
-    def list
-      [Holding.new(@data)]
+  class Email < Brief
+    def holdings
+      OpenStruct.new(list: [EmailHolding.new(@record)])
     end
   end
 
@@ -275,6 +263,26 @@ module Search::Presenters::Record::Articles
           ReportSource: report_source
         }
       ).display_uri.to_s
+    end
+  end
+
+  class EmailHolding < Holding
+    private
+
+    def lib_key_row
+      result = super
+      if result.is_a?(Array) && result.count == 3
+        result.pop
+      end
+      result
+    end
+
+    def alma_row
+      result = super
+      if result.is_a?(Array) && result.count == 3
+        result.pop
+      end
+      result
     end
   end
 end
