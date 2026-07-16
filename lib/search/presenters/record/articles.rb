@@ -235,7 +235,7 @@ module Search::Presenters::Record::Articles
           link_to_cell_for(text: "View PDF", url: lib_key_entry.url),
           # we will never get a citation only retracted pdf because we don't have full text access. (should it be that way??)
           @data.retracted? ? retracted_cell : success_cell_for("Full text available"),
-          plain_text_cell_for("Full text link not working? Report a problem")
+          improving_access_cell(:libkey)
         ]
       end
     end
@@ -245,7 +245,7 @@ module Search::Presenters::Record::Articles
         [
           link_to_cell_for(text: "Go to item", url: alma_entry.url),
           @data.retracted? ? retracted_cell : success_cell_for("Full text available"),
-          plain_text_cell_for("Full text link not working? Report a problem")
+          improving_access_cell(:alma)
         ]
       else
         [
@@ -257,6 +257,24 @@ module Search::Presenters::Record::Articles
 
     def retracted_cell
       error_cell_for("Retracted")
+    end
+
+    def improving_access_cell(kind)
+      report_source = (kind == :libkey) ? "ArticlesSearch-LibKey-GoToPDF" : "ArticlesSearch"
+      improving_access_cell_for(improving_access_url(report_source))
+    end
+
+    def improving_access_url(report_source)
+      Addressable::URI.new(
+        scheme: "https",
+        host: "umich.qualtrics.com",
+        path: "/jfe/form/SV_2broDMHlZrBYwJL",
+        query_values: {
+          DocumentID: "#{S.base_url}/primo/record/#{@data.bib.id}",
+          LinkModel: "unknown",
+          ReportSource: report_source
+        }
+      ).display_uri.to_s
     end
   end
 end

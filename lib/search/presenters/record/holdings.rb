@@ -23,6 +23,10 @@ module Search::Presenters::Record::Holdings
     ItemCell::Status::Error.new(text)
   end
 
+  def improving_access_cell_for(url)
+    OpenStruct.new(partial: "improving_access", url: url)
+  end
+
   class TableHeading
     attr_reader :text
     def initialize(text)
