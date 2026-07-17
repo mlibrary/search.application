@@ -2,6 +2,7 @@ import {
   getSearchOptions,
   getSearchOptionsDropdown,
   resetSearchOptionsDropdown,
+  updateSearchOptionsDropdown,
   updateSearchOptionsDropdownLabel
 } from '../../../../../assets/scripts/partials/header/search/_search-options.js';
 import { expect } from 'chai';
@@ -110,6 +111,40 @@ describe('search options dropdown', function () {
           expect(option.selected, `the option at index ${index} should not be selected`).to.be.false;
         }
       });
+    });
+  });
+
+  describe('updateSearchOptionsDropdown()', function () {
+    let updateSearchOptionsDropdownLabelSpy = null;
+    let resetSearchOptionsDropdownSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      updateSearchOptionsDropdownLabelSpy = sinon.spy();
+      resetSearchOptionsDropdownSpy = sinon.spy();
+      args = {
+        index: 3,
+        resetDropdown: resetSearchOptionsDropdownSpy,
+        searchField: searchField(),
+        updateLabel: updateSearchOptionsDropdownLabelSpy
+      };
+
+      // Call the function
+      updateSearchOptionsDropdown(args);
+    });
+
+    afterEach(function () {
+      updateSearchOptionsDropdownLabelSpy = null;
+      resetSearchOptionsDropdownSpy = null;
+      args = null;
+    });
+
+    it('should call `updateSearchOptionsDropdownLabel` with the correct arguments', function () {
+      expect(updateSearchOptionsDropdownLabelSpy.calledWith({ index: args.index, searchField: args.searchField }), '`updateSearchOptionsDropdownLabel` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `resetSearchOptionsDropdown` with the correct arguments', function () {
+      expect(resetSearchOptionsDropdownSpy.calledWith({ searchField: args.searchField }), '`resetSearchOptionsDropdown` should be called with the correct arguments').to.be.true;
     });
   });
 });
