@@ -32,26 +32,31 @@ const updateBooleanInputs = ({
   });
 };
 
+const resetBooleanGroup = ({ booleanGroup, booleanInputs = getBooleanInputs } = {}) => {
+  booleanInputs({ booleanGroup }).forEach((booleanInput, index) => {
+    booleanInput.default = index === 0;
+    booleanInput.checked = index === 0;
+  });
+};
+
 const updateBooleanGroup = ({
   getGroup = getBooleanGroup,
   index,
+  resetGroup = resetBooleanGroup,
   searchField,
   updateInputs = updateBooleanInputs,
   updateLegend = updateBooleanGroupLegend
 } = {}) => {
   // Create the arguments object for the update functions
   const args = { booleanGroup: getGroup({ searchField }), index };
+  // Remove the `style` attribute from the boolean group to make it visible
+  args.booleanGroup.removeAttribute('style');
   // Update the legend text to reflect the new index
   updateLegend(args);
   // Update all the boolean information to reflect the new index
   updateInputs(args);
-};
-
-const resetBooleanGroup = ({ booleanGroup, booleanInputs = getBooleanInputs } = {}) => {
-  booleanInputs({ booleanGroup }).forEach((booleanInput, index) => {
-    booleanInput.default = index === 0;
-    booleanInput.checked = index === 0;
-  });
+  // Reset the boolean group to its default state
+  resetGroup({ booleanGroup: args.booleanGroup });
 };
 
 export {

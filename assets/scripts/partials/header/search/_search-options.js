@@ -23,9 +23,22 @@ const resetSearchOptionsDropdown = ({ searchField, searchOptions = getSearchOpti
   });
 };
 
+const updateSearchOptionsDropdown = ({
+  index,
+  resetDropdown = resetSearchOptionsDropdown,
+  searchField,
+  updateLabel = updateSearchOptionsDropdownLabel
+} = {}) => {
+  // Update the `aria-label` attribute for the search options dropdown to reflect the new index
+  updateLabel({ index, searchField });
+  // Reset the search options dropdown to its default state
+  resetDropdown({ searchField });
+};
+
 export {
   getSearchOptions,
   getSearchOptionsDropdown,
   resetSearchOptionsDropdown,
+  updateSearchOptionsDropdown,
   updateSearchOptionsDropdownLabel
 };

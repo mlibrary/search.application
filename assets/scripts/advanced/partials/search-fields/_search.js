@@ -11,12 +11,25 @@ const updateSearchInputLabel = ({ index, searchField, searchInput = getSearchInp
   input.setAttribute('aria-label', label.replace(/\d+/u, index));
 };
 
-const resetSearchInput = ({ searchField, searchInput = getSearchInput } = {}) => {
+const resetSearchInputValue = ({ searchField, searchInput = getSearchInput } = {}) => {
   searchInput({ searchField }).value = '';
+};
+
+const updateSearchInput = ({
+  index,
+  resetSearchInput = resetSearchInputValue,
+  searchField,
+  updateLabel = updateSearchInputLabel
+} = {}) => {
+  // Update the `aria-label` attribute for the search input element to reflect the new index
+  updateLabel({ index, searchField });
+  // Clear the value of the search input
+  resetSearchInput({ searchField });
 };
 
 export {
   getSearchInput,
-  resetSearchInput,
-  updateSearchInputLabel
+  resetSearchInputValue,
+  updateSearchInputLabel,
+  updateSearchInput
 };
