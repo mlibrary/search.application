@@ -1,7 +1,7 @@
 import { cloneSearchField, getLastSearchField, getSearchFieldIndex, updateSearchField } from '../_search-fields.js';
-import { getRemoveSearchFieldButton, updateRemoveSearchFieldButton } from './_remove-field.js';
-import { makeBooleanGroupVisible, updateBooleanGroup } from './_booleans.js';
-import { updateSearchInput, updateSearchInputLabel } from './_search.js';
+import { updateBooleanGroup } from './_booleans.js';
+import { updateRemoveSearchFieldButton } from './_remove-field.js';
+import { updateSearchInput } from './_search.js';
 import { updateSearchOptionsDropdown } from '../../../partials/header/search/_search-options.js';
 
 const getAddSearchFieldButton = () => {
@@ -53,18 +53,20 @@ const appendClonedSearchField = ({
   lastSearchField.insertAdjacentElement('afterend', clonedSearchField);
 };
 
-const addSearchFieldTest = ({
+const addSearchField = ({
   addSearchFieldButton = getAddSearchFieldButton(),
   appendClonedField = appendClonedSearchField
 } = {}) => {
   // Add event listener to the add search field button
   addSearchFieldButton.addEventListener('click', () => {
-  // Create and apply the new search field
+    // Create and apply the new search field
     appendClonedField();
   });
 };
 
 export {
-  addSearchFieldTest,
+  addSearchField,
+  appendClonedSearchField,
+  cloneAndUpdateSearchField,
   getAddSearchFieldButton
 };

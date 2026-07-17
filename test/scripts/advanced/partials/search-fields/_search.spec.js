@@ -1,6 +1,5 @@
 import {
   getSearchInput,
-  resetSearchInput,
   updateSearchInputLabel
 } from '../../../../../assets/scripts/advanced/partials/search-fields/_search.js';
 import { expect } from 'chai';
@@ -67,38 +66,6 @@ describe('search input', function () {
 
     it('should update the `aria-label` attribute of the search input', function () {
       expect(searchInput().getAttribute('aria-label'), 'the `aria-label` attribute of the search input should be updated with the new index').to.equal(`Query input for search field ${args.index}`);
-    });
-  });
-
-  describe('resetSearchInput()', function () {
-    let getSearchInputStub = null;
-    let args = null;
-
-    beforeEach(function () {
-      getSearchInputStub = sinon.stub().returns(getSearchInput({ searchField: searchField() }));
-      args = {
-        searchField: searchField(),
-        searchInput: getSearchInputStub
-      };
-
-      // Check that the search input has a value before calling the function
-      expect(searchInput().value, 'the search input should have a value before calling the function').to.not.equal('');
-
-      // Call the function
-      resetSearchInput(args);
-    });
-
-    afterEach(function () {
-      getSearchInputStub = null;
-      args = null;
-    });
-
-    it('should call `getSearchInput` with the correct arguments', function () {
-      expect(getSearchInputStub.calledWith({ searchField: searchField() }), '`getSearchInput` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should reset the search input value', function () {
-      expect(searchInput().value, 'the search input should be empty after calling the function').to.equal('');
     });
   });
 });

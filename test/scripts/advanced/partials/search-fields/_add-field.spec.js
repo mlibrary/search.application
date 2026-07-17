@@ -1,14 +1,10 @@
 import {
   addSearchField,
   appendClonedSearchField,
-  getAddSearchFieldButton,
-  handleAddSearchField,
-  resetSearchFieldValues,
-  updateSearchFieldAttributes
+  getAddSearchFieldButton
 } from '../../../../../assets/scripts/advanced/partials/search-fields/_add-field.js';
 import { getAllSearchFields, getLastSearchField } from '../../../../../assets/scripts/advanced/partials/_search-fields.js';
 import { expect } from 'chai';
-import { getRemoveSearchFieldButton } from '../../../../../assets/scripts/advanced/partials/search-fields/_remove-field.js';
 import sinon from 'sinon';
 
 const searchFieldGroup = (index) => {
@@ -32,7 +28,7 @@ const searchFieldGroup = (index) => {
   `;
 };
 
-describe('search fields', function () {
+describe('add search field', function () {
   let addFieldButton = null;
 
   beforeEach(function () {
@@ -102,136 +98,19 @@ describe('search fields', function () {
     });
   });
 
-  describe('updateSearchFieldAttributes()', function () {
-    let args = null;
-
-    beforeEach(function () {
-      args = {
-        allSearchFields: getAllSearchFields(),
-        removeSearchFieldButton: sinon.stub().callsFake(({ searchField }) => {
-          return getRemoveSearchFieldButton({ searchField });
-        })
-      };
-
-      // Call the function
-      updateSearchFieldAttributes(args);
-    });
-
-    afterEach(function () {
-      args = null;
-    });
-
-    it('should update the attributes of all search fields', function () {
-      // Loop through all search fields and check the attributes
-      args.allSearchFields.forEach((searchField, index) => {
-        // Create the expected ID based on the index
-        const expectedId = `search-field-${index}`;
-        // Check the search field ID
-        expect(searchField.id, `The id of search field ${index} should be updated to '${expectedId}'`).to.equal(expectedId);
-        // Get the remove button in the search field
-        const removeButton = args.removeSearchFieldButton({ searchField });
-        // Check that the `data-field-id` of the remove button is updated to match the search field ID
-        expect(removeButton.dataset.fieldId, `The data-field-id of the remove button for search field ${index} should be updated to '${expectedId}'`).to.equal(expectedId);
-      });
-    });
-  });
-
-  describe('resetSearchFieldValues()', function () {
-    let resetSearchInputSpy = null;
-    let updateBooleanGroupSpy = null;
-    let resetSearchOptionsDropdownSpy = null;
-    let args = null;
-
-    beforeEach(function () {
-      resetSearchInputSpy = sinon.spy();
-      updateBooleanGroupSpy = sinon.spy();
-      resetSearchOptionsDropdownSpy = sinon.spy();
-      args = {
-        lastSearchField: getLastSearchField(),
-        resetInput: resetSearchInputSpy,
-        resetSearchOptions: resetSearchOptionsDropdownSpy,
-        updateBoolean: updateBooleanGroupSpy
-      };
-
-      // Call the function
-      resetSearchFieldValues(args);
-    });
-
-    afterEach(function () {
-      resetSearchInputSpy = null;
-      updateBooleanGroupSpy = null;
-      resetSearchOptionsDropdownSpy = null;
-      args = null;
-    });
-
-    it('should call `updateBoolean` with the correct arguments', function () {
-      expect(updateBooleanGroupSpy.calledWith({ searchField: args.lastSearchField }), '`updateBoolean` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should call `updateSearchOptions` with the correct arguments', function () {
-      expect(resetSearchOptionsDropdownSpy.calledWith({ searchField: args.lastSearchField }), '`updateSearchOptions` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should call `resetSearchInput` with the correct arguments', function () {
-      expect(resetSearchInputSpy.calledWith({ searchField: args.lastSearchField }), '`resetSearchInput` should be called with the correct arguments').to.be.true;
-    });
-  });
-
-  describe('handleAddSearchField()', function () {
-    let appendClonedFieldSpy = null;
-    let resetValuesSpy = null;
-    let updateAttributesSpy = null;
-    let args = null;
-
-    beforeEach(function () {
-      appendClonedFieldSpy = sinon.spy();
-      resetValuesSpy = sinon.spy();
-      updateAttributesSpy = sinon.spy();
-      args = {
-        appendClonedField: appendClonedFieldSpy,
-        resetValues: resetValuesSpy,
-        searchField: getLastSearchField(),
-        updateAttributes: updateAttributesSpy
-      };
-
-      // Call the function
-      handleAddSearchField(args);
-    });
-
-    afterEach(function () {
-      appendClonedFieldSpy = null;
-      resetValuesSpy = null;
-      updateAttributesSpy = null;
-      args = null;
-    });
-
-    it('should call `appendClonedSearchField` with the correct arguments', function () {
-      expect(appendClonedFieldSpy.calledOnceWithExactly({ searchField: args.searchField }), '`appendClonedSearchField` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should call `updateSearchFieldAttributes`', function () {
-      expect(updateAttributesSpy.calledOnceWithExactly(), '`updateSearchFieldAttributes` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should call `resetSearchFieldValues` with the correct arguments', function () {
-      expect(resetValuesSpy.calledOnceWithExactly(), '`resetSearchFieldValues` should be called with the correct arguments').to.be.true;
-    });
-  });
-
   describe('addSearchField()', function () {
-    let handleAddSearchFieldStub = null;
+    let appendClonedSearchFieldStub = null;
     let args = null;
     let event = null;
 
     beforeEach(function () {
-      handleAddSearchFieldStub = sinon.stub().callsFake(({ searchField }) => {
-        return handleAddSearchField({ searchField });
+      appendClonedSearchFieldStub = sinon.stub().callsFake(({ searchField }) => {
+        return appendClonedSearchField({ searchField });
       });
 
       args = {
         addSearchFieldButton: getAddSearchFieldButton(),
-        handleAddSearch: handleAddSearchFieldStub,
-        lastSearchField: getLastSearchField()
+        appendClonedField: appendClonedSearchFieldStub
       };
 
       // Call the function
@@ -243,13 +122,13 @@ describe('search fields', function () {
     });
 
     afterEach(function () {
-      handleAddSearchFieldStub = null;
+      appendClonedSearchFieldStub = null;
       args = null;
       event = null;
     });
 
-    it('should call `handleAddSearchField` with the correct arguments on click', function () {
-      expect(handleAddSearchFieldStub.calledOnceWithExactly({ searchField: args.lastSearchField }), '`handleAddSearchField` should be called once on click with the correct arguments').to.be.true;
+    it('should call `appendClonedSearchField` with the correct arguments on click', function () {
+      expect(appendClonedSearchFieldStub.calledOnceWithExactly(), '`appendClonedSearchField` should be called once on click with the correct arguments').to.be.true;
     });
   });
 });

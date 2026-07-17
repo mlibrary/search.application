@@ -1,7 +1,9 @@
 import {
   cloneSearchField,
   getAllSearchFields,
-  getLastSearchField
+  getLastSearchField,
+  getSearchFieldIndex,
+  updateSearchField
 } from '../../../../assets/scripts/advanced/partials/_search-fields.js';
 import { expect } from 'chai';
 
@@ -10,23 +12,9 @@ describe('search fields', function () {
 
   beforeEach(function () {
     // Apply HTML to the body
-    document.body.innerHTML = `
-      <div class="advanced-search__search-field" id="search-field-1">
-        <button class="advanced-search__remove-field" data-field-id="search-field-0">
-          Remove field
-        </button>
-      </div>
-      <div class="advanced-search__search-field" id="search-field-2">
-        <button class="advanced-search__remove-field" data-field-id="search-field-1">
-          Remove field
-        </button>
-      </div>
-      <div class="advanced-search__search-field" id="search-field-3">
-        <button class="advanced-search__remove-field" data-field-id="search-field-2">
-          Remove field
-        </button>
-      </div>
-    `;
+    document.body.innerHTML = Array.from({ length: 3 }, (element, index) => {
+      return `<div class="advanced-search__search-field" id="search-field-${index}"></div>`;
+    }).join('');
 
     searchFields = () => {
       return document.querySelectorAll('.advanced-search__search-field');
@@ -69,6 +57,46 @@ describe('search fields', function () {
 
     it('should clone the last search field', function () {
       expect(clonedField.isEqualNode(args.searchField), '`cloneSearchField` should clone the last search field').to.be.true;
+    });
+  });
+
+  describe('getSearchFieldIndex()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        searchField: getLastSearchField()
+      };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should return the correct index of a search field', function () {
+      expect(getSearchFieldIndex(args), '`getSearchFieldIndex` should return the correct index of the last search field').to.equal(searchFields().length - 1);
+    });
+  });
+
+  describe('updateSearchField()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = {
+        index: 5,
+        searchField: getLastSearchField()
+      };
+
+      // Call the function
+      updateSearchField(args);
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should update the `id` attribute of the search field', function () {
+      expect(args.searchField.id, '`updateSearchField` should update the `id` attribute of the search field').to.equal(`search-field-${args.index}`);
     });
   });
 });

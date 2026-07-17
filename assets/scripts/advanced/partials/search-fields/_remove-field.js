@@ -66,6 +66,8 @@ export {
   getAllRemoveSearchFieldButtons,
   getRemoveSearchFieldButton,
   handleRemoveSearchField,
+  removeSearchField,
+  removeSearchFieldEventListener,
   updateRemoveSearchFieldButton,
-  removeSearchField
+  updateRemoveSearchFieldButtonDataFieldId
 };

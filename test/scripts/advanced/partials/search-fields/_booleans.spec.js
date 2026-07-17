@@ -5,8 +5,7 @@ import {
   updateBooleanGroup,
   updateBooleanGroupLegend,
   updateBooleanInput,
-  updateBooleanInputs,
-  updateBooleanLabel
+  updateBooleanInputs
 } from '../../../../../assets/scripts/advanced/partials/search-fields/_booleans.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -141,33 +140,6 @@ describe('boolean group', function () {
     });
   });
 
-  describe('updateBooleanLabel()', function () {
-    let args = null;
-    let forAttribute = null;
-
-    beforeEach(function () {
-      args = {
-        booleanLabel: document.querySelector('label[for="AND-1"]'),
-        index: 2
-      };
-
-      // Save the initial `for` attribute value before calling the function
-      forAttribute = args.booleanLabel.getAttribute('for');
-
-      // Call the function
-      updateBooleanLabel(args);
-    });
-
-    afterEach(function () {
-      args = null;
-      forAttribute = null;
-    });
-
-    it('should update the `for` attribute to reflect the new index', function () {
-      expect(args.booleanLabel.getAttribute('for'), 'the `for` attribute value should be updated to reflect the new index').to.equal(forAttribute.endsWith(`-${args.index}`) ? forAttribute : `AND-${args.index}`);
-    });
-  });
-
   describe('updateBooleanInputs()', function () {
     let getBooleanInputsStub = null;
     let updateInputStub = null;
@@ -181,15 +153,11 @@ describe('boolean group', function () {
       updateInputStub = sinon.stub().callsFake(({ booleanInput, index }) => {
         return updateBooleanInput({ booleanInput, index });
       });
-      updateLabelStub = sinon.stub().callsFake(({ booleanLabel, index }) => {
-        return updateBooleanLabel({ booleanLabel, index });
-      });
       args = {
         booleanGroup: booleanGroup(),
         booleanInputs: getBooleanInputsStub,
         index: 2,
-        updateInput: updateInputStub,
-        updateLabel: updateLabelStub
+        updateInput: updateInputStub
       };
 
       // Call the function

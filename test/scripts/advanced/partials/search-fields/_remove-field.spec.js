@@ -7,7 +7,7 @@ import {
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-describe('search fields', function () {
+describe('remove search field', function () {
   beforeEach(function () {
     // Apply HTML to the body
     document.body.innerHTML = `
