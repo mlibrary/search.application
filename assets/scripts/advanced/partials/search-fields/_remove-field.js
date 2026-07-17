@@ -46,7 +46,7 @@ const updateRemoveSearchFieldButton = ({
 } = {}) => {
   // Get the remove search field button for the given search field
   const removeSearchFieldButton = getRemoveFieldButton({ searchField });
-  // Use regex to replace the index in the `data-field-id` attribute value
+  // Update the `data-field-id` attribute value
   updateDataFieldId({ index, removeSearchFieldButton });
   // Remove the `style` attribute from the button to make it visible
   removeSearchFieldButton.removeAttribute('style');
