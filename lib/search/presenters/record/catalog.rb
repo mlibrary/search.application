@@ -344,10 +344,6 @@ module Search
               citation: {
                 ris: ris,
                 csl: csl
-              },
-              holding: {
-                call_number: holding&.call_number,
-                location: holding&.physical_location&.text
               }
             }
           end

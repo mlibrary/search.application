@@ -157,10 +157,6 @@ module Search::Presenters::Record::Articles
         citation: {
           ris: ris,
           csl: csl
-        },
-        holding: {
-          call_number: nil,
-          location: nil
         }
       }
     end
