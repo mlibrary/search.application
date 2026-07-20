@@ -44,6 +44,10 @@ module Search
       def get_onlinejournals_academic_disciplines
         @conn.get("onlinejournals/academic_disciplines").body
       end
+
+      def get_articles_record(id)
+        @conn.get("articles/records/#{id}").body
+      end
     end
   end
 end

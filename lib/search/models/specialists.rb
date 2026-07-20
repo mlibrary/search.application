@@ -2,7 +2,7 @@ class Search::Models::Specialists
   include Enumerable
 
   def self.for_catalog(uri)
-    query_values = uri.query_values
+    query_values = uri.query_values || []
     params = {
       query: query_values["query"] || "",
       filters: Search::Models::Results::Catalog.get_filters(uri.query_hash)

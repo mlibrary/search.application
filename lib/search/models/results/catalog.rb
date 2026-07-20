@@ -35,7 +35,7 @@ class Search::Models::Results::Catalog
 
   def self.for(uri, limit: nil, offset: nil)
     qh = uri.query_hash # duplicate values can be arrays
-    query_values = uri.query_values # flattens duplicate values
+    query_values = uri.query_values || {} # flattens duplicate values
 
     current_page = (query_values["page"] || 1).to_i
 

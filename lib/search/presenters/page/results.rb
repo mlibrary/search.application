@@ -3,6 +3,7 @@ class Search::Presenters::Page
     EXTRA_ICONS =
       ["add", "delete", "mail", "close", "chat", "format_quote", "draft",
         "link", "collections_bookmark", "devices", "keyboard_arrow_right",
+        "verified",
         "location_on", "check_circle", "warning", "error", "list",
         "arrow_back_ios", "arrow_forward_ios"]
 
