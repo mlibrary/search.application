@@ -1,0 +1,57 @@
+@use '../../utilities';
+@use '../../media';
+@use './additional-options/selections';
+
+// --------------------------------------------------
+//
+// # Additional Options
+//   Styles to apply directly to `views/advanced/partials/_additional-options.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Additional Options
+//     2.1. Title
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".advanced-search__additional-option";
+
+
+
+
+
+// ***************************** //
+// *** 2. ADDITIONAL OPTIONS *** //
+// ***************************** //
+
+#{$class}s {
+  @include utilities.flex($responsive: true);
+  gap: 0 2rem;
+}
+
+
+
+// *                        * //
+// * 2.1. ADDITIONAL OPTION * //
+// *                        * //
+
+#{$class} {
+  flex: 0 1 50%;
+  & > * + * {
+    margin-top: 1rem;
+  }
+}
+
+
+
+// * 2.1.1. TITLE * //
+
+#{$class}--title {
+  border-bottom: 2px solid var(--search-color-grey-400);
+  margin: 0;
+  padding-bottom: 0.5rem;
+}

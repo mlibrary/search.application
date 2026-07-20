@@ -1,0 +1,17 @@
+<p class="text__small">
+  Select one or more checkboxes to narrow your results to items
+  that match all of your <%= data.type %> selections.
+</p>
+<input type="text" aria-label="Start typing to find a specific <%= data.type %> filter" placeholder="Filter" autocomplete="off" class="hide__no-javascript additional-option__filter--text">
+<fieldset class="additional-option__filter--checkboxes">
+  <legend class="visually-hidden">Select one or more <%= data.type %> filters</legend>
+  <% data.filters.each do |filter| %>
+    <label class="label-wrapper additional-option__filter--checkbox" data-filter-value="<%= filter %>">
+      <input type="checkbox" name="<%= data.type %>" value="<%= filter %>">
+      <span><%= filter %></span>
+    </label>
+  <% end %>
+</fieldset>
+<button class="button__link hide__no-javascript additional-option__filter--show-selected" type="button">
+  Show only selected options (#)
+</button>
