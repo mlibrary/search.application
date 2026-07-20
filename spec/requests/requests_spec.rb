@@ -34,6 +34,10 @@ RSpec.describe "requests" do
     result
   end
 
+  let(:articles_record) do
+    JSON.parse(fixture("record/articles/article.json"))
+  end
+
   def base_results
     create(:catalog_api_one_result)
   end
@@ -226,6 +230,18 @@ RSpec.describe "requests" do
       expect(last_response.body).to include(data["title"][0]["original"]["text"])
       expect(last_response.body).to include("/onlinejournals/record/#{bib_id}/ris")
       expect(last_response.body).to include("Go to online journal")
+    end
+  end
+  context "/articles/record/:id" do
+    it "shows the article record page" do
+      bib_id = "cdi_something_9912345"
+      stub_request(:get, "#{S.catalog_api_url}/articles/records/#{bib_id}")
+        .to_return(status: 200, body: articles_record.to_json, headers: {content_type: "application/json"})
+      get "/articles/record/#{bib_id}"
+      expect(last_response.status).to eq(200)
+      expect(last_response.body).to include(articles_record["title"][0]["text"])
+      expect(last_response.body).to include("/articles/record/#{bib_id}/ris")
+      expect(last_response.body).to include("Go to item")
     end
   end
   context "/catalog/record/:bib_id/ris" do

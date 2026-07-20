@@ -49,7 +49,7 @@ module Search::Presenters::Record::Articles
         {uid: :journal_title, prefix: nil},
         {uid: :volume, prefix: "Volume"},
         {uid: :issue, prefix: "Issue"},
-        {uid: :publication_date, prefix: ""},
+        {uid: :publication_date, prefix: nil},
         {uid: :pages, prefix: "pp."}
 
       ].map do |part|
@@ -62,6 +62,7 @@ module Search::Presenters::Record::Articles
           end
         end
       end.compact.join(", ")
+      return nil if text == ""
       field_for(
         uid: :published_in,
         field: "Published in",
