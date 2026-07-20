@@ -18,7 +18,7 @@ describe('boolean group', function () {
     // Apply HTML to the body
     document.body.innerHTML = `
       <form class="advanced-search__search-field">
-        <fieldset class="advanced-search__search-field--booleans">
+        <fieldset class="advanced-search__search-field--booleans" style="display: none;">
           <legend>Select a boolean operator for field 1</legend>
           <div class="checkbox">
             <input type="radio" id="AND-1" name="boolean-1" value="AND">
@@ -109,7 +109,6 @@ describe('boolean group', function () {
 
   describe('updateBooleanInput()', function () {
     let args = null;
-    let id = null;
     let name = null;
 
     beforeEach(function () {
@@ -118,8 +117,8 @@ describe('boolean group', function () {
         index: 2
       };
 
-      // Save the initial `id` and `name` attribute values before calling the function
-      ({ id, name } = args.booleanInput);
+      // Save the initial `name` attribute value before calling the function
+      ({ name } = args.booleanInput);
 
       // Call the function
       updateBooleanInput(args);
@@ -127,12 +126,7 @@ describe('boolean group', function () {
 
     afterEach(function () {
       args = null;
-      id = null;
       name = null;
-    });
-
-    it('should update the `id` to reflect the new index', function () {
-      expect(args.booleanInput.id, 'the `id` attribute value should be updated to reflect the new index').to.equal(id.endsWith(`-${args.index}`) ? id : `AND-${args.index}`);
     });
 
     it('should update the `name` to reflect the new index', function () {
@@ -142,22 +136,19 @@ describe('boolean group', function () {
 
   describe('updateBooleanInputs()', function () {
     let getBooleanInputsStub = null;
-    let updateInputStub = null;
-    let updateLabelStub = null;
+    let updateBooleanInputSpy = null;
     let args = null;
 
     beforeEach(function () {
       getBooleanInputsStub = sinon.stub().callsFake((getBooleanInputsStubArgs) => {
         return getBooleanInputs({ booleanGroup: getBooleanInputsStubArgs.booleanGroup });
       });
-      updateInputStub = sinon.stub().callsFake(({ booleanInput, index }) => {
-        return updateBooleanInput({ booleanInput, index });
-      });
+      updateBooleanInputSpy = sinon.spy();
       args = {
         booleanGroup: booleanGroup(),
         booleanInputs: getBooleanInputsStub,
         index: 2,
-        updateInput: updateInputStub
+        updateBoolean: updateBooleanInputSpy
       };
 
       // Call the function
@@ -166,8 +157,7 @@ describe('boolean group', function () {
 
     afterEach(function () {
       getBooleanInputsStub = null;
-      updateInputStub = null;
-      updateLabelStub = null;
+      updateBooleanInputSpy = null;
       args = null;
     });
 
@@ -177,62 +167,8 @@ describe('boolean group', function () {
 
     it('should call `updateBooleanInput` for each boolean input with the correct arguments', function () {
       args.booleanInputs({ booleanGroup: args.booleanGroup }).forEach((booleanInput) => {
-        expect(updateInputStub.calledWith({ booleanInput, index: args.index }), '`updateBooleanInput` should be called with the correct arguments').to.be.true;
+        expect(updateBooleanInputSpy.calledWith({ booleanInput, index: args.index }), '`updateBooleanInput` should be called with the correct arguments').to.be.true;
       });
-    });
-
-    it('should call `updateBooleanLabel` for each boolean input with the correct arguments', function () {
-      args.booleanInputs({ booleanGroup: args.booleanGroup }).forEach((booleanInput) => {
-        expect(updateLabelStub.calledWith({ booleanLabel: booleanInput.nextElementSibling, index: args.index }), '`updateBooleanLabel` should be called with the correct arguments').to.be.true;
-      });
-    });
-  });
-
-  describe('updateBooleanGroup()', function () {
-    let getGroupStub = null;
-    let updateInputsStub = null;
-    let updateLegendStub = null;
-    let args = null;
-
-    beforeEach(function () {
-      getGroupStub = sinon.stub().callsFake((getGroupStubArgs) => {
-        return getBooleanGroup({ searchField: getGroupStubArgs.searchField });
-      });
-      updateInputsStub = sinon.stub().callsFake((updateInputsStubArgs) => {
-        return updateBooleanInputs({ booleanGroup: updateInputsStubArgs.booleanGroup, index: updateInputsStubArgs.index });
-      });
-      updateLegendStub = sinon.stub().callsFake((updateLegendStubArgs) => {
-        return updateBooleanGroupLegend({ booleanGroup: updateLegendStubArgs.booleanGroup, index: updateLegendStubArgs.index });
-      });
-      args = {
-        getGroup: getGroupStub,
-        index: 2,
-        searchField: searchField(),
-        updateInputs: updateInputsStub,
-        updateLegend: updateLegendStub
-      };
-
-      // Call the function
-      updateBooleanGroup(args);
-    });
-
-    afterEach(function () {
-      getGroupStub = null;
-      updateInputsStub = null;
-      updateLegendStub = null;
-      args = null;
-    });
-
-    it('should call `getBooleanGroup` with the correct arguments', function () {
-      expect(getGroupStub.calledWith({ searchField: args.searchField }), '`getBooleanGroup` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should call `updateBooleanGroupLegend` with the correct arguments', function () {
-      expect(updateLegendStub.calledWith({ booleanGroup: getGroupStub.returnValues[0], index: args.index }), '`updateBooleanGroupLegend` should be called with the correct arguments').to.be.true;
-    });
-
-    it('should call `updateBooleanInputs` with the correct arguments', function () {
-      expect(updateInputsStub.calledWith({ booleanGroup: getGroupStub.returnValues[0], index: args.index }), '`updateBooleanInputs` should be called with the correct arguments').to.be.true;
     });
   });
 
@@ -273,6 +209,71 @@ describe('boolean group', function () {
           expect(booleanInput.checked, `the boolean input at index ${index} should be unchecked`).to.be.false;
         }
       });
+    });
+  });
+
+  describe('updateBooleanGroup()', function () {
+    let getBooleanGroupStub = null;
+    let resetBooleanGroupStub = null;
+    let updateBooleanInputsStub = null;
+    let updateBooleanGroupLegendStub = null;
+    let args = null;
+
+    beforeEach(function () {
+      getBooleanGroupStub = sinon.stub().callsFake((getBooleanGroupStubArgs) => {
+        return getBooleanGroup({ searchField: getBooleanGroupStubArgs.searchField });
+      });
+      resetBooleanGroupStub = sinon.stub().callsFake((resetBooleanGroupStubArgs) => {
+        return resetBooleanGroup({ booleanGroup: resetBooleanGroupStubArgs.booleanGroup });
+      });
+      updateBooleanInputsStub = sinon.stub().callsFake((updateBooleanInputsStubArgs) => {
+        return updateBooleanInputs({ booleanGroup: updateBooleanInputsStubArgs.booleanGroup, index: updateBooleanInputsStubArgs.index });
+      });
+      updateBooleanGroupLegendStub = sinon.stub().callsFake((updateBooleanGroupLegendStubArgs) => {
+        return updateBooleanGroupLegend({ booleanGroup: updateBooleanGroupLegendStubArgs.booleanGroup, index: updateBooleanGroupLegendStubArgs.index });
+      });
+      args = {
+        getGroup: getBooleanGroupStub,
+        index: 2,
+        resetGroup: resetBooleanGroupStub,
+        searchField: searchField(),
+        updateInputs: updateBooleanInputsStub,
+        updateLegend: updateBooleanGroupLegendStub
+      };
+
+      // Check that the boolean group is hidden before calling the function
+      expect(getBooleanGroup({ searchField: args.searchField }).hasAttribute('style'), 'the boolean group should be hidden before calling the function').to.be.true;
+
+      // Call the function
+      updateBooleanGroup(args);
+    });
+
+    afterEach(function () {
+      getBooleanGroupStub = null;
+      resetBooleanGroupStub = null;
+      updateBooleanInputsStub = null;
+      updateBooleanGroupLegendStub = null;
+      args = null;
+    });
+
+    it('should call `getBooleanGroup` with the correct arguments', function () {
+      expect(getBooleanGroupStub.calledWith({ searchField: args.searchField }), '`getBooleanGroup` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should remove the `style` attribute from the boolean group to make it visible', function () {
+      expect(getBooleanGroupStub.returnValues[0].hasAttribute('style'), 'the `style` attribute should be removed from the boolean group to make it visible').to.be.false;
+    });
+
+    it('should call `updateBooleanGroupLegend` with the correct arguments', function () {
+      expect(updateBooleanGroupLegendStub.calledWith({ booleanGroup: getBooleanGroupStub.returnValues[0], index: args.index }), '`updateBooleanGroupLegend` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `updateBooleanInputs` with the correct arguments', function () {
+      expect(updateBooleanInputsStub.calledWith({ booleanGroup: getBooleanGroupStub.returnValues[0], index: args.index }), '`updateBooleanInputs` should be called with the correct arguments').to.be.true;
+    });
+
+    it('should call `resetBooleanGroup` with the correct arguments', function () {
+      expect(resetBooleanGroupStub.calledWith({ booleanGroup: getBooleanGroupStub.returnValues[0] }), '`resetBooleanGroup` should be called with the correct arguments').to.be.true;
     });
   });
 });
