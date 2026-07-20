@@ -8,6 +8,7 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Checkboxes
+//     2.1. Checkbox
 //
 // --------------------------------------------------
 
@@ -15,7 +16,7 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: ".additional-option__filter"; 
+$class: ".additional-option__filter";
 
 
 
@@ -32,4 +33,14 @@ $class: ".additional-option__filter";
   height: 21rem;
   padding: 0.5rem;
   padding-bottom: 0.25rem;
+}
+
+
+
+// *               * //
+// * 2.1. CHECKBOX * //
+// *               * //
+
+#{$class}--checkbox {
+  word-break: break-word;
 }
