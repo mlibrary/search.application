@@ -6,7 +6,7 @@
         title: "Academic Discipline",
         partial: "selections",
         data: OpenStruct.new(
-          type: "academic discipline",
+          parameter: "academic_discipline",
           filters: [
             "Academic and Specialized News",
             "Aerospace Engineering",
@@ -235,9 +235,9 @@
   <h3>Additional search options</h3>
   <div class="advanced-search__additional-options">
     <% advanced_search_options.additional_options.each do |additional_option| %>
-      <div class="advanced-search__additional-option">
+      <div class="advanced-search__additional-option" id="advanced-search__additional-option--<%= additional_option.data.parameter %>">
         <h4 class="h5 advanced-search__additional-option--title"><%= additional_option.title %></h4>
-        <%= erb :"advanced/partials/additional-options/_#{additional_option.partial}", locals: { data: additional_option.data } %>
+        <%= erb :"advanced/partials/additional-options/_#{additional_option.partial}", locals: { data: additional_option.data, type: additional_option.title.downcase } %>
       </div>
     <% end %>
   </div>

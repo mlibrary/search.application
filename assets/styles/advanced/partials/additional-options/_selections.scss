@@ -1,4 +1,4 @@
-@use '../../../forms';
+@use './selections/checkboxes';
 
 // --------------------------------------------------
 //
@@ -7,8 +7,6 @@
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Checkboxes
-//     2.1. Checkbox
 //
 // --------------------------------------------------
 
@@ -16,31 +14,18 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: ".additional-option__filter";
+$class: ".additional-option__selections";
 
 
 
 
 
 // ********************* //
-// *** 2. CHECKBOXES *** //
+// *** 2. SELECTIONS *** //
 // ********************* //
 
-#{$class}--checkboxes {
-  border: 1px solid var(--search-color-grey-400);
-  border-radius: forms.$radius;
-  overflow-y: scroll;
-  height: 21rem;
-  padding: 0.5rem;
-  padding-bottom: 0.25rem;
-}
-
-
-
-// *               * //
-// * 2.1. CHECKBOX * //
-// *               * //
-
-#{$class}--checkbox {
-  word-break: break-word;
+#{$class} {
+  & > * + * {
+    margin-top: 1rem;
+  }
 }

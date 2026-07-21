@@ -1,0 +1,46 @@
+@use '../../../../forms';
+
+// --------------------------------------------------
+//
+// # Checkboxes
+//   Styles to apply directly to `views/advanced/partials/additional-options/selections/_checkboxes.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Checkboxes
+//     2.1. Checkbox
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".additional-option__selections--checkbox";
+
+
+
+
+
+// ********************* //
+// *** 2. CHECKBOXES *** //
+// ********************* //
+
+#{$class}es {
+  border: 1px solid var(--search-color-grey-400);
+  border-radius: forms.$radius;
+  overflow-y: scroll;
+  height: 21rem;
+  padding: 0.5rem;
+  padding-bottom: 0.25rem;
+}
+
+
+
+// *               * //
+// * 2.1. CHECKBOX * //
+// *               * //
+
+#{$class} {
+  word-break: break-word;
+}
