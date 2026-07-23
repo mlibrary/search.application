@@ -1,3 +1,6 @@
+import { addSearchField } from './search-fields/_add-field.js';
+import { removeSearchField } from './search-fields/_remove-field.js';
+
 const getAllSearchFields = () => {
   return document.querySelectorAll('.advanced-search__search-field');
 };
@@ -21,10 +24,19 @@ const updateSearchField = ({ index, searchField } = {}) => {
   searchField.setAttribute('id', searchFieldId.replace(/\d+/u, index));
 };
 
+const initializeSearchFields = ({ addField = addSearchField, removeField = removeSearchField } = {}) => {
+  // Remove search field
+  removeField();
+
+  // Add search field
+  addField();
+};
+
 export {
   cloneSearchField,
   getAllSearchFields,
   getLastSearchField,
   getSearchFieldIndex,
+  initializeSearchFields,
   updateSearchField
 };

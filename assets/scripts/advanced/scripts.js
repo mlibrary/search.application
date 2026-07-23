@@ -1,8 +1,8 @@
-import { addSearchField } from './partials/search-fields/_add-field.js';
-import { removeSearchField } from './partials/search-fields/_remove-field.js';
+import { initializeAdditionalOptions } from './partials/_additional-options.js';
+import { initializeSearchFields } from './partials/_search-fields.js';
 
-// Remove search field
-removeSearchField();
+// Search fields
+initializeSearchFields();
 
-// Add search field
-addSearchField();
+// Additional options
+initializeAdditionalOptions();

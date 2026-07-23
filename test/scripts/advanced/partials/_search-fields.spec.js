@@ -3,9 +3,11 @@ import {
   getAllSearchFields,
   getLastSearchField,
   getSearchFieldIndex,
+  initializeSearchFields,
   updateSearchField
 } from '../../../../assets/scripts/advanced/partials/_search-fields.js';
 import { expect } from 'chai';
+import sinon from 'sinon';
 
 describe('search fields', function () {
   let searchFields = null;
@@ -97,6 +99,38 @@ describe('search fields', function () {
 
     it('should update the `id` attribute of the search field', function () {
       expect(args.searchField.id, '`updateSearchField` should update the `id` attribute of the search field').to.equal(`search-field-${args.index}`);
+    });
+  });
+
+  describe('initializeSearchFields()', function () {
+    let addSearchFieldSpy = null;
+    let removeSearchFieldSpy = null;
+    let args = null;
+
+    beforeEach(function () {
+      addSearchFieldSpy = sinon.spy();
+      removeSearchFieldSpy = sinon.spy();
+      args = {
+        addField: addSearchFieldSpy,
+        removeField: removeSearchFieldSpy
+      };
+
+      // Call the function
+      initializeSearchFields(args);
+    });
+
+    afterEach(function () {
+      addSearchFieldSpy = null;
+      removeSearchFieldSpy = null;
+      args = null;
+    });
+
+    it('should call `addSearchField` with the correct arguments', function () {
+      expect(addSearchFieldSpy.calledOnceWithExactly(), '`addSearchField` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `removeSearchField` with the correct arguments', function () {
+      expect(removeSearchFieldSpy.calledOnceWithExactly(), '`removeSearchField` should have been called with the correct arguments').to.be.true;
     });
   });
 });
