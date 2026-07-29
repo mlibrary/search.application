@@ -4,21 +4,21 @@ import sinon from 'sinon';
 
 describe('additional search options', function () {
   describe('initializeAdditionalOptions()', function () {
-    let initializeSelectionsSpy = null;
+    let initializeAllSelectionsSpy = null;
     let args = null;
 
     beforeEach(function () {
-      initializeSelectionsSpy = sinon.spy();
+      initializeAllSelectionsSpy = sinon.spy();
       args = {
-        selections: initializeSelectionsSpy
+        selections: initializeAllSelectionsSpy
       };
 
       // Call the function
       initializeAdditionalOptions(args);
     });
 
-    it('should call `initializeSelections` with the correct arguments', function () {
-      expect(initializeSelectionsSpy.calledOnceWithExactly(), '`initializeSelections` should have been called with the correct arguments').to.be.true;
+    it('should call `initializeAllSelections` with the correct arguments', function () {
+      expect(initializeAllSelectionsSpy.calledOnceWithExactly(), '`initializeAllSelections` should have been called with the correct arguments').to.be.true;
     });
   });
 });

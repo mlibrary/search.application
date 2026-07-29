@@ -1,6 +1,6 @@
-import { initializeSelections } from './additional-options/_selections.js';
+import { initializeAllSelections } from './additional-options/_selections.js';
 
-const initializeAdditionalOptions = ({ selections = initializeSelections } = {}) => {
+const initializeAdditionalOptions = ({ selections = initializeAllSelections } = {}) => {
   // Initialize the selections for the additional options
   selections();
 };
