@@ -1,3 +1,7 @@
-<button class="button__link hide__no-javascript additional-option__selections--show-selected" type="button" style="display: none;">
-  <span>Show only selected options (<span class="additional-option__selections--show-selected-count">0</span>)</span>
+<%
+  # TODO: Toggle the visibility of the show selected button and the show selected count based on the state of the checkboxes on load
+%>
+<button class="button__ghost hide__no-javascript additional-option__selections--show-selected" type="button" style="display: none;" aria-pressed="false">
+  <span class="additional-option__selections--show-selected-not-pressed">Show only selected options (<span class="additional-option__selections--show-selected-count">0</span>)</span>
+  <span class="additional-option__selections--show-selected-pressed" style="display: none;">Show all options</span>
 </button>

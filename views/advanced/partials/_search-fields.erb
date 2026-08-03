@@ -1,3 +1,6 @@
+<%
+  # TODO: Break down the URL search query and populate search fields accordingly, if applicable. Else, populate three or less search fields by default.
+%>
 <% @presenter.advanced_search.checked_search_options.each_with_index do |option, index| %>
   <% search_field_id = "search-field-#{index}" %>
   <div class="advanced-search__search-field" id="<%= search_field_id %>">
