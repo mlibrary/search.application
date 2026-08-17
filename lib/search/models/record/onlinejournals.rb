@@ -8,4 +8,8 @@ class Search::Models::Record::Onlinejournals < Search::Models::Record::Catalog
     end
     new(data)
   end
+
+  def recommended?
+    !!@data["recommended_resource"]
+  end
 end
