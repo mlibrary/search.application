@@ -102,6 +102,13 @@ module Search
             "catalog"
           end
 
+          # Onlinejournals and Databases can sometimes be recommended, which
+          # means they get a special badge in the view. Default should be no
+          # badge, thus recommended? false.
+          def recommended?
+            false
+          end
+
           def position
             @record.position
           end
