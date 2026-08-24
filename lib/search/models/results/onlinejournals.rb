@@ -28,7 +28,13 @@ class Search::Models::Results::Onlinejournals < Search::Models::Results::Catalog
       sort: query_values["sort"] || "relevance"
     }
 
-    data = Search::Clients::CatalogAPI.new.get_onlinejournals_results(**params)
+    api_client = Search::Clients::CatalogAPI.new
+    data = if params[:query] == "" && params[:sort] == "title_asc" && params[:filters].count == 1 && params[:filters][0].split(":")[0] == "academic_discipline"
+      ad = params[:filters][0].split(":")[1]
+      api_client.get_onlinejournals_browse_academic_discipline(limit: params[:limit], offset: params[:offset], academic_discipline: ad)
+    else
+      api_client.get_onlinejournals_results(**params)
+    end
     new(data: data, originating_uri: uri)
   end
 

@@ -35,6 +35,12 @@ module Search
         @conn.get("onlinejournals/search", **params).body
       end
 
+      def get_onlinejournals_browse_academic_discipline(academic_discipline:, limit: 10, offset: 0)
+        params = {offset: offset, limit: limit}
+        url = Addressable::URI.encode_component("onlinejournals/browse_academic_discipline/#{academic_discipline}")
+        @conn.get(url, **params).body
+      end
+
       def get_onlinejournals_specialists(limit: 10, offset: 0, query: "*", filters: [])
         params = {offset: offset, limit: limit, query: query}
         params[:filters] = filters unless filters.empty?

@@ -41,6 +41,10 @@ module Search
             :summary
           ]
 
+          def recommended?
+            @record.recommended?
+          end
+
           def datastore
             "onlinejournals"
           end
