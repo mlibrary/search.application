@@ -165,3 +165,62 @@ class Search::Presenters::Results::Onlinejournals < Search::Presenters::Results:
     end
   end
 end
+
+class Search::Presenters::Results::Articles < Search::Presenters::Results::Catalog
+  FILTER_ORDER = [
+    "format",
+    "subject",
+    "date",
+    "language"
+  ]
+
+  def self.for(uri)
+    results_model_instance = Search::Models::Results::Articles.for(uri)
+    specialists = if results_model_instance.pagination.offset == 0
+      Search::Models::Specialists.for_articles(uri)
+    else
+      []
+    end
+    new(results_model_instance, specialists)
+  end
+
+  def boolean_filters
+    [
+      {
+        uid: "is_scholarly",
+        default: "false",
+        label: "Articles from scholaraly journals only"
+      },
+      {
+        uid: "exclude_newspapers",
+        default: "false",
+        label: "Exclude newspaper articles"
+      },
+      {
+        uid: "available_online",
+        default: "false",
+        label: "Available online"
+      },
+      {
+        uid: "is_open_access",
+        default: "false",
+        label: "Show open access only"
+      },
+      {
+        uid: "holdings_only",
+        default: "true",
+        label: "U-M library materials_only"
+      }
+    ].map do |params|
+      Search::Presenters::Results::BooleanFilter.for(
+        uri: @results.originating_uri, **params
+      )
+    end
+  end
+
+  def records
+    @results.records.map do |record|
+      Search::Presenters::Record::Articles::Brief.new(record)
+    end
+  end
+end

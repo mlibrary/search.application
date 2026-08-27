@@ -101,7 +101,9 @@ module Search::Presenters::Record::Articles
       {uid: :pmid, field: "PMID"},
       {uid: :language, field: "Language"},
       {uid: :subject, field: "Subject"},
-      {uid: :edition, field: "Edition"}
+      {uid: :edition, field: "Edition"},
+      {uid: :pages, field: "Pages"},
+      {uid: :publication_date, field: "Date of publication"}
     ].each do |f|
       define_method(f[:uid]) do
         if @record.bib.public_send(f[:uid]).present?
@@ -125,7 +127,10 @@ module Search::Presenters::Record::Articles
       :retraction,
       :abstract,
       :author,
-      :published_in
+      :publication_date,
+      :publisher,
+      :pages,
+      :subject
     ]
 
     def abstract

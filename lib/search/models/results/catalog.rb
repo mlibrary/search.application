@@ -7,10 +7,31 @@ class Search::Models::Results::Catalog
     "William L. Clements Library" => "clements"
 
   }
+
+  def self.get_params(uri:, limit: nil, offset: nil)
+    result = get_base_params(uri: uri, limit: limit, offset: offset)
+    qh = uri.query_hash # duplicate values can be arrays
+    library = LIBRARY_MAP[qh["library"]] || "aa"
+    result[:filters].push("library:#{library}")
+    result
+  end
+
+  # the parameters are needed so that we can get previous and next records
+  def self.for(uri, limit: nil, offset: nil)
+    params = get_base_params(uri: uri, limit: limit, offset: offset)
+    qh = uri.query_hash # duplicate values can be arrays
+    library = LIBRARY_MAP[qh["library"]] || "aa"
+    params[:filters].push("library:#{library}")
+
+    data = Search::Clients::CatalogAPI.new.get_catalog_results(**params)
+    new(data: data, originating_uri: uri)
+  end
+
   def self.get_filters(params)
-    result = params.filter_map do |element|
+    filters = []
+    boolean_filters = []
+    all = params.filter_map do |element|
       if element[0].match?(/^filter\./)
-        next if element[0] == "filter.search_only"
         field = element[0].split(".")[1]
         if element[1].is_a? String
           "#{field}:#{element[1]}"
@@ -18,41 +39,34 @@ class Search::Models::Results::Catalog
           element[1].map { |value| "#{field}:#{value}" }
         end
       end
-    end.flatten
-    library = LIBRARY_MAP[params["library"]] || "aa"
-    result.push("library:#{library}")
-    result
-  end
-
-  def self.ht_search_only(params)
-    value = params["filter.search_only"]
-    if value.is_a?(String) || value.nil?
-      value == "true"
-    elsif value&.any? { |x| x == "true" } # value is an array"
-      true
+    end.flatten.uniq
+    all.each do |filter|
+      if ["true", "false"].include?(filter.split(":")[1].downcase)
+        boolean_filters.push(filter.downcase)
+      else
+        filters.push(filter)
+      end
     end
+    [filters, boolean_filters.uniq]
   end
 
-  def self.for(uri, limit: nil, offset: nil)
+  def self.get_base_params(uri:, limit: nil, offset: nil)
     qh = uri.query_hash # duplicate values can be arrays
     query_values = uri.query_values || {} # flattens duplicate values
 
     current_page = (query_values["page"] || 1).to_i
-
     limit ||= (query_values["limit"] || 10).to_i
+    filters, boolean_filters = get_filters(qh)
 
-    params = {
+    result = {
       offset: offset || ((current_page - 1) * limit),
       limit: limit,
       query: query_values["query"] || "",
-      filters: get_filters(qh),
+      filters: filters,
       sort: query_values["sort"] || "relevance"
     }
-
-    params[:ht_search_only] = true if ht_search_only(qh)
-
-    data = Search::Clients::CatalogAPI.new.get_catalog_results(**params)
-    new(data: data, originating_uri: uri)
+    result[:boolean_filters] = boolean_filters unless boolean_filters.empty?
+    result
   end
 
   attr_reader :originating_uri

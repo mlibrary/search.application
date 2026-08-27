@@ -3,6 +3,24 @@ module Search
     class CatalogAPI
       attr_reader :conn
 
+      BOOLEAN_FILTER_MAP = {
+        catalog: {
+          name: {
+            "search_only" => :ht_search_only
+          }
+        },
+        articles: {
+          name: {
+            "holdings_only" => :include_citation_only,
+            "is_open_access" => :open_access,
+            "available_only" => :online,
+            "exclude_newspapers" => :exclude_newspapers,
+            "is_scholarly" => :peer_reviewed
+          },
+          toggle_value: [:include_citation_only]
+        }
+      }
+
       def initialize
         @conn = Faraday.new(
           url: S.catalog_api_url, request: {params_encoder: Faraday::FlatParamsEncoder}
@@ -17,12 +35,17 @@ module Search
         @conn.get("catalog/records/#{id}").body
       end
 
-      def get_catalog_results(limit: 10, offset: 0, query: "*", filters: [], ht_search_only: false, sort: "")
-        @conn.get("catalog/search", offset: offset, limit: limit, query: query, ht_search_only: ht_search_only, filters: filters, sort: sort).body
+      def get_catalog_results(limit: 10, offset: 0, query: "*", filters: [], sort: "", boolean_filters: [])
+        bp = boolean_params(boolean_filters, kind: :catalog)
+        @conn.get("catalog/search", offset: offset, limit: limit, query: query, filters: filters, sort: sort, **bp).body
       end
 
-      def get_catalog_specialists(query: "*", filters: [], ht_search_only: false)
-        @conn.get("catalog/specialists", query: query, ht_search_only: ht_search_only, filters: filters).body
+      def get_catalog_specialists(query: "*", filters: [], boolean_filters: [])
+        params = {query: query}
+        params[:filters] = filters unless filters.empty?
+        bp = boolean_params(boolean_filters, kind: :catalog)
+        params.merge!(bp)
+        @conn.get("catalog/specialists", **params).body
       end
 
       def get_onlinejournals_record(id)
@@ -53,6 +76,30 @@ module Search
 
       def get_articles_record(id)
         @conn.get("articles/records/#{id}").body
+      end
+
+      def get_articles_results(limit: 10, offset: 0, sort: "", query: "*", filters: [], boolean_filters: [])
+        params = {offset: offset, limit: limit, sort: sort, query: query}
+        params[:filters] = filters unless filters.empty?
+        bp = boolean_params(boolean_filters, kind: :articles)
+        params.merge!(bp)
+        @conn.get("articles/search", **params).body
+      end
+
+      def boolean_params(filters, kind: :catalog)
+        result = {}
+        filters.each do |filter|
+          key, value = filter.split(":")
+          value = value == "true"
+          param = BOOLEAN_FILTER_MAP.dig(kind, :name, key)
+          if param
+            if (BOOLEAN_FILTER_MAP.dig(kind, :toggle_value) || []).include?(param)
+              value = value ? false : true
+            end
+            result[param] = value if value
+          end
+        end
+        result
       end
     end
   end

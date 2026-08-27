@@ -44,6 +44,10 @@ module Search
           @record.bib.id
         end
 
+        def recommended?
+          false
+        end
+
         def position
           @record.position
         end

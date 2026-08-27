@@ -1,6 +1,23 @@
 RSpec.describe Search::Models::Results::Catalog do
   let(:data) { create(:catalog_api_one_result) }
 
+  context ".get_params filters" do
+    it "does not contain any boolean filters" do
+      result = described_class.get_params(
+        uri: Addressable::URI.parse("#{S.base_url}/catalog?query=music,&filter.search_only=True&filter.search_only=false&filter.format=Music")
+      )[:filters]
+
+      expect(result).to eq(["format:Music", "library:aa"])
+    end
+    it "does not contain duplicate filters" do
+      result = described_class.get_params(
+        uri: Addressable::URI.parse("#{S.base_url}/catalog?filter.format=Music&filter.format=Music")
+      )[:filters]
+
+      expect(result).to eq(["format:Music", "library:aa"])
+    end
+  end
+
   subject { described_class.new(data: data, originating_uri: Addressable::URI.parse("#{S.base_url}/catalog")) }
 
   it "has catalog records" do
