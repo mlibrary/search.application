@@ -13,7 +13,7 @@ describe Search::Clients::CatalogAPI do
       expect(subject).to eq({ht_search_only: true})
     end
     it "handles articles key flipping" do
-      subject = described_class.new.boolean_params(["um_library_materials_only:false"], kind: :articles)
+      subject = described_class.new.boolean_params(["holdings_only:false"], kind: :articles)
 
       expect(subject).to eq({include_citation_only: true})
     end

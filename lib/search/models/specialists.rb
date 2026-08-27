@@ -15,6 +15,12 @@ class Search::Models::Specialists
     new(data)
   end
 
+  def self.for_articles(uri)
+    params = Search::Models::Results::Articles.get_params(uri: uri).slice(:query)
+    data = Search::Clients::CatalogAPI.new.get_catalog_specialists(**params)
+    new(data)
+  end
+
   def initialize(data)
     @data = data
   end

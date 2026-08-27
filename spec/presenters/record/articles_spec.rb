@@ -153,7 +153,7 @@ describe Search::Presenters::Record::Articles::Brief do
       allow(record.bib).to receive(:title).and_return(double(text: "Some title"))
       allow(record.bib).to receive(:author).and_return(text("Some author"))
       allow(record.bib).to receive(:id).and_return("some_id")
-      [:abstract, :journal_title, :volume, :issue, :publication_date, :pages].each do |field|
+      [:abstract, :journal_title, :volume, :issue, :publication_date, :pages, :publisher, :subject].each do |field|
         allow(record.bib).to receive(field).and_return(nil)
       end
 

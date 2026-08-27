@@ -11,7 +11,7 @@ module Search
         },
         articles: {
           name: {
-            "um_library_materials_only" => :include_citation_only,
+            "holdings_only" => :include_citation_only,
             "is_open_access" => :open_access,
             "available_only" => :online,
             "exclude_newspapers" => :exclude_newspapers,
@@ -41,8 +41,11 @@ module Search
       end
 
       def get_catalog_specialists(query: "*", filters: [], boolean_filters: [])
+        params = {query: query}
+        params[:filters] = filters unless filters.empty?
         bp = boolean_params(boolean_filters, kind: :catalog)
-        @conn.get("catalog/specialists", query: query, filters: filters, **bp).body
+        params.merge!(bp)
+        @conn.get("catalog/specialists", **params).body
       end
 
       def get_onlinejournals_record(id)
