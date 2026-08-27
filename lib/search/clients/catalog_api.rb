@@ -36,13 +36,13 @@ module Search
       end
 
       def get_catalog_results(limit: 10, offset: 0, query: "*", filters: [], sort: "", boolean_filters: [])
-        bf = boolean_params(boolean_filters, kind: :catalog)
-        @conn.get("catalog/search", offset: offset, limit: limit, query: query, filters: filters, sort: sort, **bf).body
+        bp = boolean_params(boolean_filters, kind: :catalog)
+        @conn.get("catalog/search", offset: offset, limit: limit, query: query, filters: filters, sort: sort, **bp).body
       end
 
       def get_catalog_specialists(query: "*", filters: [], boolean_filters: [])
-        bf = boolean_params(boolean_filters, kind: :catalog)
-        @conn.get("catalog/specialists", query: query, filters: filters, **bf).body
+        bp = boolean_params(boolean_filters, kind: :catalog)
+        @conn.get("catalog/specialists", query: query, filters: filters, **bp).body
       end
 
       def get_onlinejournals_record(id)
@@ -75,7 +75,12 @@ module Search
         @conn.get("articles/records/#{id}").body
       end
 
-      def get_articles_results(limit: 10, offset: 0, query: "*", filters: [], boolean_filters: [])
+      def get_articles_results(limit: 10, offset: 0, sort: "", query: "*", filters: [], boolean_filters: [])
+        params = {offset: offset, limit: limit, sort: sort, query: query}
+        params[:filters] = filters unless filters.empty?
+        bp = boolean_params(boolean_filters, kind: :articles)
+        params.merge!(bp)
+        @conn.get("articles/search", **params).body
       end
 
       def boolean_params(filters, kind: :catalog)
