@@ -33,9 +33,10 @@ class Search::Presenters::Results::Catalog
     {uid: "title_desc", name: "Title (Z-A)"}
   ]
   def self.for(uri)
-    results_model_instance = Search::Models::Results::Catalog.for(uri)
-    specialists = if results_model_instance.pagination.offset == 0
-      Search::Models::Specialists.for_catalog(uri)
+    datastore = to_s.split("::").last.to_s.downcase
+    results_model_instance = "Search::Models::Results::#{datastore.capitalize}".constantize.for(uri)
+    specialists = if Search::Models::Results::Pagination.offset_for(uri) == 0
+      Search::Models::Specialists.send("for_#{datastore}", uri)
     else
       []
     end
@@ -145,16 +146,6 @@ class Search::Presenters::Results::Onlinejournals < Search::Presenters::Results:
     "academic_discipline"
   ]
 
-  def self.for(uri)
-    results_model_instance = Search::Models::Results::Onlinejournals.for(uri)
-    specialists = if results_model_instance.pagination.offset == 0
-      Search::Models::Specialists.for_onlinejournals(uri)
-    else
-      []
-    end
-    new(results_model_instance, specialists)
-  end
-
   def boolean_filters
     []
   end
@@ -173,16 +164,6 @@ class Search::Presenters::Results::Articles < Search::Presenters::Results::Catal
     "date",
     "language"
   ]
-
-  def self.for(uri)
-    results_model_instance = Search::Models::Results::Articles.for(uri)
-    specialists = if results_model_instance.pagination.offset == 0
-      Search::Models::Specialists.for_articles(uri)
-    else
-      []
-    end
-    new(results_model_instance, specialists)
-  end
 
   def boolean_filters
     [
