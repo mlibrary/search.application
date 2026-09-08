@@ -28,6 +28,7 @@ module Search
           f.request :json
           f.response :raise_error
           f.response :json
+          f.adapter :httpx
         end
       end
 

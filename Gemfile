@@ -22,6 +22,7 @@ gem "addressable"
 gem "debug"
 gem "mini_magick"
 gem "concurrent-ruby", require: "concurrent"
+gem "httpx"
 
 gem "opentelemetry-sdk"
 gem "opentelemetry-instrumentation-all"

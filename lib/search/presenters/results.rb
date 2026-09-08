@@ -34,13 +34,15 @@ class Search::Presenters::Results::Catalog
   ]
   def self.for(uri)
     datastore = to_s.split("::").last.to_s.downcase
-    results_model_instance = "Search::Models::Results::#{datastore.capitalize}".constantize.for(uri)
+    future = Concurrent::Promises.future do
+      "Search::Models::Results::#{datastore.capitalize}".constantize.for(uri)
+    end
     specialists = if Search::Models::Results::Pagination.offset_for(uri) == 0
       Search::Models::Specialists.send("for_#{datastore}", uri)
     else
       []
     end
-    new(results_model_instance, specialists)
+    new(future.value, specialists)
   end
 
   attr_reader :specialists

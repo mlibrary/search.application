@@ -551,6 +551,7 @@ DEPENDENCIES
   concurrent-ruby
   debug
   faker
+  httpx
   mail
   mini_magick
   omniauth
