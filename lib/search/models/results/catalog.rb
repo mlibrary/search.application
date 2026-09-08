@@ -81,7 +81,7 @@ class Search::Models::Results::Catalog
   end
 
   def pagination
-    @pagination ||= Pagination.new(limit: limit, total: total.to_i, offset: offset.to_i)
+    @pagination ||= Search::Models::Results::Pagination.new(limit: limit, total: total.to_i, offset: offset.to_i)
   end
 
   def limit
@@ -107,26 +107,26 @@ class Search::Models::Results::Catalog
   end
 end
 
-class Search::Models::Results::Catalog::Pagination
-  attr_reader :total, :limit, :offset
-  def initialize(total:, limit:, offset:)
-    @total = total
-    @limit = limit
-    @offset = offset
-  end
+# class Search::Models::Results::Catalog::Pagination
+# attr_reader :total, :limit, :offset
+# def initialize(total:, limit:, offset:)
+# @total = total
+# @limit = limit
+# @offset = offset
+# end
 
-  def first_index
-    offset + 1
-  end
+# def first_index
+# offset + 1
+# end
 
-  def last_index
-    [(offset + limit), total].min
-  end
+# def last_index
+#[(offset + limit), total].min
+# end
 
-  def current_page
-    (offset / limit) + 1
-  end
-end
+# def current_page
+# (offset / limit) + 1
+# end
+# end
 
 class Search::Models::Results::Catalog::Filter
   def initialize(data)
