@@ -9,6 +9,16 @@ require_relative "lib/metrics"
 require_relative "lib/sinatra_helpers"
 require "debug" if S.app_env == "development"
 require "ruby-prof" if S.profile?
+
+if S.app_env != "test"
+  require "opentelemetry/sdk"
+  require "opentelemetry/instrumentation/all"
+  require "opentelemetry-exporter-otlp"
+  OpenTelemetry::SDK.configure do |c|
+    c.service_name = "search-application"
+    c.use_all # enables all instrumentation!
+  end
+end
 Metrics::Yabeda.configure!
 
 class Search::Application < Sinatra::Base
