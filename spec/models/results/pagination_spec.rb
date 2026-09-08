@@ -1,5 +1,37 @@
 RSpec.describe Search::Models::Results::Pagination do
   let(:params) { {total: 50, limit: 10, offset: 0} }
+  def generate_uri(page: nil, limit: nil)
+    uri_str = "/catalog?query=whatever"
+    uri_str += "&page=#{page}" if page
+    uri_str += "&limit=#{limit}" if limit
+    Addressable::URI.parse(uri_str)
+  end
+  context ".offset_for" do
+    it "handles page 1, limit 1" do
+      subj = described_class.offset_for(generate_uri(page: 1, limit: 1))
+      expect(subj).to eq(0)
+    end
+    it "handles page 2, limit 1" do
+      subj = described_class.offset_for(generate_uri(page: 2, limit: 1))
+      expect(subj).to eq(1)
+    end
+    it "handles page 2, limit 10" do
+      subj = described_class.offset_for(generate_uri(page: 2, limit: 10))
+      expect(subj).to eq(10)
+    end
+    it "handles no page no limit" do
+      subj = described_class.offset_for(generate_uri)
+      expect(subj).to eq(0)
+    end
+    it "handles page without limit" do
+      subj = described_class.offset_for(generate_uri(page: 3))
+      expect(subj).to eq(20)
+    end
+    it "handles limit without page" do
+      subj = described_class.offset_for(generate_uri(limit: 1))
+      expect(subj).to eq(0)
+    end
+  end
   subject do
     described_class.new(**params)
   end

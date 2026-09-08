@@ -54,13 +54,11 @@ class Search::Models::Results::Catalog
     qh = uri.query_hash # duplicate values can be arrays
     query_values = uri.query_values || {} # flattens duplicate values
 
-    current_page = (query_values["page"] || 1).to_i
-    limit ||= (query_values["limit"] || 10).to_i
     filters, boolean_filters = get_filters(qh)
 
     result = {
-      offset: offset || ((current_page - 1) * limit),
-      limit: limit,
+      offset: offset || Search::Models::Results::Pagination.offset_for(uri),
+      limit: limit || Search::Models::Results::Pagination.limit_for(uri),
       query: query_values["query"] || "",
       filters: filters,
       sort: query_values["sort"] || "relevance"
