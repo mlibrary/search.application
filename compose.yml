@@ -29,6 +29,7 @@ services:
       - .env
     environment:
       - REDIS_URL=redis://redis:6379
+      - OTEL_SERVICE_NAME=search-application
     command:
       - bundle
       - exec
@@ -85,6 +86,11 @@ services:
     image: ghcr.io/mlibrary/search.catalog-api-unstable:latest
     env_file:
       - .env
+    environment:
+      - OTEL_SERVICE_NAME=search-api
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_TRACES_EXPORTER=otlp_proto_http
+      - OTEL_EXPORTER_OTLP_INSECURE=true
     ports:
       - 8000:8000
     command:
@@ -100,6 +106,7 @@ services:
       - 4000:4567
     environment:
       - APP_ENV=production
+      - OTEL_SERVICE_NAME=search-parser
     env_file:
       - .env
     command:
@@ -145,5 +152,13 @@ services:
       - npm
       - run
       - watch:css
+  jaeger:
+    image: jaegertracing/jaeger:latest
+    ports:
+      - 5778:5778
+      - 16686:16686
+      - 4317:4317
+      - 4318:4318
+      - 9411:9411
 volumes:
   redis:

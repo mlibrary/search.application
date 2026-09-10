@@ -9,6 +9,16 @@ require_relative "lib/metrics"
 require_relative "lib/sinatra_helpers"
 require "debug" if S.app_env == "development"
 require "ruby-prof" if S.profile?
+
+if S.app_env != "test"
+  require "opentelemetry/sdk"
+  require "opentelemetry/instrumentation/all"
+  require "opentelemetry-exporter-otlp"
+  OpenTelemetry::SDK.configure do |c|
+    c.service_name = "search-application"
+    c.use_all # enables all instrumentation!
+  end
+end
 Metrics::Yabeda.configure!
 
 class Search::Application < Sinatra::Base
@@ -94,7 +104,7 @@ class Search::Application < Sinatra::Base
   end
 
   Search::Datastores.each do |datastore|
-    if datastore.slug == "catalog"
+    if ["catalog", "onlinejournals", "articles"].include?(datastore.slug)
       get "/#{datastore.slug}/record/:id" do
         # profile = RubyProf::Profile.new
         # profile.start
@@ -127,7 +137,8 @@ class Search::Application < Sinatra::Base
       rescue
         redirect "/#{datastore.slug}/record/:id"
       end
-      get "/catalog" do
+
+      get "/#{datastore.slug}" do
         if params.any?
           @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: full_uri, patron: @patron)
           erb :"datastores/results/layout", layout: :layout do
@@ -152,7 +163,8 @@ class Search::Application < Sinatra::Base
         end
       end
     end
-    if datastore.slug == "onlinejournals" || datastore.slug == "databases"
+
+    if ["onlinejournals", "databases"].include?(datastore.slug)
       get "/#{datastore.slug}/browse" do
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "browse"
         @presenter = Search::Presenters.for_datastore_browse(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
@@ -161,6 +173,7 @@ class Search::Application < Sinatra::Base
         end
       end
     end
+
     if datastore.slug == "everything"
       get "/#{datastore.slug}/list" do
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "list"

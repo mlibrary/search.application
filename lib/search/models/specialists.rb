@@ -2,15 +2,21 @@ class Search::Models::Specialists
   include Enumerable
 
   def self.for_catalog(uri)
-    query_values = uri.query_values
-    params = {
-      query: query_values["query"] || "",
-      filters: Search::Models::Results::Catalog.get_filters(uri.query_hash),
-      sort: query_values["sort"] || "relevance"
-    }
-    ht_search_only = Search::Models::Results::Catalog.ht_search_only(uri.query_hash)
-    params[:ht_search_only] = true if ht_search_only
+    params = Search::Models::Results::Catalog.get_params(uri: uri).slice(:query, :filters, :boolean_filters)
 
+    data = Search::Clients::CatalogAPI.new.get_catalog_specialists(**params)
+    new(data)
+  end
+
+  def self.for_onlinejournals(uri)
+    params = Search::Models::Results::Onlinejournals.get_params(uri: uri).slice(:query, :filters, :boolean_filters)
+
+    data = Search::Clients::CatalogAPI.new.get_onlinejournals_specialists(**params)
+    new(data)
+  end
+
+  def self.for_articles(uri)
+    params = Search::Models::Results::Articles.get_params(uri: uri).slice(:query)
     data = Search::Clients::CatalogAPI.new.get_catalog_specialists(**params)
     new(data)
   end

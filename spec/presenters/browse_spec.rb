@@ -32,6 +32,13 @@ RSpec.describe Search::Presenters::Browse do
 
   context "#academic_discipline" do
     it "returns an AcademicDisciplines presenter" do
+      results = [{
+        "name" => "Business",
+        "count" => 17474,
+        "disciplines" => []
+      }]
+      stub_request(:get, "#{S.catalog_api_url}/onlinejournals/academic_disciplines")
+        .to_return(status: 200, body: results.to_json, headers: {content_type: "application/json"})
       expect(subject.academic_discipline).to be_a(Search::Presenters::Browse::AcademicDisciplines)
     end
   end

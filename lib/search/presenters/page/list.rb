@@ -1,7 +1,7 @@
 class Search::Presenters::Page
   class List < DatastoreStatic
     CURRENT_PAGE = "My Temporary List"
-    EXTRA_ICONS = ["mail", "chat", "format_quote", "draft", "add", "delete"]
+    EXTRA_ICONS = ["mail", "chat", "format_quote", "draft", "add", "delete", "verified"]
     def self.for(uri:, patron:)
       datastore = Search::Datastores.find("everything")
       new(datastore: datastore, uri: uri, patron: patron)
@@ -28,6 +28,10 @@ class Search::Presenters::Page
 
     def actions
       Search::Presenters::Actions.new(["link"])
+    end
+
+    def show_specialists?(index)
+      false
     end
 
     def show_holdings?

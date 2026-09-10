@@ -12,7 +12,7 @@ module Search::Presenters
         Addressable::URI.new(
           path: "/#{@slug}",
           query_values: {
-            "browse_starts_with" => @title,
+            "query" => "browse_starts_with:(#{@title})",
             "sort" => "title_asc"
           }
         ).to_s
