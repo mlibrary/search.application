@@ -9,6 +9,16 @@ require_relative "lib/metrics"
 require_relative "lib/sinatra_helpers"
 require "debug" if S.app_env == "development"
 require "ruby-prof" if S.profile?
+
+if S.app_env != "test"
+  require "opentelemetry/sdk"
+  require "opentelemetry/instrumentation/all"
+  require "opentelemetry-exporter-otlp"
+  OpenTelemetry::SDK.configure do |c|
+    c.service_name = "search-application"
+    c.use_all # enables all instrumentation!
+  end
+end
 Metrics::Yabeda.configure!
 
 class Search::Application < Sinatra::Base
@@ -129,7 +139,7 @@ class Search::Application < Sinatra::Base
       end
 
       get "/#{datastore.slug}" do
-        if params.any? && datastore.slug != "articles"
+        if params.any?
           @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: full_uri, patron: @patron)
           erb :"datastores/results/layout", layout: :layout do
             erb :"datastores/results/#{datastore.slug}"

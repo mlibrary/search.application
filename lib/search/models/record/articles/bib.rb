@@ -23,9 +23,15 @@ class Search::Models::Record::Articles::Bib
     end
   end
 
+  def subject
+    map_field("subject") do |item|
+      ArticlesSubjectItem.new(item)
+    end
+  end
+
   [
     :abstract, :journal_title, :issue, :volume, :pages, :publication_date, :publisher, :genre, :issn, :eissn,
-    :isbn, :eisbn, :doi, :oclc, :pmid, :language, :subject, :edition
+    :isbn, :eisbn, :doi, :oclc, :pmid, :language, :edition
   ].each do |uid|
     define_method(uid) { map_text_field(uid.to_s) }
   end

@@ -93,6 +93,7 @@ module Search::Models::Record::Metadata
     end
   end
 
+  # Catalog
   class AuthorBrowseItem < LinkToItem
     include BrowseUrl
 
@@ -183,6 +184,17 @@ module Search::Models::Record::Metadata
 
     def url
       "#{S.base_url}/catalog?" + {query: "academic_discipline:#{text}"}.to_query
+    end
+  end
+
+  # Articles
+  class ArticlesSubjectItem < Item
+    def initialize(data)
+      @data = data
+    end
+
+    def url
+      "#{S.base_url}/articles?" + {query: "subject:\"#{text}\""}.to_query
     end
   end
 end
