@@ -1,0 +1,35 @@
+@use '../../../../../../forms';
+
+// --------------------------------------------------
+//
+// # Recommended
+//   Styles to apply directly to `views/datastores/results/partials/results-list/list-item/header/_recommended.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Recommended
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.results__list-item--recommended';
+
+
+
+
+
+// ********************** //
+// *** 2. RECOMMENDED *** //
+// ********************** //
+
+#{$class} {
+  background-color: var(--color-maize-400);
+  border-radius: forms.$radius;
+  color: var(--search-color-primary);
+  display: inline-block;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+}
