@@ -20,10 +20,18 @@ RSpec.describe Search::Models::Record::Articles::Bib do
       expect(my_subject.url).to eq("#{S.base_url}/articles?" + {query: 'author:"Lena, Jennifer C"'}.to_query)
     end
   end
+
+  context "#subject" do
+    it "has expected output" do
+      my_subject = subject.subject.first
+      expect(my_subject.text).to eq("Afrobeat")
+      expect(my_subject.url).to eq("#{S.base_url}/articles?" + {query: 'subject:"Afrobeat"'}.to_query)
+    end
+  end
   [
     :abstract, :abstract, :journal_title, :issue, :volume, :pages,
     :publication_date, :publisher, :genre, :issn, :eissn, :isbn, :eisbn, :doi,
-    :oclc, :pmid, :language, :subject, :edition
+    :oclc, :pmid, :language, :edition
   ].each do |uid|
     context "##{uid}" do
       it "is an array of OpenStructs that respond to text" do
