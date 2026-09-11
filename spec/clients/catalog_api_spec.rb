@@ -1,4 +1,4 @@
-describe Search::Clients::CatalogAPI do
+describe Search::Clients::SearchAPI do
   context "boolean_params" do
     it "handles catalog search_only true" do
       subject = described_class.new.boolean_params(["search_only:true"])

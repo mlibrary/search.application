@@ -1,6 +1,6 @@
 module Search
   module Clients
-    class CatalogAPI
+    class SearchAPI
       attr_reader :conn
 
       BOOLEAN_FILTER_MAP = {
