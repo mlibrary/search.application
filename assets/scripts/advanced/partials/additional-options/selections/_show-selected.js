@@ -1,11 +1,13 @@
-import { getSelectionsCheckboxesByState, toggleSelectionsUncheckedCheckboxes } from './_checkboxes.js';
+import { toggleSelectionsUncheckedCheckboxes } from './_checkboxes.js';
 
 const getShowSelectedButton = ({ selections }) => {
   return selections.querySelector('.additional-option__selections--show-selected');
 };
 
 const updateShowSelectedButtonCount = ({ button, count }) => {
+  // Get the count element within the button
   const countElement = button.querySelector('.additional-option__selections--show-selected-count');
+  // Update the count
   countElement.textContent = count;
 };
 
@@ -48,10 +50,9 @@ const toggleShowSelectedButtonItems = ({
   toggleText({ button });
 };
 
-const toggleShowSelectedButtonVisibility = ({ button, getCheckedCheckboxes = getSelectionsCheckboxesByState, selections }) => {
+const toggleShowSelectedButtonVisibility = ({ button, count }) => {
   // Toggle the visibility of the button, if the count is greater than 0
-  const checkedCheckboxes = getCheckedCheckboxes({ checked: true, selections });
-  if (checkedCheckboxes.length > 0) {
+  if (count > 0) {
     button.removeAttribute('style');
   } else {
     button.setAttribute('style', 'display: none;');
@@ -67,27 +68,21 @@ const handleShowSelectedFilters = ({
   // Add functionality to handle showing selected filters
   button.addEventListener('click', () => {
     toggleButtonItems({ button });
-    toggleUncheckedCheckboxes({ selections });
+    toggleUncheckedCheckboxes({ button, selections });
   });
 };
 
 const initializeShowSelected = ({
+  button,
   handleShowSelected = handleShowSelectedFilters,
   selections,
-  showSelectedButton = getShowSelectedButton,
   toggleButtonVisibility = toggleShowSelectedButtonVisibility
 }) => {
-  // Get the show selected button
-  const button = showSelectedButton({ selections });
-
-  // Save the arguments
-  const args = { button, selections };
-
   // Toggle the visibility of the show selected button on load
-  toggleButtonVisibility(args);
+  toggleButtonVisibility({ button, selections });
 
   // Handle show selected filters
-  handleShowSelected(args);
+  handleShowSelected({ button, selections });
 };
 
 export {

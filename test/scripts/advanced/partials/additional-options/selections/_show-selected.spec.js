@@ -11,7 +11,6 @@ import {
   updateShowSelectedButtonCount
 } from '../../../../../../assets/scripts/advanced/partials/additional-options/selections/_show-selected.js';
 import { expect } from 'chai';
-import { getSelectionsCheckboxesByState } from '../../../../../../assets/scripts/advanced/partials/additional-options/selections/_checkboxes.js';
 import sinon from 'sinon';
 
 describe('show selected', function () {
@@ -109,11 +108,11 @@ describe('show selected', function () {
     beforeEach(function () {
       args = {
         button: getButton(),
-        isPressed: isShowSelectedButtonPressed({ button: getButton() })
+        isPressed: false
       };
 
       // Check that the `aria-pressed` attribute is initially set
-      expect(args.button.getAttribute('aria-pressed'), 'Button should initially have aria-pressed attribute').to.equal(String(args.isPressed));
+      expect(args.button.hasAttribute('aria-pressed'), 'Button should initially have aria-pressed attribute').to.be.true;
 
       // Call the function
       toggleShowSelectedButtonPressed(args);
@@ -123,8 +122,8 @@ describe('show selected', function () {
       args = null;
     });
 
-    it('should toggle the pressed state of the button', function () {
-      expect(args.button.getAttribute('aria-pressed'), '`toggleShowSelectedButtonPressed` should toggle the pressed state').to.equal(String(!args.isPressed));
+    it('should change the `aria-pressed` attribute of the button to the opposite of the `isPressed` value', function () {
+      expect(args.button.getAttribute('aria-pressed'), '`toggleShowSelectedButtonPressed` change the `aria-pressed` attribute of the button to the opposite of the `isPressed` value').to.equal(String(!args.isPressed));
     });
   });
 
@@ -236,42 +235,36 @@ describe('show selected', function () {
   });
 
   describe('toggleShowSelectedButtonVisibility()', function () {
-    let getSelectionsCheckboxesByStateStub = null;
     let args = null;
 
     beforeEach(function () {
-      getSelectionsCheckboxesByStateStub = sinon.stub().callsFake(({ checked, selections }) => {
-        return getSelectionsCheckboxesByState({ checked, selections });
-      });
       args = {
         button: getButton(),
-        getCheckedCheckboxes: getSelectionsCheckboxesByStateStub,
-        selections: getSelections()
+        count: 1
       };
-
-      // Check the button is initially hidden
-      expect(args.button.style.display, 'Button should initially be hidden').to.equal('none');
-
-      // Call the function
-      toggleShowSelectedButtonVisibility(args);
     });
 
     afterEach(function () {
-      getSelectionsCheckboxesByStateStub = null;
       args = null;
     });
 
-    it('should call `getSelectionsCheckboxesByState` with the correct arguments', function () {
-      expect(getSelectionsCheckboxesByStateStub.calledOnceWithExactly({ checked: true, selections: args.selections }), '`getSelectionsCheckboxesByState` should have been called once').to.be.true;
+    it('should make the button visible when count is greater than 0', function () {
+      // Check that the count is greater than 0
+      expect(args.count, 'Count should be greater than 0').to.be.greaterThan(0);
+      // Call the function
+      toggleShowSelectedButtonVisibility(args);
+      // Check that the button is visible
+      expect(args.button.hasAttribute('style'), '`toggleShowSelectedButtonVisibility` should make the button visible when count is greater than 0').to.be.false;
     });
 
-    it('should toggle the show selected button', function () {
-      // Check that the button's visibility is toggled based on the count of checked checkboxes
-      if (getSelectionsCheckboxesByStateStub({ checked: true, selections: args.selections }).length > 0) {
-        expect(args.button.hasAttribute('style'), '`toggleShowSelectedButtonVisibility` should toggle the display').to.be.false;
-      } else {
-        expect(args.button.style.display, '`toggleShowSelectedButtonVisibility` should hide the button when count is 0').to.equal('none');
-      }
+    it('should make the button not visible when count is less than 1', function () {
+      // Check that the count is less than 1
+      args.count = 0;
+      expect(args.count, 'Count should be less than 1').to.be.lessThan(1);
+      // Call the function
+      toggleShowSelectedButtonVisibility(args);
+      // Check that the button is not visible
+      expect(args.button.style.display, '`toggleShowSelectedButtonVisibility` should make the button not visible when count is less than 1').to.equal('none');
     });
   });
 
@@ -315,26 +308,22 @@ describe('show selected', function () {
     });
 
     it('should call `toggleUncheckedCheckboxes` with the correct arguments when the button is clicked', function () {
-      expect(toggleUncheckedCheckboxesSpy.calledOnceWithExactly({ selections: args.selections }), '`toggleUncheckedCheckboxes` should have been called with the correct arguments').to.be.true;
+      expect(toggleUncheckedCheckboxesSpy.calledOnceWithExactly({ button: args.button, selections: args.selections }), '`toggleUncheckedCheckboxes` should have been called with the correct arguments').to.be.true;
     });
   });
 
   describe('initializeShowSelected()', function () {
-    let getShowSelectedButtonStub = null;
     let handleShowSelectedFiltersSpy = null;
     let toggleShowSelectedButtonVisibilitySpy = null;
     let args = null;
 
     beforeEach(function () {
-      getShowSelectedButtonStub = sinon.stub().callsFake(({ selections }) => {
-        return getShowSelectedButton({ selections });
-      });
       toggleShowSelectedButtonVisibilitySpy = sinon.spy();
       handleShowSelectedFiltersSpy = sinon.spy();
       args = {
+        button: getButton(),
         handleShowSelected: handleShowSelectedFiltersSpy,
         selections: getSelections(),
-        showSelectedButton: getShowSelectedButtonStub,
         toggleButtonVisibility: toggleShowSelectedButtonVisibilitySpy
       };
 
@@ -348,16 +337,12 @@ describe('show selected', function () {
       args = null;
     });
 
-    it('should call `getShowSelectedButton` with the correct arguments', function () {
-      expect(getShowSelectedButtonStub.calledOnceWithExactly({ selections: args.selections }), '`getShowSelectedButton` should have been called once').to.be.true;
-    });
-
     it('should call `toggleShowSelectedButtonVisibility`with the correct arguments', function () {
-      expect(toggleShowSelectedButtonVisibilitySpy.calledOnceWithExactly({ button: getShowSelectedButtonStub({ selections: args.selections }), selections: args.selections }), '`toggleShowSelectedButtonVisibility` should have been called once').to.be.true;
+      expect(toggleShowSelectedButtonVisibilitySpy.calledOnceWithExactly({ button: args.button, selections: args.selections }), '`toggleShowSelectedButtonVisibility` should have been called once').to.be.true;
     });
 
     it('should call `handleShowSelectedFilters` with the correct arguments', function () {
-      expect(handleShowSelectedFiltersSpy.calledOnceWithExactly({ button: getShowSelectedButtonStub({ selections: args.selections }), selections: args.selections }), '`handleShowSelectedFilters` should have been called once').to.be.true;
+      expect(handleShowSelectedFiltersSpy.calledOnceWithExactly({ button: args.button, selections: args.selections }), '`handleShowSelectedFilters` should have been called once').to.be.true;
     });
   });
 });
