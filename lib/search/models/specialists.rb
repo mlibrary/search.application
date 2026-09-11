@@ -4,20 +4,20 @@ class Search::Models::Specialists
   def self.for_catalog(uri)
     params = Search::Models::Results::Catalog.get_params(uri: uri).slice(:query, :filters, :boolean_filters)
 
-    data = Search::Clients::CatalogAPI.new.get_catalog_specialists(**params)
+    data = Search::Clients::SearchAPI.new.get_catalog_specialists(**params)
     new(data)
   end
 
   def self.for_onlinejournals(uri)
     params = Search::Models::Results::Onlinejournals.get_params(uri: uri).slice(:query, :filters, :boolean_filters)
 
-    data = Search::Clients::CatalogAPI.new.get_onlinejournals_specialists(**params)
+    data = Search::Clients::SearchAPI.new.get_onlinejournals_specialists(**params)
     new(data)
   end
 
   def self.for_articles(uri)
     params = Search::Models::Results::Articles.get_params(uri: uri).slice(:query)
-    data = Search::Clients::CatalogAPI.new.get_catalog_specialists(**params)
+    data = Search::Clients::SearchAPI.new.get_catalog_specialists(**params)
     new(data)
   end
 

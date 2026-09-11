@@ -5,4 +5,4 @@ module Search
   end
 end
 
-require "search/clients/catalog_api"
+require "search/clients/search_api"

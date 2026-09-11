@@ -126,9 +126,9 @@ RSpec.describe "requests" do
   end
   context "catalog search results" do
     it "shows the results page when there is a query parameter" do
-      stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=0&query=title:(test)&limit=10&filters=library:aa&sort=relevance")
+      stub_request(:get, "#{S.search_api_url}/catalog/search?offset=0&query=title:(test)&limit=10&filters=library:aa&sort=relevance")
         .to_return(status: 200, body: base_results.to_json, headers: {content_type: "application/json"})
-      stub_request(:get, "#{S.catalog_api_url}/catalog/specialists?&query=title:(test)&filters=library:aa")
+      stub_request(:get, "#{S.search_api_url}/catalog/specialists?&query=title:(test)&filters=library:aa")
         .to_return(status: 200, body: fixture("results/specialists.json"), headers: {content_type: "application/json"})
       get "/catalog?query=title:(test)"
       expect(last_response.body).to include("Catalog results")
@@ -137,9 +137,9 @@ RSpec.describe "requests" do
   end
   context "onlinejournals search results" do
     it "shows the results page when there is a query parameter" do
-      stub_request(:get, "#{S.catalog_api_url}/onlinejournals/search?offset=0&query=title:(test)&limit=10&sort=relevance")
+      stub_request(:get, "#{S.search_api_url}/onlinejournals/search?offset=0&query=title:(test)&limit=10&sort=relevance")
         .to_return(status: 200, body: onlinejournals_results.to_json, headers: {content_type: "application/json"})
-      stub_request(:get, "#{S.catalog_api_url}/onlinejournals/specialists?&query=title:(test)&limit=10&offset=0")
+      stub_request(:get, "#{S.search_api_url}/onlinejournals/specialists?&query=title:(test)&limit=10&offset=0")
         .to_return(status: 200, body: fixture("results/specialists.json"), headers: {content_type: "application/json"})
       get "/onlinejournals?query=title:(test)"
       expect(last_response.body).to include("Online Journals results")
@@ -209,7 +209,7 @@ RSpec.describe "requests" do
       bib_id = "9912345"
       data = base_api_record
       call_number = data["call_number"][0]["text"]
-      stub_request(:get, "#{S.catalog_api_url}/catalog/records/#{bib_id}")
+      stub_request(:get, "#{S.search_api_url}/catalog/records/#{bib_id}")
         .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
       stub_request(:get, "#{S.catalog_browse_url}/carousel?query=#{call_number}")
         .to_return(status: 200, body: [], headers: {})
@@ -223,7 +223,7 @@ RSpec.describe "requests" do
     it "shows the catalog record page" do
       bib_id = "9912345"
       data = base_onlinejournals_api_record
-      stub_request(:get, "#{S.catalog_api_url}/onlinejournals/records/#{bib_id}")
+      stub_request(:get, "#{S.search_api_url}/onlinejournals/records/#{bib_id}")
         .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
       get "/onlinejournals/record/#{bib_id}"
       expect(last_response.status).to eq(200)
@@ -235,7 +235,7 @@ RSpec.describe "requests" do
   context "/articles/record/:id" do
     it "shows the article record page" do
       bib_id = "cdi_something_9912345"
-      stub_request(:get, "#{S.catalog_api_url}/articles/records/#{bib_id}")
+      stub_request(:get, "#{S.search_api_url}/articles/records/#{bib_id}")
         .to_return(status: 200, body: articles_record.to_json, headers: {content_type: "application/json"})
       get "/articles/record/#{bib_id}"
       expect(last_response.status).to eq(200)
@@ -281,7 +281,7 @@ RSpec.describe "requests" do
       data = base_api_record
       bib_id = data["id"]
       data["citation"] = citation["citation"]
-      stub_request(:get, "#{S.catalog_api_url}/catalog/records/#{bib_id}")
+      stub_request(:get, "#{S.search_api_url}/catalog/records/#{bib_id}")
         .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
       get "/catalog/record/#{bib_id}/ris"
       expect(last_response.headers["Content-Type"]).to eq("application/x-research-info-systems")
@@ -289,7 +289,7 @@ RSpec.describe "requests" do
     end
     it "redirects to past activity when there is network timeout" do
       bib_id = "9912345"
-      stub_request(:get, "#{S.catalog_api_url}/catalog/records/#{bib_id}")
+      stub_request(:get, "#{S.search_api_url}/catalog/records/#{bib_id}")
         .to_timeout
       get "/catalog/record/#{bib_id}/ris"
       expect(last_response.status).to eq(302)
