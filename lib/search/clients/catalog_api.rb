@@ -23,7 +23,7 @@ module Search
 
       def initialize
         @conn = Faraday.new(
-          url: S.catalog_api_url, request: {params_encoder: Faraday::FlatParamsEncoder}
+          url: S.search_api_url, request: {params_encoder: Faraday::FlatParamsEncoder}
         ) do |f|
           f.request :json
           f.response :raise_error

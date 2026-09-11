@@ -19,7 +19,7 @@ services:
         GID: ${GID:-1000}
     depends_on:
       - 'redis'
-      - 'catalog-api'
+      - 'search-api'
     ports:
       - 4567:4567
       - 9100:9100
@@ -82,8 +82,8 @@ services:
       - sidekiq
       - -r
       - "./app.rb"
-  catalog-api:
-    image: ghcr.io/mlibrary/search.catalog-api-unstable:latest
+  search-api:
+    image: ghcr.io/mlibrary/search.api-unstable:latest
     env_file:
       - .env
     environment:

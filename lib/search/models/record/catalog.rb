@@ -8,7 +8,7 @@ require "search/models/record/catalog/citation"
 class Search::Models::Record::Catalog
   def self.for(id)
     data = nil
-    Yabeda.catalog_api_full_record_duration.measure do
+    Yabeda.search_api_full_record_duration.measure do
       # get data from the api with the client
       data = Search::Clients::CatalogAPI.new.get_catalog_record(id)
     end
