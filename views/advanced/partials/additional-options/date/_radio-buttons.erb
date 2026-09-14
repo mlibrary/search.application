@@ -1,0 +1,12 @@
+<%
+  # TODO: Check the radio button if affiliated filter exists in the query parameters
+%>
+<fieldset class="additional-option__date--types">
+  <legend class="visually-hidden">Select date type</legend>
+  <% data.filters.each do |filter| %>
+    <label class="label-wrapper additional-option__date--types-type" data-filter-value="<%= filter %>">
+      <input type="radio" name="<%= data.parameter %>" value="<%= filter %>">
+      <span><%= filter %></span>
+    </label>
+  <% end %>
+</fieldset>

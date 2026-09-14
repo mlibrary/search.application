@@ -1,0 +1,12 @@
+<div class="additional-option__date--years">
+  <% ["Start", "End"].each do |label| %>
+    <% id = "additional-option__date--year-#{label.downcase}" %>
+    <div class="additional-option__date--year <%= id %>">
+      <label for="<%= id %>">
+        <span><%= label %> Date</span>
+      </label>
+      <input type="number" min="1000" max="<%= Time.now.year %>" autocomplete="off" id="<%= id %>">
+      <small>Please enter this format: YYYY</small>
+    </div>
+  <% end %>
+</div>

@@ -1,5 +1,6 @@
 @use '../../utilities';
 @use '../../media';
+@use './additional-options/date';
 @use './additional-options/selections';
 
 // --------------------------------------------------
@@ -29,7 +30,7 @@ $class: ".advanced-search__additional-option";
 // ***************************** //
 
 #{$class}s {
-  @include utilities.flex($responsive: true);
+  @include utilities.flex($align: baseline, $responsive: true);
   gap: 0 2rem;
 }
 

@@ -1,0 +1,41 @@
+@use "../../../../utilities";
+
+// --------------------------------------------------
+//
+// # Radio Buttons
+//   Styles to apply directly to `views/advanced/partials/additional-options/date/_radio-buttons.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Types
+//     2.1. Type
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".additional-option__date--types";
+
+
+
+
+
+// **************** //
+// *** 2. TYPES *** //
+// **************** //
+
+#{$class} {
+  @include utilities.flex();
+}
+
+
+
+// *           * //
+// * 2.1. TYPE * //
+// *           * //
+
+.label-wrapper#{$class}-type {
+  align-items: center;
+}

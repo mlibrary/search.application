@@ -3,6 +3,19 @@
     has_additional_options?: true,
     additional_options: [
       OpenStruct.new(
+        title: "Date of Publication",
+        partial: "date",
+        data: OpenStruct.new(
+          parameter: "date_of_publication",
+          filters: [
+            "Before",
+            "After",
+            "Between",
+            "In"
+          ]
+        )
+      ),
+      OpenStruct.new(
         title: "Academic Discipline",
         partial: "selections",
         data: OpenStruct.new(

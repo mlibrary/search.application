@@ -1,13 +1,14 @@
-@use './selections/checkboxes';
+@use './date/radio-buttons';
+@use './date/years';
 
 // --------------------------------------------------
 //
-// # Selections
-//   Styles to apply directly to `views/advanced/partials/additional-options/_selections.erb`.
+// # Date
+//   Styles to apply directly to `views/advanced/partials/additional-options/_date.erb`.
 //
 // ## Table of Contents
 //   1. Variables
-//   2. Selections
+//   2. Date
 //
 // --------------------------------------------------
 
@@ -15,15 +16,15 @@
 // *** 1. VARIABLES *** //
 // ******************** //
 
-$class: ".additional-option__selections";
+$class: ".additional-option__date";
 
 
 
 
 
-// ********************* //
-// *** 2. SELECTIONS *** //
-// ********************* //
+// *************** //
+// *** 2. DATE *** //
+// *************** //
 
 #{$class} {
   & > * + * {

@@ -1,0 +1,30 @@
+@use "../../../../utilities";
+
+// --------------------------------------------------
+//
+// # Years
+//   Styles to apply directly to `views/advanced/partials/additional-options/date/_years.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Years
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".additional-option__date--years";
+
+
+
+
+
+// **************** //
+// *** 2. YEARS *** //
+// **************** //
+
+#{$class} {
+  @include utilities.flex($responsive: true);
+}
