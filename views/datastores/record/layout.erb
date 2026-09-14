@@ -9,7 +9,7 @@
         <%= h1(body: erb(:'datastores/record/partials/_title', locals: { position: @presenter.position, titles: @record.title }), classes: ["record__title"]) %>
       </div>
       <h2 class="visually-hidden">Record info:</h2>
-      <%= erb :'datastores/partials/_metadata', locals: { metadata: @record.metadata } %>
+      <%= erb :'datastores/partials/_metadata', locals: { metadata: @record.metadata, record_id: @record.id } %>
       <%= yield %>
     </section>
     <h2 class="visually-hidden">Available at:</h2>
