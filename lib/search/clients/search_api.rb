@@ -81,10 +81,24 @@ module Search
 
       def get_articles_results(limit: 10, offset: 0, sort: "", query: "*", filters: [], boolean_filters: [])
         params = {offset: offset, limit: limit, sort: sort, query: query}
-        params[:filters] = filters unless filters.empty?
+        af = articles_filters(filters)
+        params[:filters] = af unless af.empty?
         bp = boolean_params(boolean_filters, kind: :articles)
         params.merge!(bp)
         @conn.get("articles/search", **params).body
+      end
+
+      def articles_filters(filters)
+        filters.map do |filter|
+          kind, value = filter.split(":")[0, 2]
+
+          if kind == "date"
+            years = value.split("-")[0, 2]
+            "date:#{years.join(",")}"
+          else
+            filter
+          end
+        end
       end
 
       def boolean_params(filters, kind: :catalog)
