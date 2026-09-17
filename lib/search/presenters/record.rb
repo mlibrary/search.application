@@ -106,6 +106,16 @@ module Search
         def each(&block)
           @values.each(&block)
         end
+
+        def to_h
+          {
+            field: field,
+            partial: partial,
+            uid: uid,
+            values: values.map { |x| x.to_h }[0, 3],
+            total: values.count
+          }
+        end
       end
     end
   end

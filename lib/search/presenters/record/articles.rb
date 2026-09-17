@@ -148,14 +148,9 @@ module Search::Presenters::Record::Articles
 
     def to_h
       {
-        title: {
-          original: @record.bib.title.text
-        },
+        title: @record.bib.title.to_h,
         metadata: metadata.map do |f|
-          {
-            field: f.field,
-            original: f.values&.first&.text
-          }
+          f.to_h
         end,
         url: url,
         citation: {
@@ -163,6 +158,22 @@ module Search::Presenters::Record::Articles
           csl: csl
         }
       }
+      # {
+      # title: {
+      # original: @record.bib.title.text
+      # },
+      # metadata: metadata.map do |f|
+      # {
+      # field: f.field,
+      # original: f.values&.first&.text
+      # }
+      # end,
+      # url: url,
+      # citation: {
+      # ris: ris,
+      # csl: csl
+      # }
+      # }
     end
 
     def to_json
