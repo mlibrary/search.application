@@ -66,7 +66,7 @@ module Search::Presenters::Record::Articles
       field_for(
         uid: :published_in,
         field: "Published in",
-        partial: "peer_review",
+        partial: @record.bib.peer_reviewed ? "peer_review" : "plain_text",
         values: [
           OpenStruct.new(to_s: text, text: text)
         ]
@@ -127,9 +127,7 @@ module Search::Presenters::Record::Articles
       :retraction,
       :abstract,
       :author,
-      :publication_date,
-      :publisher,
-      :pages,
+      :published_in,
       :subject
     ]
 
