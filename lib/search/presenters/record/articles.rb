@@ -127,9 +127,7 @@ module Search::Presenters::Record::Articles
       :retraction,
       :abstract,
       :author,
-      :publication_date,
-      :publisher,
-      :pages,
+      :published_in,
       :subject
     ]
 
