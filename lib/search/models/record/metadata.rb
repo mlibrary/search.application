@@ -24,6 +24,14 @@ module Search::Models::Record::Metadata
     end
   end
 
+  def self.plain_text_item(text)
+    Item.new({"text" => text})
+  end
+
+  def self.link_to_item(text:, url:)
+    BaseLinkToItem.new(text: text, url: url)
+  end
+
   private
 
   class PairedItem
@@ -105,9 +113,24 @@ module Search::Models::Record::Metadata
     end
   end
 
-  class LinkToItem < Item
-    include SearchUrl
+  class BaseLinkToItem < Item
+    attr_reader :url
+    attr_reader :text
 
+    def initialize(text:, url:)
+      @text = text
+      @url = url
+    end
+
+    def to_h
+      {
+        text: text,
+        url: url
+      }
+    end
+  end
+
+  class LinkToItem < Item
     def initialize(data:, datastore:)
       @data = data
       @datstore = datastore
@@ -121,8 +144,12 @@ module Search::Models::Record::Metadata
     end
   end
 
+  class SearchLinkToItem < LinkToItem
+    include SearchUrl
+  end
+
   # Catalog
-  class AuthorBrowseItem < LinkToItem
+  class AuthorBrowseItem < SearchLinkToItem
     include BrowseUrl
     include BrowseHash
 

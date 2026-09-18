@@ -34,7 +34,7 @@ module Search::Presenters::Record::Articles
           field: "Retracted",
           partial: "link_to",
           values: [
-            OpenStruct.new(to_s: "This article has been retracted.", url: @record.bib.retraction_notice_url)
+            Search::Models::Record::Metadata.link_to_item(text: "This article has been retracted.", url: @record.bib.retraction_notice_url)
           ]
         )
       end
@@ -67,9 +67,7 @@ module Search::Presenters::Record::Articles
         uid: :published_in,
         field: "Published in",
         partial: @record.bib.peer_reviewed ? "peer_review" : "plain_text",
-        values: [
-          OpenStruct.new(to_s: text, text: text)
-        ]
+        values: [Search::Models::Record::Metadata.plain_text_item(text)]
       )
     end
 
@@ -142,7 +140,7 @@ module Search::Presenters::Record::Articles
         uid: :abstract,
         field: "Abstract",
         partial: "plain_text",
-        values: [OpenStruct.new(to_s: text, text: text)]
+        values: [Search::Models::Record::Metadata.plain_text_item(text)]
       )
     end
 
