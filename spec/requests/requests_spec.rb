@@ -5,7 +5,7 @@ RSpec.describe "requests" do
       sms: "sms",
       logged_in: false,
       expires_at: (Time.now + 1.hour).to_i,
-      campus: nil
+      campus: "aa"
     }
     @params = {
       search_datastore: "everything",
@@ -63,22 +63,7 @@ RSpec.describe "requests" do
         get_static_page
         expect(last_request.session[:logged_in]).to eq(false)
         expect(last_request.session[:expires_at]).not_to be_nil
-        expect(last_request.session[:affiliation]).to be_nil
-        expect(last_request.session[:path_before_form]).to include("/accessibility?something=other")
-      end
-      it "does not change the affiliation when unexpired" do
-        @session[:affiliation] = "flint"
-        get_static_page
-        expect(last_request.session[:expires_at]).not_to be_nil
-        expect(last_request.session[:affiliation]).to eq("flint")
-        expect(last_request.session[:path_before_form]).to include("/accessibility?something=other")
-      end
-      it "resets the affiliation when expired" do
-        @session[:affiliation] = "flint"
-        @session[:expires_at] = (Time.now - 1.hour).to_i
-        get_static_page
-        expect(last_request.session[:expires_at]).not_to be_nil
-        expect(last_request.session[:affiliation]).to be_nil
+        expect(last_request.session[:campus]).to eq("aa")
         expect(last_request.session[:path_before_form]).to include("/accessibility?something=other")
       end
     end
@@ -153,19 +138,6 @@ RSpec.describe "requests" do
         get_static_page
         post "/search", @params
         expect(last_response.location).to end_with("/everything")
-      end
-
-      # I don't think we want to do this anymore
-      xit "redirects to `search.lib.umich.edu` with the query not wrapped" do
-        search_text = "search text"
-        search_datastore = "catalog"
-        get "/#{search_datastore}"
-        post "/search", @params.merge(search_text: search_text, search_datastore: search_datastore)
-        location = last_response.location
-        uri = URI.parse(location)
-        query_params = URI.decode_www_form(uri.query).to_h
-        expect(location).to start_with("https://search.lib.umich.edu/#{search_datastore}")
-        expect(query_params["query"]).to eq(search_text)
       end
     end
     context "searching with a different option selected" do

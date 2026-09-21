@@ -3,7 +3,7 @@ module Fakes
   class PatronFake < Search::Patron::Base
     include Search::Patron::SessionHelper
 
-    [:affiliation, :email, :sms, :campus, :logged_in?].each do |method|
+    [:email, :sms, :campus, :logged_in?].each do |method|
       define_method method do
         method.to_s
       end
@@ -15,7 +15,6 @@ RSpec.describe Search::Patron::SessionHelper do
     it "outputs an appropriate hash" do
       expected = {
         email: "email",
-        affiliation: "affiliation",
         campus: "campus",
         logged_in: "logged_in?"
       }
@@ -27,22 +26,22 @@ end
 RSpec.describe Search::Patron do
   before(:each) do
     @data = JSON.parse(fixture("alma_user.json"))
-    @session_affiliation = nil
+    @ip = "202.0.0.0" # not flint
   end
   subject do
-    described_class.for(uniqname: "fakeuser", session_affiliation: @session_affiliation)
+    described_class.for(uniqname: "fakeuser", ip: @ip)
   end
   context ".for" do
     it "returns an Alma Patron object on a succesful request" do
       stub_alma_get_request(url: "users/fakeuser", output: @data.to_json)
       expect(subject.email).to eq("fakeuser@umich.edu")
-      expect(subject.affiliation).to be_nil
+      expect(subject.campus).to eq("aa")
     end
-    it "passes the existing session affiliation to the Alma Patron" do
-      @session_affiliation = "flint"
-      stub_alma_get_request(url: "users/fakeuser", output: @data.to_json)
-      expect(subject.affiliation).to eq("flint")
-    end
+    # it "passes the existing session affiliation to the Alma Patron" do
+    # @session_affiliation = "flint"
+    # stub_alma_get_request(url: "users/fakeuser", output: @data.to_json)
+    # expect(subject.affiliation).to eq("flint")
+    # end
 
     it "returns not logged in patron for non-200 response" do
       stub_alma_get_request(url: "users/fakeuser", status: 500, output: "some output string")
@@ -61,7 +60,7 @@ RSpec.describe Search::Patron::Alma do
     @session_affiliation = nil
   end
   subject do
-    described_class.new(@data, @session_affiliation)
+    described_class.new(@data)
   end
   context "#email" do
     it "returns the preferred email address from Alma" do
@@ -73,8 +72,8 @@ RSpec.describe Search::Patron::Alma do
     end
   end
   context "#campus" do
-    it "returns nil for non-flint campus" do
-      expect(subject.campus).to be_nil
+    it "returns aa for non-flint campus" do
+      expect(subject.campus).to eq("aa")
     end
     it "returns flint for Flint campus" do
       @data["campus_code"]["value"] = "UMFL"
@@ -84,22 +83,6 @@ RSpec.describe Search::Patron::Alma do
   context "#logged_in?" do
     it "returns true" do
       expect(subject.logged_in?).to eq(true)
-    end
-  end
-  context "#affiliation" do
-    context "session_affiliation is nil" do
-      it "returns nil when not flint" do
-        expect(subject.affiliation).to be_nil
-      end
-      it "returns the campus when it is flint " do
-        @data["campus_code"]["value"] = "UMFL"
-        expect(subject.affiliation).to eq("flint")
-      end
-    end
-    it "returns the session_affiliation if it is not nil" do
-      @session_affiliation = "aa"
-      @data["campus_code"]["value"] = "UMFL"
-      expect(subject.affiliation).to eq("aa")
     end
   end
 end
@@ -143,8 +126,13 @@ RSpec.describe Search::Patron::FromSession do
 end
 
 RSpec.describe Search::Patron::NotLoggedIn do
+  before(:each) do
+    # Address in the documentation range, which is what we are using for the
+    # Flint range in testing.
+    @ip = "203.0.113.1"
+  end
   subject do
-    described_class.new
+    described_class.new(ip: @ip)
   end
   context "#email" do
     it "returns empty string" do
@@ -152,8 +140,12 @@ RSpec.describe Search::Patron::NotLoggedIn do
     end
   end
   context "#campus" do
-    it "returns empty string" do
-      expect(subject.campus).to eq("")
+    it "is flint when ip is in the flint range" do
+      expect(subject.campus).to eq("flint")
+    end
+    it "is aa when it is not in the flint range" do
+      @ip = "202.0.0.0"
+      expect(subject.campus).to eq("aa")
     end
   end
   context "#logged_in?" do
