@@ -24,6 +24,11 @@ const updateListItemTitleTransliterated = ({ element, title }) => {
   // Get the tertiary element
   const transliteratedTitle = element.querySelector('.results__list-item--title-transliterated');
 
+  // Return early if the transliterated title element is not found
+  if (!transliteratedTitle) {
+    return;
+  }
+
   if (title) {
     // Update the text
     transliteratedTitle.textContent = title;

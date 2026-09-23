@@ -137,6 +137,22 @@ describe('list item title', function () {
       // Check that the transliterated element no longer exists
       expect(getTransliterated(), 'the transliterated element should not exist if the `title` is `null`').to.be.null;
     });
+
+    it('should not throw an error if the transliterated title element is not found', function () {
+      // Remove the transliterated element
+      const transliteratedElement = getTransliterated();
+      if (transliteratedElement) {
+        transliteratedElement.remove();
+      }
+
+      // Check that the transliterated element no longer exists
+      expect(getTransliterated(), 'the transliterated element should not exist before testing').to.be.null;
+
+      // Call the function again
+      expect(() => {
+        return updateListItemTitleTransliterated(args);
+      }, '`updateListItemTitleTransliterated` should not throw an error if the transliterated title element is not found').to.not.throw();
+    });
   });
 
   describe('updateListItemTitle()', function () {
