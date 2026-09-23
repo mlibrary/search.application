@@ -165,6 +165,7 @@ describe('list item title', function () {
         listItem: getListItem(),
         title: {
           original: 'Original Title',
+          text: null,
           transliterated: 'Transliterated Title'
         },
         updateTitleFunctions: {
@@ -198,7 +199,7 @@ describe('list item title', function () {
       });
 
       it('should call `updateListItemTitleAnchor` with the correct arguments', function () {
-        expect(args.updateTitleFunctions.updateListItemTitleAnchor.calledOnceWithExactly({ element: args.getTitleElement(), title: args.title.original, url: args.url }), '`updateListItemTitleAnchor` should call `updateListItemTitleAnchor` with the correct arguments').to.be.true;
+        expect(args.updateTitleFunctions.updateListItemTitleAnchor.calledOnceWithExactly({ element: args.getTitleElement(), title: args.title.text || args.title.original, url: args.url }), '`updateListItemTitleAnchor` should call `updateListItemTitleAnchor` with the correct arguments').to.be.true;
       });
 
       it('should call `updateListItemTitleTransliterated` with the correct arguments', function () {
