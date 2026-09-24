@@ -31,7 +31,6 @@ services:
       - REDIS_URL=redis://redis:6379
       - OTEL_SERVICE_NAME=application
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
-      - OTEL_RUBY_INSTRUMENTATION_FARADAY_CONFIG_OPTS=enable_internal_instrumentation=true
     command:
       - bundle
       - exec
@@ -80,7 +79,6 @@ services:
       - REDIS_URL=redis://redis:6379
       - OTEL_SERVICE_NAME=worker
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
-      - OTEL_RUBY_INSTRUMENTATION_FARADAY_CONFIG_OPTS=enable_internal_instrumentation=true
     command:
       - bundle
       - exec
