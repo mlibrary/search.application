@@ -15,7 +15,6 @@ if S.app_env != "test"
   require "opentelemetry/instrumentation/all"
   require "opentelemetry-exporter-otlp"
   OpenTelemetry::SDK.configure do |c|
-    c.service_name = "search-application"
     c.use_all # enables all instrumentation!
   end
 end

@@ -29,7 +29,9 @@ services:
       - .env
     environment:
       - REDIS_URL=redis://redis:6379
-      - OTEL_SERVICE_NAME=search-application
+      - OTEL_SERVICE_NAME=application
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+      - OTEL_RUBY_INSTRUMENTATION_FARADAY_CONFIG_OPTS=enable_internal_instrumentation=true
     command:
       - bundle
       - exec
@@ -76,6 +78,9 @@ services:
       - .env
     environment:
       - REDIS_URL=redis://redis:6379
+      - OTEL_SERVICE_NAME=worker
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+      - OTEL_RUBY_INSTRUMENTATION_FARADAY_CONFIG_OPTS=enable_internal_instrumentation=true
     command:
       - bundle
       - exec
@@ -87,10 +92,11 @@ services:
     env_file:
       - .env
     environment:
-      - OTEL_SERVICE_NAME=search-api
+      - OTEL_SERVICE_NAME=api
       - OTEL_METRICS_EXPORTER=none
-      - OTEL_TRACES_EXPORTER=otlp_proto_http
+      - OTEL_TRACES_EXPORTER=otlp
       - OTEL_EXPORTER_OTLP_INSECURE=true
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
     ports:
       - 8000:8000
     command:
@@ -106,7 +112,8 @@ services:
       - 4000:4567
     environment:
       - APP_ENV=production
-      - OTEL_SERVICE_NAME=search-parser
+      - OTEL_SERVICE_NAME=parser
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
     env_file:
       - .env
     command:
