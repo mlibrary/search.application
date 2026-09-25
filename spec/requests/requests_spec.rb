@@ -115,9 +115,21 @@ RSpec.describe "requests" do
         .to_return(status: 200, body: base_results.to_json, headers: {content_type: "application/json"})
       stub_request(:get, "#{S.search_api_url}/catalog/specialists?&query=title:(test)&filters=library:aa")
         .to_return(status: 200, body: fixture("results/specialists.json"), headers: {content_type: "application/json"})
-      get "/catalog?query=title:(test)"
+      get "/catalog?query=title:(test)&library=aa"
       expect(last_response.body).to include("Catalog results")
       expect(last_response.body).to include("So and So")
+    end
+
+    it "redirects with a library param from session campus when none included in the query" do
+      get "/catalog?query=title:(test)"
+      expect(last_response.location).to include("/catalog?query=title:(test)&library=aa")
+    end
+    it "redirects with a library param from session campus (flint this time) when none included in the query" do
+      @session[:campus] = "flint"
+      @session[:logged_in] = true
+      env "rack.session", @session
+      get "/catalog?query=title:(test)"
+      expect(last_response.location).to include("/catalog?query=title:(test)&library=flint")
     end
   end
   context "onlinejournals search results" do
