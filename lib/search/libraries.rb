@@ -1,48 +1,41 @@
 module Search
   class Library
-    def initialize(library)
-      @library = library
+    attr_reader :name, :id
+    def initialize(id:, name:)
+      @library = name
+      @name = name
+      @id = id
     end
 
-    def active_class(param:, current_affiliation: nil)
-      if matches_param?(param) ||
+    def active_class(param:, campus: nil)
+      if match?(param) ||
           (
             param.nil? &&
-            (matches_current_affiliation?(current_affiliation) || matches_default?(current_affiliation))
+            match?(campus)
           )
         "button__ghost--active"
       end
     end
 
     def slug
-      @library.tr(" ", "+")
+      @id
     end
 
     def to_s
-      @library
+      name
     end
 
-    def name
-      @library
-    end
-
-    def matches_param?(param)
-      @library == param
-    end
-
-    def matches_current_affiliation?(current_affiliation)
-      current_affiliation == "flint" && name == "Flint Thompson Library"
-    end
-
-    def matches_default?(current_affiliation)
-      current_affiliation.nil? && @library == Search::Libraries.default.name
+    def match?(string)
+      [name, id].include?(string)
     end
   end
 
   module Libraries
     LIBRARIES = YAML.load_file(File.join(S.config_path, "libraries.yaml")).map do |data|
-      Library.new(data)
+      Library.new(id: data["id"], name: data["name"])
     end
+
+    DEFAULT = LIBRARIES.find { |x| x.id == "aa" }
 
     class << self
       include Enumerable
@@ -58,7 +51,7 @@ module Search
       end
 
       def default
-        all.first
+        DEFAULT
       end
     end
   end
