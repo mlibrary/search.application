@@ -140,6 +140,11 @@ class Search::Application < Sinatra::Base
 
       get "/#{datastore.slug}" do
         if params.any?
+          if datastore.slug == "catalog" && params.keys.none?("library")
+            query = full_uri.query + "&library=#{session["campus"]}"
+            redirect full_uri.merge({query: query})
+          end
+
           @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: full_uri, patron: @patron)
           erb :"datastores/results/layout", layout: :layout do
             erb :"datastores/results/#{datastore.slug}"
