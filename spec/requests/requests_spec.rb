@@ -121,15 +121,19 @@ RSpec.describe "requests" do
     end
 
     it "redirects with a library param from session campus when none included in the query" do
-      get "/catalog?query=title:(test)"
-      expect(last_response.location).to include("/catalog?query=title:(test)&library=aa")
+      get "/catalog?query=example"
+      expect(last_response.location).to include("/catalog?query=example&library=aa")
+    end
+    it "redirects with a library param from session campus when invalid libraries included" do
+      get "/catalog?query=example&library=invalid&library=also_invalid"
+      expect(last_response.location).to include("/catalog?query=example&library=aa")
     end
     it "redirects with a library param from session campus (flint this time) when none included in the query" do
       @session[:campus] = "flint"
       @session[:logged_in] = true
       env "rack.session", @session
-      get "/catalog?query=title:(test)"
-      expect(last_response.location).to include("/catalog?query=title:(test)&library=flint")
+      get "/catalog?query=example"
+      expect(last_response.location).to include("/catalog?query=example&library=flint")
     end
   end
   context "onlinejournals search results" do

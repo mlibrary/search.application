@@ -140,8 +140,11 @@ class Search::Application < Sinatra::Base
 
       get "/#{datastore.slug}" do
         if params.any?
-          if datastore.slug == "catalog" && params.keys.none?("library")
-            query = full_uri.query + "&library=#{session["campus"]}"
+          if datastore.slug == "catalog" && Search::Libraries.none?(params["library"])
+            query_array = full_uri.query_values(Array).reject { |x| x[0] == "library" }
+            query_array.push(["library", session["campus"]])
+            query = Addressable::URI.form_encode(query_array)
+
             redirect full_uri.merge({query: query})
           end
 
