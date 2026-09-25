@@ -67,10 +67,10 @@ const updateListItemTitle = ({
   const { original, text, transliterated } = title;
 
   // Update the anchor element
-  updateTitleFunctions.updateListItemTitleAnchor({ element, title: text ?? original, url });
+  updateTitleFunctions.updateListItemTitleAnchor({ element, title: text ?? original.text, url });
 
   // Update the transliterated element
-  updateTitleFunctions.updateListItemTitleTransliterated({ element, title: transliterated });
+  updateTitleFunctions.updateListItemTitleTransliterated({ element, title: transliterated?.text });
 };
 
 export {
