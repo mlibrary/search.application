@@ -5,6 +5,12 @@ module Search
         "Search::Presenters::Record::#{datastore.capitalize}::#{size.capitalize}".constantize.for(id)
       end
 
+      def self.for_list(datastore:, data:)
+        "Search::Presenters::Record::#{datastore.capitalize}::Brief".constantize.new(
+          "Search::Models::Record::#{datastore.capitalize}".constantize.new(data)
+        )
+      end
+
       class Base
         METADATA_METHODS = []
         def self.datastore
@@ -105,6 +111,16 @@ module Search
 
         def each(&block)
           @values.each(&block)
+        end
+
+        def to_h
+          {
+            field: field,
+            partial: partial,
+            uid: uid,
+            values: values.map { |x| x.to_h }[0, 3],
+            total: values.count
+          }
         end
       end
     end

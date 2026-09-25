@@ -104,7 +104,7 @@ describe('list item title', function () {
     beforeEach(function () {
       args = {
         element: getListItem(),
-        title: 'New Title'
+        title: 'Transliterated Title'
       };
 
       getTransliterated = () => {
@@ -137,6 +137,22 @@ describe('list item title', function () {
       // Check that the transliterated element no longer exists
       expect(getTransliterated(), 'the transliterated element should not exist if the `title` is `null`').to.be.null;
     });
+
+    it('should not throw an error if the transliterated title element is not found', function () {
+      // Remove the transliterated element
+      const transliteratedElement = getTransliterated();
+      if (transliteratedElement) {
+        transliteratedElement.remove();
+      }
+
+      // Check that the transliterated element no longer exists
+      expect(getTransliterated(), 'the transliterated element should not exist before testing').to.be.null;
+
+      // Call the function again
+      expect(() => {
+        return updateListItemTitleTransliterated(args);
+      }, '`updateListItemTitleTransliterated` should not throw an error if the transliterated title element is not found').to.not.throw();
+    });
   });
 
   describe('updateListItemTitle()', function () {
@@ -148,8 +164,9 @@ describe('list item title', function () {
         index: 4,
         listItem: getListItem(),
         title: {
-          original: 'Original Title',
-          transliterated: 'Transliterated Title'
+          original: { text: 'Original Title' },
+          text: null,
+          transliterated: { text: 'Transliterated Title' }
         },
         updateTitleFunctions: {
           updateListItemTitleAnchor: sinon.spy(),
@@ -182,11 +199,11 @@ describe('list item title', function () {
       });
 
       it('should call `updateListItemTitleAnchor` with the correct arguments', function () {
-        expect(args.updateTitleFunctions.updateListItemTitleAnchor.calledOnceWithExactly({ element: args.getTitleElement(), title: args.title.original, url: args.url }), '`updateListItemTitleAnchor` should call `updateListItemTitleAnchor` with the correct arguments').to.be.true;
+        expect(args.updateTitleFunctions.updateListItemTitleAnchor.calledOnceWithExactly({ element: args.getTitleElement(), title: args.title.text || args.title.original.text, url: args.url }), '`updateListItemTitleAnchor` should call `updateListItemTitleAnchor` with the correct arguments').to.be.true;
       });
 
       it('should call `updateListItemTitleTransliterated` with the correct arguments', function () {
-        expect(args.updateTitleFunctions.updateListItemTitleTransliterated.calledOnceWithExactly({ element: args.getTitleElement(), title: args.title.transliterated }), '`updateListItemTitleTransliterated` should call `updateListItemTitleTransliterated` with the correct arguments').to.be.true;
+        expect(args.updateTitleFunctions.updateListItemTitleTransliterated.calledOnceWithExactly({ element: args.getTitleElement(), title: args.title.transliterated?.text }), '`updateListItemTitleTransliterated` should call `updateListItemTitleTransliterated` with the correct arguments').to.be.true;
       });
     });
 

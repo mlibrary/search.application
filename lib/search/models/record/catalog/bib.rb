@@ -51,14 +51,14 @@ class Search::Models::Record::Catalog::Bib
   [:new_title, :other_titles, :previous_title, :preferred_title, :releated_title].each do |uid|
     define_method(uid) do
       map_paired_field(uid.to_s) do |item|
-        LinkToItem.new(data: item, datastore: @datastore)
+        SearchLinkToItem.new(data: item, datastore: @datastore)
       end
     end
   end
 
   def related_title
     map_paired_field("related_title") do |item|
-      LinkToItem.new(data: item, datastore: @datastore)
+      SearchLinkToItem.new(data: item, datastore: @datastore)
     end
   end
 

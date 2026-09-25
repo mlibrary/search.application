@@ -20,34 +20,34 @@ const getListItemCheckbox = ({ listItem }) => {
   return listItem.querySelector('input[type="checkbox"].record__checkbox');
 };
 
-const updateCheckboxLabel = ({ checkbox, title }) => {
+const updateListItemCheckboxLabel = ({ checkbox, title }) => {
   // Update the checkbox label
   checkbox.setAttribute('aria-label', `Select ${title}`);
 };
 
-const updateCheckboxValue = ({ checkbox, recordDatastore, recordId }) => {
+const updateListItemCheckboxValue = ({ checkbox, recordDatastore, recordId }) => {
   // Update the checkbox value
   checkbox.value = `${recordDatastore},${recordId}`;
 };
 
-const updateCheckbox = ({
+const updateListItemCheckbox = ({
   getCheckbox = getListItemCheckbox,
   listItem,
   recordDatastore,
   recordId,
   title,
   toggleState = toggleCheckedState,
-  updateLabel = updateCheckboxLabel,
-  updateValue = updateCheckboxValue
+  updateCheckboxLabel = updateListItemCheckboxLabel,
+  updateCheckboxValue = updateListItemCheckboxValue
 }) => {
   // Get the checkbox
   const checkbox = getCheckbox({ listItem });
 
   // Update the checkbox label
-  updateLabel({ checkbox, title });
+  updateCheckboxLabel({ checkbox, title });
 
   // Update the checkbox value
-  updateValue({ checkbox, recordDatastore, recordId });
+  updateCheckboxValue({ checkbox, recordDatastore, recordId });
 
   // Toggle the checked state
   toggleState({ checkbox, isAdded: true, viewingRecord: false });
@@ -85,7 +85,7 @@ export {
   someCheckboxesChecked,
   splitCheckboxValue,
   toggleCheckedState,
-  updateCheckboxLabel,
-  updateCheckboxValue,
-  updateCheckbox
+  updateListItemCheckboxLabel,
+  updateListItemCheckboxValue,
+  updateListItemCheckbox
 };

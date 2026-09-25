@@ -21,8 +21,17 @@ const updateMetadataRowField = ({ field, row }) => {
 };
 
 const updateMetadataRowList = ({ original, row, transliterated }) => {
+  // Grab the parallel list
+  const parallelList = row.querySelector('ul.metadata__list--parallel');
+
+  // Return early if the parallel list is not found
+  if (!parallelList) {
+    return;
+  }
+
   // Grab the list items
   const listItems = row.querySelectorAll('ul.metadata__list--parallel > li');
+
   // Loop through the data types
   [original, transliterated].forEach((value, index) => {
     if (value) {

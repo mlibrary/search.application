@@ -82,9 +82,8 @@ describe('List Item', function () {
         index: 0,
         listItem: getListItem(),
         listItemFuncs: {
-          updateCheckbox: sinon.spy(),
           updateListItemAttributes: sinon.spy(),
-          updateListItemTitle: sinon.spy(),
+          updateListItemHeader: sinon.spy(),
           updateMetadata: sinon.spy()
         },
         record: global.temporaryList[recordDatastore][recordId],
@@ -104,12 +103,8 @@ describe('List Item', function () {
       expect(args.listItemFuncs.updateListItemAttributes.calledOnceWithExactly({ listItem: args.listItem, recordDatastore: args.recordDatastore, recordId: args.recordId }), '`updateListItemAttributes` should have been called with the correct arguments').to.be.true;
     });
 
-    it('should call `updateCheckbox` with the correct arguments', function () {
-      expect(args.listItemFuncs.updateCheckbox.calledOnceWithExactly({ listItem: args.listItem, recordDatastore: args.recordDatastore, recordId: args.recordId, title: args.record.title.original }), '`updateCheckbox` should have been called with the correct arguments').to.be.true;
-    });
-
-    it('should call `updateListItemTitle` with the correct arguments', function () {
-      expect(args.listItemFuncs.updateListItemTitle.calledOnceWithExactly({ index: args.index, listItem: args.listItem, title: args.record.title, url: args.record.url }), '`updateListItemTitle` should have been called with the correct arguments').to.be.true;
+    it('should call `updateListItemHeader` with the correct arguments', function () {
+      expect(args.listItemFuncs.updateListItemHeader.calledOnceWithExactly({ index: args.index, listItem: args.listItem, recordDatastore: args.recordDatastore, recordId: args.recordId, title: args.record.title, url: args.record.url }), '`updateListItemHeader` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `updateMetadata` with the correct arguments', function () {
