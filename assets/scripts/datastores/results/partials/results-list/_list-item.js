@@ -33,7 +33,7 @@ const updateListItem = ({ index, listItem, listItemFuncs = listItemFunctions, re
   const { metadata, title, url } = record;
 
   // Update the checkbox
-  listItemFuncs.updateCheckbox({ listItem, recordDatastore, recordId, title: title.original });
+  listItemFuncs.updateCheckbox({ listItem, recordDatastore, recordId, title: title.text ?? title.original.text });
 
   // Update the title
   listItemFuncs.updateListItemTitle({ index, listItem, title, url });

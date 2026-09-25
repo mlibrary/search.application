@@ -105,7 +105,7 @@ describe('List Item', function () {
     });
 
     it('should call `updateCheckbox` with the correct arguments', function () {
-      expect(args.listItemFuncs.updateCheckbox.calledOnceWithExactly({ listItem: args.listItem, recordDatastore: args.recordDatastore, recordId: args.recordId, title: args.record.title.original }), '`updateCheckbox` should have been called with the correct arguments').to.be.true;
+      expect(args.listItemFuncs.updateCheckbox.calledOnceWithExactly({ listItem: args.listItem, recordDatastore: args.recordDatastore, recordId: args.recordId, title: args.record.title.text ?? args.record.title.original.text }), '`updateCheckbox` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `updateListItemTitle` with the correct arguments', function () {
