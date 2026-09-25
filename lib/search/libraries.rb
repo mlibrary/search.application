@@ -50,6 +50,10 @@ module Search
         all.find { |x| x.match?(string) }
       end
 
+      def none?(string)
+        all.none? { |x| x.match?(string) }
+      end
+
       def default
         DEFAULT
       end
