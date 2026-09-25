@@ -44,7 +44,7 @@ class Search::Application < Sinatra::Base
     pass if ["auth", "change-affiliation", "logout", "-"].include?(subdirectory)
     pass if subdirectory == "session_switcher" && S.dev_login?
     if expired_user_session?
-      patron = Search::Patron.not_logged_in
+      patron = Search::Patron.not_logged_in(ip: request.ip)
       patron.to_h.each { |k, v| session[k] = v }
       session[:expires_at] = (Time.now + 1.hour).to_i
     end
@@ -60,7 +60,7 @@ class Search::Application < Sinatra::Base
 
   if S.dev_login?
     get "/session_switcher" do
-      patron = Search::Patron.for(uniqname: params[:uniqname], session_affiliation: nil)
+      patron = Search::Patron.for(uniqname: params[:uniqname], ip: request.ip)
       patron.to_h.each { |k, v| session[k] = v }
       session[:expires_at] = (Time.now + 1.day).to_i
       redirect back
@@ -140,6 +140,14 @@ class Search::Application < Sinatra::Base
 
       get "/#{datastore.slug}" do
         if params.any?
+          if datastore.slug == "catalog" && Search::Libraries.none?(params["library"])
+            query_array = full_uri.query_values(Array).reject { |x| x[0] == "library" }
+            query_array.push(["library", session["campus"]])
+            query = Addressable::URI.form_encode(query_array)
+
+            redirect full_uri.merge({query: query})
+          end
+
           @presenter = Search::Presenters.for_datastore_results(slug: datastore.slug, uri: full_uri, patron: @patron)
           erb :"datastores/results/layout", layout: :layout do
             erb :"datastores/results/#{datastore.slug}"

@@ -5,7 +5,7 @@ RSpec.describe "requests" do
       sms: "sms",
       logged_in: false,
       expires_at: (Time.now + 1.hour).to_i,
-      campus: nil
+      campus: "aa"
     }
     @params = {
       search_datastore: "everything",
@@ -63,22 +63,7 @@ RSpec.describe "requests" do
         get_static_page
         expect(last_request.session[:logged_in]).to eq(false)
         expect(last_request.session[:expires_at]).not_to be_nil
-        expect(last_request.session[:affiliation]).to be_nil
-        expect(last_request.session[:path_before_form]).to include("/accessibility?something=other")
-      end
-      it "does not change the affiliation when unexpired" do
-        @session[:affiliation] = "flint"
-        get_static_page
-        expect(last_request.session[:expires_at]).not_to be_nil
-        expect(last_request.session[:affiliation]).to eq("flint")
-        expect(last_request.session[:path_before_form]).to include("/accessibility?something=other")
-      end
-      it "resets the affiliation when expired" do
-        @session[:affiliation] = "flint"
-        @session[:expires_at] = (Time.now - 1.hour).to_i
-        get_static_page
-        expect(last_request.session[:expires_at]).not_to be_nil
-        expect(last_request.session[:affiliation]).to be_nil
+        expect(last_request.session[:campus]).to eq("aa")
         expect(last_request.session[:path_before_form]).to include("/accessibility?something=other")
       end
     end
@@ -130,9 +115,25 @@ RSpec.describe "requests" do
         .to_return(status: 200, body: base_results.to_json, headers: {content_type: "application/json"})
       stub_request(:get, "#{S.search_api_url}/catalog/specialists?&query=title:(test)&filters=library:aa")
         .to_return(status: 200, body: fixture("results/specialists.json"), headers: {content_type: "application/json"})
-      get "/catalog?query=title:(test)"
+      get "/catalog?query=title:(test)&library=aa"
       expect(last_response.body).to include("Catalog results")
       expect(last_response.body).to include("So and So")
+    end
+
+    it "redirects with a library param from session campus when none included in the query" do
+      get "/catalog?query=example"
+      expect(last_response.location).to include("/catalog?query=example&library=aa")
+    end
+    it "redirects with a library param from session campus when invalid libraries included" do
+      get "/catalog?query=example&library=invalid&library=also_invalid"
+      expect(last_response.location).to include("/catalog?query=example&library=aa")
+    end
+    it "redirects with a library param from session campus (flint this time) when none included in the query" do
+      @session[:campus] = "flint"
+      @session[:logged_in] = true
+      env "rack.session", @session
+      get "/catalog?query=example"
+      expect(last_response.location).to include("/catalog?query=example&library=flint")
     end
   end
   context "onlinejournals search results" do
@@ -153,19 +154,6 @@ RSpec.describe "requests" do
         get_static_page
         post "/search", @params
         expect(last_response.location).to end_with("/everything")
-      end
-
-      # I don't think we want to do this anymore
-      xit "redirects to `search.lib.umich.edu` with the query not wrapped" do
-        search_text = "search text"
-        search_datastore = "catalog"
-        get "/#{search_datastore}"
-        post "/search", @params.merge(search_text: search_text, search_datastore: search_datastore)
-        location = last_response.location
-        uri = URI.parse(location)
-        query_params = URI.decode_www_form(uri.query).to_h
-        expect(location).to start_with("https://search.lib.umich.edu/#{search_datastore}")
-        expect(query_params["query"]).to eq(search_text)
       end
     end
     context "searching with a different option selected" do

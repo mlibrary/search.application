@@ -29,6 +29,12 @@ S.register(:oidc_issuer) { ENV["OIDC_ISSUER"] }
 S.register(:oidc_client_id) { ENV["OIDC_CLIENT_ID"] }
 S.register(:oidc_client_secret) { ENV["OIDC_CLIENT_SECRET"] }
 
+S.register(:flint_ip_ranges) do
+  (ENV["FLINT_IP_RANGES"] || "").split(",").map do |range|
+    IPAddr.new(range)
+  end
+end
+
 S.register(:base_url) { ENV["BASE_URL"] || "http://localhost:4567" }
 
 S.register(:search_api_url) { ENV["SEARCH_API_URL"] || "http://search-api:8000" }

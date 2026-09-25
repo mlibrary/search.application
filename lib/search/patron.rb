@@ -1,24 +1,24 @@
 module Search
   module Patron
-    def self.for(uniqname:, session_affiliation:)
+    def self.for(uniqname:, ip:)
       alma_response = AlmaRestClient.client.get("users/#{uniqname}")
       if alma_response.status == 200
-        Alma.new(alma_response.body, session_affiliation)
+        Alma.new(alma_response.body)
       else
         S.logger.error(alma_response.body)
-        not_logged_in
+        not_logged_in(ip: ip)
       end
     rescue Faraday::Error => e
       S.logger.error(e.detailed_message)
-      not_logged_in
+      not_logged_in(ip: ip)
     end
 
     def self.from_session(session)
       FromSession.new(session)
     end
 
-    def self.not_logged_in
-      NotLoggedIn.new
+    def self.not_logged_in(ip:)
+      NotLoggedIn.new(ip: ip)
     end
   end
 end
@@ -30,7 +30,6 @@ module Search
         {
           email: email,
           campus: campus,
-          affiliation: affiliation,
           logged_in: logged_in?
         }
       end
@@ -52,10 +51,6 @@ module Search
       def logged_in?
         raise NotImplementedError
       end
-
-      def affiliation
-        raise NotImplementedError
-      end
     end
   end
 end
@@ -65,9 +60,8 @@ module Search
     class Alma < Base
       include SessionHelper
 
-      def initialize(data, session_affiliation = nil)
+      def initialize(data)
         @data = data
-        @session_affiliation = session_affiliation
       end
 
       def email
@@ -78,11 +72,7 @@ module Search
 
       def campus
         campus_code = @data.dig("campus_code", "value")
-        "flint" if campus_code == "UMFL"
-      end
-
-      def affiliation
-        @session_affiliation || campus
+        (campus_code == "UMFL") ? "flint" : "aa"
       end
 
       def logged_in?
@@ -97,21 +87,33 @@ module Search
     class NotLoggedIn < Base
       include SessionHelper
 
+      def initialize(ip: nil)
+        @ip = IPAddr.new(ip)
+      end
+
       def email
         ""
       end
 
+      # Ultimately needs to return based on IP address if in Flint Range
       def campus
-        ""
+        flint_ip? ? "flint" : "aa"
       end
 
-      # Ultimately needs to return based on IP address if in Flint Range
       def affiliation
         nil
       end
 
       def logged_in?
         false
+      end
+
+      private
+
+      def flint_ip?
+        S.flint_ip_ranges.any? do |range|
+          range.include?(@ip)
+        end
       end
     end
   end
