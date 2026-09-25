@@ -8,11 +8,7 @@ module Search
     end
 
     def active_class(param:, campus: nil)
-      if match?(param) ||
-          (
-            param.nil? &&
-            match?(campus)
-          )
+      if match?(param) || (param.nil? && match?(campus))
         "button__ghost--active"
       end
     end
@@ -48,6 +44,10 @@ module Search
         all.each do |library|
           block.call(library)
         end
+      end
+
+      def find(string)
+        all.find { |x| x.match?(string) }
       end
 
       def default
