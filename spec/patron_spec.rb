@@ -37,12 +37,6 @@ RSpec.describe Search::Patron do
       expect(subject.email).to eq("fakeuser@umich.edu")
       expect(subject.campus).to eq("aa")
     end
-    # it "passes the existing session affiliation to the Alma Patron" do
-    # @session_affiliation = "flint"
-    # stub_alma_get_request(url: "users/fakeuser", output: @data.to_json)
-    # expect(subject.affiliation).to eq("flint")
-    # end
-
     it "returns not logged in patron for non-200 response" do
       stub_alma_get_request(url: "users/fakeuser", status: 500, output: "some output string")
       expect(subject.email).to eq("")
@@ -57,7 +51,6 @@ end
 RSpec.describe Search::Patron::Alma do
   before(:each) do
     @data = JSON.parse(fixture("alma_user.json"))
-    @session_affiliation = nil
   end
   subject do
     described_class.new(@data)
@@ -114,15 +107,6 @@ RSpec.describe Search::Patron::FromSession do
       expect(subject.logged_in?).to eq(false)
     end
   end
-  context "#affiliation" do
-    it "returns nil if not in the session" do
-      expect(subject.affiliation).to eq(nil)
-    end
-    it "returns the session value when it is there" do
-      @data[:affiliation] = "flint"
-      expect(subject.affiliation).to eq("flint")
-    end
-  end
 end
 
 RSpec.describe Search::Patron::NotLoggedIn do
@@ -152,11 +136,5 @@ RSpec.describe Search::Patron::NotLoggedIn do
     it "returns false" do
       expect(subject.logged_in?).to eq(false)
     end
-  end
-  context "#affiliation" do
-    it "returns nil if if not in the IP range" do
-      expect(subject.affiliation).to be_nil
-    end
-    it "returns 'flint' if in the IP range"
   end
 end

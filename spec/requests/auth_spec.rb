@@ -15,7 +15,6 @@ RSpec.describe "authentication requests" do
       logged_in: false,
       expires_at: (Time.now - 1.hour).to_i,
       campus: "flint",
-      affiliation: "flint",
       path_before_form: "http://example.com/accessibility?something=other"
     }
     OmniAuth.config.add_mock(:openid_connect, omniauth_auth)

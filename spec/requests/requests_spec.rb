@@ -90,25 +90,6 @@ RSpec.describe "requests" do
       expect(last_response.body).to include("Page not found")
     end
   end
-  context "post /change-affiliation" do
-    context "has nil affiliation in sesssion" do
-      it "sets session affiliation to flint and redirects to the last visited page" do
-        get_static_page
-        post "/change-affiliation"
-        expect(last_request.session[:affiliation]).to eq("flint")
-        expect(last_response.location).to include("accessibility")
-      end
-    end
-    context "has flint affiliation in sesssion" do
-      it "sets session affiliation to nil and redirects to the last visited page" do
-        @session[:affiliation] = "flint"
-        get_static_page
-        post "/change-affiliation"
-        expect(last_request.session[:affiliation]).to be_nil
-        expect(last_response.location).to include("accessibility")
-      end
-    end
-  end
   context "catalog search results" do
     it "shows the results page when there is a query parameter" do
       stub_request(:get, "#{S.search_api_url}/catalog/search?offset=0&query=title:(test)&limit=10&filters=library:aa&sort=relevance")
@@ -174,8 +155,7 @@ RSpec.describe "requests" do
         email: nil,
         logged_in: false,
         expires_at: (Time.now + 1.hour).to_i,
-        campus: "flint",
-        affiliation: nil
+        campus: "flint"
       }
     end
     context "flint messages" do

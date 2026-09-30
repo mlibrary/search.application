@@ -100,10 +100,6 @@ module Search
         flint_ip? ? "flint" : "aa"
       end
 
-      def affiliation
-        nil
-      end
-
       def logged_in?
         false
       end
@@ -136,17 +132,6 @@ module Search
 
       def logged_in?
         @session[:logged_in]
-      end
-
-      #
-      # What the current status of the user's affiliation is.  flint means the
-      # affiliation had been set in the ui or the user logged in, had not set a
-      # session in the ui and their campus is flint
-      #
-      # @return [String || Nil] could be "flint" or Nil
-      #
-      def affiliation
-        @session[:affiliation]
       end
     end
   end
