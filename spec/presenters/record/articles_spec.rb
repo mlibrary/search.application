@@ -46,8 +46,19 @@ describe Search::Presenters::Record::Articles::Full do
       allow(record.bib).to receive(:issue).and_return(text("4"))
       allow(record.bib).to receive(:publication_date).and_return(text("2020"))
       allow(record.bib).to receive(:pages).and_return(text("55"))
+      allow(record.bib).to receive(:peer_reviewed).and_return(true)
 
       expect(subject.published_in.values.first.to_s).to eq("Some journal, Volume 3, Issue 4, 2020, pp. 55")
+      expect(subject.published_in.partial).to eq("peer_review")
+    end
+    it "has a plain_text partial when peer_reviewed is false" do
+      allow(record.bib).to receive(:pages).and_return(text("55"))
+      allow(record.bib).to receive(:peer_reviewed).and_return(false)
+      [:journal_title, :volume, :issue, :publication_date].each do |field|
+        allow(record.bib).to receive(field).and_return(nil)
+      end
+      expect(subject.published_in.values.first.to_s).to eq("pp. 55")
+      expect(subject.published_in.partial).to eq("plain_text")
     end
   end
   context "#holdings" do
@@ -153,7 +164,7 @@ describe Search::Presenters::Record::Articles::Brief do
       allow(record.bib).to receive(:title).and_return(double(text: "Some title"))
       allow(record.bib).to receive(:author).and_return(text("Some author"))
       allow(record.bib).to receive(:id).and_return("some_id")
-      [:abstract, :journal_title, :volume, :issue, :publication_date, :pages].each do |field|
+      [:abstract, :journal_title, :volume, :issue, :publication_date, :pages, :publisher, :subject].each do |field|
         allow(record.bib).to receive(field).and_return(nil)
       end
 
@@ -180,6 +191,7 @@ describe Search::Presenters::Record::Articles::Brief do
     end
   end
 end
+
 describe Search::Presenters::Record::Articles::Email do
   let(:record) do
     instance_double(Search::Models::Record::Articles,

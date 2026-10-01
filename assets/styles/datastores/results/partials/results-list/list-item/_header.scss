@@ -1,5 +1,6 @@
 @use '../../../../../utilities';
 @use './header/title';
+@use './header/recommended';
 
 // --------------------------------------------------
 //
@@ -9,6 +10,7 @@
 // ## Table of Contents
 //   1. Variables
 //   2. Header
+//     2.1. Content
 //
 // --------------------------------------------------
 
@@ -27,5 +29,16 @@ $class: '.results__list-item--header';
 // ***************** //
 
 #{$class} {
+  @include utilities.flex($align: baseline, $responsive: sm);
+  justify-content: space-between;
+}
+
+
+
+// *              * //
+// * 2.1. CONTENT * //
+// *              * //
+
+#{$class}-content {
   @include utilities.flex($align: baseline);
 }

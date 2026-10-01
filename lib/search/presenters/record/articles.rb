@@ -66,7 +66,7 @@ module Search::Presenters::Record::Articles
       field_for(
         uid: :published_in,
         field: "Published in",
-        partial: "peer_review",
+        partial: @record.bib.peer_reviewed ? "peer_review" : "plain_text",
         values: [
           OpenStruct.new(to_s: text, text: text)
         ]
@@ -74,7 +74,8 @@ module Search::Presenters::Record::Articles
     end
 
     [
-      {uid: :author, field: "Author"}
+      {uid: :author, field: "Author"},
+      {uid: :subject, field: "Subject"}
     ].each do |f|
       define_method(f[:uid]) do
         if @record.bib.public_send(f[:uid]).present?
@@ -100,8 +101,9 @@ module Search::Presenters::Record::Articles
       {uid: :oclc, field: "OCLC"},
       {uid: :pmid, field: "PMID"},
       {uid: :language, field: "Language"},
-      {uid: :subject, field: "Subject"},
-      {uid: :edition, field: "Edition"}
+      {uid: :edition, field: "Edition"},
+      {uid: :pages, field: "Pages"},
+      {uid: :publication_date, field: "Date of publication"}
     ].each do |f|
       define_method(f[:uid]) do
         if @record.bib.public_send(f[:uid]).present?
@@ -125,7 +127,8 @@ module Search::Presenters::Record::Articles
       :retraction,
       :abstract,
       :author,
-      :published_in
+      :published_in,
+      :subject
     ]
 
     def abstract

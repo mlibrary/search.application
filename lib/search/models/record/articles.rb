@@ -5,11 +5,11 @@ require "search/models/record/articles/bib"
 require "search/models/record/articles/holdings"
 
 class Search::Models::Record::Articles
-  def self.for(id)
+  def self.for(id, uri = nil)
     data = nil
-    Yabeda.catalog_api_full_record_duration.measure do
+    Yabeda.search_api_full_record_duration.measure do
       # get data from the api with the client
-      data = Search::Clients::CatalogAPI.new.get_articles_record(id)
+      data = Search::Clients::SearchAPI.new.get_articles_record(id)
     end
     new(data)
   end

@@ -17,7 +17,7 @@ class Search::Presenters::Page
     def self.for(slug:, uri:, patron:, record_id:)
       datastore = Search::Datastores.find(slug)
       future = Concurrent::Promises.future { Pagination.for(datastore: slug, uri: uri) }
-      record = Search::Presenters::Record.for_datastore(datastore: slug, id: record_id)
+      record = Search::Presenters::Record.for_datastore(datastore: slug, id: record_id, uri: uri)
       new(datastore: datastore, uri: uri, patron: patron, record: record, pagination: future.value)
     end
 
@@ -75,7 +75,6 @@ class Search::Presenters::Page
 
     class Pagination
       def self.for(uri:, datastore: "catalog")
-        return Empty.new if datastore == "articles"
         results_model_klass = "Search::Models::Results::#{datastore.capitalize}".constantize
         query_values = uri.query_values || {} # flatten duplicate values
         position = query_values["position"].to_i

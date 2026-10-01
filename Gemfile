@@ -22,10 +22,15 @@ gem "addressable"
 gem "debug"
 gem "mini_magick"
 gem "concurrent-ruby", require: "concurrent"
+gem "httpx"
+
+gem "opentelemetry-sdk"
+gem "opentelemetry-instrumentation-all"
+gem "opentelemetry-exporter-otlp"
 
 group :metrics do
   gem "yabeda-puma-plugin"
-  gem "yabeda-prometheus"
+  gem "yabeda-prometheus", ">= 0.9.1"
   gem "prometheus-client"
 end
 

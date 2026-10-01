@@ -21,9 +21,10 @@ We will no longer rely on the `affiliation` parameter to modify search results.
 
 ## Status
 
-| Date       | Summary  |
-|------------|----------|
-| 2025-02-28 | Proposed |
+| Date       | Summary                       |
+|------------|-------------------------------|
+| 2025-02-28 | Proposed                      |
+| 2026-09-30 | Additional information in 006 |
 
 ## Consequences
 

@@ -110,6 +110,7 @@ $class: '.specialists';
 // * 4.1.2. CONTENT * //
 
 #{$class}__list--item-content {
+  word-break: break-word;
   & > * {
     margin: 0;
     & + * {

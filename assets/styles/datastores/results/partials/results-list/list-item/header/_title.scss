@@ -1,3 +1,5 @@
+@use '../../../../../../forms';
+
 // --------------------------------------------------
 //
 // # Title
@@ -7,6 +9,7 @@
 //   1. Variables
 //   2. Title
 //     2.1. Truncate
+//   3. Recommended
 //
 // --------------------------------------------------
 
@@ -42,4 +45,21 @@ $class: '.results__list-item--title';
   line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+
+
+
+
+// ********************** //
+// *** 3. RECOMMENDED *** //
+// ********************** //
+
+#{$class}-recommended {
+  background-color: var(--color-maize-400);
+  border-radius: forms.$radius;
+  color: var(--search-color-primary);
+  display: inline-block;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
 }
