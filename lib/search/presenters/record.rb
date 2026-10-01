@@ -1,8 +1,8 @@
 module Search
   module Presenters
     module Record
-      def self.for_datastore(datastore:, id:, size: "full")
-        "Search::Presenters::Record::#{datastore.capitalize}::#{size.capitalize}".constantize.for(id)
+      def self.for_datastore(datastore:, id:, size: "full", uri: nil)
+        "Search::Presenters::Record::#{datastore.capitalize}::#{size.capitalize}".constantize.for(id, uri: uri)
       end
 
       class Base
@@ -11,8 +11,8 @@ module Search
           raise NotImplementedError
         end
 
-        def self.for(id)
-          record = "Search::Models::Record::#{datastore.capitalize}".constantize.for(id)
+        def self.for(id, uri: nil)
+          record = "Search::Models::Record::#{datastore.capitalize}".constantize.for(id, uri: uri)
           new(record)
         end
 
