@@ -108,14 +108,14 @@ describe Search::Presenters::Page::Record::Pagination do
       it "returns valid pagination when given an in the middle item" do
         @results["records"][1]["id"] = "some_mms_id"
 
-        stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=4&limit=3&query=title:(test)&&filters=library:aa&sort=relevance")
+        stub_request(:get, "#{S.search_api_url}/catalog/search?offset=4&limit=3&query=title:(test)&&filters=library:aa&sort=relevance")
           .to_return(status: 200, body: @results.to_json, headers: {content_type: "application/json"})
         subject = described_class.for(uri: @uri)
         expect(subject.next_url).not_to be_nil
         expect(subject.previous_url).not_to be_nil
       end
       it "returns Empty pagination when the mms_id isn't in the results" do
-        stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=4&limit=3&query=title:(test)&&filters=library:aa&sort=relevance")
+        stub_request(:get, "#{S.search_api_url}/catalog/search?offset=4&limit=3&query=title:(test)&&filters=library:aa&sort=relevance")
           .to_return(status: 200, body: @results.to_json, headers: {content_type: "application/json"})
         subject = described_class.for(uri: @uri)
         expect(subject.class.name).to include("Empty")
@@ -130,14 +130,14 @@ describe Search::Presenters::Page::Record::Pagination do
       it "returns valid pagination" do
         @results["records"][0]["id"] = "some_mms_id"
 
-        stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=0&limit=2&query=title:(test)&&filters=library:aa&sort=relevance")
+        stub_request(:get, "#{S.search_api_url}/catalog/search?offset=0&limit=2&query=title:(test)&&filters=library:aa&sort=relevance")
           .to_return(status: 200, body: @results.to_json, headers: {content_type: "application/json"})
         subject = described_class.for(uri: @uri)
         expect(subject.next_url).not_to be_nil
         expect(subject.previous_url).to be_nil
       end
       it "returns Empty pagination if solr doesn't return matching mms_id" do
-        stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=0&limit=2&query=title:(test)&&filters=library:aa&sort=relevance")
+        stub_request(:get, "#{S.search_api_url}/catalog/search?offset=0&limit=2&query=title:(test)&&filters=library:aa&sort=relevance")
           .to_return(status: 200, body: @results.to_json, headers: {content_type: "application/json"})
         subject = described_class.for(uri: @uri)
         expect(subject.class.name).to include("Empty")
@@ -145,7 +145,7 @@ describe Search::Presenters::Page::Record::Pagination do
       it "returns Empty pagination if solr returns only one item" do
         @results["records"][0]["id"] = "some_mms_id"
         @results["records"].pop
-        stub_request(:get, "#{S.catalog_api_url}/catalog/search?offset=0&limit=2&query=title:(test)&&filters=library:aa&sort=relevance")
+        stub_request(:get, "#{S.search_api_url}/catalog/search?offset=0&limit=2&query=title:(test)&&filters=library:aa&sort=relevance")
           .to_return(status: 200, body: @results.to_json, headers: {content_type: "application/json"})
         subject = described_class.for(uri: @uri)
         expect(subject.class.name).to include("Empty")

@@ -33,10 +33,6 @@ class Search::Presenters::Page
     Search::Presenters::SearchOptions.new(datastore_slug: current_datastore.to_s, uri: @uri)
   end
 
-  def affiliations
-    Search::Presenters::Affiliations.new(current_affiliation: @patron.affiliation)
-  end
-
   def meta_tags
   end
 
