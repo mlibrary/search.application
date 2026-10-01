@@ -32,8 +32,10 @@ module Search
         end
       end
 
-      def get_catalog_record(id)
-        @conn.get("catalog/records/#{id}").body
+      def get_catalog_record(id, ht_search_only = false)
+        params = {}
+        params["ht_search_only"] = ht_search_only if ht_search_only
+        @conn.get("catalog/records/#{id}", **params).body
       end
 
       def get_catalog_results(limit: 10, offset: 0, query: "*", filters: [], sort: "", boolean_filters: [])
