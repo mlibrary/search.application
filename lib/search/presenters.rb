@@ -3,7 +3,6 @@ module Search
   end
 end
 require "search/presenters/actions"
-require "search/presenters/affiliations"
 require "search/presenters/breadcrumbs"
 require "search/presenters/icons"
 require "search/presenters/record"
