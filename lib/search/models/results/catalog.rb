@@ -4,8 +4,11 @@ class Search::Models::Results::Catalog
     "U-M Ann Arbor Libraries" => "aa",
     "Flint Thompson Library" => "flint",
     "Bentley Historical Library" => "bentley",
-    "William L. Clements Library" => "clements"
-
+    "William L. Clements Library" => "clements",
+    "all" => "all",
+    "flint" => "flint",
+    "bentley" => "bentley",
+    "clements" => "clements"
   }
 
   def self.get_params(uri:, limit: nil, offset: nil)

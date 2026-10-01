@@ -29,6 +29,12 @@ S.register(:oidc_issuer) { ENV["OIDC_ISSUER"] }
 S.register(:oidc_client_id) { ENV["OIDC_CLIENT_ID"] }
 S.register(:oidc_client_secret) { ENV["OIDC_CLIENT_SECRET"] }
 
+S.register(:flint_ip_ranges) do
+  (ENV["FLINT_IP_RANGES"] || "").split(",").map do |range|
+    IPAddr.new(range)
+  end
+end
+
 S.register(:base_url) { ENV["BASE_URL"] || "http://localhost:4567" }
 
 S.register(:search_api_url) { ENV["SEARCH_API_URL"] || "http://search-api:8000" }
@@ -79,8 +85,11 @@ class ProductionFormatter < SemanticLogger::Formatters::Json
   def pid
   end
 
-  # Leave out the timestamp
-  def time
+  def named_tags
+    [:trace_id, :span_id].each do |tag|
+      log.named_tags[tag] = log.context[tag] if log.named_tags[tag].nil? && log.context[tag]
+    end
+    super
   end
 
   # Leave out environment
@@ -97,6 +106,13 @@ Sidekiq.configure_server do |config|
 end
 
 if S.app_env != "test"
+  SemanticLogger.on_log do |log|
+    span = OpenTelemetry::Trace.current_span
+
+    log.set_context(:trace_id, span.context.valid? ? span.context.hex_trace_id : nil)
+    log.set_context(:span_id, span.context.valid? ? span.context.hex_span_id : nil)
+  end
+
   if $stdin.tty?
     SemanticLogger.add_appender(io: S.log_stream, formatter: :color)
   else
