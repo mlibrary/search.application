@@ -1,0 +1,67 @@
+catalog:
+  id: "1337"
+  title:
+    - original:
+        text: "Original Title"
+      transliterated:
+        text: "Transliterated Title"
+  main_author:
+    - transliterated:
+        text: "Transliterated Data"
+        search:
+          - field: "author"
+            value: "Transliterated Data"
+        browse: "Transliterated Data"
+      original:
+        text: "Original Data"
+        search:
+          - field: "author"
+            value: "Original Data"
+        browse: "Original Data"
+  published:
+    - original:
+        text: "Original Data"
+      transliterated:
+        text: "Transliterated Data"
+
+articles:
+  id: "1337"
+  title:
+    - text: "Title"
+  abstract:
+    - text: "Abstract Data"
+  peer_reviewed: true
+  author:
+    - text: "Author Data"
+      search:
+        - field: "author"
+          value: "Author Data"
+  journal_title:
+    - text: "Journal Title"
+  issue:
+    - text: "Issue"
+  volume:
+    - text: "Volume"
+  pages:
+    - text: "Pages"
+  publication_date:
+    - text: "Publication Date"
+  publisher:
+    - text: "Published"
+  subject:
+    - text: "Subject"
+  edition:
+    - text: "Edition"
+
+onlinejournals:
+  id: "1337"
+  title:
+    - original:
+        text: "Original Title"
+      transliterated:
+        text: "Transliterated Title"
+  published:
+    - original:
+        text: "Original Data"
+      transliterated:
+        text: "Transliterated Data"
