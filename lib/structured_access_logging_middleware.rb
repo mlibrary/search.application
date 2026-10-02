@@ -37,7 +37,7 @@ class StructuredAccessLoggingMiddleware
   # Log the request to the configured logger.
   def log(env, status, response_headers, began_at)
     request = Rack::Request.new(env)
-    span = request.get_header("otel.rack.token_and_span")[1]
+    span = OpenTelemetry::Trace.current_span
 
     record = {
       host: request.ip,

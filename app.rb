@@ -7,6 +7,7 @@ require_relative "lib/services"
 require_relative "lib/search"
 require_relative "lib/metrics"
 require_relative "lib/sinatra_helpers"
+require_relative "lib/structured_access_logging_middleware"
 require "debug" if S.app_env == "development"
 require "ruby-prof" if S.profile?
 
@@ -25,6 +26,8 @@ class Search::Application < Sinatra::Base
   configure do
     mime_type :ris, "application/x-research-info-systems"
   end
+
+  use StructuredAccessLoggingMiddleware if S.app_env != "test"
 
   set :root, S.project_root
   set :app_file, S.project_root + "/app.rb"
