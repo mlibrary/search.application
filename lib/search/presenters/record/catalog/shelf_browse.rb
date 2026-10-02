@@ -13,7 +13,7 @@ class Search::Presenters::Record::Catalog::ShelfBrowse
       if response.status == 200
         new(call_number: call_number, data: response.body)
       else
-        S.logger.error(response.status + " Couldn't contact Catalog Browse.")
+        S.logger.error(response.status.to_s + " Couldn't contact Catalog Browse.")
       end
     end
   end
