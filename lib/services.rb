@@ -41,6 +41,7 @@ S.register(:search_api_url) { ENV["SEARCH_API_URL"] || "http://search-api:8000" 
 S.register(:onlinejournals_api_url) { ENV["SEARCH_API_URL"] || "http://search-api:8000" }
 
 S.register(:catalog_browse_url) { ENV["CATALOG_BROWSE_URL"] || "https://search.lib.umich.edu/catalog/browse" }
+S.register(:catalog_browse_api_url) { ENV["CATALOG_BROWSE_API_URL"] || "https://search.lib.umich.edu/catalog/browse" }
 
 S.register(:twilio_client) {
   Twilio::REST::Client.new(ENV.fetch("TWILIO_ACCT_SID"), ENV.fetch("TWILIO_AUTH_TOKEN"))

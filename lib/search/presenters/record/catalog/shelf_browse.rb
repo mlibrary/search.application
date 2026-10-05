@@ -2,7 +2,7 @@ class Search::Presenters::Record::Catalog::ShelfBrowse
   def self.for(call_number:)
     if call_number.present?
       @conn = Faraday.new(
-        url: "#{S.catalog_browse_url}/carousel",
+        url: "#{S.catalog_browse_api_url}/carousel",
         params: {query: call_number}
       ) do |f|
         f.request :json
