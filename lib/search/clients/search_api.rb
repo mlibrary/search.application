@@ -103,6 +103,10 @@ module Search
         end
       end
 
+      def get_databases_record(id)
+        @conn.get("databases/records/#{id}").body
+      end
+
       def boolean_params(filters, kind: :catalog)
         result = {}
         filters.each do |filter|

@@ -107,7 +107,7 @@ class Search::Application < Sinatra::Base
   end
 
   Search::Datastores.each do |datastore|
-    if ["catalog", "onlinejournals", "articles"].include?(datastore.slug)
+    if ["catalog", "onlinejournals", "articles", "databases"].include?(datastore.slug)
       get "/#{datastore.slug}/record/:id" do
         # profile = RubyProf::Profile.new
         # profile.start
