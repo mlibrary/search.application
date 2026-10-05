@@ -38,6 +38,10 @@ RSpec.describe "requests" do
     JSON.parse(fixture("record/articles/article.json"))
   end
 
+  let(:databases_record) do
+    JSON.parse(fixture("record/databases/database.json"))
+  end
+
   def base_results
     create(:catalog_api_one_result)
   end
@@ -212,6 +216,20 @@ RSpec.describe "requests" do
       expect(last_response.body).to include("Go to item")
     end
   end
+
+  context "/databases/record/:id" do
+    it "shows the databases record page" do
+      id = "some_id"
+      stub_request(:get, "#{S.search_api_url}/databases/records/#{id}")
+        .to_return(status: 200, body: databases_record.to_json, headers: {content_type: "application/json"})
+      get "/databases/record/#{id}"
+      expect(last_response.status).to eq(200)
+      expect(last_response.body).to include(databases_record["title"][0]["text"])
+      expect(last_response.body).to include("/databases/record/#{id}/ris")
+      expect(last_response.body).to include("Go to database")
+    end
+  end
+
   context "/catalog/record/:bib_id/ris" do
     it "returns an ris file" do
       citation = {

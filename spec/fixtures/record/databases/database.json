@@ -1,0 +1,56 @@
+{
+  "id": "8757",
+  "title": [
+    {
+      "text": "Birds of the World"
+    }
+  ],
+  "description": [
+    {
+      "text": "Online database of over 10,000 global bird species, featuring: written material from Birds of North America, Handbook of the Birds of the World, Neotropical Birds, and Bird Families of the World; interactive content from the Macaulay Library at Cornell; and hundreds of millions of observations from eBird. Searchable by species, topic, or keyword, or you can browse using the avian taxonomy explorer. Each species account covers life history and behavior; range, abundance, and migration maps; habitat descriptions; and conservation and management guidelines. All information is regularly updated with the latest research findings from leading researchers."
+    }
+  ],
+  "access_type": [
+    {
+      "text": "Authorized U-M users (+ guests in U-M Libraries)"
+    }
+  ],
+  "url": "https://ddm.dnd.lib.umich.edu/database/link/8757",
+  "database_type": [
+     "Audio",
+     "Encyclopedia",
+     "Images",
+     "Maps and Mapping Tools",
+     "Video"
+  ],
+  "alternative_titles": [
+    { "text": "BNA" },
+    { "text": "Birds of North America" },
+    { "text":"HBW Alive" },
+    { "text":"Neotropical Birds" },
+    { "text":"Bird Families of the World" },
+    { "text":"BoW" },
+    { "text":"Handbook of the birds of the world" }
+  ],
+  "academic_discipline": [
+    {
+      "list": [
+        "Science",
+        "Biology",
+        "Zoology"
+      ]
+    },
+    {
+      "list": [
+        "Science",
+        "Biology",
+        "Ecology and Evolutionary Biology"
+      ]
+    }
+  ],
+  "citation": {
+    "tagged": [],
+    "csl": {}
+  }
+  
+}

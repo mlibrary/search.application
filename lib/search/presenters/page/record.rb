@@ -18,7 +18,7 @@ class Search::Presenters::Page
       datastore = Search::Datastores.find(slug)
       future = Concurrent::Promises.future { Pagination.for(datastore: slug, uri: uri) }
       record = Search::Presenters::Record.for_datastore(datastore: slug, id: record_id, uri: uri)
-      new(datastore: datastore, uri: uri, patron: patron, record: record, pagination: future.value)
+      new(datastore: datastore, uri: uri, patron: patron, record: record, pagination: future.value || Pagination::Empty.new)
     end
 
     def initialize(datastore:, uri:, patron:, record:, pagination:)
