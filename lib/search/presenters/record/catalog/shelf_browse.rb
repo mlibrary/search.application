@@ -10,7 +10,12 @@ class Search::Presenters::Record::Catalog::ShelfBrowse
         f.response :json
       end
       response = @conn.get
-      new(call_number: call_number, data: response.body)
+      if response.status == 200
+        new(call_number: call_number, data: response.body)
+      else
+        S.logger.error("Catalog browse status is #{response.status}")
+        nil
+      end
     end
   rescue Faraday::Error => e
     S.logger.error(e.to_s)
