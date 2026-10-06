@@ -190,6 +190,23 @@ describe('metadata', function () {
     it('should remove the list item if the data does not exist', function () {
       expect(getListItems().length, '`updateMetadataRowList` should remove the list item if the data does not exist').to.equal(getDefinedValues.length);
     });
+
+    it('should not throw an error if the parallel list element is not found', function () {
+      // Remove the parallel list element if it exists
+      const row = getTableRow();
+      const parallelList = row.querySelector('ul.metadata__list--parallel');
+      if (parallelList) {
+        parallelList.remove();
+      }
+
+      // Check that the parallel list no longer exists
+      expect(row.querySelector('ul.metadata__list--parallel'), '`updateMetadataRowList` should not find the parallel list element after it has been removed').to.be.null;
+
+      // Call the function and ensure it does not throw an error
+      expect(() => {
+        return updateMetadataRowList({ original: 'Original Metadata', row, transliterated: 'Transliterated Metadata' });
+      }, '`updateMetadataRowList` should not throw an error if the parallel list element is not found').to.not.throw();
+    });
   });
 
   describe('updateMetadataRow()', function () {

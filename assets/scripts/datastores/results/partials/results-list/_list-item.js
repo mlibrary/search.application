@@ -1,5 +1,4 @@
-import { updateCheckbox } from '../../../results/partials/results-list/list-item/header/_checkbox.js';
-import { updateListItemTitle } from '../../../results/partials/results-list/list-item/header/_title.js';
+import { updateListItemHeader } from '../../../results/partials/results-list/list-item/_header.js';
 import { updateMetadata } from '../../../partials/_metadata.js';
 
 const getListItemPartial = ({ resultsList }) => {
@@ -18,10 +17,8 @@ const updateListItemAttributes = ({ listItem, recordDatastore, recordId }) => {
 };
 
 const listItemFunctions = {
-  cloneListItem,
-  updateCheckbox,
   updateListItemAttributes,
-  updateListItemTitle,
+  updateListItemHeader,
   updateMetadata
 };
 
@@ -32,11 +29,8 @@ const updateListItem = ({ index, listItem, listItemFuncs = listItemFunctions, re
   // Break down the record information
   const { metadata, title, url } = record;
 
-  // Update the checkbox
-  listItemFuncs.updateCheckbox({ listItem, recordDatastore, recordId, title: title.original });
-
-  // Update the title
-  listItemFuncs.updateListItemTitle({ index, listItem, title, url });
+  // Update the header
+  listItemFuncs.updateListItemHeader({ index, listItem, recordDatastore, recordId, title, url });
 
   // Update the metadata
   listItemFuncs.updateMetadata({ listItem, metadata });

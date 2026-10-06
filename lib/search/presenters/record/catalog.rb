@@ -336,16 +336,9 @@ module Search
 
           def to_h
             {
-              title: {
-                original: @record.bib.title.original.text,
-                transliterated: @record.bib.title.transliterated&.text
-              },
+              title: @record.bib.title.to_h,
               metadata: metadata.map do |f|
-                {
-                  field: f.field,
-                  original: f.values&.first&.original&.text,
-                  transliterated: f.values&.first&.transliterated&.text
-                }
+                f.to_h
               end,
               url: url,
               citation: {

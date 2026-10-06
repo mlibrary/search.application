@@ -24,6 +24,11 @@ const updateListItemTitleTransliterated = ({ element, title }) => {
   // Get the tertiary element
   const transliteratedTitle = element.querySelector('.results__list-item--title-transliterated');
 
+  // Return early if the transliterated title element is not found
+  if (!transliteratedTitle) {
+    return;
+  }
+
   if (title) {
     // Update the text
     transliteratedTitle.textContent = title;
@@ -59,13 +64,13 @@ const updateListItemTitle = ({
   updateTitleFunctions.updateListItemTitleNumber({ element, index });
 
   // Get the title properties
-  const { original, transliterated } = title;
+  const { original, text, transliterated } = title;
 
   // Update the anchor element
-  updateTitleFunctions.updateListItemTitleAnchor({ element, title: original, url });
+  updateTitleFunctions.updateListItemTitleAnchor({ element, title: text ?? original.text, url });
 
   // Update the transliterated element
-  updateTitleFunctions.updateListItemTitleTransliterated({ element, title: transliterated });
+  updateTitleFunctions.updateListItemTitleTransliterated({ element, title: transliterated?.text });
 };
 
 export {

@@ -24,6 +24,14 @@ module Search::Models::Record::Metadata
     end
   end
 
+  def self.plain_text_item(text)
+    Item.new({"text" => text})
+  end
+
+  def self.link_to_item(text:, url:)
+    BaseLinkToItem.new(text: text, url: url)
+  end
+
   private
 
   class PairedItem
@@ -43,6 +51,12 @@ module Search::Models::Record::Metadata
     def paired?
       transliterated.present?
     end
+
+    def to_h
+      result = {original: original.to_h}
+      result[:transliterated] = transliterated.to_h if paired?
+      result
+    end
   end
 
   # to include this, the class needs to have @data with a "search" key and a @datastore
@@ -59,6 +73,17 @@ module Search::Models::Record::Metadata
   module BrowseUrl
     def browse_url
       "#{S.base_url}/catalog/browse/#{browse_category}?" + {query: browse_query_string}.to_query
+    end
+  end
+
+  module BrowseHash
+    def to_h
+      {
+        text: text,
+        url: url,
+        browse_url: browse_url,
+        kind: kind
+      }.compact
     end
   end
 
@@ -82,20 +107,51 @@ module Search::Models::Record::Metadata
     def paired?
       false
     end
+
+    def to_h
+      {text: text}
+    end
+  end
+
+  class BaseLinkToItem < Item
+    attr_reader :url
+    attr_reader :text
+
+    def initialize(text:, url:)
+      @text = text
+      @url = url
+    end
+
+    def to_h
+      {
+        text: text,
+        url: url
+      }
+    end
   end
 
   class LinkToItem < Item
-    include SearchUrl
-
     def initialize(data:, datastore:)
       @data = data
       @datstore = datastore
     end
+
+    def to_h
+      {
+        text: text,
+        url: url
+      }
+    end
+  end
+
+  class SearchLinkToItem < LinkToItem
+    include SearchUrl
   end
 
   # Catalog
-  class AuthorBrowseItem < LinkToItem
+  class AuthorBrowseItem < SearchLinkToItem
     include BrowseUrl
+    include BrowseHash
 
     def kind
       "author"
@@ -114,6 +170,7 @@ module Search::Models::Record::Metadata
 
   class SubjectBrowseItem < Item
     include BrowseUrl
+    include BrowseHash
 
     def kind
       "subject"
@@ -136,6 +193,7 @@ module Search::Models::Record::Metadata
 
   class CallNumberBrowseItem < Item
     include BrowseUrl
+    include BrowseHash
 
     def kind
       "call_number"
@@ -164,9 +222,15 @@ module Search::Models::Record::Metadata
       false
     end
 
-    # This is here _map_field can work
+    # This is here so _map_field can work
     def text
       @data["list"].join(" > ")
+    end
+
+    def to_h
+      disciplines.map do |d|
+        d.to_h
+      end
     end
 
     def disciplines
@@ -176,7 +240,7 @@ module Search::Models::Record::Metadata
     end
   end
 
-  class AcademicDisciplineElement < Item
+  class AcademicDisciplineElement < LinkToItem
     attr_reader :text
     def initialize(text)
       @text = text
@@ -188,7 +252,7 @@ module Search::Models::Record::Metadata
   end
 
   # Articles
-  class ArticlesSubjectItem < Item
+  class ArticlesSubjectItem < LinkToItem
     def initialize(data)
       @data = data
     end
