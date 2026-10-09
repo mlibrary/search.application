@@ -18,6 +18,7 @@
   <meta property="og:url" content="<%= @site_url %><%= request.path %>">
   <meta property="twitter:site" content="@umichlibrary">
   <meta name="version" content="<%=S.version%>">
+  <meta name="trace_id" content="<%=trace_id%>"
   <% if @presenter.meta_tags %>
     <% @presenter.meta_tags.each do |tag| %>
       <meta name="citation_<%= tag["name"] %>" content="<%= tag["content"] %>">

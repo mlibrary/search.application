@@ -100,6 +100,13 @@ class Search::Application < Sinatra::Base
     def full_uri
       Addressable::URI.parse(request.url)
     end
+
+    def trace_id
+      if S.app_env != "test"
+        span = OpenTelemetry::Trace.current_span
+        span.context.valid? ? span.context.hex_trace_id : nil
+      end
+    end
   end
 
   get "/" do
