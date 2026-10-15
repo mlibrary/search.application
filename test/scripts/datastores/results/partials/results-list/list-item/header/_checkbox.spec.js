@@ -257,7 +257,7 @@ describe('checkbox', function () {
     });
   });
 
-  describe('getCheckedCheckboxes', function () {
+  describe('getCheckedCheckboxes()', function () {
     it('should return only the checked checkboxes in the temporary list', function () {
       // Check that the correct elements are returned
       expect(getCheckedCheckboxes(), 'only the checked checkboxes should be returned').to.deep.equal(document.querySelectorAll('input[type="checkbox"]:checked'));
@@ -274,7 +274,7 @@ describe('checkbox', function () {
     });
   });
 
-  describe('filterSelectedRecords', function () {
+  describe('filterSelectedRecords()', function () {
     it('should return an array of the selected record IDs', function () {
       // Check that the correct record IDs are returned
       const selectedRecords = [...getCheckedCheckboxes()].map((checkbox) => {
@@ -294,7 +294,7 @@ describe('checkbox', function () {
     });
   });
 
-  describe('someCheckboxesChecked', function () {
+  describe('someCheckboxesChecked()', function () {
     describe('true', function () {
       it('should return `true` if at least one checkbox is checked', function () {
         expect(someCheckboxesChecked(true), 'the function should return `true` if at least one checkbox is checked').to.be.true;
