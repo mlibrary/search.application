@@ -10,4 +10,10 @@ describe Search::ViewHelpers do
       expect(uri.query_hash["position"]).to eq("2")
     end
   end
+  context "link_to" do
+    it "removes trailing slashes from urls" do
+      subject = klass.new.link_to(body: "JSTOR Security Studies (Thematic Collection)", url: "https://www.jstor.org/security-studies/")
+      expect(subject).not_to include("security-studies/")
+    end
+  end
 end

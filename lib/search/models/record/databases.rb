@@ -23,7 +23,7 @@ class Search::Models::Record::Databases
   end
 
   def url
-    @data["url"]
+    @data["permalink"]
   end
 
   def holdings
