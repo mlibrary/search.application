@@ -15,7 +15,7 @@ class Search::Models::Record::Databases::Bib
     map_text_field("title").first
   end
 
-  [:description, :coverage, :access_type, :alt_title, :platform].each do |uid|
+  [:description, :brief_description, :special_message, :coverage, :access_type, :alt_title, :platform].each do |uid|
     define_method(uid) do
       map_text_field(uid)
     end
@@ -28,15 +28,15 @@ class Search::Models::Record::Databases::Bib
   end
 
   def permalink
-    [PlainItem.new(@data["permalink"])]
+    map_field("permalink") do |text|
+      PlainItem.new(text) if text
+    end
   end
 
   [:new, :trial].each do |uid|
     define_method(uid) do
-      if @data[uid.to_s]
-        [PlainItem.new("Yes")]
-      else
-        []
+      map_field(uid) do |item|
+        PlainItem.new("Yes")
       end
     end
   end

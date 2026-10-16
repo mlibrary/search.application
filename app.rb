@@ -136,8 +136,9 @@ class Search::Application < Sinatra::Base
       get "/#{datastore.slug}/record/:id/ris" do
         attachment "#{params["id"]}.ris"
         Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").ris
-      rescue
-        redirect "/#{datastore.slug}/record/:id"
+      rescue => e
+        S.logger.error("RIS download fail", {message: e})
+        redirect "/#{datastore.slug}/record/#{params["id"]}"
       end
 
       get "/#{datastore.slug}" do
