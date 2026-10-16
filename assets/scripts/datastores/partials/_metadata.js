@@ -1,83 +1,113 @@
-import { removeToggleButton } from './_toggle.js';
-
 const getListItemMetadataTable = ({ listItem }) => {
   return listItem.querySelector('table.metadata');
 };
 
-const prepareMetadataElement = ({ listItem, removeToggle = removeToggleButton, table }) => {
-  // Remove the toggle button before it gets copied
-  removeToggle({ listItem });
-
-  // Remove the list's ID before it gets copied
-  table.querySelector('ul.metadata__list').removeAttribute('id');
+const createMetadataTableRowDataCellListItem = ({ value }) => {
+  // Create a list item
+  const li = document.createElement('li');
+  // Check if the value has a `transliterated` property
+  if (value.transliterated) {
+    // Create a parallel list element
+    const parallelUl = document.createElement('ul');
+    // Add classes to the parallel list element
+    parallelUl.classList.add('list__no-style', 'metadata__list--parallel');
+    // Loop through the value types
+    ['original', 'transliterated'].forEach((type) => {
+      // Create a list item for each value type
+      const parallelLi = document.createElement('li');
+      // Set the text content of the list item based on the value type
+      parallelLi.textContent = value[type].text;
+      // Append the list item to the parallel list
+      parallelUl.appendChild(parallelLi);
+    });
+    // Append the parallel list to the list item
+    li.appendChild(parallelUl);
+  } else {
+    // Set the text content of the list item
+    li.textContent = value.original ? value.original.text : value.text;
+  }
+  // Return the list item
+  return li;
 };
 
-const cloneMetadataRow = ({ row }) => {
-  return row.cloneNode(true);
+const metadataHasManyValues = ({ shown, total }) => {
+  // Return early if there are no additional values to show
+  if (total <= shown) {
+    return null;
+  }
+  // Create a list item
+  const li = document.createElement('li');
+  // Set the text content to indicate there are more values than shown
+  li.textContent = `... and ${total - shown} more.`;
+  // Return the list item containing the "more" message
+  return li;
 };
 
-const updateMetadataRowField = ({ field, row }) => {
-  row.querySelector('th').textContent = field;
-};
-
-const updateMetadataRowList = ({ original, row, transliterated }) => {
-  // Grab the list items
-  const listItems = row.querySelectorAll('ul.metadata__list--parallel > li');
-  // Loop through the data types
-  [original, transliterated].forEach((value, index) => {
-    if (value) {
-      // Update the list item text
-      listItems[index].textContent = value;
-    } else {
-      // Remove the list item if the data type is not available
-      listItems[index].remove();
-    }
+const createMetadataTableRowDataCellList = ({ data, hasManyValues = metadataHasManyValues, metadataTableRowDataCellListItem = createMetadataTableRowDataCellListItem }) => {
+  // Destructure the data object
+  const { partial, total, values } = data;
+  // Create a list element
+  const ul = document.createElement('ul');
+  // Add classes to the list element based on the data partial type
+  ul.classList.add('list__no-style', 'metadata__list', `metadata__list--${partial}`);
+  // Loop through the metadata values
+  values.forEach((value) => {
+    // Create a list item using the helper function
+    const li = metadataTableRowDataCellListItem({ value });
+    // Append the list item to the list
+    ul.appendChild(li);
   });
+  const hasMany = hasManyValues({ shown: values.length, total });
+  if (hasMany) {
+    ul.appendChild(hasMany);
+  }
+  // Return the newly created list element
+  return ul;
 };
 
-const updateMetadataRow = ({
+const createMetadataTableRowDataCell = ({ createTableRowDataCellList = createMetadataTableRowDataCellList, data, row }) => {
+  // Create a table data cell
+  const td = document.createElement('td');
+  // Set the content of the data cell
+  td.appendChild(createTableRowDataCellList({ data }));
+  // Append the data cell to the row
+  row.appendChild(td);
+};
+
+const createMetadataTableRowHeader = ({ field, row }) => {
+  // Create a table row header cell
+  const th = document.createElement('th');
+  // Set the scope attribute for the header cell
+  th.setAttribute('scope', 'row');
+  // Set the text content of the header cell to the field name
+  th.textContent = field;
+  // Append the header cell to the row
+  row.appendChild(th);
+};
+
+const createMetadataTableRow = ({
+  createTableRowDataCell = createMetadataTableRowDataCell,
+  createTableRowHeader = createMetadataTableRowHeader,
   data,
-  row,
-  updateMetadataData = updateMetadataRowList,
-  updateMetadataField = updateMetadataRowField
+  table
 }) => {
-  // Break down the data
-  const { field, original, transliterated } = data;
-  // Update the metadata field in the row
-  updateMetadataField({ field, row });
-  // Update the metadata data in the row
-  updateMetadataData({ original, row, transliterated });
-};
-
-const updateMetadataTable = ({
-  cloneRow = cloneMetadataRow,
-  metadata,
-  table,
-  updateRow = updateMetadataRow
-}) => {
-  // Get the original row
-  const originalRow = table.querySelector('tbody > tr');
-
-  // Loop through all the metadata
-  metadata.forEach((data) => {
-    // Clone the original row
-    const clonedRow = cloneRow({ row: originalRow });
-    // Update the metadata in the cloned row
-    updateRow({ data, row: clonedRow });
-    // Insert the cloned row
-    originalRow.parentNode.insertBefore(clonedRow, originalRow);
-  });
-
-  // Remove the original row
-  originalRow.remove();
+  // Get the table body element
+  const tbody = table.querySelector('tbody');
+  // Create table row element
+  const row = document.createElement('tr');
+  // Append the new row to the table body
+  tbody.appendChild(row);
+  // Create the table row header
+  createTableRowHeader({ field: data.field, row });
+  // Create the table row data cell
+  createTableRowDataCell({ data, row });
 };
 
 const updateMetadata = ({
+  createTableRow = createMetadataTableRow,
   getMetadataTable = getListItemMetadataTable,
   listItem,
-  metadata,
-  prepareElement = prepareMetadataElement,
-  updateTable = updateMetadataTable
+  metadata
 }) => {
   // Get the metadata table
   const table = getMetadataTable({ listItem });
@@ -92,21 +122,20 @@ const updateMetadata = ({
     // Remove the table if there is no metadata
     table.remove();
   } else {
-    // Prepare the table before updating metadata
-    prepareElement({ listItem, table });
-
-    // Update the metadata table
-    updateTable({ listItem, metadata, table });
+    // Create metadata rows
+    metadata.forEach((data) => {
+      createTableRow({ data, table });
+    });
   }
 };
 
 export {
-  cloneMetadataRow,
+  createMetadataTableRow,
+  createMetadataTableRowDataCell,
+  createMetadataTableRowDataCellList,
+  createMetadataTableRowDataCellListItem,
+  createMetadataTableRowHeader,
   getListItemMetadataTable,
-  prepareMetadataElement,
-  updateMetadata,
-  updateMetadataRow,
-  updateMetadataRowField,
-  updateMetadataRowList,
-  updateMetadataTable
+  metadataHasManyValues,
+  updateMetadata
 };

@@ -1,204 +1,329 @@
 {
-  "articles": {},
-  "catalog": {
-    "990038939650106381": {
+  "articles": {
+    "cdi_nii_cinii_1870020692861752192": {
       "title": {
-        "original": "DOA 2 : 逃亡者 / 製作大映株式会社, 東映ビデオ株式会社 ; プロデューサー増田欣宏, 岡田真, 木村俊樹 ; 脚本 Naka 雅 Mura ; 監督三池崇史 = Dead or alive 2 : birds / Daiei Co., Ltd. Toei Video present ; producers, Yoshihiro Masuda, Makoto Okada, Toshiki Kimura ; written by Masa Nakamura ; directed by Takashi Miike.",
-        "transliterated": "Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds / seisaku Daiei Kabushiki Kaisha, Tōei Bideo Kabushiki Kaisha ; kantoku Miike Takashi ; produced by Yoshiro Masuda, Makoto Okada, Toshiki Kimura ; producer-screenplay, Masa Nakamura."
+        "text": "Bill shape imposes biomechanical tradeoffs in cavity-excavating birds"
       },
       "metadata": [
         {
-          "field": "Published/Created",
-          "original": "New York, NY : Kino on Video, ©2003.",
-          "transliterated": null
+          "field": "Abstract",
+          "partial": "plain_text",
+          "uid": "abstract",
+          "values": [
+            {
+              "text": "Organisms are subject to physical forces that influence morphological evolution. Birds use their bills as implements to perform various functions, each exerting unique physical demands. When excavating cavities, bird bills must resist a ran..."
+            }
+          ],
+          "total": 1
+        },
+        {
+          "field": "Author",
+          "partial": "link_to",
+          "uid": "author",
+          "values": [
+            {
+              "text": "Vaibhav Chhaya",
+              "url": "http://localhost:4567/articles?query=author%3A%22Vaibhav+Chhaya%22"
+            },
+            {
+              "text": "Sushma Reddy",
+              "url": "http://localhost:4567/articles?query=author%3A%22Sushma+Reddy%22"
+            },
+            {
+              "text": "Anand Krishnan",
+              "url": "http://localhost:4567/articles?query=author%3A%22Anand+Krishnan%22"
+            }
+          ],
+          "total": 3
+        },
+        {
+          "field": "Published in",
+          "partial": "peer_review",
+          "uid": "published_in",
+          "values": [
+            {
+              "text": "Proceedings of the Royal Society B: Biological Sciences, Volume 290, 2022"
+            }
+          ],
+          "total": 1
+        },
+        {
+          "field": "Subject",
+          "partial": "link_to",
+          "uid": "subject",
+          "values": [
+            {
+              "text": "Animals",
+              "url": "http://localhost:4567/articles?query=subject%3A%22Animals%22"
+            },
+            {
+              "text": "Biomechanical Phenomena",
+              "url": "http://localhost:4567/articles?query=subject%3A%22Biomechanical+Phenomena%22"
+            },
+            {
+              "text": "Birds",
+              "url": "http://localhost:4567/articles?query=subject%3A%22Birds%22"
+            }
+          ],
+          "total": 6
         }
       ],
-      "url": "http://localhost:4567/catalog/record/990038939650106381",
+      "url": "http://localhost:4567/articles/record/cdi_nii_cinii_1870020692861752192",
       "citation": {
-        "ris": "TY  - VIDEO\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-09-22\nID  - 990038939650106381\nAU  - Miike, Takashi, 1960-\nAU  - Nakamura, Masa.\nAU  - Masuda, Yoshihiro.\nAU  - Okada, Makoto.\nAU  - Kimura, Toshiki.\nAU  - Aikawa, Shō, 1961-\nAU  - Takeuchi, Riki.\nAU  - Chen, Guanxi, 1980-\nAU  - Endō, Ken'ichi, 1961-\nAU  - Teah.\nAU  - Daiē, Kabushiki Kaisha.\nAU  - Tōei Bideo Kabushiki Kaisha.\nAU  - Kino International Corporation.\nAU  - 大映株式会社.\nCN  - PN1995.9.F67 D432 2000\nCP  - New York, NY :\nCY  - New York, NY :\nDA  - 2003\nPY  - 2003\nY1  - 2003\nJF  - Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /\nT1  - Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /\nTI  - Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /\nKW  - Yakuza -- Drama\nKW  - Assassins -- Japan -- Drama\nKW  - Gangster films -- Japan\nKW  - Assassins\nKW  - Gangster films\nKW  - Yakuza\nKW  - Japan\nKW  - Yakuza Dorama\nKW  - Foreign language films -- Japanese\nKW  - Feature films -- Japan\nKW  - Action and adventure films\nKW  - Drama\nKW  - Feature films\nKW  - Humanities | General and Comparative Literature\nKW  - Arts | Film and Video Studies\nLA  - Japanese\nLA  - English\nM1  - 1 videodisc (approximately 97 min.) :\nNV  - 1 videodisc (approximately 97 min.) :\nN2  - Now reunited, Mizuki and Shuichi team up to pay off their spiritual debts while staying one trigger-pull ahead of the mobsters and killers who want them dead.\nPB  - Kino on Video,\nER  -",
+        "ris": "TY  - JOUR\nDB  - U-M Articles Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - cdi_nii_cinii_1870020692861752192\nT1  - Bill shape imposes biomechanical tradeoffs in cavity-excavating birds\nTI  - Bill shape imposes biomechanical tradeoffs in cavity-excavating birds\nAU  - Vaibhav Chhaya\nAU  - Sushma Reddy\nAU  - Anand Krishnan\nPB  - The Royal Society\nJF  - Proceedings of the Royal Society B: Biological Sciences\nJO  - Proceedings of the Royal Society B: Biological Sciences\nVL  - 290\nSN  - 0962-8452\nSN  - 1471-2954\nDO  - 10.1098/rspb.2022.2395\nKW  - Animals\nKW  - Biomechanical Phenomena\nKW  - Birds\nKW  - Finite Element Analysis\nKW  - Morphology and Biomechanics\nKW  - Stress, Mechanical\nAB  - Organisms are subject to physical forces that influence morphological evolution. Birds use their bills as implements to perform various functions, each exerting unique physical demands. When excavating cavities, bird bills must resist a range of mechanical stresses to prevent fracture. However, the contribution of bill geometry and material composition to excavation stress resistance remains poorly understood. Here, we study the biomechanical consequences of bill diversification in the cavity-excavating palaeotropical barbets. Using finite-element models and beam theory, we compare excavation performance for two loading regimes experienced by barbet bills during cavity excavation: impact and torsion. We find that deeper and wider maxillae perform better for impact loads than for torsional loads, with the converse for narrower maxillae. This results in tradeoffs between impact and torsion resistance imposed by bill geometry. Analytical beam models validate this prediction, showing that this relationship holds even when maxillae are simplified to solid elliptical beams. Finally, we find that composite bill structures broadly exhibit lower stresses than homogeneous structures of the same geometry, indicating a functional synergy between the keratinous rhamphotheca and bony layers of the bill. Overall, our findings demonstrate the strong link between morphological evolution, behaviour and functional performance in organisms.\nN2  - Organisms are subject to physical forces that influence morphological evolution. Birds use their bills as implements to perform various functions, each exerting unique physical demands. When excavating cavities, bird bills must resist a range of mechanical stresses to prevent fracture. However, the contribution of bill geometry and material composition to excavation stress resistance remains poorly understood. Here, we study the biomechanical consequences of bill diversification in the cavity-excavating palaeotropical barbets. Using finite-element models and beam theory, we compare excavation performance for two loading regimes experienced by barbet bills during cavity excavation: impact and torsion. We find that deeper and wider maxillae perform better for impact loads than for torsional loads, with the converse for narrower maxillae. This results in tradeoffs between impact and torsion resistance imposed by bill geometry. Analytical beam models validate this prediction, showing that this relationship holds even when maxillae are simplified to solid elliptical beams. Finally, we find that composite bill structures broadly exhibit lower stresses than homogeneous structures of the same geometry, indicating a functional synergy between the keratinous rhamphotheca and bony layers of the bill. Overall, our findings demonstrate the strong link between morphological evolution, behaviour and functional performance in organisms.\nER  -",
         "csl": {
-          "id": "990038939650106381",
-          "type": "motion_picture",
-          "title": "Dead or alive 2 : Tōbōsha = Dead or alive 2 : Birds /",
-          "call-number": "VIDEO-D 36841-D",
-          "publisher-place": "New York, NY :",
-          "publisher": "Kino on Video,",
-          "issued": {
-            "literal": "2003"
-          },
+          "id": "cdi_nii_cinii_1870020692861752192",
+          "type": "article-journal",
+          "title": "Bill shape imposes biomechanical tradeoffs in cavity-excavating birds",
           "author": [
             {
-              "family": "Miike",
-              "given": "Takashi,"
+              "literal": "Vaibhav Chhaya"
             },
             {
-              "family": "Nakamura",
-              "given": "Masa."
+              "literal": "Sushma Reddy"
             },
             {
-              "family": "Masuda",
-              "given": "Yoshihiro."
-            },
-            {
-              "family": "Okada",
-              "given": "Makoto."
-            },
-            {
-              "family": "Kimura",
-              "given": "Toshiki."
-            },
-            {
-              "family": "Aikawa",
-              "given": "Shō,"
-            },
-            {
-              "family": "Takeuchi",
-              "given": "Riki."
-            },
-            {
-              "family": "Chen",
-              "given": "Guanxi,"
-            },
-            {
-              "family": "Endō",
-              "given": "Ken'ichi,"
-            },
-            {
-              "literal": "Teah."
-            },
-            {
-              "literal": "Daiē, Kabushiki Kaisha."
-            },
-            {
-              "literal": "Tōei Bideo Kabushiki Kaisha."
-            },
-            {
-              "literal": "Kino International Corporation."
+              "literal": "Anand Krishnan"
             }
-          ]
+          ],
+          "publisher": "The Royal Society",
+          "ISBN": [],
+          "ISSN": [
+            "0962-8452",
+            "1471-2954"
+          ],
+          "container-title": "Proceedings of the Royal Society B: Biological Sciences",
+          "volume": "290",
+          "genre": "article",
+          "doi": "10.1098/rspb.2022.2395"
         }
       }
     },
-    "990052871530106381": {
+    "cdi_proquest_journals_2828913497": {
       "title": {
-        "original": "The Da Vinci code / Dan Brown.",
-        "transliterated": null
+        "text": "Birds"
+      },
+      "metadata": [
+        {
+          "field": "Abstract",
+          "partial": "plain_text",
+          "uid": "abstract",
+          "values": [
+            {
+              "text": "A poem is presented."
+            }
+          ],
+          "total": 1
+        },
+        {
+          "field": "Author",
+          "partial": "link_to",
+          "uid": "author",
+          "values": [
+            {
+              "text": "Lerner, Lexi",
+              "url": "http://localhost:4567/articles?query=author%3A%22Lerner%2C+Lexi%22"
+            }
+          ],
+          "total": 1
+        },
+        {
+          "field": "Published in",
+          "partial": "peer_review",
+          "uid": "published_in",
+          "values": [
+            {
+              "text": "JAMA : the journal of the American Medical Association, Volume 329, Issue 22, 2023, pp. 1990-"
+            }
+          ],
+          "total": 1
+        }
+      ],
+      "url": "http://localhost:4567/articles/record/cdi_proquest_journals_2828913497",
+      "citation": {
+        "ris": "TY  - JOUR\nDB  - U-M Articles Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - cdi_proquest_journals_2828913497\nT1  - Birds\nTI  - Birds\nAU  - Lerner, Lexi\nPB  - Chicago: American Medical Association\nJF  - JAMA : the journal of the American Medical Association\nJO  - JAMA : the journal of the American Medical Association\nSP  - 1990-\nVL  - 329\nIS  - 22\nSN  - 0098-7484\nSN  - 1538-3598\nDO  - 10.1001/jama.2023.8236\nLA  - English\nAB  - A poem is presented.\nN2  - A poem is presented.\nER  -",
+        "csl": {
+          "id": "cdi_proquest_journals_2828913497",
+          "type": "article-journal",
+          "title": "Birds",
+          "author": [
+            {
+              "family": "Lerner",
+              "given": "Lexi"
+            }
+          ],
+          "publisher": "Chicago: American Medical Association",
+          "ISBN": [],
+          "ISSN": [
+            "0098-7484",
+            "1538-3598"
+          ],
+          "page": "1990-",
+          "container-title": "JAMA : the journal of the American Medical Association",
+          "volume": "329",
+          "issue": "22",
+          "genre": "article",
+          "doi": "10.1001/jama.2023.8236"
+        }
+      }
+    }
+  },
+  "catalog": {
+    "99187844707006381": {
+      "title": {
+        "original": {
+          "text": "Birds = 鳥 / 久保敬親."
+        },
+        "transliterated": {
+          "text": "Birds = Tori / Kubo Keishin."
+        }
       },
       "metadata": [
         {
           "field": "Author/Creator",
-          "original": "Brown, Dan, 1964-",
-          "transliterated": null
+          "partial": "browse",
+          "uid": "main_author",
+          "values": [
+            {
+              "original": {
+                "text": "久保敬親, 1947-2019.",
+                "url": "http://localhost:4567/catalog?query=author%3A%22%E4%B9%85%E4%BF%9D%E6%95%AC%E8%A6%AA%2C+1947-2019.%22",
+                "browse_url": "http://localhost:4567/catalog/browse/author?query=%E4%B9%85%E4%BF%9D%E6%95%AC%E8%A6%AA%2C+1947-2019.",
+                "kind": "author"
+              },
+              "transliterated": {
+                "text": "Kubo, Keishin, 1947-2019.",
+                "url": "http://localhost:4567/catalog?query=author%3A%22Kubo%2C+Keishin%2C+1947-2019.%22",
+                "browse_url": "http://localhost:4567/catalog/browse/author?query=Kubo%2C+Keishin%2C+1947-2019.",
+                "kind": "author"
+              }
+            }
+          ],
+          "total": 1
         },
         {
           "field": "Published/Created",
-          "original": "New York : Random House Audio, ℗2003.",
-          "transliterated": null
+          "partial": "plain_text",
+          "uid": "published",
+          "values": [
+            {
+              "original": {
+                "text": "東京 : 山と渓谷社, 1989."
+              },
+              "transliterated": {
+                "text": "Tōkyō : Yama to Keikokusha, 1989."
+              }
+            }
+          ],
+          "total": 1
         }
       ],
-      "url": "http://localhost:4567/catalog/record/990052871530106381",
+      "url": "http://localhost:4567/catalog/record/99187844707006381",
       "citation": {
-        "ris": "TY  - MUSIC\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-09-22\nID  - 990052871530106381\nAU  - Brown, Dan, 1964-\nAU  - Michael, Paul.\nCN  - PS 3552 .R792 D2 2003b\nCP  - New York :\nCY  - New York :\nDA  - 2003\nPY  - 2003\nY1  - 2003\nET  - Abridged.\nJF  - The Da Vinci code /\nT1  - The Da Vinci code /\nTI  - The Da Vinci code /\nKW  - Leonardo, da Vinci, 1452-1519 -- Manuscripts -- Fiction\nKW  - Cryptographers -- Fiction\nKW  - Leonardo, da Vinci, 1452-1519\nKW  - Cryptographers\nKW  - Manuscripts\nKW  - Audiobooks\nKW  - Fiction\nKW  - Detective and mystery fiction\nKW  - Thrillers (Fiction)\nKW  - Compact discs\nKW  - Humanities | English Language and Literature\nLA  - English\nM1  - 6 audio discs (approximately 6 hr.) :\nNV  - 6 audio discs (approximately 6 hr.) :\nN2  - Harvard symbologist Robert Langdon is once again caught up in an investigation initiated by the secret Catholic organization known as Opus Dei. His French cryptologist partner, Sophie Neveu, is the granddaughter of a man murdered in the Louvre. Sophie's grandfather left many ciphers they must decipher to solve the mysteries of his death and her family and protect an invaluable religious relic.\nPB  - Random House Audio,\nSN  - 9780739339787\nSN  - 0739339788\nSN  - 9780307879257\nSN  - 0307879259\nER  -",
+        "ris": "TY  - BOOK\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - 99187844707006381\nAU  - Kubo, Keishin, 1947-2019\nCN  - QL 674 .L83 1989\nCP  - Tōkyō :\nCY  - Tōkyō :\nDA  - 1989\nPY  - 1989\nY1  - 1989\nET  - Shohan.\nJF  - Birds = Tori\nT1  - Birds = Tori\nTI  - Birds = Tori\nKW  - Birds -- Japan -- Pictorial works\nKW  - Oiseaux -- Japon -- Ouvrages illustrés\nKW  - Birds\nKW  - Japan\nKW  - Illustrated works\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nLA  - Japanese\nM1  - 1 volume :\nNV  - 1 volume :\nPB  - Yama to Keikokusha\nSN  - 9784635596077\nSN  - 4635596079\nER  -",
         "csl": {
-          "id": "990052871530106381",
-          "type": "song",
-          "title": "The Da Vinci code /",
-          "edition": "Abridged.",
-          "ISBN": [
-            "9780739339787",
-            "0739339788",
-            "9780307879257",
-            "0307879259"
-          ],
-          "call-number": "PS 3552 .R792 D2 2003b",
-          "publisher-place": "New York :",
-          "publisher": "Random House Audio,",
-          "issued": {
-            "literal": "2003"
-          },
+          "id": "99187844707006381",
+          "type": "graphic",
+          "title": "Birds = Tori",
           "author": [
             {
-              "family": "Brown",
-              "given": "Dan,"
+              "family": "Kubo",
+              "given": "Keishin"
+            }
+          ],
+          "issued": {
+            "literal": "1989"
+          },
+          "publisher": "Yama to Keikokusha",
+          "ISBN": [
+            "9784635596077",
+            "4635596079"
+          ],
+          "edition": "Shohan.",
+          "call-number": "QL 674 .L83 1989",
+          "publisher-place": "Tōkyō"
+        }
+      }
+    },
+    "990040646010106381": {
+      "title": {
+        "original": {
+          "text": "The birds / translated from Aristophanes by Paul Muldoon with Richard Martin."
+        }
+      },
+      "metadata": [
+        {
+          "field": "Author/Creator",
+          "partial": "browse",
+          "uid": "main_author",
+          "values": [
+            {
+              "original": {
+                "text": "Aristophanes.",
+                "url": "http://localhost:4567/catalog?query=author%3A%22Aristophanes.%22",
+                "browse_url": "http://localhost:4567/catalog/browse/author?query=Aristophanes.",
+                "kind": "author"
+              }
+            }
+          ],
+          "total": 1
+        },
+        {
+          "field": "Published/Created",
+          "partial": "plain_text",
+          "uid": "published",
+          "values": [
+            {
+              "original": {
+                "text": "Oldcastle, County Meath : Gallery, 1999."
+              }
+            }
+          ],
+          "total": 1
+        },
+        {
+          "field": "Series (transcribed)",
+          "partial": "plain_text",
+          "uid": "series",
+          "values": [
+            {
+              "original": {
+                "text": "Gallery books"
+              }
+            }
+          ],
+          "total": 1
+        }
+      ],
+      "url": "http://localhost:4567/catalog/record/990040646010106381",
+      "citation": {
+        "ris": "TY  - BOOK\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - 990040646010106381\nAU  - Aristophanes\nAU  - Muldoon, Paul\nCN  - 888 A7av tM94\nCP  - Oldcastle, County Meath :\nCY  - Oldcastle, County Meath :\nDA  - 1999\nPY  - 1999\nY1  - 1999\nJF  - The birds\nT1  - The birds\nTI  - The birds\nLA  - English\nM1  - 79 p. ;\nNV  - 79 p. ;\nPB  - Gallery\nSN  - 9781852352455\nSN  - 1852352450\nSN  - 9781852352448\nSN  - 1852352442\nT3  - Gallery books\nER  -",
+        "csl": {
+          "id": "990040646010106381",
+          "type": "book",
+          "title": "The birds",
+          "author": [
+            {
+              "family": "Muldoon",
+              "given": "Paul"
             },
             {
-              "family": "Michael",
-              "given": "Paul."
+              "literal": "Aristophanes"
             }
-          ]
-        }
-      }
-    },
-    "990006758990106381": {
-      "title": {
-        "original": "Birds.",
-        "transliterated": null
-      },
-      "metadata": [
-        {
-          "field": "Published/Created",
-          "original": "Sandy, Bedfordshire, Eng. : Royal Society for the Protection of Birds",
-          "transliterated": null
-        }
-      ],
-      "url": "http://localhost:4567/catalog/record/990006758990106381",
-      "citation": {
-        "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-09-22\nID  - 990006758990106381\nAU  - Royal Society for the Protection of Birds.\nCN  - QL671 .B678\nCP  - Sandy, Bedfordshire, Eng. :\nCY  - Sandy, Bedfordshire, Eng. :\nDA  - 1966-2013\nPY  - 1966-2013\nY1  - 1966-2013\nJF  - Birds.\nT1  - Birds.\nTI  - Birds.\nKW  - Birds -- Periodicals\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nLA  - English\nM1  - v. :\nNV  - v. :\nPB  - Royal Society for the Protection of Birds\nSN  - 0006-3665\nT2  - Bird notes\nER  -",
-        "csl": {
-          "id": "990006758990106381",
-          "type": "article-journal",
-          "title": "Birds.",
-          "ISSN": [
-            "0006-3665"
           ],
-          "call-number": "QL671 .B678",
-          "publisher-place": "Sandy, Bedfordshire, Eng. :",
-          "publisher": "Royal Society for the Protection of Birds",
           "issued": {
-            "literal": "1966-2013"
+            "literal": "1999"
           },
-          "author": [
-            {
-              "literal": "Royal Society for the Protection of Birds."
-            }
+          "publisher": "Gallery",
+          "ISBN": [
+            "9781852352455",
+            "1852352450",
+            "9781852352448",
+            "1852352442"
           ],
-          "number": "v. 1- Jan./Feb. 1966-"
-        }
-      }
-    },
-    "99187335971706381": {
-      "title": {
-        "original": "ヤマシナチョウルイケンキュウジョケンキュウホウコク",
-        "transliterated": "山階鳥類研究所研究報告"
-      },
-      "metadata": [
-        {
-          "field": "Published/Created",
-          "original": "Chiba-ken Abiko-shi : Yamashina Chōrui Kenkyūjo, 1952-",
-          "transliterated": null
-        }
-      ],
-      "url": "http://localhost:4567/catalog/record/99187335971706381",
-      "citation": {
-        "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-09-22\nID  - 99187335971706381\nAU  - Yamashina Chōrui Kenkyūjo.\nCN  - QL691.J4 Y36\nCP  - Chiba-ken Abiko-shi :\nCY  - Chiba-ken Abiko-shi :\nDA  - 1952-2003\nPY  - 1952-2003\nY1  - 1952-2003\nJF  - 山階鳥類研究所研究報告\nT1  - 山階鳥類研究所研究報告\nTI  - 山階鳥類研究所研究報告\nKW  - Birds -- Japan -- Periodicals\nKW  - Zoology -- Japan -- Periodicals\nKW  - Birds\nKW  - Zoology\nKW  - Japan\nKW  - Ornithology -- Japan -- Periodicals\nKW  - Periodicals\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nLA  - Japanese\nLA  - English\nM1  - 1 online resource\nNV  - 1 online resource\nPB  - Yamashina Chōrui Kenkyūjo,\nSN  - 1883-3659\nER  -",
-        "csl": {
-          "id": "99187335971706381",
-          "type": "article-journal",
-          "title": "山階鳥類研究所研究報告",
-          "ISSN": [
-            "1883-3659"
-          ],
-          "publisher-place": "Chiba-ken Abiko-shi :",
-          "publisher": "Yamashina Chōrui Kenkyūjo,",
-          "issued": {
-            "literal": "1952-2003"
-          },
-          "author": [
-            {
-              "literal": "Yamashina Chōrui Kenkyūjo."
-            }
-          ],
-          "number": "No. 1 (1952)-dai 34-kan 2-gō (Heisei 15-nen 3-gtsu [Mar. 2003]) = no. 108."
+          "collection-title": "Gallery books",
+          "call-number": "888 A7av tM94",
+          "publisher-place": "Oldcastle, County Meath"
         }
       }
     }
@@ -207,39 +332,129 @@
   "everything": {},
   "guidesandmore": {},
   "onlinejournals": {
-    "99187335971706381": {
+    "990060969780106381": {
       "title": {
-        "original": "ヤマシナチョウルイケンキュウジョケンキュウホウコク",
-        "transliterated": "山階鳥類研究所研究報告"
+        "original": {
+          "text": "鳥."
+        },
+        "transliterated": {
+          "text": "Tori."
+        }
+      },
+      "metadata": [
+        {
+          "field": "Contributors",
+          "partial": "browse",
+          "uid": "contributors",
+          "values": [
+            {
+              "original": {
+                "text": "日本 鳥学会.",
+                "url": "http://localhost:4567/catalog?query=author%3A%22%E6%97%A5%E6%9C%AC+%E9%B3%A5%E5%AD%A6%E4%BC%9A.%22",
+                "browse_url": "http://localhost:4567/catalog/browse/author?query=%E6%97%A5%E6%9C%AC+%E9%B3%A5%E5%AD%A6%E4%BC%9A.",
+                "kind": "author"
+              },
+              "transliterated": {
+                "text": "Nihon Chōgakkai.",
+                "url": "http://localhost:4567/catalog?query=author%3A%22Nihon+Ch%C5%8Dgakkai.%22",
+                "browse_url": "http://localhost:4567/catalog/browse/author?query=Nihon+Ch%C5%8Dgakkai.",
+                "kind": "author"
+              }
+            },
+            {
+              "original": {
+                "text": "Biodiversity Heritage Library.",
+                "url": "http://localhost:4567/catalog?query=author%3A%22Biodiversity+Heritage+Library.%22",
+                "browse_url": "http://localhost:4567/catalog/browse/author?query=Biodiversity+Heritage+Library.",
+                "kind": "author"
+              }
+            }
+          ],
+          "total": 2
+        },
+        {
+          "field": "Published/Created",
+          "partial": "plain_text",
+          "uid": "published",
+          "values": [
+            {
+              "original": {
+                "text": "東京 : 日本 鳥学会, 大正 4 [1915]-1986."
+              },
+              "transliterated": {
+                "text": "Tōkyō : Nihon Chōgakkai, Taishō 4 [1915]-1986."
+              }
+            }
+          ],
+          "total": 1
+        }
+      ],
+      "url": "http://localhost:4567/onlinejournals/record/990060969780106381",
+      "citation": {
+        "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - 990060969780106381\nAU  - Nihon Chōgakkai\nAU  - Biodiversity Heritage Library\nCN  - QL671.J4 T67\nCP  - Tōkyō :\nCY  - Tōkyō :\nDA  - 1915-1986\nPY  - 1915-1986\nY1  - 1915-1986\nJF  - Tori\nT1  - Tori\nTI  - Tori\nKW  - Birds -- Japan -- Periodicals\nKW  - Bird watching -- Japan -- Periodicals\nKW  - Ornithology -- Periodicals\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nKW  - International Studies | Asian Studies | Japanese Studies\nL2  - http://www.biodiversitylibrary.org//bibliography/48722\nLA  - Japanese\nLA  - English\nM1  - 34 v. :\nNV  - 34 v. :\nPB  - Nihon Chōgakkai\nSN  - 0040-9480\nER  -",
+        "csl": {
+          "id": "990060969780106381",
+          "type": "article-journal",
+          "title": "Tori",
+          "author": [
+            {
+              "literal": "Nihon Chōgakkai"
+            },
+            {
+              "literal": "Biodiversity Heritage Library"
+            }
+          ],
+          "issued": {
+            "literal": "1915-1986"
+          },
+          "publisher": "Nihon Chōgakkai",
+          "ISSN": [
+            "0040-9480"
+          ],
+          "publisher-place": "Tōkyō",
+          "number": "Dai 1-kan dai 1-gō (Taishō 6-nen 5-gatsu [May 1917])-dai 34-kan 4-gō (1986-nen 2-gatsu)."
+        }
+      }
+    },
+    "990161238310106381": {
+      "title": {
+        "original": {
+          "text": "Newsletter / Council for the Conservation of Migratory Birds."
+        }
       },
       "metadata": [
         {
           "field": "Published/Created",
-          "original": "Chiba-ken Abiko-shi : Yamashina Chōrui Kenkyūjo, 1952-",
-          "transliterated": null
-        }
-      ],
-      "url": "http://localhost:4567/catalog/record/99187335971706381",
-      "citation": {
-        "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2025-09-22\nID  - 99187335971706381\nAU  - Yamashina Chōrui Kenkyūjo.\nCN  - QL691.J4 Y36\nCP  - Chiba-ken Abiko-shi :\nCY  - Chiba-ken Abiko-shi :\nDA  - 1952-2003\nPY  - 1952-2003\nY1  - 1952-2003\nJF  - 山階鳥類研究所研究報告\nT1  - 山階鳥類研究所研究報告\nTI  - 山階鳥類研究所研究報告\nKW  - Birds -- Japan -- Periodicals\nKW  - Zoology -- Japan -- Periodicals\nKW  - Birds\nKW  - Zoology\nKW  - Japan\nKW  - Ornithology -- Japan -- Periodicals\nKW  - Periodicals\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nLA  - Japanese\nLA  - English\nM1  - 1 online resource\nNV  - 1 online resource\nPB  - Yamashina Chōrui Kenkyūjo,\nSN  - 1883-3659\nER  -",
-        "csl": {
-          "id": "99187335971706381",
-          "type": "article-journal",
-          "title": "山階鳥類研究所研究報告",
-          "ISSN": [
-            "1883-3659"
-          ],
-          "publisher-place": "Chiba-ken Abiko-shi :",
-          "publisher": "Yamashina Chōrui Kenkyūjo,",
-          "issued": {
-            "literal": "1952-2003"
-          },
-          "author": [
+          "partial": "plain_text",
+          "uid": "published",
+          "values": [
             {
-              "literal": "Yamashina Chōrui Kenkyūjo."
+              "original": {
+                "text": "[Place of publication not identified] : Council for the Conservation of Migratory Birds"
+              }
             }
           ],
-          "number": "No. 1 (1952)-dai 34-kan 2-gō (Heisei 15-nen 3-gtsu [Mar. 2003]) = no. 108."
+          "total": 1
+        }
+      ],
+      "url": "http://localhost:4567/onlinejournals/record/990161238310106381",
+      "citation": {
+        "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - 990161238310106381\nAU  - Council for the Conservation of Migratory Birds (U.S.), author\nCN  - G615\nDA  - 2015-2017\nPY  - 2015-2017\nY1  - 2015-2017\nJF  - Newsletter\nT1  - Newsletter\nTI  - Newsletter\nKW  - Council for the Conservation of Migratory Birds (U.S.) -- Periodicals\nKW  - Migratory birds -- Conservation -- United States -- Periodicals\nKW  - Newsletters\nKW  - Social Sciences | Geography and Maps\nKW  - International Studies | Asian Studies | Southeast Asian Studies\nL2  - https://purl.fdlp.gov/GPO/gpo90186\nLA  - English\nM1  - 1 online resource (4 volumes)\nNV  - 1 online resource (4 volumes)\nPB  - Council for the Conservation of Migratory Birds\nER  -",
+        "csl": {
+          "id": "990161238310106381",
+          "type": "article-journal",
+          "title": "Newsletter",
+          "author": [
+            {
+              "literal": "Council for the Conservation of Migratory Birds (U.S.)"
+            }
+          ],
+          "issued": {
+            "literal": "2015-2017"
+          },
+          "publisher": "Council for the Conservation of Migratory Birds",
+          "publisher-place": "[Place of publication not identified]",
+          "number": "Began with: May 2015; ceased with: January 2017."
         }
       }
     }
