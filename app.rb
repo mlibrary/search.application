@@ -251,7 +251,9 @@ class Search::Application < Sinatra::Base
     headers "metrics.route" => "not_found"
     @presenter = Search::Presenters.for_404_page(uri: URI.parse(request.fullpath), patron: @patron)
     status 404
-    erb :"errors/404"
+    erb :"errors/layout", layout: :layout do
+      erb :"errors/404"
+    end
   end
 
   post "/search" do
