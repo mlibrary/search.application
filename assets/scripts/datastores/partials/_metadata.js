@@ -2,6 +2,34 @@ const getListItemMetadataTable = ({ listItem }) => {
   return listItem.querySelector('table.metadata');
 };
 
+const createMetadataTableRowDataCellListItem = ({ value }) => {
+  // Create a list item
+  const li = document.createElement('li');
+  // Check if the value has a `transliterated` property
+  if (value.transliterated) {
+    // Create a parallel list element
+    const parallelUl = document.createElement('ul');
+    // Add classes to the parallel list element
+    parallelUl.classList.add('list__no-style', 'metadata__list--parallel');
+    // Loop through the value types
+    ['original', 'transliterated'].forEach((type) => {
+      // Create a list item for each value type
+      const parallelLi = document.createElement('li');
+      // Set the text content of the list item based on the value type
+      parallelLi.textContent = value[type].text;
+      // Append the list item to the parallel list
+      parallelUl.appendChild(parallelLi);
+    });
+    // Append the parallel list to the list item
+    li.appendChild(parallelUl);
+  } else {
+    // Set the text content of the list item
+    li.textContent = value.original ? value.original.text : value.text;
+  }
+  // Return the list item
+  return li;
+};
+
 const metadataHasManyValues = ({ shown, total }) => {
   // Return early if there are no additional values to show
   if (total <= shown) {
@@ -15,7 +43,7 @@ const metadataHasManyValues = ({ shown, total }) => {
   return li;
 };
 
-const createMetadataTableRowDataCellList = ({ data, hasManyValues = metadataHasManyValues }) => {
+const createMetadataTableRowDataCellList = ({ data, hasManyValues = metadataHasManyValues, metadataTableRowDataCellListItem = createMetadataTableRowDataCellListItem }) => {
   // Destructure the data object
   const { partial, total, values } = data;
   // Create a list element
@@ -24,29 +52,8 @@ const createMetadataTableRowDataCellList = ({ data, hasManyValues = metadataHasM
   ul.classList.add('list__no-style', 'metadata__list', `metadata__list--${partial}`);
   // Loop through the metadata values
   values.forEach((value) => {
-    // Create a list item
-    const li = document.createElement('li');
-    // Check if the value has a `transliterated` property
-    if (value.transliterated) {
-      // Create a parallel list element
-      const parallelUl = document.createElement('ul');
-      // Add classes to the parallel list element
-      parallelUl.classList.add('list__no-style', 'metadata__list--parallel');
-      // Loop through the value types
-      ['original', 'transliterated'].forEach((type) => {
-        // Create a list item for each value type
-        const parallelLi = document.createElement('li');
-        // Set the text content of the list item based on the value type
-        parallelLi.textContent = value[type].text;
-        // Append the list item to the parallel list
-        parallelUl.appendChild(parallelLi);
-      });
-      // Append the parallel list to the list item
-      li.appendChild(parallelUl);
-    } else {
-      // Set the text content of the list item
-      li.textContent = value.original ? value.original.text : value.text;
-    }
+    // Create a list item using the helper function
+    const li = metadataTableRowDataCellListItem({ value });
     // Append the list item to the list
     ul.appendChild(li);
   });
@@ -126,6 +133,7 @@ export {
   createMetadataTableRow,
   createMetadataTableRowDataCell,
   createMetadataTableRowDataCellList,
+  createMetadataTableRowDataCellListItem,
   createMetadataTableRowHeader,
   getListItemMetadataTable,
   metadataHasManyValues,

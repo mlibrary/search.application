@@ -2,6 +2,7 @@ import {
   createMetadataTableRow,
   createMetadataTableRowDataCell,
   createMetadataTableRowDataCellList,
+  createMetadataTableRowDataCellListItem,
   createMetadataTableRowHeader,
   getListItemMetadataTable,
   metadataHasManyValues,
@@ -55,86 +56,63 @@ describe('metadata', function () {
     });
   });
 
-  describe('createMetadataTableRowDataCellList()', function () {
+  describe('createMetadataTableRowDataCellListItem()', function () {
     let args = null;
-    let tbody = null;
-    let tr = null;
-    let td = null;
+    let ul = null;
     let getList = null;
-    let getListItems = null;
+    let getMetadataListItem = null;
 
     beforeEach(function () {
       args = {
-        data: metadata[0]
+        value: metadata[0].values[0]
       };
 
-      // Get the tbody element within the metadata table
-      tbody = getTable().querySelector('tbody');
-      // Create a table row
-      tr = document.createElement('tr');
-      // Create a table cell
-      td = document.createElement('td');
-      // Append the row to the tbody
-      tbody.appendChild(tr);
-      // Append the cell to the row
-      tr.appendChild(td);
+      // Create an unordered list element
+      ul = document.createElement('ul');
+      // Append the unordered list to the results list item
+      getListItem().appendChild(ul);
 
       getList = () => {
-        return td.querySelector('ul');
+        return ul;
       };
 
-      getListItems = () => {
-        return td.querySelectorAll('ul.metadata__list > li');
+      getMetadataListItem = () => {
+        return getList().querySelector('li');
       };
 
       // Check that the list does not already exist
-      expect(getList(), 'the list should not exist initially').to.be.null;
+      expect(getMetadataListItem(), 'the list should not exist initially').to.be.null;
 
       // Append the metadata list to the cell
-      td.appendChild(createMetadataTableRowDataCellList(args));
+      ul.appendChild(createMetadataTableRowDataCellListItem(args));
     });
 
     afterEach(function () {
       args = null;
-      tbody = null;
-      tr = null;
-      td = null;
       getList = null;
-      getListItems = null;
+      getMetadataListItem = null;
     });
 
     it('should create a list element', function () {
-      expect(getList(), 'the list should exist after calling the function').to.not.be.null;
-    });
-
-    it('should assign the correct classes to the list element', function () {
-      ['list__no-style', 'metadata__list', `metadata__list--${args.data.partial}`].forEach((className) => {
-        expect(getList().classList.contains(className), `the UL should have the class ${className}`).to.be.true;
-      });
-    });
-
-    it('should create a list item for each metadata value', function () {
-      expect(getListItems().length, 'the number of list items should match the number of metadata values').to.equal(args.data.values.length);
+      expect(getMetadataListItem(), 'the list should exist after calling the function').to.not.be.null;
     });
 
     it('should include the correct metadata values in the list items', function () {
-      getListItems().forEach((li, index) => {
-        const getValue = args.data.values[index];
-        if (getValue.transliterated) {
-          const getParellelList = li.querySelector('ul');
-          // Check if a list element was created
-          expect(getParellelList, `the list item at index ${index} should contain a nested list`).to.not.be.null;
-          // Check if the nested list contains the correct values
-          ['original', 'transliterated'].forEach((key) => {
-            const value = getValue[key];
-            if (value) {
-              expect(getParellelList.textContent, `the nested list should contain the ${key} value`).to.include(value.text);
-            }
-          });
-        } else {
-          expect(li.textContent, `the list item at index ${index} should have the correct text`).to.equal(getValue.original ? getValue.original.text : getValue.text);
-        }
-      });
+      const li = getMetadataListItem();
+      if (args.value.transliterated) {
+        const getParellelList = li.querySelector('ul');
+        // Check if a list element was created
+        expect(getParellelList, 'the list item should contain a nested list').to.not.be.null;
+        // Check if the nested list contains the correct values
+        ['original', 'transliterated'].forEach((key) => {
+          const value = args.value[key];
+          if (value) {
+            expect(getParellelList.textContent, `the nested list should contain the ${key} value`).to.include(value.text);
+          }
+        });
+      } else {
+        expect(li.textContent, 'the list item should have the correct text').to.equal(args.value.original ? args.value.original.text : args.value.text);
+      }
     });
 
     describe('has transliteration', function () {
@@ -153,6 +131,82 @@ describe('metadata', function () {
           return value.transliterated;
         }), 'the metadata should not have a transliterated value').to.be.false;
       });
+    });
+  });
+
+  describe('createMetadataTableRowDataCellList()', function () {
+    let createMetadataTableRowDataCellListItemStub = null;
+    let metadataHasManyValuesStub = null;
+    let args = null;
+    let getList = null;
+    let getListItems = null;
+
+    beforeEach(function () {
+      createMetadataTableRowDataCellListItemStub = sinon.stub().callsFake(({ value }) => {
+        return createMetadataTableRowDataCellListItem({ value });
+      });
+      metadataHasManyValuesStub = sinon.stub().callsFake(({ shown, total }) => {
+        return metadataHasManyValues({ shown, total });
+      });
+      args = {
+        data: metadata[0],
+        hasManyValues: metadataHasManyValuesStub,
+        metadataTableRowDataCellListItem: createMetadataTableRowDataCellListItemStub
+      };
+
+      getList = () => {
+        return getListItem().querySelector('ul');
+      };
+
+      getListItems = () => {
+        return getListItem().querySelectorAll('ul.metadata__list > li');
+      };
+
+      // Check that the list does not already exist
+      expect(getList(), 'the list should not exist initially').to.be.null;
+
+      // Append the metadata list to the cell
+      getListItem().appendChild(createMetadataTableRowDataCellList(args));
+    });
+
+    afterEach(function () {
+      createMetadataTableRowDataCellListItemStub = null;
+      metadataHasManyValuesStub = null;
+      args = null;
+      getList = null;
+      getListItems = null;
+    });
+
+    it('should create a list element', function () {
+      expect(getList(), 'the list should exist after calling the function').to.not.be.null;
+    });
+
+    it('should assign the correct classes to the list element', function () {
+      ['list__no-style', 'metadata__list', `metadata__list--${args.data.partial}`].forEach((className) => {
+        expect(getList().classList.contains(className), `the UL should have the class ${className}`).to.be.true;
+      });
+    });
+
+    it('should call `createMetadataTableRowDataCellListItem` for each metadata value with the correct arguments', function () {
+      args.data.values.forEach((value) => {
+        expect(createMetadataTableRowDataCellListItemStub.calledOnceWithExactly({ value }), '`createMetadataTableRowDataCellListItem` should have been called with the correct arguments').to.be.true;
+      });
+    });
+
+    it('should create a list item for each metadata value', function () {
+      expect(getListItems().length, 'the number of list items should match the number of metadata values').to.equal(args.data.values.length);
+    });
+
+    it('should call `metadataHasManyValues` with the correct arguments', function () {
+      expect(metadataHasManyValuesStub.calledOnceWithExactly({ shown: args.data.values.length, total: args.data.total }), '`metadataHasManyValues` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should append the `metadataHasManyValues` element to the list', function () {
+      if (metadataHasManyValuesStub.returnValues[0]) {
+        expect(getList().contains(metadataHasManyValuesStub.returnValues[0]), 'the `metadataHasManyValues` element should be appended to the list').to.be.true;
+      } else {
+        expect(getList().contains(metadataHasManyValuesStub.returnValues[0]), 'the `metadataHasManyValues` element should not be appended to the list').to.be.false;
+      }
     });
   });
 
