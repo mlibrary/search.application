@@ -1,0 +1,33 @@
+// --------------------------------------------------
+//
+// # Plain Text
+//   Styles to apply directly to `views/datastores/partials/metadata/_plain_text.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Plain Text
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.metadata__list--plain-text';
+
+
+
+
+
+// ********************* //
+// *** 2. PLAIN TEXT *** //
+// ********************* //
+
+#{$class} > li {
+  & > *:first-child {
+    margin-top: 0;
+  }
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+}

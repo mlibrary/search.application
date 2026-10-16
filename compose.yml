@@ -86,7 +86,7 @@ services:
       - -r
       - "./app.rb"
   search-api:
-    image: ${API_IMAGE:-"ghcr.io/mlibrary/search.api-unstable:latest"}
+    image: ${API_IMAGE:-ghcr.io/mlibrary/search.api-unstable:latest}
     pull_policy: ${PULL_POLICY:-always}
     env_file:
       - .env
