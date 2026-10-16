@@ -4,14 +4,27 @@
 //   Styling for ordered and unordered lists.
 //
 // ## Table of Contents
-//   1. Navigation
+//   1. Lists
+//   2. Navigation
 //
 // --------------------------------------------------
 
 
 
+// **************** //
+// *** 1. LISTS *** //
+// **************** //
+
+ul {
+  list-style-type: disc;
+}
+
+
+
+
+
 // ********************* //
-// *** 1. NAVIGATION *** //
+// *** 2. NAVIGATION *** //
 // ********************* //
 
 nav ol,
