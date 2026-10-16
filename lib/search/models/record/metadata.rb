@@ -19,6 +19,7 @@ module Search::Models::Record::Metadata
 
   def map_field(uid)
     list = @data.dig(uid.to_s) || []
+    list = [list] if !list.is_a?(Array)
     list.map do |item|
       yield(item)
     end

@@ -20,7 +20,6 @@ module Search::Presenters::Record::Databases
     end
     # Plain content, multiple_field_display
     [
-      {uid: :description, field: "Description"},
       {uid: :type, field: "Database type"},
       {uid: :access_type, field: "Access type"},
       {uid: :permalink, field: "Permalink"},
@@ -50,6 +49,34 @@ module Search::Presenters::Record::Databases
       )
     end
 
+    [
+      {uid: :description, field: "Description"},
+      {uid: :brief_description, field: "Description"}
+    ].each do |f|
+      define_method(f[:uid]) do
+        if @record.bib.public_send(f[:uid]).present?
+          text = @record.bib.public_send(f[:uid])&.first&.text
+          values = if @record.bib.special_message.present?
+            [
+              OpenStruct.new(to_s: text, text: text, special_message: @record.bib.special_message)
+            ]
+          else
+            [
+              Search::Models::Record::Metadata::PlainItem.new(text)
+            ]
+          end
+          field_for(
+            uid: f[:uid],
+            field: f[:field],
+            # partial: @record.bib.special_message ? "special_message" : "plain_text",
+            partial: "plain_text",
+            values: values
+          )
+
+        end
+      end
+    end
+
     def more_information
       field_for(
         uid: "more_information",
@@ -61,6 +88,39 @@ module Search::Presenters::Record::Databases
 
     def holdings
       OpenStruct.new(list: [Holding.new(@record.url)])
+    end
+  end
+
+  class Brief < Full
+    METADATA_METHODS = [
+      :brief_description,
+      :type,
+      :access_type,
+      :new,
+      :trial,
+      :permalink
+    ]
+    def to_h
+      {
+        title: {
+          original: @record.bib.title.text
+        },
+        metadata: metadata.map do |f|
+          {
+            field: f.field,
+            original: f.values&.first&.text
+          }
+        end,
+        url: url,
+        citation: {
+          ris: ris,
+          csl: csl
+        }
+      }
+    end
+
+    def to_json
+      to_h.to_json
     end
   end
 
@@ -96,7 +156,11 @@ module Search::Presenters::Record::Databases
     end
 
     def rows
-      [[link_to_cell_for(text: "Go to database", url: @url)]]
+      if @url
+        [[link_to_cell_for(text: "Go to database", url: @url)]]
+      else
+        []
+      end
     end
   end
 end
