@@ -2,13 +2,28 @@ const getListItemMetadataTable = ({ listItem }) => {
   return listItem.querySelector('table.metadata');
 };
 
-const createMetadataTableRowDataCellList = ({ data }) => {
+const metadataHasManyValues = ({ shown, total }) => {
+  // Return early if there are no additional values to show
+  if (total <= shown) {
+    return null;
+  }
+  // Create a list item
+  const li = document.createElement('li');
+  // Set the text content to indicate there are more values than shown
+  li.textContent = `... and ${total - shown} more.`;
+  // Return the list item containing the "more" message
+  return li;
+};
+
+const createMetadataTableRowDataCellList = ({ data, hasManyValues = metadataHasManyValues }) => {
+  // Destructure the data object
+  const { partial, total, values } = data;
   // Create a list element
   const ul = document.createElement('ul');
   // Add classes to the list element based on the data partial type
-  ul.classList.add('list__no-style', 'metadata__list', `metadata__list--${data.partial}`);
+  ul.classList.add('list__no-style', 'metadata__list', `metadata__list--${partial}`);
   // Loop through the metadata values
-  data.values.forEach((value) => {
+  values.forEach((value) => {
     // Create a list item
     const li = document.createElement('li');
     // Check if the value has a `transliterated` property
@@ -35,6 +50,10 @@ const createMetadataTableRowDataCellList = ({ data }) => {
     // Append the list item to the list
     ul.appendChild(li);
   });
+  const hasMany = hasManyValues({ shown: values.length, total });
+  if (hasMany) {
+    ul.appendChild(hasMany);
+  }
   // Return the newly created list element
   return ul;
 };
@@ -109,5 +128,6 @@ export {
   createMetadataTableRowDataCellList,
   createMetadataTableRowHeader,
   getListItemMetadataTable,
+  metadataHasManyValues,
   updateMetadata
 };

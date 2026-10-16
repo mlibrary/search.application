@@ -4,6 +4,7 @@ import {
   createMetadataTableRowDataCellList,
   createMetadataTableRowHeader,
   getListItemMetadataTable,
+  metadataHasManyValues,
   updateMetadata
 } from '../../../../assets/scripts/datastores/partials/_metadata.js';
 import { expect } from 'chai';
@@ -280,6 +281,38 @@ describe('metadata', function () {
     it('should create the row', function () {
       const row = args.table.querySelector('tr');
       expect(row, 'the created row should exist').to.not.be.null;
+    });
+  });
+
+  describe('metadataHasManyValues()', function () {
+    let args = null;
+
+    beforeEach(function () {
+      args = { shown: 3, total: 3 };
+    });
+
+    afterEach(function () {
+      args = null;
+    });
+
+    it('should return null if `total` is less than or equal to `shown`', function () {
+      // Check that `total` is less than or equal to `shown`
+      expect(args.total, '`total` should be less than or equal to `shown`').to.be.at.most(args.shown);
+      // Call the function and check that it returns `null`
+      expect(metadataHasManyValues(args), '`metadataHasManyValues` should return `null` when `total` is less than or equal to `shown`').to.be.null;
+    });
+
+    it('should return a list item if `total` is greater than `shown`', function () {
+      // Set `total` to be greater than `shown`
+      args.total = args.shown + 1;
+      // Check that `total` is now greater than `shown`
+      expect(args.total, '`total` should be greater than `shown`').to.be.above(args.shown);
+      // Assign the result of the function to a variable
+      const result = metadataHasManyValues(args);
+      // Check that the function returns a list item
+      expect(result.tagName, '`metadataHasManyValues` should return a list item when `total` is greater than `shown`').to.equal('LI');
+      // Check that the text content is correct
+      expect(result.textContent).to.equal(`... and ${args.total - args.shown} more.`);
     });
   });
 
