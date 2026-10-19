@@ -1,6 +1,6 @@
 class Search::Models::Record::Catalog::Holdings::Physical
   def initialize(data)
-    @physical_holdings = data.dig("holdings", "physical")
+    @physical_holdings = data.dig("holdings", "physical") || []
   end
 
   def list

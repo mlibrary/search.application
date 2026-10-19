@@ -1,6 +1,6 @@
 class Search::Models::Record::Catalog::Holdings::AlmaDigital
   def initialize(data)
-    @alma_digital_items = data.dig("holdings", "alma_digital_items")
+    @alma_digital_items = data.dig("holdings", "alma_digital_items") || []
   end
 
   def count
