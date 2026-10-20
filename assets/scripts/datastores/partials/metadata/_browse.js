@@ -1,25 +1,16 @@
-const getBrowseMetadataPartial = ({ listItem }) => {
-  return listItem.querySelector('.metadata__list--browse');
-};
+import { linkToPartial } from './_link_to.js';
+import { plainTextPartial } from './_plain_text.js';
 
-const cloneBrowseMetadataPartial = ({ getBrowsePartial = getBrowseMetadataPartial, listItem }) => {
-  const partial = getBrowsePartial({ listItem });
-  return partial.cloneNode(true);
-};
-
-const updateBrowseMetadataPartial = ({ clonedBrowsePartial = cloneBrowseMetadataPartial, listItem }) => {
-  const partial = clonedBrowsePartial({ listItem });
-  // Add logic on what to change
-  return partial;
-};
-
-const appendBrowseMetadataPartial = ({ listItem, metadataTable, updateBrowsePartial = updateBrowseMetadataPartial }) => {
-  metadataTable.appendChild(updateBrowsePartial({ listItem }));
+const browsePartial = ({ linkTo = linkToPartial, plainText = plainTextPartial, value }) => {
+  const partial = value.url ? linkTo({ value }) : plainText({ value });
+  return `
+    ${partial}
+    <span class="metadata__list--browse-link">
+      <a href="${value.browse_url}">Browse in ${value.kind.replace('_', ' ')} list</a>
+    </span>
+  `;
 };
 
 export {
-  appendBrowseMetadataPartial,
-  cloneBrowseMetadataPartial,
-  getBrowseMetadataPartial,
-  updateBrowseMetadataPartial
+  browsePartial
 };

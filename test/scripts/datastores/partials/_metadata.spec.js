@@ -1,4 +1,5 @@
 import {
+  convertPartialType,
   createMetadataTableRow,
   createMetadataTableRowDataCell,
   createMetadataTableRowDataCellList,
@@ -6,6 +7,7 @@ import {
   createMetadataTableRowHeader,
   getListItemMetadataTable,
   metadataHasManyValues,
+  partialTypes,
   updateMetadata
 } from '../../../../assets/scripts/datastores/partials/_metadata.js';
 import { expect } from 'chai';
@@ -56,16 +58,39 @@ describe('metadata', function () {
     });
   });
 
+  describe('convertPartialType()', function () {
+    it('should remove all underscores and camelcase the result', function () {
+      expect(convertPartialType({ partial: metadata[1].partial }), 'the string should have been converted correctly').to.equal('plainText');
+    });
+  });
+
+  describe('partialTypes', function () {
+    it('should be an object', function () {
+      expect(partialTypes, '`partialTypes` should be an object').to.be.an('object');
+    });
+  });
+
   describe('createMetadataTableRowDataCellListItem()', function () {
+    let convertPartialTypeStub = null;
     let args = null;
+    let camcelCasePartial = null;
     let ul = null;
     let getList = null;
     let getMetadataListItem = null;
 
     beforeEach(function () {
+      convertPartialTypeStub = sinon.stub().callsFake(({ partial }) => {
+        return convertPartialType({ partial });
+      });
+
       args = {
+        convertPartial: convertPartialTypeStub,
+        partial: metadata[0].partial,
+        partials: partialTypes,
         value: metadata[0].values[0]
       };
+
+      camcelCasePartial = convertPartialTypeStub({ partial: args.partial });
 
       // Create an unordered list element
       ul = document.createElement('ul');
@@ -88,30 +113,37 @@ describe('metadata', function () {
     });
 
     afterEach(function () {
+      convertPartialTypeStub = null;
       args = null;
+      camcelCasePartial = null;
       getList = null;
       getMetadataListItem = null;
+    });
+
+    it('should call the `convertPartialType` function with the correct arguments', function () {
+      expect(convertPartialTypeStub.calledWithExactly({ partial: args.partial }), '`convertPartialType` function should have been called with the correct arguments').to.be.true;
     });
 
     it('should create a list element', function () {
       expect(getMetadataListItem(), 'the list should exist after calling the function').to.not.be.null;
     });
 
-    it('should include the correct metadata values in the list items', function () {
+    it('should include the correct metadata partials in the list items', function () {
       const li = getMetadataListItem();
       if (args.value.transliterated) {
         const getParellelList = li.querySelector('ul');
         // Check if a list element was created
         expect(getParellelList, 'the list item should contain a nested list').to.not.be.null;
-        // Check if the nested list contains the correct values
-        ['original', 'transliterated'].forEach((key) => {
-          const value = args.value[key];
-          if (value) {
-            expect(getParellelList.textContent, `the nested list should contain the ${key} value`).to.include(value.text);
-          }
+        // Get the nested list items
+        const nestedListItems = getParellelList.querySelectorAll('li');
+        // Loop through the value types
+        ['original', 'transliterated'].forEach((key, index) => {
+          // Check that the nested list item contains the correct partial for the value type
+          expect(nestedListItems[index].innerHTML, `the nested list item should contain the ${key} value`).to.equal(args.partials[camcelCasePartial]({ value: args.value[key] }));
         });
       } else {
-        expect(li.textContent, 'the list item should have the correct text').to.equal(args.value.original ? args.value.original.text : args.value.text);
+        // Check that the list item contains the correct partial
+        expect(li.innerHTML, 'the list item should contain the correct partial').to.equal(args.partials[camcelCasePartial]({ value: args.value.original ? args.value.original : args.value }));
       }
     });
 
@@ -142,8 +174,8 @@ describe('metadata', function () {
     let getListItems = null;
 
     beforeEach(function () {
-      createMetadataTableRowDataCellListItemStub = sinon.stub().callsFake(({ value }) => {
-        return createMetadataTableRowDataCellListItem({ value });
+      createMetadataTableRowDataCellListItemStub = sinon.stub().callsFake(({ partial, value }) => {
+        return createMetadataTableRowDataCellListItem({ partial, value });
       });
       metadataHasManyValuesStub = sinon.stub().callsFake(({ shown, total }) => {
         return metadataHasManyValues({ shown, total });
@@ -189,7 +221,7 @@ describe('metadata', function () {
 
     it('should call `createMetadataTableRowDataCellListItem` for each metadata value with the correct arguments', function () {
       args.data.values.forEach((value) => {
-        expect(createMetadataTableRowDataCellListItemStub.calledOnceWithExactly({ value }), '`createMetadataTableRowDataCellListItem` should have been called with the correct arguments').to.be.true;
+        expect(createMetadataTableRowDataCellListItemStub.calledOnceWithExactly({ partial: args.data.partial, value }), '`createMetadataTableRowDataCellListItem` should have been called with the correct arguments').to.be.true;
       });
     });
 

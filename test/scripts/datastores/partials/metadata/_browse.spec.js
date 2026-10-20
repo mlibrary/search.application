@@ -1,146 +1,64 @@
-import {
-  appendBrowseMetadataPartial,
-  cloneBrowseMetadataPartial,
-  getBrowseMetadataPartial,
-  updateBrowseMetadataPartial
-} from '../../../../../assets/scripts/datastores/partials/metadata/_browse.js';
+import { browsePartial } from '../../../../../assets/scripts/datastores/partials/metadata/_browse.js';
 import { expect } from 'chai';
+import { linkToPartial } from '../../../../../assets/scripts/datastores/partials/metadata/_link_to.js';
+import { plainTextPartial } from '../../../../../assets/scripts/datastores/partials/metadata/_plain_text.js';
 import sinon from 'sinon';
 
 describe('browse metadata partial', function () {
-  let getListItem = null;
-  let getMetadataTable = null;
+  let linkToPartialStub = null;
+  let plainTextPartialStub = null;
+  let args = null;
 
   beforeEach(function () {
-    document.body.innerHTML = `
-      <table class="metadata">
-      </table>
-      <li class="results__list-item">
-        <ul class="metadata__list--browse" id="metadata__toggle--field-1337">
-          <li>
-            <ul class="list__no-style metadata__list--parallel">
-              <li>
-                <a href="/catalog?query=author:(Original+Data)">Original Data</a>
-                <span class="metadata__list--browse-link">
-                  <a href="/catalog/browse/author?query=Original+Data">Browse in author list</a>
-                </span>
-              </li>
-              <li>
-                <a href="/catalog?query=author:(Transliterated+Data)">Transliterated Data</a>
-                <span class="metadata__list--browse-link">
-                  <a href="/catalog/browse/author?query=Transliterated+Data">Browse in author list</a>
-                </span>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    `;
+    linkToPartialStub = sinon.stub().callsFake(({ value }) => {
+      return linkToPartial({ value });
+    });
+    plainTextPartialStub = sinon.stub().callsFake(({ value }) => {
+      return plainTextPartial({ value });
+    });
+    /* eslint-disable camelcase */
+    args = {
+      linkTo: linkToPartialStub,
+      plainText: plainTextPartialStub,
+      value: {
+        browse_url: 'https://example.com/',
+        kind: 'call_number',
+        text: 'Sample text'
+      }
+    };
+    /* eslint-enable camelcase */
 
-    getListItem = () => {
-      return document.querySelector('.results__list-item');
-    };
-    getMetadataTable = () => {
-      return document.querySelector('.metadata');
-    };
+    // Apply HTML to the body by calling the function
+    document.body.innerHTML = browsePartial(args);
   });
 
   afterEach(function () {
-    getListItem = null;
-    getMetadataTable = null;
+    linkToPartialStub = null;
+    plainTextPartialStub = null;
+    args = null;
   });
 
-  describe('getBrowseMetadataPartial()', function () {
-    it('should return the correct browse metadata partial', function () {
-      expect(getBrowseMetadataPartial({ listItem: getListItem() }), '`getBrowseMetadataPartial` should return the correct browse metadata partial').to.equal(document.querySelector('.metadata__list--browse'));
-    });
-  });
-
-  describe('cloneBrowseMetadataPartial()', function () {
-    let getBrowseMetadataPartialStub = null;
-    let args = null;
-
-    beforeEach(function () {
-      getBrowseMetadataPartialStub = sinon.stub().callsFake(({ listItem }) => {
-        return getBrowseMetadataPartial({ listItem });
-      });
-      args = {
-        getBrowsePartial: getBrowseMetadataPartialStub,
-        listItem: getListItem()
-      };
-
-      // Call the function
-      cloneBrowseMetadataPartial(args);
+  describe('browsePartial()', function () {
+    it('should call `plainTextPartial` with the correct arguments', function () {
+      expect(plainTextPartialStub.calledOnceWithExactly({ value: args.value }), '`plainTextPartial` should be called with the correct arguments').to.be.true;
     });
 
-    afterEach(function () {
-      getBrowseMetadataPartialStub = null;
-      args = null;
+    it('should call `linkToPartial` with the correct arguments', function () {
+      // Define the `url` property for the arguments
+      args.value.url = 'https://example.com/';
+
+      // Apply the HTML
+      document.body.innerHTML = browsePartial(args);
+
+      // Check that `linkToPartial` was called with the correct arguments
+      expect(linkToPartialStub.calledOnceWithExactly({ value: args.value }), '`linkToPartial` should be called with the correct arguments').to.be.true;
     });
 
-    it('should call `getBrowseMetadataPartial` with the correct arguments', function () {
-      expect(getBrowseMetadataPartialStub.calledOnceWithExactly({ listItem: args.listItem }), '`getBrowseMetadataPartial` should have been called with the correct arguments').to.be.true;
-    });
-
-    it('should clone the partial', function () {
-      expect(cloneBrowseMetadataPartial({ listItem: args.listItem }).isEqualNode(getBrowseMetadataPartial({ listItem: args.listItem })), '`cloneMetadataRow` should clone the metadata row').to.be.true;
-    });
-  });
-
-  describe('updateBrowseMetadataPartial()', function () {
-    let cloneBrowseMetadataPartialSpy = null;
-    let args = null;
-
-    beforeEach(function () {
-      cloneBrowseMetadataPartialSpy = sinon.spy();
-      args = {
-        clonedBrowsePartial: cloneBrowseMetadataPartialSpy,
-        listItem: getListItem()
-      };
-
-      // Call the function
-      updateBrowseMetadataPartial(args);
-    });
-
-    afterEach(function () {
-      cloneBrowseMetadataPartialSpy = null;
-      args = null;
-    });
-
-    it('should call `cloneBrowseMetadataPartial` with the correct arguments', function () {
-      expect(cloneBrowseMetadataPartialSpy.calledOnceWithExactly({ listItem: args.listItem }), '`cloneBrowseMetadataPartial` should have been called with the correct arguments').to.be.true;
-    });
-  });
-
-  describe('appendBrowseMetadataPartial()', function () {
-    let updateBrowseMetadataPartialStub = null;
-    let args = null;
-
-    beforeEach(function () {
-      updateBrowseMetadataPartialStub = sinon.stub().callsFake(({ listItem }) => {
-        return updateBrowseMetadataPartial({ listItem });
-      });
-      args = {
-        listItem: getListItem(),
-        metadataTable: getMetadataTable(),
-        updateBrowsePartial: updateBrowseMetadataPartialStub
-      };
-
-      // Call the function
-      appendBrowseMetadataPartial(args);
-    });
-
-    afterEach(function () {
-      updateBrowseMetadataPartialStub = null;
-      args = null;
-    });
-
-    it('should call `updateBrowseMetadataPartial` with the correct arguments', function () {
-      expect(updateBrowseMetadataPartialStub.calledOnceWithExactly({ listItem: args.listItem }), '`updateBrowseMetadataPartial` should have been called with the correct arguments').to.be.true;
-    });
-
-    it('should append the cloned partial to the metadata table', function () {
-      expect(args.metadataTable.contains(updateBrowseMetadataPartialStub.returnValues[0]), '`appendBrowseMetadataPartial` should append the cloned partial to the metadata table').to.be.true;
+    it('should add an anchor that navigates to browse', function () {
+      const anchor = document.querySelector('.metadata__list--browse-link a');
+      expect(anchor, 'the anchor should exist').to.not.be.null;
+      expect(anchor.innerHTML, 'the anchor should have the correct text').to.equal(`Browse in ${args.value.kind.replace('_', ' ')} list`);
+      expect(anchor.href, 'the anchor should have the correct href').to.equal(args.value.browse_url);
     });
   });
 });
