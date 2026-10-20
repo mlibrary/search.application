@@ -367,24 +367,42 @@ describe Search::Presenters::Record::Catalog::Brief do
       allow(citation_stub).to receive(:csl).and_return({"type" => "book"})
       expected = {
         title: {
-          original: bib_stub.title.original.text,
-          transliterated: bib_stub.title.transliterated.text
+          original: {text: bib_stub.title.original.text},
+          transliterated: {text: bib_stub.title.transliterated.text}
         },
         metadata: [
           {
             field: "Author/Creator",
-            original: bib_stub.main_author.first.original.text,
-            transliterated: bib_stub.main_author.first.transliterated.text
+            partial: "browse",
+            uid: :main_author,
+            values: [
+              {original:
+                {text: bib_stub.main_author.first.original.text, url: bib_stub.main_author.first.original.url, browse_url: bib_stub.main_author.first.original.browse_url, kind: "author"},
+               transliterated: {text: bib_stub.main_author.first.transliterated.text, url: bib_stub.main_author.first.transliterated.url, browse_url: bib_stub.main_author.first.transliterated.browse_url, kind: "author"}}
+            ],
+            total: 1
           },
           {
             field: "Published/Created",
-            original: bib_stub.published.first.original.text,
-            transliterated: bib_stub.published.first.transliterated.text
+            partial: "plain_text",
+            uid: :published,
+            values: [
+              {
+                original: {text: bib_stub.published.first.original.text},
+                transliterated: {text: bib_stub.published.first.transliterated.text}
+              }
+            ], total: 1
           },
           {
             field: "Series (transcribed)",
-            original: bib_stub.series.first.original.text,
-            transliterated: bib_stub.series.first.transliterated.text
+            partial: "plain_text", uid: :series,
+            values: [
+              {
+                original: {text: bib_stub.series.first.original.text},
+                transliterated: {text: bib_stub.series.first.transliterated.text}
+              }
+            ],
+            total: 1
           }
         ],
         url: "#{S.base_url}/catalog/record/#{bib_stub.id}",
