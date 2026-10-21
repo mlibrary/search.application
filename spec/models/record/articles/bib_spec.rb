@@ -17,7 +17,12 @@ RSpec.describe Search::Models::Record::Articles::Bib do
     it "has expected output" do
       my_subject = subject.author.first
       expect(my_subject.text).to eq("Lena, Jennifer C")
-      expect(my_subject.url).to eq("#{S.base_url}/articles?" + {query: 'author:"Lena, Jennifer C"'}.to_query)
+      expected_url = "#{S.base_url}/articles?" + {query: 'author:"Lena, Jennifer C"'}.to_query
+      expect(my_subject.url).to eq(expected_url)
+      expect(my_subject.to_h).to eq({
+        text: "Lena, Jennifer C",
+        url: expected_url
+      })
     end
   end
 

@@ -277,12 +277,12 @@ describe('layout', function () {
 
     it('should return datastore names that have records', function () {
       // Check that datastore names are in the array
-      expect(getDatastores(args), '`getDatastores()` should return the names of the non-empty datastores').to.deep.equal(['catalog', 'onlinejournals']);
+      expect(getDatastores(args), '`getDatastores()` should return the names of the non-empty datastores').to.deep.equal(['articles', 'catalog', 'onlinejournals']);
     });
 
     it('should return datastore names that do not have records', function () {
       // Check that datastore names are in the array
-      expect(getDatastores({ ...args, empty: true }), '`getDatastores()` should return the names of the empty datastores').to.deep.equal(['articles', 'databases', 'everything', 'guidesandmore']);
+      expect(getDatastores({ ...args, empty: true }), '`getDatastores()` should return the names of the empty datastores').to.deep.equal(['databases', 'everything', 'guidesandmore']);
     });
   });
 

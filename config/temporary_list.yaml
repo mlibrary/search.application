@@ -1,0 +1,20 @@
+catalog:
+  id: "1337"
+  title:
+    - original:
+        text: "Original Title"
+      transliterated:
+        text: "Transliterated Title"
+
+articles:
+  id: "1337"
+  title:
+    - text: "Title"
+
+onlinejournals:
+  id: "1337"
+  title:
+    - original:
+        text: "Original Title"
+      transliterated:
+        text: "Transliterated Title"

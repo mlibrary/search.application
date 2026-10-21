@@ -113,8 +113,8 @@ module Factories::CatalogRecord
 
     def paired_text_item
       Search::Models::Record::Catalog::Bib::PairedItem.for({
-        "transliterated" => url_double,
-        "original" => url_double
+        "transliterated" => text_double,
+        "original" => text_double
       })
     end
 
@@ -176,19 +176,29 @@ module Factories::CatalogRecord
     end
 
     def text_double
-      double("text", text: Faker::Lorem.sentence)
+      text = Faker::Lorem.sentence
+      double("text", text: text, to_h: {text: text})
     end
 
     def url_double
-      double("url", text: Faker::Lorem.sentence, url: Faker::Internet.url)
+      text = Faker::Lorem.sentence
+      url = Faker::Internet.url
+      double("url", text: text, url: url, to_h: {text: text, url: url})
     end
 
     def browse_double(kind)
+      text = Faker::Lorem.sentence
+      url = Faker::Internet.url
+      browse_url = Faker::Internet.url
+      browse_kind = kind || Faker::Internet.slug
       double("browse",
-        text: Faker::Lorem.sentence,
-        url: Faker::Internet.url,
-        browse_url: Faker::Internet.url,
-        kind: kind || Faker::Internet.slug)
+        text: text,
+        url: url,
+        browse_url: browse_url,
+        kind: browse_kind,
+        to_h: {
+          text: text, url: url, browse_url: browse_url, kind: browse_kind
+        })
     end
 
     #

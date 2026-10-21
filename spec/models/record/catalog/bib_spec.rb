@@ -59,11 +59,18 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       it "has transliterated and original text" do
         expect(subject.public_send(field).first.transliterated.text).to eq(@data[field.to_s].first["transliterated"]["text"])
         expect(subject.public_send(field).first.original.text).to eq(@data[field.to_s].first["original"]["text"])
+        expect(subject.public_send(field).first.to_h).to eq({
+          original: {text: @data[field.to_s].first["original"]["text"]},
+          transliterated: {text: @data[field.to_s].first["transliterated"]["text"]}
+        })
       end
       it "only has original text if transliterated and original are the same" do
         @data[field.to_s].first["transliterated"]["text"] = @data[field.to_s].first["original"]["text"]
         expect(subject.public_send(field).first.original.text).to eq(@data[field.to_s].first["original"]["text"])
         expect(subject.public_send(field).first.transliterated).to be_nil
+        expect(subject.public_send(field).first.to_h).to eq({
+          original: {text: @data[field.to_s].first["original"]["text"]}
+        })
       end
       it "has paired? true when there is transliterated" do
         expect(subject.public_send(field).first.paired?).to eq(true)
@@ -71,6 +78,9 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       it "has paired? false when there is no transliterated" do
         @data[field.to_s].first["transliterated"] = nil
         expect(subject.public_send(field).first.paired?).to eq(false)
+        expect(subject.public_send(field).first.to_h).to eq({
+          original: {text: @data[field.to_s].first["original"]["text"]}
+        })
       end
     end
   end
@@ -95,16 +105,28 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
             field: @data[field].first["original"]["search"].first["field"]
           }
         }
+        expected_original_url = "#{S.base_url}/catalog?" + {query: "#{expected[:original][:field]}:\"#{expected[:original][:search_string]}\""}.to_query
+        expected_transliterated_url = "#{S.base_url}/catalog?" + {query: "#{expected[:transliterated][:field]}:\"#{expected[:transliterated][:search_string]}\""}.to_query
 
         my_subject = subject.public_send(field).first
         expect(my_subject.paired?).to eq(true)
         expect(my_subject.transliterated.text).to eq(expected[:transliterated][:text])
-        expect(my_subject.transliterated.url)
-          .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:transliterated][:field]}:\"#{expected[:transliterated][:search_string]}\""}.to_query)
+        expect(my_subject.transliterated.url).to eq(expected_transliterated_url)
 
         expect(my_subject.original.text).to eq(expected[:original][:text])
-        expect(my_subject.original.url)
-          .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:original][:field]}:\"#{expected[:original][:search_string]}\""}.to_query)
+        expect(my_subject.original.url).to eq(expected_original_url)
+        expect(my_subject.to_h).to eq(
+          {
+            original: {
+              text: expected[:original][:text],
+              url: expected_original_url
+            },
+            transliterated: {
+              text: expected[:transliterated][:text],
+              url: expected_transliterated_url
+            }
+          }
+        )
       end
     end
   end
@@ -130,22 +152,39 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
             browse: @data[field].first["original"]["browse"]
           }
         }
+        expected_original_browse_url = "#{S.base_url}/catalog/browse/author?" + {query: expected[:original][:browse]}.to_query
+        expected_original_url = "#{S.base_url}/catalog?" + {query: "#{expected[:original][:field]}:\"#{expected[:original][:search_string]}\""}.to_query
+        expected_transliterated_browse_url = "#{S.base_url}/catalog/browse/author?" + {query: expected[:transliterated][:browse]}.to_query
+        expected_transliterated_url = "#{S.base_url}/catalog?" + {query: "#{expected[:transliterated][:field]}:\"#{expected[:transliterated][:search_string]}\""}.to_query
 
         my_subject = subject.public_send(field).first
         expect(my_subject.paired?).to eq(true)
-        expect(my_subject.transliterated.url)
-          .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:transliterated][:field]}:\"#{expected[:transliterated][:search_string]}\""}.to_query)
+        expect(my_subject.transliterated.url).to eq(expected_transliterated_url)
         expect(my_subject.transliterated.text).to eq(expected[:transliterated][:text])
         expect(my_subject.transliterated.browse_url)
-          .to eq("#{S.base_url}/catalog/browse/author?" + {query: expected[:transliterated][:browse]}.to_query)
+          .to eq(expected_transliterated_browse_url)
         expect(my_subject.transliterated.kind).to eq("author")
 
-        expect(my_subject.original.url)
-          .to eq("#{S.base_url}/catalog?" + {query: "#{expected[:original][:field]}:\"#{expected[:original][:search_string]}\""}.to_query)
+        expect(my_subject.original.url).to eq(expected_original_url)
         expect(my_subject.original.text).to eq(expected[:original][:text])
         expect(my_subject.original.browse_url)
-          .to eq("#{S.base_url}/catalog/browse/author?" + {query: expected[:original][:browse]}.to_query)
+          .to eq(expected_original_browse_url)
         expect(my_subject.original.kind).to eq("author")
+        # debugger
+        expect(my_subject.to_h).to eq({
+          original: {
+            text: expected[:original][:text],
+            browse_url: expected_original_browse_url,
+            url: expected_original_url,
+            kind: "author"
+          },
+          transliterated: {
+            text: expected[:transliterated][:text],
+            browse_url: expected_transliterated_browse_url,
+            url: expected_transliterated_url,
+            kind: "author"
+          }
+        })
       end
       it "handles empty #{field}" do
         @data[field] = []
@@ -164,11 +203,17 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       @data = create_catalog_api_record(:call_number)
       cn = @data["call_number"][0]["text"]
       s = subject.call_number.first
+      browse_url = "#{S.base_url}/catalog/browse/callnumber?#{{query: cn}.to_query}"
       expect(s.paired?).to eq(false)
       expect(s.text).to eq(cn)
       expect(s.url).to be_nil
-      expect(s.browse_url).to eq("#{S.base_url}/catalog/browse/callnumber?#{{query: cn}.to_query}")
+      expect(s.browse_url).to eq(browse_url)
       expect(s.kind).to eq("call_number")
+      expect(s.to_h).to eq({
+        text: cn,
+        browse_url: browse_url,
+        kind: "call_number"
+      })
     end
   end
 
@@ -178,11 +223,19 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
       lc = "Birds -- Japan -- Identification"
       @data["lc_subjects"][0]["text"] = lc
       lc_norm = "Birds Japan Identification"
+      expected_url = "#{S.base_url}/catalog?" + {query: "subject:\"#{lc_norm}\""}.to_query
+      expected_browse_url = "#{S.base_url}/catalog/browse/subject?" + {query: lc_norm}.to_query
       s = subject.lc_subjects.first
       expect(s.paired?).to eq(false)
       expect(s.text).to eq(lc)
-      expect(CGI.unescape(s.url)).to eq("#{S.base_url}/catalog?query=subject:\"#{lc_norm}\"")
-      expect(CGI.unescape(s.browse_url)).to eq("#{S.base_url}/catalog/browse/subject?query=#{lc_norm}")
+      expect(s.url).to eq(expected_url)
+      expect(s.browse_url).to eq(expected_browse_url)
+      expect(s.to_h).to eq({
+        text: lc,
+        url: expected_url,
+        browse_url: expected_browse_url,
+        kind: "subject"
+      })
     end
   end
   context "#remediated_lc_subjects" do
@@ -213,10 +266,17 @@ RSpec.describe Search::Models::Record::Catalog::Bib do
     before(:each) do
       @data = create_catalog_api_record(:academic_discipline)
     end
-    it "is an array of arrays of strings" do
+    it "is an array of arrays of urls" do
       ad = subject.academic_discipline.first.disciplines.first
       expect(ad.text).to eq("Science")
-      expect(ad.url).to eq("#{S.base_url}/catalog?" + {query: "academic_discipline:Science"}.to_query)
+      expected_url = "#{S.base_url}/catalog?" + {query: "academic_discipline:Science"}.to_query
+      expect(ad.url).to eq(expected_url)
+      expect(subject.academic_discipline.first.to_h.first).to eq(
+        {
+          text: "Science",
+          url: expected_url
+        }
+      )
     end
     it "responds false to #paired?" do
       expect(subject.academic_discipline.first.paired?).to eq(false)
