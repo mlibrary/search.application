@@ -19,7 +19,7 @@ class Search::Models::Record::Articles::Bib
 
   def author
     map_field("author") do |item|
-      LinkToItem.new(data: item, datastore: @datastore)
+      SearchLinkToItem.new(data: item, datastore: @datastore)
     end
   end
 

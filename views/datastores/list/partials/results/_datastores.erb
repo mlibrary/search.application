@@ -1,6 +1,19 @@
-<% datastores.each do |datastore| %>
+<%
+  require "yaml"
+
+  temporary_list = YAML.safe_load_file(
+    File.join(S.config_path, "temporary_list.yaml"),
+    permitted_classes: [],
+    aliases: false
+  )
+%>
+<% @datastores.each do |datastore| %>
+  <%
+    datastore_slug = ["catalog", "articles", "onlinejournals"].include?(datastore.slug) ?  datastore.slug : "catalog"
+    result = Search::Presenters::Record.for_list(datastore: datastore_slug, data: temporary_list.fetch(datastore_slug))
+  %>
   <section class="list__datastore list__<%= datastore.slug %>" data-datastore="<%= datastore.slug %>">
     <h2><%= datastore.title %></h2>
-    <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: 0, datastore: datastore.slug, results: results, start_result: 1 } %>
+    <%= erb :'/datastores/results/partials/_results-list', locals: { current_page: 0, datastore: datastore.slug, results: [result], start_result: 1 } %>
   </section>
 <% end %>

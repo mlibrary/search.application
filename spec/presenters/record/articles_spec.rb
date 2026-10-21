@@ -6,7 +6,7 @@ describe Search::Presenters::Record::Articles::Full do
       citation: instance_double(Search::Models::Record::Catalog::Citation))
   end
   def text(str)
-    [double(text: str)]
+    [double(text: str, to_h: {text: str})]
   end
 
   subject do
@@ -132,7 +132,7 @@ describe Search::Presenters::Record::Articles::Full do
 end
 describe Search::Presenters::Record::Articles::Brief do
   def text(str)
-    [double(text: str)]
+    [double(text: str, to_h: {text: str})]
   end
   let(:record) do
     instance_double(Search::Models::Record::Articles,
@@ -161,23 +161,26 @@ describe Search::Presenters::Record::Articles::Brief do
   context "#to_h and to_json" do
     it "returns the expected output" do
       allow(record).to receive(:retracted?).and_return(false)
-      allow(record.bib).to receive(:title).and_return(double(text: "Some title"))
+      allow(record.bib).to receive(:title).and_return(double(to_h: {text: "Some title"}))
       allow(record.bib).to receive(:author).and_return(text("Some author"))
       allow(record.bib).to receive(:id).and_return("some_id")
       [:abstract, :journal_title, :volume, :issue, :publication_date, :pages, :publisher, :subject].each do |field|
-        allow(record.bib).to receive(field).and_return(nil)
+        allow(record.bib).to receive(field).and_return([])
       end
 
       allow(record.citation).to receive(:csl).and_return({})
       allow(record.citation).to receive(:ris).and_return([])
       expected = {
         title: {
-          original: "Some title"
+          text: "Some title"
         },
         metadata: [
           {
             field: "Author",
-            original: "Some author"
+            partial: "link_to",
+            uid: :author,
+            values: [{text: "Some author"}],
+            total: 1
           }
         ],
         url: "#{S.base_url}/articles/record/some_id",
