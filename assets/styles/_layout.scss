@@ -129,7 +129,7 @@ $class: "container";
 
 .hide__no-javascript {
   body.no-javascript & {
-    display: none;
+    display: none!important;
   }
 }
 

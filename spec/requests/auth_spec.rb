@@ -15,7 +15,6 @@ RSpec.describe "authentication requests" do
       logged_in: false,
       expires_at: (Time.now - 1.hour).to_i,
       campus: "flint",
-      affiliation: "flint",
       path_before_form: "http://example.com/accessibility?something=other"
     }
     OmniAuth.config.add_mock(:openid_connect, omniauth_auth)
@@ -29,8 +28,7 @@ RSpec.describe "authentication requests" do
       expect(session[:expires_at]).to be > Time.now.to_i
       expect(session[:logged_in]).to eq(true)
       expect(session[:email]).to eq("fakeuser@umich.edu")
-      expect(session[:campus]).to be_nil
-      expect(session[:affiliation]).to eq("flint")
+      expect(session[:campus]).to eq("aa")
       expect(last_response.status).to eq(302)
       expect(last_response.location).to eq(@session[:path_before_form])
     end

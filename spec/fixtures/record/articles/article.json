@@ -1,0 +1,1001 @@
+{
+  "id": "cdi_projectmuse_ebooks_9781400840458",
+  "peer_reviewed": false,
+  "title": [
+    {
+      "text": "Banding Together: How Communities Create Genres in Popular Music"
+    }
+  ],
+  "abstract": [
+    {
+      "text": "Why do some music styles gain mass popularity while others thrive in small niches?Banding Togetherexplores this question and reveals the attributes that together explain the growth of twentieth-century American popular music. Drawing on a vast array of examples from sixty musical styles--ranging from rap and bluegrass to death metal and South Texas polka, and including several created outside the United States--Jennifer Lena uncovers the shared grammar that allows us to understand the cultural language and evolution of popular music.\nWhat are the common economic, organizational, ideological, and aesthetic traits among contemporary genres? Do genres follow patterns in their development? Lena discovers four dominant forms--Avant-garde, Scene-based, Industry-based, and Traditionalist--and two dominant trajectories that describe how American pop music genres develop. Outside the United States there exists a fifth form: the Government-purposed genre, which she examines in the music of China, Serbia, Nigeria, and Chile. Offering a rare analysis of how music communities operate, she looks at the shared obstacles and opportunities creative people face and reveals the ways in which people collaborate around ideas, artworks, individuals, and organizations that support their work."
+    }
+  ],
+  "author": [
+    {
+      "text": "Lena, Jennifer C",
+      "search": [
+        {
+          "field": "author",
+          "value": "Lena, Jennifer C"
+        }
+      ]
+    }
+  ],
+  "journal_title": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "issue": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "volume": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "pages": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "publication_date": [
+    {
+      "text": "2012"
+    }
+  ],
+  "publisher": [
+    {
+      "text": "Princeton, N.J: Princeton University Press"
+    }
+  ],
+  "genre": [
+    {
+      "text": "book"
+    }
+  ],
+  "issn": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "eissn": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "isbn": [
+    {
+      "text": "9781400840458"
+    }
+  ],
+  "eisbn": [
+    {
+      "text": "9781400840458"
+    }
+  ],
+  "doi": [
+    {
+      "text": "10.1515/9781400840458"
+    }
+  ],
+  "oclc": [
+    {
+      "text": "767502420"
+    }
+  ],
+  "pmid": [
+    {
+      "text": "whatever"
+    }
+  ],
+  "language": [
+    {
+      "text": "English"
+    }
+  ],
+  "subject": [
+    {
+      "text": "Afrobeat"
+    }
+  ],
+  "edition": [
+    {
+      "text": "1"
+    }
+  ],
+  "holdings": [
+    {
+      "source": "alma",
+      "availability": "full_text",
+      "url": "https://mgetit.lib.umich.edu/resolve?ctx_enc=info%3Aofi%2Fenc%3AUTF-8&ctx_id=10_1&ctx_tim=2026-07-10+11%3A19%3A36&ctx_ver=Z39.88-2004&url_ctx_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Actx&url_ver=Z39.88-2004&rfr_id=info%3Asid%2Fprimo.exlibrisgroup.com-jstor_proje&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&rft.genre=book&rft.btitle=Banding+Together%3A+How+Communities+Create+Genres+in+Popular+Music&rft.au=Lena%2C+Jennifer+C&rft.date=2012&rft.isbn=9781400840458&rft_id=info%3Adoi%2F10.1515%2F9781400840458&rft.eisbn=9781400840458&rft.edition=1&rft.pub=Princeton+University+Press&rft.place=Princeton%2C+N.J&rft_id=info%3Aoclcnum%2F767502420&rft_dat=%3Cjstor_proje%3Ej.ctt7rrzb%3C%2Fjstor_proje%3E&svc_dat=viewit&rft_pqid=EBC802239&rft_jstor_id=j.ctt7rrzb&rft_id=info%3Aprimo%2Fcdi_projectmuse_ebooks_9781400840458"
+    }
+  ],
+  "citation": {
+    "tagged": [
+      {
+        "content": "BOOK",
+        "ris": [
+          "TY"
+        ],
+        "meta": []
+      },
+      {
+        "content": "cdi_projectmuse_ebooks_9781400840458",
+        "ris": [
+          "ID"
+        ],
+        "meta": [
+          "id"
+        ]
+      },
+      {
+        "content": "Banding Together: How Communities Create Genres in Popular Music",
+        "ris": [
+          "T1",
+          "TI"
+        ],
+        "meta": [
+          "title"
+        ]
+      },
+      {
+        "content": "Lena, Jennifer C",
+        "ris": [
+          "AU"
+        ],
+        "meta": [
+          "author"
+        ]
+      },
+      {
+        "content": "Princeton, N.J: Princeton University Press",
+        "ris": [
+          "PB"
+        ],
+        "meta": [
+          "publisher"
+        ]
+      },
+      {
+        "content": "9781400840458",
+        "ris": [
+          "SN"
+        ],
+        "meta": [
+          "isbn"
+        ]
+      },
+      {
+        "content": "1400840457",
+        "ris": [
+          "SN"
+        ],
+        "meta": [
+          "isbn"
+        ]
+      },
+      {
+        "content": "0691163383",
+        "ris": [
+          "SN"
+        ],
+        "meta": [
+          "isbn"
+        ]
+      },
+      {
+        "content": "0691150761",
+        "ris": [
+          "SN"
+        ],
+        "meta": [
+          "isbn"
+        ]
+      },
+      {
+        "content": "9780691150765",
+        "ris": [
+          "SN"
+        ],
+        "meta": [
+          "isbn"
+        ]
+      },
+      {
+        "content": "9780691163383",
+        "ris": [
+          "SN"
+        ],
+        "meta": [
+          "isbn"
+        ]
+      },
+      {
+        "content": "9781400840458",
+        "ris": [
+          "SN"
+        ],
+        "meta": [
+          "isbn"
+        ]
+      },
+      {
+        "content": "1400840457",
+        "ris": [
+          "SN"
+        ],
+        "meta": [
+          "isbn"
+        ]
+      },
+      {
+        "content": "10.1515/9781400840458",
+        "ris": [
+          "DO"
+        ],
+        "meta": [
+          "doi"
+        ]
+      },
+      {
+        "content": "English",
+        "ris": [
+          "LA"
+        ],
+        "meta": [
+          "language"
+        ]
+      },
+      {
+        "content": "Afrobeat",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Art music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Bandleader",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Billboard (magazine)",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Boundary object",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Case study",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Classical music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Composer",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Country music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Country rock",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Dance music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Disc jockey",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Doo-wop",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Example (musician)",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Fine art",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Folk music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "For Example",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Gangsta rap",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Genre",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Glam rock",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Gospel music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Graduate school",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Grunge",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Guitar",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Hip hop music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Ideology",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Independent record label",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Jazz",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "JHB",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Miles Davis",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "MUSIC / General",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Music community",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Music genre",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Music history",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Music industry",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Music Is",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Music publisher (popular music)",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Musical History",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Musician",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Narrative",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Nashville sound",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Newport Folk Festival",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Oligopoly",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Outlaw country",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Ozzy Osbourne",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Parents Music Resource Center",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Polka",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Pop music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Popular Culture",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Popular music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Popular music -- Social aspects",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Popular music genres",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Psychedelic rock",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Punk rock",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Rapper (electrostatic precipitation)",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Rapper's Delight",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Rapping",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Record chart",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Record label",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Record producer",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Recording studio",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Reggae",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Rock music",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Social aspects",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Social movement",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "SOCIAL SCIENCE",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "SOCIAL SCIENCE / Popular Culture",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "SOCIAL SCIENCE / Sociology / General",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Social sciences",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Social structure",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Sociology",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Southern gospel",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Techno",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Technology",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "The Byrds",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Turbo-folk",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Western swing",
+        "ris": [
+          "KW"
+        ],
+        "meta": [
+          "keywords"
+        ]
+      },
+      {
+        "content": "Why do some music styles gain mass popularity while others thrive in small niches?Banding Togetherexplores this question and reveals the attributes that together explain the growth of twentieth-century American popular music. Drawing on a vast array of examples from sixty musical styles--ranging from rap and bluegrass to death metal and South Texas polka, and including several created outside the United States--Jennifer Lena uncovers the shared grammar that allows us to understand the cultural language and evolution of popular music.\nWhat are the common economic, organizational, ideological, and aesthetic traits among contemporary genres? Do genres follow patterns in their development? Lena discovers four dominant forms--Avant-garde, Scene-based, Industry-based, and Traditionalist--and two dominant trajectories that describe how American pop music genres develop. Outside the United States there exists a fifth form: the Government-purposed genre, which she examines in the music of China, Serbia, Nigeria, and Chile. Offering a rare analysis of how music communities operate, she looks at the shared obstacles and opportunities creative people face and reveals the ways in which people collaborate around ideas, artworks, individuals, and organizations that support their work.",
+        "ris": [
+          "AB",
+          "N2"
+        ],
+        "meta": [
+          "abstract"
+        ]
+      },
+      {
+        "content": "",
+        "ris": [
+          "ER"
+        ],
+        "meta": []
+      }
+    ],
+    "csl": {
+      "id": "cdi_projectmuse_ebooks_9781400840458",
+      "type": "book",
+      "title": "Banding Together: How Communities Create Genres in Popular Music",
+      "author": [
+        {
+          "family": "Lena",
+          "given": "Jennifer C"
+        }
+      ],
+      "issued": {
+        "literal": "2012"
+      },
+      "publisher": "Princeton, N.J: Princeton University Press",
+      "ISBN": [
+        "9781400840458",
+        "1400840457",
+        "0691163383",
+        "0691150761",
+        "9780691150765",
+        "9780691163383"
+      ],
+      "ISSN": [],
+      "edition": "1",
+      "genre": "book",
+      "doi": "10.1515/9781400840458"
+    }
+  }
+}

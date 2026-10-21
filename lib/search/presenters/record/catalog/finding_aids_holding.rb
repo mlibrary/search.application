@@ -14,11 +14,11 @@ class Search::Presenters::Record::Catalog::Holdings::FindingAids <
 
   class Item < Search::Presenters::Record::Catalog::Holdings::ItemBase
     def action
-      ItemCell::LinkTo.new(text: "Request from finding aid", url: @item.url)
+      link_to_cell_for(text: "Request from finding aid", url: @item.url)
     end
 
     def status
-      Status::Success.new("Building use only")
+      success_cell_for("Building use only")
     end
   end
 end

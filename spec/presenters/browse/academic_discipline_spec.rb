@@ -1,48 +1,49 @@
 describe Search::Presenters::Browse::AcademicDiscipline do
+  let(:academic_discipline_model) do
+    ad_parent = instance_double(Search::Models::Browse::AcademicDisciplines::AcademicDiscipline, name: "Business", count: 999)
+    ad_child = instance_double(Search::Models::Browse::AcademicDisciplines::AcademicDiscipline, name: "Administration", count: 888, disciplines: [])
+    allow(ad_parent).to receive(:disciplines).and_return([ad_child])
+    allow(ad_child).to receive(:parents).and_return([ad_parent])
+    ad_parent
+  end
   before(:each) do
-    @discipline = Search::Presenters::Browse::AcademicDisciplines::ACADEMIC_DISCIPLINES.disciplines.min_by { |discipline| discipline.name.to_s }
-    @disciplines = @discipline.disciplines || []
     @datastore = "onlinejournals"
   end
 
   subject do
-    described_class.new(discipline: @discipline, datastore: @datastore)
+    described_class.new(discipline: academic_discipline_model, datastore: @datastore)
   end
 
   context "#name" do
     it "returns the name of the discipline" do
-      expect(subject.name).to eq(@discipline.name)
-    end
-  end
-
-  context "#count" do
-    it "returns the count of the discipline" do
-      expect(subject.count).to eq(@discipline.count)
-    end
-  end
-
-  context "#url" do
-    it "generates a URL with the correct query parameters" do
-      expect(subject.url).to eq("/#{@datastore}?filter.academic_discipline=#{subject.name}&sort=title_asc")
-    end
-  end
-
-  context "#disciplines" do
-    it "returns an array of AcademicDiscipline objects" do
-      expect(subject.disciplines).to all(be_a(Search::Presenters::Browse::AcademicDiscipline))
+      expect(subject.name).to eq("Business")
     end
 
-    it "returns the correct number of disciplines" do
-      expect(subject.disciplines.length).to eq(@disciplines.length)
+    context "#count" do
+      it "returns the count of the discipline" do
+        expect(subject.count).to eq(999)
+      end
     end
 
-    it "returns disciplines with the correct names and counts" do
-      subject_disciplines = subject.disciplines
-      sorted_by_name = @disciplines.sort_by { |d| d.name.to_s }
+    context "#url" do
+      it "generates a URL with the correct query parameters" do
+        expect(subject.url).to eq("/#{@datastore}?filter.academic_discipline=Business&sort=title_asc")
+      end
+    end
 
-      sorted_by_name.each_with_index do |discipline, index|
-        expect(subject_disciplines[index].name).to eq(discipline.name)
-        expect(subject_disciplines[index].count).to eq(discipline.count)
+    context "#disciplines" do
+      it "returns an array of AcademicDiscipline objects" do
+        expect(subject.disciplines).to all(be_a(Search::Presenters::Browse::AcademicDiscipline))
+      end
+
+      it "returns the correct number of disciplines" do
+        expect(subject.disciplines.length).to eq(1)
+      end
+
+      it "returns disciplines with the correct names and counts" do
+        subject_disciplines = subject.disciplines
+        expect(subject_disciplines.first.name).to eq("Administration")
+        expect(subject_disciplines.first.count).to eq(888)
       end
     end
   end
@@ -50,9 +51,16 @@ end
 
 describe Search::Presenters::Browse::AcademicDisciplines do
   let(:datastore) { "onlinejournals" }
+  let(:ad_model) do
+    ad_parent = instance_double(Search::Models::Browse::AcademicDisciplines::AcademicDiscipline, name: "Business", count: 999)
+    ad_child = instance_double(Search::Models::Browse::AcademicDisciplines::AcademicDiscipline, name: "Administration", count: 888)
+    allow(ad_parent).to receive(:disciplines).and_return([ad_child])
+    allow(ad_child).to receive(:parents).and_return([ad_parent])
+    [ad_parent]
+  end
 
   subject do
-    described_class.new(datastore: datastore, disciplines: Search::Presenters::Browse::AcademicDisciplines::ACADEMIC_DISCIPLINES)
+    described_class.new(datastore: datastore, data: ad_model)
   end
 
   context "#all" do

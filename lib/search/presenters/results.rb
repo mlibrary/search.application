@@ -33,13 +33,16 @@ class Search::Presenters::Results::Catalog
     {uid: "title_desc", name: "Title (Z-A)"}
   ]
   def self.for(uri)
-    results_model_instance = Search::Models::Results::Catalog.for(uri)
-    specialists = if results_model_instance.pagination.offset == 0
-      Search::Models::Specialists.for_catalog(uri)
+    datastore = to_s.split("::").last.to_s.downcase
+    future = Concurrent::Promises.future do
+      "Search::Models::Results::#{datastore.capitalize}".constantize.for(uri)
+    end
+    specialists = if Search::Models::Results::Pagination.offset_for(uri) == 0
+      Search::Models::Specialists.send("for_#{datastore}", uri)
     else
       []
     end
-    new(results_model_instance, specialists)
+    new(future.value, specialists)
   end
 
   attr_reader :specialists
@@ -145,16 +148,6 @@ class Search::Presenters::Results::Onlinejournals < Search::Presenters::Results:
     "academic_discipline"
   ]
 
-  def self.for(uri)
-    results_model_instance = Search::Models::Results::Onlinejournals.for(uri)
-    specialists = if results_model_instance.pagination.offset == 0
-      Search::Models::Specialists.for_onlinejournals(uri)
-    else
-      []
-    end
-    new(results_model_instance, specialists)
-  end
-
   def boolean_filters
     []
   end
@@ -162,6 +155,55 @@ class Search::Presenters::Results::Onlinejournals < Search::Presenters::Results:
   def records
     @results.records.map do |record|
       Search::Presenters::Record::Onlinejournals::Brief.new(record)
+    end
+  end
+end
+
+class Search::Presenters::Results::Articles < Search::Presenters::Results::Catalog
+  FILTER_ORDER = [
+    "format",
+    "subject",
+    "date",
+    "language"
+  ]
+
+  def boolean_filters
+    [
+      {
+        uid: "is_scholarly",
+        default: "false",
+        label: "Articles from scholaraly journals only"
+      },
+      {
+        uid: "exclude_newspapers",
+        default: "false",
+        label: "Exclude newspaper articles"
+      },
+      {
+        uid: "available_online",
+        default: "false",
+        label: "Available online"
+      },
+      {
+        uid: "is_open_access",
+        default: "false",
+        label: "Show open access only"
+      },
+      {
+        uid: "holdings_only",
+        default: "true",
+        label: "U-M library materials_only"
+      }
+    ].map do |params|
+      Search::Presenters::Results::BooleanFilter.for(
+        uri: @results.originating_uri, **params
+      )
+    end
+  end
+
+  def records
+    @results.records.map do |record|
+      Search::Presenters::Record::Articles::Brief.new(record)
     end
   end
 end

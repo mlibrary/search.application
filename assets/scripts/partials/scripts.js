@@ -1,8 +1,3 @@
-import chooseAffiliation from './header/_choose-affiliation.js';
-import { displaySearchTip } from './header/search/_tip.js';
+import displaySearchTip from './header/_search.js';
 
-// Choose Affiliation
-chooseAffiliation();
-
-// Display the selected search tip
 displaySearchTip();

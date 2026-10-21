@@ -9,6 +9,7 @@ require "rspec/temp_dir"
 SimpleCov.start
 
 ENV["APP_ENV"] = "test"
+ENV["FLINT_IP_RANGES"] = "203.0.113.0/24" # This is a documenation ip block
 require_relative "factories"
 require_relative "../app"
 OmniAuth.config.test_mode = true

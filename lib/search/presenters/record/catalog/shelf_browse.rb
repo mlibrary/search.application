@@ -2,7 +2,7 @@ class Search::Presenters::Record::Catalog::ShelfBrowse
   def self.for(call_number:)
     if call_number.present?
       @conn = Faraday.new(
-        url: "#{S.catalog_browse_url}/carousel",
+        url: "#{S.catalog_browse_api_url}/carousel",
         params: {query: call_number}
       ) do |f|
         f.request :json
@@ -13,9 +13,13 @@ class Search::Presenters::Record::Catalog::ShelfBrowse
       if response.status == 200
         new(call_number: call_number, data: response.body)
       else
-        S.logger.error(response.status + " Couldn't contact Catalog Browse.")
+        S.logger.error("Catalog browse status is #{response.status}")
+        nil
       end
     end
+  rescue Faraday::Error => e
+    S.logger.error(e.to_s)
+    nil
   end
 
   def initialize(call_number:, data:)

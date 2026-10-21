@@ -3,6 +3,7 @@ class Search::Presenters::Page
     CURRENT_PAGE = "Record"
     EXTRA_ICONS = [
       "add", "delete", "mail", "chat", "format_quote", "draft", "link",
+      "verified",
       "collections_bookmark", "devices", "keyboard_arrow_right",
       "location_on", "check_circle", "warning", "error", "list",
       "arrow_back_ios", "arrow_forward_ios"
@@ -16,7 +17,7 @@ class Search::Presenters::Page
     def self.for(slug:, uri:, patron:, record_id:)
       datastore = Search::Datastores.find(slug)
       future = Concurrent::Promises.future { Pagination.for(datastore: slug, uri: uri) }
-      record = Search::Presenters::Record.for_datastore(datastore: slug, id: record_id)
+      record = Search::Presenters::Record.for_datastore(datastore: slug, id: record_id, uri: uri)
       new(datastore: datastore, uri: uri, patron: patron, record: record, pagination: future.value)
     end
 

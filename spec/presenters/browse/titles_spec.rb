@@ -16,7 +16,9 @@ describe Search::Presenters::Browse::Title do
 
   context "#url" do
     it "generates a URL with the correct query parameters" do
-      expect(subject.url).to eq("/#{@slug}?browse_starts_with=#{@title}&sort=title_asc")
+      uri = Addressable::URI.parse(subject.url)
+      expect(uri.query_hash["query"]).to eq("browse_starts_with:(#{@title})")
+      expect(uri.query_hash["sort"]).to eq("title_asc")
     end
   end
 end
@@ -43,7 +45,9 @@ describe Search::Presenters::Browse::Titles do
       subject_titles = subject.all
       Search::Presenters::Browse::Titles::BROWSE_STARTS_WITH.each_with_index do |title, index|
         expect(subject_titles[index].title).to eq(title)
-        expect(subject_titles[index].url).to eq("/onlinejournals?browse_starts_with=#{title}&sort=title_asc")
+        uri = Addressable::URI.parse(subject_titles[index].url)
+        expect(uri.query_hash["query"]).to eq("browse_starts_with:(#{title})")
+        expect(uri.query_hash["sort"]).to eq("title_asc")
       end
     end
   end

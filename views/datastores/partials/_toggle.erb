@@ -2,7 +2,7 @@
   classes = ["button__ghost", "hide__no-javascript", "hide__print"] + Array(classes)
 
   postfix ||= ""
-  body = ["Show fewer", postfix.presence].compact.join(" ")
+  body = ["Show fewer", postfix.presence&.pluralize].compact.join(" ")
 %>
 <button class="<%= classes.join(" ")%>" aria-expanded="true" aria-controls="<%= id %>" data-toggle="<%= count %>">
   <%= body %>

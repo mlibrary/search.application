@@ -19,7 +19,7 @@ services:
         GID: ${GID:-1000}
     depends_on:
       - 'redis'
-      - 'catalog-api'
+      - 'search-api'
     ports:
       - 4567:4567
       - 9100:9100
@@ -29,6 +29,8 @@ services:
       - .env
     environment:
       - REDIS_URL=redis://redis:6379
+      - OTEL_SERVICE_NAME=application
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
     command:
       - bundle
       - exec
@@ -75,16 +77,24 @@ services:
       - .env
     environment:
       - REDIS_URL=redis://redis:6379
+      - OTEL_SERVICE_NAME=worker
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
     command:
       - bundle
       - exec
       - sidekiq
       - -r
       - "./app.rb"
-  catalog-api:
-    image: ghcr.io/mlibrary/search.catalog-api-unstable:latest
+  search-api:
+    image: ghcr.io/mlibrary/search.api-unstable:latest
     env_file:
       - .env
+    environment:
+      - OTEL_SERVICE_NAME=api
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
     ports:
       - 8000:8000
     command:
@@ -100,6 +110,8 @@ services:
       - 4000:4567
     environment:
       - APP_ENV=production
+      - OTEL_SERVICE_NAME=parser
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
     env_file:
       - .env
     command:
@@ -145,5 +157,13 @@ services:
       - npm
       - run
       - watch:css
+  jaeger:
+    image: jaegertracing/jaeger:latest
+    ports:
+      - 5778:5778
+      - 16686:16686
+      - 4317:4317
+      - 4318:4318
+      - 9411:9411
 volumes:
   redis:

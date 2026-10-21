@@ -11,7 +11,7 @@
   <ul class="list__no-style">
     <% @libraries.each do |library| %>
       <li>
-        <%= link_to(body: library, url: "?library=#{library.slug}", classes: ["button__ghost", library.active_class(param: params[:library], current_affiliation: @patron.affiliation)]) %>
+        <%= link_to(body: library, url: "?library=#{library.slug}", classes: ["button__ghost", library.active_class(param: params[:library], campus: @patron.campus)]) %>
       </li>
     <% end %>
   </ul>

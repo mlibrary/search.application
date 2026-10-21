@@ -1,0 +1,49 @@
+@use '../../../utilities';
+@use '../../../typography';
+
+// --------------------------------------------------
+//
+// # Peer Review
+//   Styles to apply directly to `views/datastores/partials/metadata/_peer_review.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Peer Review
+//     2.1. Icon
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".metadata .metadata__peer-review";
+
+
+
+
+
+// ********************** //
+// *** 2. PEER REVIEW *** //
+// ********************** //
+
+#{$class} {
+  @include utilities.flex($align: start);
+  & {
+    color: var(--color-green-500);
+    gap: 0.25rem;
+  }
+  @media print {
+    display: flex!important;
+  }
+}
+
+
+
+// *          * //
+// * 2.1 ICON * //
+// *          * //
+
+#{$class} > .material-symbols-rounded {
+  font-size: 1.25rem;
+}

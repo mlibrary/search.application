@@ -42,17 +42,21 @@ module Search
         breadcrumb.split("-").map(&:capitalize).join(" ")
       end
 
+      def id?(subdirectory)
+        subdirectory.match?(/\d+$/)
+      end
+
       def breadcrumbs
         crumbs = []
         latest_index = 0
         path = ""
         subdirectories.each do |subdirectory|
           # Add each subdirectory to the path
-          path += "/#{subdirectory}"
+          path = File.join(path, subdirectory)
           result_uri = @uri.join(Addressable::URI.parse(path))
           result_uri.query_values = query_values
           # Check if the subdirectory contains numerals (e.g. full record uids or barcodes for Get This)
-          if subdirectory.match(/^\d+$/) && latest_index > 0
+          if id?(subdirectory) && latest_index > 0
             crumbs[latest_index - 1].url = result_uri.display_uri.to_s
           else
             # Check if subdirectory is a datastore
