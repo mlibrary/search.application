@@ -1,0 +1,32 @@
+@use '../../../utilities';
+
+// --------------------------------------------------
+//
+// # Booleans
+//   Styles to apply directly to `views/advanced/partials/search-fields/_booleans.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Booleans
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".advanced-search__search-field--booleans";
+
+
+
+// ******************* //
+// *** 2. BOOLEANS *** //
+// ******************* //
+
+#{$class} {
+  @include utilities.flex();
+  justify-content: center;
+  .checkbox {
+    align-items: center;
+  }
+}

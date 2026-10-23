@@ -1,0 +1,9 @@
+<div class="additional-option__selections">
+  <p class="text__small">
+    Select one or more checkboxes to narrow your results to items
+    that match all of your <%= type %> selections.
+  </p>
+  <%= erb :"advanced/partials/additional-options/selections/_filter", locals: { type: type } %>
+  <%= erb :"advanced/partials/additional-options/selections/_checkboxes", locals: { data: data, type: type } %>
+  <%= erb :"advanced/partials/additional-options/selections/_show-selected" %>
+</div>

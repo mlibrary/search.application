@@ -1,0 +1,28 @@
+// --------------------------------------------------
+//
+// # Button
+//   Styles to apply directly to `views/advanced/partials/_button.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Button
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".advanced-search__form--submit";
+
+
+
+
+
+// ***************** //
+// *** 2. BUTTON *** //
+// ***************** //
+
+#{$class} {
+  gap: 0.25rem;
+}
