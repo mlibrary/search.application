@@ -30,8 +30,8 @@ $class: ".advanced-search__additional-option";
 // ***************************** //
 
 #{$class}s {
-  @include utilities.flex($align: baseline, $responsive: true);
-  gap: 0 2rem;
+  @include utilities.flex($align: baseline, $responsive: true, $wrap: true);
+  gap: 2rem;
 }
 
 
@@ -41,7 +41,8 @@ $class: ".advanced-search__additional-option";
 // *                        * //
 
 #{$class} {
-  flex: 0 1 50%;
+  flex: 0 1 calc(50% - 2rem);
+  width: 100%;
   & > * + * {
     margin-top: 1rem;
   }
