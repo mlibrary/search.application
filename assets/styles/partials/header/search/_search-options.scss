@@ -1,0 +1,45 @@
+@use '../../../media';
+
+// --------------------------------------------------
+//
+// # Navigation
+//   Styles to apply directly to `views/partials/header/search/_search-options.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Dropdown
+//     2.1. Search Form
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.search-form__inputs--select';
+
+
+
+
+
+// ******************* //
+// *** 2. DROPDOWN *** //
+// ******************* //
+
+#{$class} {
+  grid-area: dropdown;
+  @include media.breakpoint('xs') {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+
+
+// *                  * //
+// * 2.1. SEARCH FORM * //
+// *                  * //
+
+.search-form #{$class} {
+  border-color: var(--search-color-blue-400);
+}

@@ -1,0 +1,46 @@
+@use "../../../../utilities";
+@use "../../../../media";
+
+// --------------------------------------------------
+//
+// # Years
+//   Styles to apply directly to `views/advanced/partials/additional-options/date/_years.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Years
+//    2.1. Start Date
+//    2.2. End Date
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".additional-option__date--years";
+
+
+
+
+
+// **************** //
+// *** 2. YEARS *** //
+// **************** //
+
+#{$class} {
+  @include utilities.flex($responsive: 'md');
+}
+
+
+
+// *           * //
+// * 2.1. YEAR * //
+// *           * //
+
+#{$class} .additional-option__date--year {
+  width: 100%;
+  @include media.breakpoint('md') {
+    width: calc(50% - 1rem);
+  }
+}
