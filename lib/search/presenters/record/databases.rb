@@ -100,6 +100,10 @@ module Search::Presenters::Record::Databases
       :trial,
       :permalink
     ]
+    def recommended?
+      @record.recommended?
+    end
+
     def to_h
       {
         title: {

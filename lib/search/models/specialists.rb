@@ -21,6 +21,12 @@ class Search::Models::Specialists
     new(data)
   end
 
+  def self.for_databases(uri)
+    params = Search::Models::Results::Databases.get_params(uri: uri).slice(:query, :filters)
+    data = Search::Clients::SearchAPI.new.get_databases_specialists(**params)
+    new(data)
+  end
+
   def initialize(data)
     @data = data
   end
