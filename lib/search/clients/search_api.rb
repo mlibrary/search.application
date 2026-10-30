@@ -67,8 +67,8 @@ module Search
         @conn.get(url, **params).body
       end
 
-      def get_onlinejournals_specialists(limit: 10, offset: 0, query: "*", filters: [])
-        params = {offset: offset, limit: limit, query: query}
+      def get_onlinejournals_specialists(query: "*", filters: [])
+        params = {query: query}
         params[:filters] = filters unless filters.empty?
         @conn.get("onlinejournals/specialists", **params).body
       end
@@ -105,6 +105,28 @@ module Search
 
       def get_databases_record(id)
         @conn.get("databases/records/#{id}").body
+      end
+
+      def get_databases_results(limit: 10, offset: 0, query: "*", filters: [], sort: "")
+        params = {offset: offset, limit: limit, query: query, sort: sort}
+        params[:filters] = filters unless filters.empty?
+        @conn.get("databases/search", **params).body
+      end
+
+      def get_databases_specialists(query: "*", filters: [])
+        params = {query: query}
+        params[:filters] = filters unless filters.empty?
+        @conn.get("databases/specialists", **params).body
+      end
+
+      def get_databases_academic_disciplines
+        @conn.get("databases/academic_disciplines").body
+      end
+
+      def get_databases_browse_academic_discipline(academic_discipline:, limit: 10, offset: 0)
+        params = {offset: offset, limit: limit}
+        url = Addressable::URI.encode_component("databases/browse_academic_discipline/#{academic_discipline}")
+        @conn.get(url, **params).body
       end
 
       def boolean_params(filters, kind: :catalog)

@@ -22,6 +22,10 @@ class Search::Models::Record::Databases
     Bib.new(@data)
   end
 
+  def recommended?
+    !!@data["recommended_resource"]
+  end
+
   def url
     @data["permalink"]
   end

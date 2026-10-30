@@ -125,7 +125,7 @@ RSpec.describe "requests" do
     it "shows the results page when there is a query parameter" do
       stub_request(:get, "#{S.search_api_url}/onlinejournals/search?offset=0&query=title:(test)&limit=10&sort=relevance")
         .to_return(status: 200, body: onlinejournals_results.to_json, headers: {content_type: "application/json"})
-      stub_request(:get, "#{S.search_api_url}/onlinejournals/specialists?&query=title:(test)&limit=10&offset=0")
+      stub_request(:get, "#{S.search_api_url}/onlinejournals/specialists?&query=title:(test)")
         .to_return(status: 200, body: fixture("results/specialists.json"), headers: {content_type: "application/json"})
       get "/onlinejournals?query=title:(test)"
       expect(last_response.body).to include("Online Journals results")
