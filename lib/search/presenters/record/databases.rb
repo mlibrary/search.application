@@ -5,7 +5,6 @@ module Search::Presenters::Record::Databases
       :type,
       :access_type,
       :new,
-      :permalink,
       :coverage,
       :alt_title,
       :more_information,
@@ -22,7 +21,7 @@ module Search::Presenters::Record::Databases
     [
       {uid: :type, field: "Database type"},
       {uid: :access_type, field: "Access type"},
-      {uid: :permalink, field: "Permalink"},
+      # {uid: :permalink, field: "Permalink"},
       {uid: :coverage, field: "Coverage"},
       {uid: :alt_title, field: "Alternative Title(s)"},
       {uid: :platform, field: "Interface Platform"},
@@ -97,8 +96,7 @@ module Search::Presenters::Record::Databases
       :type,
       :access_type,
       :new,
-      :trial,
-      :permalink
+      :trial
     ]
     def recommended?
       @record.recommended?
@@ -151,12 +149,12 @@ module Search::Presenters::Record::Databases
     end
 
     def table_headings
-      [table_heading_for("Action")]
+      [table_heading_for("Action"), table_heading_for("Permalink")]
     end
 
     def rows
       if @url
-        [[link_to_cell_for(text: "Go to database", url: @url)]]
+        [[link_to_cell_for(text: "Go to database", url: @url), plain_text_cell_for(@url)]]
       else
         []
       end
