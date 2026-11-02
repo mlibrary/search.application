@@ -1,0 +1,1080 @@
+<%
+  advanced_search_options = OpenStruct.new(
+    has_additional_options?: true,
+    additional_options: [
+      OpenStruct.new(
+        title: "Date of Publication",
+        partial: "date",
+        data: OpenStruct.new(
+          parameter: "date_of_publication",
+          filters: [
+            "Before",
+            "After",
+            "Between",
+            "In"
+          ]
+        )
+      ),
+      OpenStruct.new(
+        title: "Narrow Search To",
+        partial: "narrow_search_to",
+        data: OpenStruct.new(
+          parameter: "narrow_search_to",
+          filters: [
+            {
+              label: "Library",
+              slug: "library",
+              options: [
+                {
+                  value: "All libraries",
+                  narrow: []
+                },
+                {
+                  value: "William L. Clements Library",
+                  narrow: []
+                },
+                {
+                  value: "Bentley Historical Library",
+                  narrow: []
+                },
+                {
+                  value: "Flint Thompson Library",
+                  narrow: []
+                },
+                {
+                  value: "U-M Ann Arbor Libraries",
+                  narrow: []
+                }
+              ],
+              narrow: []
+            },
+            {
+              label: "Location",
+              slug: "location",
+              options: [
+                {
+                  value: "All locations",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Art Architecture &amp; Engineering",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Askwith Media Library",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Bentley Historical",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Biological Station",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Buhr Shelving Facility",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "CSCAR - Rackham Building",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Fine Arts",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Flint Thompson Library",
+                  narrow: ["All libraries"]
+                },
+                {
+                  value: "Hatcher Graduate",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Health Sciences Remote Shelving",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Research Museums Center",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Music",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Shapiro",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Special Collections",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "Taubman Health Sciences",
+                  narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+                },
+                {
+                  value: "William L. Clements",
+                  narrow: ["All libraries"]
+                }
+              ],
+              narrow: ["U-M Ann Arbor Libraries", "All libraries"]
+            },
+            {
+              label: "Collection",
+              slug: "collection",
+              options: [
+                {
+                  value: "All collections",
+                  narrow: []
+                },
+                {
+                  value: "2nd Floor - 2321 M",
+                  narrow: ["Art Architecture &amp; Engineering"]
+                },
+                {
+                  value: "2nd Floor Service Desk",
+                  narrow: ["Art Architecture &amp; Engineering"]
+                },
+                {
+                  value: "AAEL Equipment",
+                  narrow: ["Art Architecture &amp; Engineering"]
+                },
+                {
+                  value: "American Sheet Music",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Anatomical Models",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Anthro. Div. - Ethnobotany Lab",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Anthro. Div. Lib. - Oversize",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Anthropology Div. Library",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Archives - Special Collections",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Argus - MoA",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Artists' Books",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Asa Gray Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Asia Library",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Askwith Equipment",
+                  narrow: ["Askwith Media Library"]
+                },
+                {
+                  value: "Atlas Collection",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Atlases &amp; Maps",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Basement Compact Shelving",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Birds Div. Lib. - Case",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Birds Division Library",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Book Collection -- Oversize",
+                  narrow: ["Art Architecture &amp; Engineering"]
+                },
+                {
+                  value: "Browsing Collection",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Cage",
+                  narrow: ["Biological Station"]
+                },
+                {
+                  value: "Career Collection",
+                  narrow: ["Art Architecture &amp; Engineering"]
+                },
+                {
+                  value: "Children's Literature",
+                  narrow: ["Flint Thompson Library", "Special Collections"]
+                },
+                {
+                  value: "Children's Literature Collection",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library Atlas Shelves",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library Book Shelves",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library File Cabinets",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library Folio",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library Map Cases",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library Office",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library Oversize",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library Oversize Drawer",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library Rare Cases",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library Rare File",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Clark Library Software",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Closed Shelving",
+                  narrow: ["Art Architecture &amp; Engineering", "Hatcher Graduate"]
+                },
+                {
+                  value: "College and Career Success Collection",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Course Reserve",
+                  narrow: ["Biological Station"]
+                },
+                {
+                  value: "Course Reserves",
+                  narrow: ["Art Architecture &amp; Engineering"]
+                },
+                {
+                  value: "Course Reserves - Rm. 2500",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Current Journals",
+                  narrow: ["Art Architecture &amp; Engineering", "Fine Arts"]
+                },
+                {
+                  value: "Design Lab",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Dissertations",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Dissertations/Masters",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "DVD Collection",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Electronic resources",
+                  narrow: ["Bentley Historical"]
+                },
+                {
+                  value: "English Language Program",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Faulkner Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Fine Arts Equipment",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Fish Div. Lib. - Oversize",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Fish Division Library",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Flat Folio Collection",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Folio",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Folio Collection",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "General and Rare",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Graduate Library Mixed Media",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Graduate Library Stacks",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Graphic Novels",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Hatcher Equipment - Service Desk",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Herbarium Cage - By appointment only",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Herbarium Oversize",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Herbarium Reference",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Herbarium Stacks",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Herpetology Div. Lib. - Oversize",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Herpetology Division Library",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "History of Medicine Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Hubbard Imaginary Voyages Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Indexes",
+                  narrow: ["Health Sciences Remote Shelving"]
+                },
+                {
+                  value: "Insect Div. Lib. - Orthoptera",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Insect Div. Lib. - Oversize",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Insect Division Library",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "International Studies In Process Closed Shelving",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Islamic Manuscripts",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Janice Bluestein Longone Culinary Archive",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Jewish Heritage Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Joseph A. Labadie Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Journals",
+                  narrow: ["Fine Arts", "Health Sciences Remote Shelving"]
+                },
+                {
+                  value: "Journals - Rm. 2500",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Main Collection",
+                  narrow: ["Art Architecture &amp; Engineering", "Bentley Historical", "Biological Station", "Fine Arts", "Flint Thompson Library", "Music", "William L. Clements"]
+                },
+                {
+                  value: "Mammals Division - Oversize",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Mammals Division Library",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Masters Theses",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Masters Theses Archival Collection",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Media Collection",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Microfiche - Basement",
+                  narrow: ["Art Architecture &amp; Engineering"]
+                },
+                {
+                  value: "Microfilm - Basement",
+                  narrow: ["Art Architecture &amp; Engineering"]
+                },
+                {
+                  value: "Microform Collection - Rm. 2500",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Microforms",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Middle East Reference",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Miniature Scores",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Mollusks Division - Oversize",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Mollusks Division Library",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "MonoCat",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Music Equipment",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Near East Seminar - Rm. 3020 Thayer Academic Bldg (Dept of Middle East Studies)",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "New Books",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "New Books Shelf",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Offsite Shelving",
+                  narrow: ["Askwith Media Library"]
+                },
+                {
+                  value: "On Display - Hatcher/Shapiro",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Open Reserves Shelving Area",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Oriental Seminar Rm.",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Oriental Seminar Rm. Flat Folios",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Oriental Seminar Rm. Folios",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Oriental Seminar Rm. Journals",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Oriental Seminar Rm. Reference",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Overflow",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Oversize",
+                  narrow: ["Biological Station", "Fine Arts", "Health Sciences Remote Shelving"]
+                },
+                {
+                  value: "Oversize Recordings",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Oversize Shelves",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Oversized Collection",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Paleontology Div. Library",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Paleontology Lib. - Oversize",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Paleontology Lib. - Reference",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Pamphlets",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Papyrology",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Papyrology Reference Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Parsons-Rau Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Periodicals",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Permanent Reserves - Rm. 2500",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Philippine History Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Pop-Up and Movable Books",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Publishers' Bindings",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Rare Book Rm.",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Rare Book Room",
+                  narrow: ["William L. Clements"]
+                },
+                {
+                  value: "Reading Room",
+                  narrow: ["Bentley Historical"]
+                },
+                {
+                  value: "Recordings",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Recreational Reading",
+                  narrow: ["Art Architecture &amp; Engineering"]
+                },
+                {
+                  value: "Reference",
+                  narrow: ["Art Architecture &amp; Engineering", "Biological Station", "Fine Arts", "Hatcher Graduate", "Music"]
+                },
+                {
+                  value: "Reference - Rm. 2500",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Reference - The Wu Reading Room",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Reference Collection",
+                  narrow: ["Flint Thompson Library", "Special Collections"]
+                },
+                {
+                  value: "Remote Storage",
+                  narrow: ["William L. Clements"]
+                },
+                {
+                  value: "Reserved Readings",
+                  narrow: ["Flint Thompson Library"]
+                },
+                {
+                  value: "Reserves",
+                  narrow: ["Music", "Taubman Health Sciences"]
+                },
+                {
+                  value: "Reserves - Circulation Desk",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Reserves - Electronic Resource",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Room 2002 Shapiro",
+                  narrow: ["Askwith Media Library"]
+                },
+                {
+                  value: "Room 2500",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Room 2500 - Cage - By appointment only",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Room 2500 - Oversize",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Science Book Stacks",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Science Fiction Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Science Journals",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Science Media Cabinet",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Science Oversize Stacks",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Security File",
+                  narrow: ["Bentley Historical"]
+                },
+                {
+                  value: "Serials and Microforms",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Shakespeare Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Shapiro 2nd floor Leisure Reading Collection",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Shapiro Basement Government Publications",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Shapiro Equipment - Service Desk",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Sheet Music Collection",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Slavic Reference",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Slavic Reference - Holtzman - Restricted",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Software",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "South Asia Reference",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Southeast Asia Reference",
+                  narrow: ["Hatcher Graduate"]
+                },
+                {
+                  value: "Special Collections",
+                  narrow: ["Art Architecture &amp; Engineering", "Fine Arts"]
+                },
+                {
+                  value: "Special Collections Oversize",
+                  narrow: ["Fine Arts"]
+                },
+                {
+                  value: "Special Formats",
+                  narrow: ["Research Museums Center"]
+                },
+                {
+                  value: "Staff Offices",
+                  narrow: ["Fine Arts", "Music"]
+                },
+                {
+                  value: "Storage",
+                  narrow: ["Bentley Historical", "Taubman Health Sciences"]
+                },
+                {
+                  value: "Taubman Equipment",
+                  narrow: ["Taubman Health Sciences"]
+                },
+                {
+                  value: "The Azad and Margaret Hogikyan Armenian Studies Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Transportation History Collection",
+                  narrow: ["Special Collections"]
+                },
+                {
+                  value: "Unassigned location",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Unbound serials",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Undergraduate Oversize - basement",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Undergraduate stacks",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "University Reserves",
+                  narrow: ["Askwith Media Library"]
+                },
+                {
+                  value: "Video Games",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Video Games - Books",
+                  narrow: ["Shapiro"]
+                },
+                {
+                  value: "Videos",
+                  narrow: ["Music"]
+                },
+                {
+                  value: "Women Composers Collection",
+                  narrow: ["Music"]
+                }
+              ],
+              narrow: ["Bentley Historical Library", "Flint Thompson Library", "William L. Clements Library"]
+            }
+          ]
+        )
+      ),
+      OpenStruct.new(
+        title: "Academic Discipline",
+        partial: "selections",
+        data: OpenStruct.new(
+          parameter: "academic_discipline",
+          filters: [
+            "Academic and Specialized News",
+            "Aerospace Engineering",
+            "African American Studies",
+            "African Studies",
+            "Allergy and Clinical Immunology",
+            "American Culture",
+            "Analytical Chemistry",
+            "Anesthesiology",
+            "Anthropology",
+            "Arab-American Studies",
+            "Archaeology",
+            "Architecture",
+            "Archives &amp; Record Management",
+            "Armenian Studies",
+            "Art History",
+            "Art and Design",
+            "Arts",
+            "Asian Languages and Cultures",
+            "Asian Studies",
+            "Asian/Pacific Islander American Studies",
+            "Astronomy and Astrophysics",
+            "Automotive Engineering",
+            "Biological Chemistry",
+            "Biology",
+            "Biomedical Engineering",
+            "Biostatistics",
+            "Books",
+            "Botany",
+            "British and Irish Studies",
+            "Business",
+            "Business (General)",
+            "Business News",
+            "Cardiovascular Medicine",
+            "Careers",
+            "Central Asian and Caucasian Studies",
+            "Chemical Engineering",
+            "Chemistry",
+            "Children's Literature",
+            "Chinese Studies",
+            "Civil Engineering",
+            "Classical Studies",
+            "Climate Sciences",
+            "Communication Studies",
+            "Companies and Industry",
+            "Computer Science",
+            "Conservative Perspectives",
+            "Conservative and Liberal Perspectives",
+            "Czech and Slovak Studies",
+            "Dance",
+            "Dentistry",
+            "Dermatology",
+            "Disability Studies",
+            "Earth and Environmental Sciences",
+            "East Asian Studies",
+            "Ecology and Evolutionary Biology",
+            "Economics",
+            "Education",
+            "Electrical Engineering",
+            "Emergency Medicine",
+            "Encyclopedias",
+            "Endocrinology",
+            "Energy",
+            "Engineering",
+            "Engineering (General)",
+            "Engineering Education",
+            "English Language and Literature",
+            "Entrepreneurship",
+            "Environment and Sustainability",
+            "Environmental Engineering",
+            "Environmental Health Sciences",
+            "Epidemiology",
+            "European Studies",
+            "European Union Studies",
+            "Family Medicine",
+            "Film and Video Studies",
+            "Finance",
+            "French Language and Literatures",
+            "French Studies",
+            "Gastroenterology",
+            "Gay/Lesbian/Bisexual/Transgender Studies",
+            "General Information Sources",
+            "General and Comparative Literature",
+            "Genetics",
+            "Geography and Maps",
+            "Geriatric Medicine",
+            "Germanic Languages and Literatures",
+            "Germanic Studies",
+            "Government Information",
+            "Government, Politics and Law",
+            "Grants and Fundraising",
+            "Health Behavior and Health Equity",
+            "Health Management and Policy",
+            "Health Sciences",
+            "Hematology and Oncology",
+            "Historical News Sources",
+            "History (General)",
+            "Human Computer Interaction",
+            "Human Genetics",
+            "Humanities",
+            "Humanities (General)",
+            "Iberian Studies",
+            "Industrial and Operations Engineering",
+            "Infectious Diseases",
+            "Information Science",
+            "Inorganic Chemistry",
+            "Integrative Medicine",
+            "Internal Medicine",
+            "International Business",
+            "International Government Information",
+            "International News",
+            "International Public Policy",
+            "International Studies",
+            "Italian Language and Literatures",
+            "Italian Studies",
+            "Japanese Studies",
+            "Judaic Studies",
+            "Kinesiology and Sports",
+            "Korean Studies",
+            "Landscape Architecture",
+            "Latin American and Caribbean Studies",
+            "Latina/o Studies",
+            "Law and Legal Studies",
+            "Liberal Perspectives",
+            "Library Science",
+            "Linguistics",
+            "Management",
+            "Manufacturing",
+            "Marketing",
+            "Materials Science and Engineering",
+            "Mathematics",
+            "Mechanical Engineering",
+            "Medical Education",
+            "Medicine (General)",
+            "Michigan News",
+            "Microbiology and Immunology",
+            "Middle Eastern, Near Eastern and North African Studies",
+            "Modern Greek Studies",
+            "Molecular, Cellular and Developmental Biology",
+            "Multiple Perspectives",
+            "Multiracial Studies",
+            "Museum Studies",
+            "Music",
+            "Native American Studies",
+            "Naval Architecture and Marine Engineering",
+            "Nephrology",
+            "Neurology and Neurosciences",
+            "Neurosurgery",
+            "News Magazines",
+            "News and Current Events",
+            "Nuclear Engineering and Radiological Sciences",
+            "Nursing",
+            "Obstetrics and Gynecology",
+            "Ophthalmology and Vision Sciences",
+            "Organic Chemistry",
+            "Orthopaedic Surgery",
+            "Otolaryngology",
+            "Pacific/Australia/New Zealand Studies",
+            "Patents and Trademarks",
+            "Pathology",
+            "Pediatrics",
+            "People (Biography and Contact Information)",
+            "Pharmaceutical Engineering",
+            "Pharmacy and Pharmacology",
+            "Philosophy",
+            "Physical Chemistry",
+            "Physical Medicine and Rehabilitation",
+            "Physics",
+            "Physiology",
+            "Polish Studies",
+            "Political Science",
+            "Population and Demography",
+            "Portuguese Language and Literatures",
+            "Psychiatry",
+            "Psychology",
+            "Public Health (General)",
+            "Public Policy",
+            "Pulmonary Medicine",
+            "Radiation Oncology",
+            "Radiology",
+            "Religious Studies",
+            "Reviews (of Books, Movies, Plays, etc.)",
+            "Rheumatology",
+            "Robotics",
+            "Romance Languages and Literatures",
+            "Russian Studies",
+            "Scandinavian Languages and Literatures",
+            "Scandinavian Studies",
+            "Science",
+            "Science (General)",
+            "Science Policy",
+            "Search Engines",
+            "Slavic Languages and Literatures",
+            "Slavic and East European Studies",
+            "Social Sciences",
+            "Social Sciences (General)",
+            "Social Work",
+            "Sociology",
+            "South Asian Studies",
+            "Southeast Asian Studies",
+            "Southeast European Studies",
+            "Space Sciences and Engineering",
+            "Spanish Language and Literatures",
+            "State and Local Government Information",
+            "State and Local Policy",
+            "Statistics (Mathematical)",
+            "Statistics and Numeric Data",
+            "Surgery",
+            "Theatre and Drama",
+            "Transportation",
+            "U.S. Domestic Policy",
+            "U.S. Government Information",
+            "United States History",
+            "Urban Planning",
+            "Urology",
+            "Women's and Gender Studies",
+            "Zoology"
+          ]
+        )
+      )
+    ]
+  )
+%>
+
+<% if advanced_search_options.has_additional_options? %>
+  <h3>Additional search options</h3>
+  <div class="advanced-search__additional-options">
+    <% advanced_search_options.additional_options.each do |additional_option| %>
+      <div class="advanced-search__additional-option" id="advanced-search__additional-option--<%= additional_option.data.parameter %>">
+        <h4 class="h5 advanced-search__additional-option--title"><%= additional_option.title %></h4>
+        <%= erb :"advanced/partials/additional-options/_#{additional_option.partial}", locals: { data: additional_option.data, type: additional_option.title.downcase } %>
+      </div>
+    <% end %>
+  </div>
+  <%= erb :"advanced/partials/_button" %>
+<% end %>

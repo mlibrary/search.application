@@ -1,0 +1,32 @@
+// --------------------------------------------------
+//
+// # Narrow Search To
+//   Styles to apply directly to `views/advanced/partials/additional-options/_narrow_search_to.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Narrow Search To
+//     2.1. Location
+//     2.2. Collection
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".additional-option__narrow-search-to";
+
+
+
+
+
+// *************************** //
+// *** 2. NARROW SEARCH TO *** //
+// *************************** //
+
+#{$class} {
+  & > * + * {
+    margin-top: 1rem;
+  }
+}

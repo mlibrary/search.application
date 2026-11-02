@@ -1,0 +1,43 @@
+@use '../../../utilities';
+@use '../../../icons';
+
+// --------------------------------------------------
+//
+// # Search Tip
+//   Styles to apply directly to `views/partials/header/search/_tip.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Search Tip
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: '.search-form__tip';
+
+
+
+
+
+// ********************* //
+// *** 2. SEARCH TIP *** //
+// ********************* //
+
+#{$class} {
+  @include utilities.flex();
+  align-items: start;
+  display: none;
+  margin-bottom: 0;
+  &:before {
+    @include icons.icon($icon: 'info', $fill: false);
+    & {
+      flex: none;
+    }
+  }
+  #{$class}--content {
+    flex-grow: 1;
+  }
+}
