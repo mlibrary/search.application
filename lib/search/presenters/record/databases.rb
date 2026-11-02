@@ -106,14 +106,9 @@ module Search::Presenters::Record::Databases
 
     def to_h
       {
-        title: {
-          original: @record.bib.title.text
-        },
+        title: @record.bib.title.to_h,
         metadata: metadata.map do |f|
-          {
-            field: f.field,
-            original: f.values&.first&.text
-          }
+          f.to_h
         end,
         url: url,
         citation: {
