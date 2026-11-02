@@ -5,14 +5,17 @@ import sinon from 'sinon';
 describe('additional search options', function () {
   describe('initializeAdditionalOptions()', function () {
     let initializeDateOptionsSpy = null;
+    let initializeNarrowSearchToSpy = null;
     let initializeAllSelectionsSpy = null;
     let args = null;
 
     beforeEach(function () {
       initializeDateOptionsSpy = sinon.spy();
       initializeAllSelectionsSpy = sinon.spy();
+      initializeNarrowSearchToSpy = sinon.spy();
       args = {
         date: initializeDateOptionsSpy,
+        narrowSearchTo: initializeNarrowSearchToSpy,
         selections: initializeAllSelectionsSpy
       };
 
@@ -23,6 +26,7 @@ describe('additional search options', function () {
     afterEach(function () {
       initializeDateOptionsSpy = null;
       initializeAllSelectionsSpy = null;
+      initializeNarrowSearchToSpy = null;
       args = null;
     });
 
@@ -32,6 +36,10 @@ describe('additional search options', function () {
 
     it('should call `initializeAllSelections` with the correct arguments', function () {
       expect(initializeAllSelectionsSpy.calledOnceWithExactly(), '`initializeAllSelections` should have been called with the correct arguments').to.be.true;
+    });
+
+    it('should call `initializeNarrowSearchTo` with the correct arguments', function () {
+      expect(initializeNarrowSearchToSpy.calledOnceWithExactly(), '`initializeNarrowSearchTo` should have been called with the correct arguments').to.be.true;
     });
   });
 });
