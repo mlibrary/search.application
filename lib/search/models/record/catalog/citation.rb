@@ -4,8 +4,8 @@ class Search::Models::Record::Catalog::Citation
   end
 
   def meta_tags
-    @data["tagged"].map do |entity|
-      entity["meta"].map do |tag|
+    tagged.map do |entity|
+      (entity["meta"] || []).map do |tag|
         {"name" => tag,
          "content" => entity["content"]}
       end
@@ -13,8 +13,8 @@ class Search::Models::Record::Catalog::Citation
   end
 
   def ris
-    @data["tagged"].map do |entity|
-      entity["ris"].map do |tag|
+    tagged.map do |entity|
+      (entity["ris"] || []).map do |tag|
         "#{tag}  - #{entity["content"]}"
       end
     end.flatten.compact.join("\n").strip
@@ -22,5 +22,11 @@ class Search::Models::Record::Catalog::Citation
 
   def csl
     @data&.dig("csl")
+  end
+
+  private
+
+  def tagged
+    @data["tagged"] || []
   end
 end

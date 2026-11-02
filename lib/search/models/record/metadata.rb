@@ -19,6 +19,7 @@ module Search::Models::Record::Metadata
 
   def map_field(uid)
     list = @data.dig(uid.to_s) || []
+    list = [list] if !list.is_a?(Array)
     list.map do |item|
       yield(item)
     end
@@ -130,6 +131,21 @@ module Search::Models::Record::Metadata
     end
   end
 
+  class PlainItem < Item
+    attr_reader :text
+    def initialize(text)
+      @text = text
+    end
+  end
+
+  class PlainLinkToItem < Item
+    attr_reader :text, :url
+    def initialize(text:, url:)
+      @text = text
+      @url = url
+    end
+  end
+
   class LinkToItem < Item
     def initialize(data:, datastore:)
       @data = data
@@ -214,8 +230,9 @@ module Search::Models::Record::Metadata
   end
 
   class AcademicDisciplineItem
-    def initialize(data)
+    def initialize(olddata = "", data: olddata, datastore: "catalog")
       @data = data
+      @datastore = datastore
     end
 
     def paired?
@@ -235,19 +252,20 @@ module Search::Models::Record::Metadata
 
     def disciplines
       @data["list"].map do |text|
-        AcademicDisciplineElement.new(text)
+        AcademicDisciplineElement.new(text: text, datastore: @datastore)
       end
     end
   end
 
   class AcademicDisciplineElement < LinkToItem
     attr_reader :text
-    def initialize(text)
+    def initialize(text:, datastore: "catalog")
       @text = text
+      @datastore = datastore
     end
 
     def url
-      "#{S.base_url}/catalog?" + {query: "academic_discipline:#{text}"}.to_query
+      "#{S.base_url}/#{@datastore}?" + {query: "academic_discipline:#{text}"}.to_query
     end
   end
 
