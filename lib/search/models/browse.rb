@@ -1,7 +1,7 @@
 module Search::Models::Browse
   class AcademicDisciplines
     def self.for(datastore:)
-      data = Search::Clients::SearchAPI.new.get_onlinejournals_academic_disciplines
+      data = Search::Clients::SearchAPI.new.public_send("get_#{datastore}_academic_disciplines")
       new(data)
     rescue => e
       S.logger.error(e)

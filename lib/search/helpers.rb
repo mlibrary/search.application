@@ -2,7 +2,7 @@ require "yaml"
 module Search
   module ViewHelpers
     def link_to(body:, url:, classes: [], open_in_new: false, utm_source: "library-search", rest: nil)
-      uri = URI.parse(url)
+      uri = Addressable::URI.parse(url.sub(/\/$/, ""))
 
       if ["http", "https"].include?(uri.scheme) && !uri.host.nil? && uri.host != URI.parse(S.base_url).host
         params = URI.decode_www_form(uri.query || "") + {utm_source: utm_source}.to_a

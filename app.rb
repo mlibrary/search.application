@@ -107,7 +107,7 @@ class Search::Application < Sinatra::Base
   end
 
   Search::Datastores.each do |datastore|
-    if ["catalog", "onlinejournals", "articles"].include?(datastore.slug)
+    if ["catalog", "onlinejournals", "articles", "databases"].include?(datastore.slug)
       get "/#{datastore.slug}/record/:id" do
         # profile = RubyProf::Profile.new
         # profile.start
@@ -136,8 +136,9 @@ class Search::Application < Sinatra::Base
       get "/#{datastore.slug}/record/:id/ris" do
         attachment "#{params["id"]}.ris"
         Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").ris
-      rescue
-        redirect "/#{datastore.slug}/record/:id"
+      rescue => e
+        S.logger.error("RIS download fail", {message: e})
+        redirect "/#{datastore.slug}/record/#{params["id"]}"
       end
 
       get "/#{datastore.slug}" do
@@ -250,7 +251,9 @@ class Search::Application < Sinatra::Base
     headers "metrics.route" => "not_found"
     @presenter = Search::Presenters.for_404_page(uri: URI.parse(request.fullpath), patron: @patron)
     status 404
-    erb :"errors/404"
+    erb :"errors/layout", layout: :layout do
+      erb :"errors/404"
+    end
   end
 
   post "/search" do

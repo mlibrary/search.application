@@ -86,7 +86,9 @@ services:
       - -r
       - "./app.rb"
   search-api:
-    image: ghcr.io/mlibrary/search.api-unstable:latest
+    image: ${API_IMAGE:-ghcr.io/mlibrary/search.api-unstable:latest}
+    platform: linux/amd64
+    pull_policy: ${API_PULL_POLICY:-always}
     env_file:
       - .env
     environment:
@@ -105,7 +107,9 @@ services:
       - --host
       - 0.0.0.0
   parser:
-    image: ghcr.io/mlibrary/search.parser-unstable:latest
+    image: ${PARSER_IMAGE:-ghcr.io/mlibrary/search.parser-unstable:latest}
+    platform: linux/amd64
+    pull_policy: ${PARSER_PULL_POLICY:-always}
     ports:
       - 4000:4567
     environment:

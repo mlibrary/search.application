@@ -89,7 +89,7 @@ class Search::Presenters::Results::Catalog
   end
 
   def sort_options
-    SORT_OPTIONS.map do |option|
+    self.class::SORT_OPTIONS.map do |option|
       SortOption.new(**option, uri: @results.originating_uri)
     end
   end
@@ -166,6 +166,11 @@ class Search::Presenters::Results::Articles < Search::Presenters::Results::Catal
     "date",
     "language"
   ]
+  SORT_OPTIONS = [
+    {uid: "relevance", name: "Relevance"},
+    {uid: "date_asc", name: "Published/Created Date (oldest first)"},
+    {uid: "date_desc", name: "Published/Created Date (newest first)"}
+  ]
 
   def boolean_filters
     [
@@ -204,6 +209,30 @@ class Search::Presenters::Results::Articles < Search::Presenters::Results::Catal
   def records
     @results.records.map do |record|
       Search::Presenters::Record::Articles::Brief.new(record)
+    end
+  end
+end
+
+class Search::Presenters::Results::Databases < Search::Presenters::Results::Catalog
+  FILTER_ORDER = [
+    "academic_discipline",
+    "access_type",
+    "database_type"
+  ]
+
+  SORT_OPTIONS = [
+    {uid: "relevance", name: "Relevance"},
+    {uid: "title_asc", name: "Title (A-Z)"},
+    {uid: "title_desc", name: "Title (Z-A)"}
+  ]
+
+  def boolean_filters
+    []
+  end
+
+  def records
+    @results.records.map do |record|
+      Search::Presenters::Record::Databases::Brief.new(record)
     end
   end
 end
