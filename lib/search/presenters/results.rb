@@ -236,3 +236,27 @@ class Search::Presenters::Results::Databases < Search::Presenters::Results::Cata
     end
   end
 end
+
+class Search::Presenters::Results::Guidesandmore < Search::Presenters::Results::Catalog
+  FILTER_ORDER = [
+    "page_type"
+  ]
+
+  SORT_OPTIONS = [
+    {uid: "relevance", name: "Relevance"},
+    {uid: "title_asc", name: "Title (A-Z)"},
+    {uid: "title_desc", name: "Title (Z-A)"},
+    {uid: "date_asc", name: "Creation Date (oldest first)"},
+    {uid: "date_desc", name: "Creation Date (newest first)"}
+  ]
+
+  def boolean_filters
+    []
+  end
+
+  def records
+    @results.records.map do |record|
+      Search::Presenters::Record::Guidesandmore::Full.new(record)
+    end
+  end
+end

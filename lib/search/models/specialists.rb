@@ -27,6 +27,12 @@ class Search::Models::Specialists
     new(data)
   end
 
+  def self.for_guidesandmore(uri)
+    params = Search::Models::Results::Guidesandmore.get_params(uri: uri).slice(:query)
+    data = Search::Clients::SearchAPI.new.get_catalog_specialists(**params)
+    new(data)
+  end
+
   def initialize(data)
     @data = data
   end
