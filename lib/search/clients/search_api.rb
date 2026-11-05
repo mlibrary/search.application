@@ -129,6 +129,16 @@ module Search
         @conn.get(url, **params).body
       end
 
+      def get_guidesandmore_record(id)
+        @conn.get("guidesandmore/records/#{id}").body
+      end
+
+      def get_guidesandmore_results(limit: 10, offset: 0, query: "*", filters: [], sort: "")
+        params = {offset: offset, limit: limit, query: query, sort: sort}
+        params[:filters] = filters unless filters.empty?
+        @conn.get("guidesandmore/search", **params).body
+      end
+
       def boolean_params(filters, kind: :catalog)
         result = {}
         filters.each do |filter|
