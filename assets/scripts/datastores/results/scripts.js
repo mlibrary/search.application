@@ -1,12 +1,12 @@
-import { defaultTemporaryList, getSessionStorage } from '../list/layout.js';
+import { defaultTemporaryList, getLocalStorage } from '../list/layout.js';
 import { hideInfo } from './partials/_info.js';
 import { libraryScope } from './partials/_library-scope.js';
 import { resultsList } from './layout.js';
 import { sortResults } from './partials/summary/_sort.js';
 import { toggleItems } from '../partials/_toggle.js';
 
-// Get the temporary list from session storage
-const list = getSessionStorage({ defaultValue: defaultTemporaryList, itemName: 'temporaryList' });
+// Get the temporary list from local storage
+const list = getLocalStorage({ defaultValue: defaultTemporaryList, itemName: 'temporaryList' });
 
 // Hide datastore info
 hideInfo();

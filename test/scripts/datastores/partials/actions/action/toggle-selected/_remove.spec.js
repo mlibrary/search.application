@@ -109,7 +109,7 @@ describe('remove selected', function () {
   describe('handleRemoveSelectedClick()', function () {
     let deleteSelectedRecordsStub = null;
     let reloadPageSpy = null;
-    let setSessionStorageSpy = null;
+    let setLocalStorageSpy = null;
     let temporaryListBannerSpy = null;
     let toggleSelectedButtonSpy = null;
     let getToggleSelectedTabSpy = null;
@@ -121,7 +121,7 @@ describe('remove selected', function () {
     beforeEach(function () {
       deleteSelectedRecordsStub = sinon.stub().returns({});
       reloadPageSpy = sinon.spy();
-      setSessionStorageSpy = sinon.spy();
+      setLocalStorageSpy = sinon.spy();
       temporaryListBannerSpy = sinon.spy();
       toggleSelectedButtonSpy = sinon.spy();
       getToggleSelectedTabSpy = sinon.spy();
@@ -132,7 +132,7 @@ describe('remove selected', function () {
         event: { target: getRemoveSelectedButton() },
         list: global.temporaryList,
         reloadPage: reloadPageSpy,
-        setList: setSessionStorageSpy,
+        setList: setLocalStorageSpy,
         showBanner: temporaryListBannerSpy,
         toggleRemoveButton: toggleSelectedButtonSpy,
         toggleSelectedTab: { click: getToggleSelectedTabSpy },
@@ -146,7 +146,7 @@ describe('remove selected', function () {
     afterEach(function () {
       deleteSelectedRecordsStub = null;
       reloadPageSpy = null;
-      setSessionStorageSpy = null;
+      setLocalStorageSpy = null;
       temporaryListBannerSpy = null;
       toggleSelectedButtonSpy = null;
       getToggleSelectedTabSpy = null;
@@ -170,8 +170,8 @@ describe('remove selected', function () {
         expect(deleteSelectedRecordsStub.calledWith({ list: args.list }), '`deleteSelectedRecords` should be called with the correct arguments').to.be.true;
       });
 
-      it('should call `setSessionStorage` with the correct arguments', function () {
-        expect(setSessionStorageSpy.calledWith({ itemName: 'temporaryList', value: deleteSelectedRecordsStub.returnValues[0] }), '`setSessionStorage` should be called with the correct arguments').to.be.true;
+      it('should call `setLocalStorage` with the correct arguments', function () {
+        expect(setLocalStorageSpy.calledWith({ itemName: 'temporaryList', value: deleteSelectedRecordsStub.returnValues[0] }), '`setLocalStorage` should be called with the correct arguments').to.be.true;
       });
 
       it('should call `reloadPage` to reload the page', function () {
@@ -213,8 +213,8 @@ describe('remove selected', function () {
         expect(deleteSelectedRecordsStub.calledWith({ list: args.list }), '`deleteSelectedRecords` should be called with the correct arguments').to.be.true;
       });
 
-      it('should call `setSessionStorage` with the correct arguments', function () {
-        expect(setSessionStorageSpy.calledWith({ itemName: 'temporaryList', value: deleteSelectedRecordsStub.returnValues[0] }), '`setSessionStorage` should be called with the correct arguments').to.be.true;
+      it('should call `setLocalStorage` with the correct arguments', function () {
+        expect(setLocalStorageSpy.calledWith({ itemName: 'temporaryList', value: deleteSelectedRecordsStub.returnValues[0] }), '`setLocalStorage` should be called with the correct arguments').to.be.true;
       });
 
       it('should not call `reloadPage` to reload the page', function () {

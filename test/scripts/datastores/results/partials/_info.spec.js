@@ -79,21 +79,21 @@ describe('info', function () {
 
   describe('hideInfo()', function () {
     let datastoreInfo = null;
-    let getSessionStorageStub = null;
-    let setSessionStorageStub = null;
+    let getLocalStorageStub = null;
+    let setLocalStorageStub = null;
     let toggleInfoSectionClassStub = null;
     let args = null;
     const itemName = 'datastoreInfo';
 
     beforeEach(function () {
       datastoreInfo = { articles: false };
-      getSessionStorageStub = sinon.stub().returns(datastoreInfo);
-      setSessionStorageStub = sinon.stub();
+      getLocalStorageStub = sinon.stub().returns(datastoreInfo);
+      setLocalStorageStub = sinon.stub();
       toggleInfoSectionClassStub = sinon.stub();
       args = {
         button: getButton(),
-        list: getSessionStorageStub(),
-        setInfoSection: setSessionStorageStub,
+        list: getLocalStorageStub(),
+        setInfoSection: setLocalStorageStub,
         toggleInfoSection: toggleInfoSectionClassStub
       };
 
@@ -103,8 +103,8 @@ describe('info', function () {
 
     afterEach(function () {
       datastoreInfo = null;
-      getSessionStorageStub = null;
-      setSessionStorageStub = null;
+      getLocalStorageStub = null;
+      setLocalStorageStub = null;
       toggleInfoSectionClassStub = null;
       args = null;
     });
@@ -113,11 +113,11 @@ describe('info', function () {
       expect(toggleInfoSectionClassStub.calledWithExactly({ infoSection: args.button.parentElement, isAdded: false }), 'the `toggleInfoSection` function should be called once initially with the correct arguments').to.be.true;
     });
 
-    it('should call `setSessionStorage` with the correct arguments on button click', function () {
+    it('should call `setLocalStorage` with the correct arguments on button click', function () {
       // Simulate a button click
       args.button.click();
 
-      expect(setSessionStorageStub.calledWithExactly({ itemName, value: { ...datastoreInfo, articles: !datastoreInfo.articles } }), 'the `setSessionStorage` function should be called with the correct arguments on button click').to.be.true;
+      expect(setLocalStorageStub.calledWithExactly({ itemName, value: { ...datastoreInfo, articles: !datastoreInfo.articles } }), 'the `setLocalStorage` function should be called with the correct arguments on button click').to.be.true;
     });
 
     it('should call `toggleInfoSectionClass` again with the correct arguments on button click', function () {

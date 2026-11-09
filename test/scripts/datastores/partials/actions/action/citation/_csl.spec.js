@@ -120,7 +120,7 @@ describe('csl', function () {
         expect(getListCitationDataStub.calledOnceWithExactly({ list: global.temporaryList, type: 'csl' }), 'getListCitationData() should have been called').to.be.true;
       });
 
-      it('should cache the CSL data from session storage', function () {
+      it('should cache the CSL data from local storage', function () {
         expect(cslDataCache, 'the cached CSL data should match the expected data').to.deep.equal(listCSLData);
       });
 
