@@ -256,7 +256,7 @@ class Search::Presenters::Results::Guidesandmore < Search::Presenters::Results::
 
   def records
     @results.records.map do |record|
-      Search::Presenters::Record::Guidesandmore::Full.new(record)
+      Search::Presenters::Record::Guidesandmore::Brief.new(record)
     end
   end
 end

@@ -6,7 +6,7 @@ class Search::Models::Record::Onlinejournals < Search::Models::Record::Catalog
       # get data from the api with the client
       data = Search::Clients::SearchAPI.new.get_onlinejournals_record(id)
     end
-    new(data)
+    new(data, originating_uri: uri)
   end
 
   def recommended?

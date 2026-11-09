@@ -59,7 +59,17 @@ module Search
         end
 
         def url
-          "#{S.base_url}/#{datastore}/record/#{id}"
+          return base_url if @record.originating_uri.nil?
+          result = Addressable::URI.parse(base_url)
+          request_qv = Addressable::URI.parse(@record.originating_uri).query_values(Array) || []
+          request_qv.reject! { |x| x[0] == "position" }
+          request_qv.append(["position", @record.position]) unless @record.position.nil?
+          result.query_values = request_qv
+          result.display_uri.to_s
+        end
+
+        def ris_action_url
+          "#{base_url}/ris"
         end
 
         def datastore
@@ -92,6 +102,14 @@ module Search
         end
 
         private
+
+        def base_url
+          "#{S.base_url}/#{datastore}/record/#{id}"
+        end
+
+        def external_url?
+          false
+        end
 
         def field_for(field:, partial:, values:, uid: nil)
           Field.new(uid: uid, field: field, partial: partial, values: values) if values.present?

@@ -17,6 +17,6 @@ class Search::Models::Results::Onlinejournals < Search::Models::Results::Catalog
   end
 
   def records
-    @records ||= @data["records"].each_with_index.map { |x, index| Search::Models::Record::Onlinejournals.new(x, position: position(index)) }
+    @records ||= @data["records"].each_with_index.map { |x, index| Search::Models::Record::Onlinejournals.new(x, position: position(index), originating_uri: @originating_uri) }
   end
 end

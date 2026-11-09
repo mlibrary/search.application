@@ -13,14 +13,15 @@ class Search::Models::Record::Catalog
       # get data from the api with the client
       data = Search::Clients::SearchAPI.new.get_catalog_record(id, ht_search_only)
     end
-    new(data)
+    new(data, originating_uri: uri)
   end
 
-  attr_reader :position
+  attr_reader :position, :originating_uri
 
-  def initialize(data, position: nil)
+  def initialize(data, position: nil, originating_uri: nil)
     @data = data
     @position = position
+    @originating_uri = originating_uri
   end
 
   def bib

@@ -78,7 +78,7 @@ class Search::Models::Results::Catalog
   end
 
   def records
-    @records ||= @data["records"].each_with_index.map { |x, index| Search::Models::Record::Catalog.new(x, position: position(index)) }
+    @records ||= @data["records"].each_with_index.map { |x, index| Search::Models::Record::Catalog.new(x, position: position(index), originating_uri: @originating_uri) }
   end
 
   def pagination

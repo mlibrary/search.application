@@ -31,6 +31,14 @@ module Search::Presenters::Record::Guidesandmore
       end
     end
 
+    def url
+      @record.url
+    end
+
+    def external_url?
+      true
+    end
+
     def holdings
       OpenStruct.new(list: [])
     end
