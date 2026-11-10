@@ -1,0 +1,139 @@
+{
+  "records": [
+    {
+      "id": "MjgyOTY4XzE4ODU0NjQ",
+      "title": [
+        {
+          "text": "Christmas Music on Finding Christmas Music in the Music Library"
+        }
+      ],
+      "type": [
+        {
+          "text": "Research Guides"
+        }
+      ],
+      "author": [
+        {
+          "text": "So and So"
+        }
+      ],
+      "description": [
+        {
+          "text": "This is a guide to finding printed Christmas music in the Music Library."
+        }
+      ],
+      "url": "https://guides.lib.umich.edu/christmasmusic/home",
+      "citation": {
+        "tagged": [
+          {
+            "content": "WEB",
+            "ris": [
+              "TY"
+            ]
+          },
+          {
+            "content": "U-M Guides And More Search",
+            "ris": [
+              "DB"
+            ]
+          },
+          {
+            "content": "University of Michigan Library",
+            "ris": [
+              "DP"
+            ]
+          },
+          {
+            "content": "2026-11-10",
+            "ris": [
+              "Y2"
+            ],
+            "meta": [
+              "online_date"
+            ]
+          },
+          {
+            "content": "282968_1885464",
+            "ris": [
+              "ID"
+            ],
+            "meta": [
+              "id"
+            ]
+          },
+          {
+            "content": "Christmas Music on Finding Christmas Music in the Music Library",
+            "ris": [
+              "T1",
+              "TI"
+            ],
+            "meta": [
+              "title"
+            ]
+          },
+          {
+            "content": "https://guides.lib.umich.edu/christmasmusic/home",
+            "ris": [
+              "L2",
+              "UR"
+            ],
+            "meta": [
+              "fulltext_html_url"
+            ]
+          },
+          {
+            "content": "This is a guide to finding printed Christmas music in the Music Library.",
+            "ris": [
+              "N2"
+            ]
+          },
+          {
+            "content": "",
+            "ris": [
+              "ER"
+            ]
+          }
+        ],
+        "csl": {
+          "id": "282968_1885464",
+          "type": "webpage",
+          "title": "Christmas Music on Finding Christmas Music in the Music Library",
+          "author": [
+            {
+              "family": "So",
+              "given": "So and"
+            }
+          ],
+          "URL": "https://guides.lib.umich.edu/christmasmusic/home"
+        }
+      }
+    }
+  ],
+  "filters": [
+    {
+      "field": "page_type",
+      "values": [
+        {
+          "text": "Research Guides",
+          "count": 1
+        },
+        {
+          "text": "Blogs and Blog Posts",
+          "count": 1
+        },
+        {
+          "text": "Specialty Sites",
+          "count": 1
+        },
+        {
+          "text": "Online Exhibits",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "limit": 10,
+  "offset": 0,
+  "total": 1,
+  "sort": "relevance"
+}

@@ -4,16 +4,10 @@ module Search
       @datastore = datastore
     end
 
-    def slug
-      @datastore["slug"]
-    end
-
-    def title
-      @datastore["title"]
-    end
-
-    def description
-      @datastore["description"]
+    ["slug", "title", "description"].each do |method|
+      define_method(method) do
+        fetch_string(method)
+      end
     end
 
     def search_options
@@ -21,11 +15,17 @@ module Search
     end
 
     def flint_message(campus:, page_param:)
-      @datastore["flint_message"] if campus == "flint" && (page_param.to_i <= 1)
+      fetch_string("flint_message") if campus == "flint" && (page_param.to_i <= 1)
     end
 
     def aria_current_attribute(presenter_slug)
       (slug == presenter_slug) ? "page" : "false"
+    end
+
+    private
+
+    def fetch_string(key)
+      @datastore[key].tr("\n", " ").strip
     end
   end
 
