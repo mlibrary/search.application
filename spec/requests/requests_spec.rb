@@ -17,6 +17,7 @@ RSpec.describe "requests" do
     env "rack.session", @session
     get "/accessibility?something=other"
   }
+
   def base_api_record
     create(:catalog_api_record, fields: [:id, :call_number, :title, :citation, :holdings, :indexing_date])
   end
@@ -178,8 +179,8 @@ RSpec.describe "requests" do
   end
   context "/catalog/record/:id" do
     it "shows the catalog record page" do
-      bib_id = "9912345"
       data = base_api_record
+      bib_id = data["id"]
       call_number = data["call_number"][0]["text"]
       stub_request(:get, "#{S.search_api_url}/catalog/records/#{bib_id}")
         .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
@@ -193,8 +194,8 @@ RSpec.describe "requests" do
   end
   context "/onlinejournals/record/:id" do
     it "shows the catalog record page" do
-      bib_id = "9912345"
       data = base_onlinejournals_api_record
+      bib_id = data["id"]
       stub_request(:get, "#{S.search_api_url}/onlinejournals/records/#{bib_id}")
         .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
       get "/onlinejournals/record/#{bib_id}"
@@ -206,7 +207,7 @@ RSpec.describe "requests" do
   end
   context "/articles/record/:id" do
     it "shows the article record page" do
-      bib_id = "cdi_something_9912345"
+      bib_id = articles_record["id"]
       stub_request(:get, "#{S.search_api_url}/articles/records/#{bib_id}")
         .to_return(status: 200, body: articles_record.to_json, headers: {content_type: "application/json"})
       get "/articles/record/#{bib_id}"
@@ -219,7 +220,7 @@ RSpec.describe "requests" do
 
   context "/databases/record/:id" do
     it "shows the databases record page" do
-      id = "some_id"
+      id = databases_record["id"]
       stub_request(:get, "#{S.search_api_url}/databases/records/#{id}")
         .to_return(status: 200, body: databases_record.to_json, headers: {content_type: "application/json"})
       get "/databases/record/#{id}"

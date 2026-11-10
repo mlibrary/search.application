@@ -101,14 +101,14 @@ module Search
           []
         end
 
+        def external_url?
+          false
+        end
+
         private
 
         def base_url
           "#{S.base_url}/#{datastore}/record/#{id}"
-        end
-
-        def external_url?
-          false
         end
 
         def field_for(field:, partial:, values:, uid: nil)

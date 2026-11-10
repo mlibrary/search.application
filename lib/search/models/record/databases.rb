@@ -8,7 +8,7 @@ class Search::Models::Record::Databases
       # get data from the api with the client
       data = Search::Clients::SearchAPI.new.get_databases_record(id)
     end
-    new(data, originating_uri: originating_uri)
+    new(data, originating_uri: uri)
   end
 
   attr_reader :position, :originating_uri

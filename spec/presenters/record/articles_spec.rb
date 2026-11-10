@@ -3,7 +3,8 @@ describe Search::Presenters::Record::Articles::Full do
     instance_double(Search::Models::Record::Articles,
       bib: instance_double(Search::Models::Record::Articles::Bib),
       holdings: instance_double(Search::Models::Record::Articles::Holdings),
-      citation: instance_double(Search::Models::Record::Catalog::Citation))
+      citation: instance_double(Search::Models::Record::Catalog::Citation),
+      originating_uri: nil)
   end
   def text(str)
     [double(text: str, to_h: {text: str})]
@@ -138,7 +139,8 @@ describe Search::Presenters::Record::Articles::Brief do
     instance_double(Search::Models::Record::Articles,
       bib: instance_double(Search::Models::Record::Articles::Bib),
       holdings: instance_double(Search::Models::Record::Articles::Holdings),
-      citation: instance_double(Search::Models::Record::Catalog::Citation))
+      citation: instance_double(Search::Models::Record::Catalog::Citation),
+      originating_uri: nil)
   end
 
   subject do
