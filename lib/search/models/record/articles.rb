@@ -1,10 +1,4 @@
-class Search::Models::Record::Articles
-end
-
-require "search/models/record/articles/bib"
-require "search/models/record/articles/holdings"
-
-class Search::Models::Record::Articles
+class Search::Models::Record::Articles < Search::Models::Record::Base
   def self.for(id, uri = nil)
     data = nil
     Yabeda.search_api_full_record_duration.measure do
@@ -13,8 +7,6 @@ class Search::Models::Record::Articles
     end
     new(data, originating_uri: uri)
   end
-
-  attr_reader :position, :originating_uri
 
   def initialize(data, position: nil, originating_uri: nil)
     @data = data
@@ -38,3 +30,5 @@ class Search::Models::Record::Articles
     Search::Models::Record::Catalog::Citation.new(@data)
   end
 end
+require "search/models/record/articles/bib"
+require "search/models/record/articles/holdings"

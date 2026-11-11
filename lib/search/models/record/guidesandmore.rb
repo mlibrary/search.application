@@ -1,15 +1,4 @@
-class Search::Models::Record::Guidesandmore
-  attr_reader :position, :originating_uri
-
-  def self.for(id, uri = nil)
-    data = nil
-    Yabeda.search_api_full_record_duration.measure do
-      # get data from the api with the client
-      data = Search::Clients::SearchAPI.new.get_record(datastore: "guidesandmore", id: id)
-    end
-    new(data, originating_uri: uri)
-  end
-
+class Search::Models::Record::Guidesandmore < Search::Models::Record::Base
   def initialize(data, position: nil, originating_uri: uri)
     @data = data
     @position = position

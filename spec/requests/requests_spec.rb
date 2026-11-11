@@ -245,6 +245,18 @@ RSpec.describe "requests" do
         expect(last_response.body).to include("Christmas music")
       end
     end
+    context "brief" do
+      it "shows a brief record" do
+        record = guidesandmore_results["records"][0]
+        id = record["id"]
+        stub_request(:get, "#{S.search_api_url}/guidesandmore/records/#{id}")
+          .to_return(status: 200, body: record.to_json, headers: {content_type: "application/json"})
+        get "/guidesandmore/record/#{id}/brief"
+        expect(last_response.status).to eq(200)
+        expect(last_response.body).to include("Christmas music")
+        expect(last_response.content_type).to eq("application/json")
+      end
+    end
   end
   context "/catalog/record/:id" do
     it "shows the catalog record page" do
