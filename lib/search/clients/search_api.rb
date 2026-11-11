@@ -45,12 +45,12 @@ module Search
         @conn.get("#{datastore}/search", **params).body
       end
 
-      def get_catalog_specialists(query: "*", filters: [], boolean_filters: [])
+      def get_specialists(datastore: :catalog, query: "*", filters: [], boolean_filters: [])
         params = {query: query}
         params[:filters] = filters unless filters.empty?
-        bp = boolean_params(boolean_filters, datastore: :catalog)
+        bp = boolean_params(boolean_filters, datastore: datastore.to_sym)
         params.merge!(bp)
-        @conn.get("catalog/specialists", **params).body
+        @conn.get("#{datastore}/specialists", **params).body
       end
 
       def get_onlinejournals_browse_academic_discipline(academic_discipline:, limit: 10, offset: 0)
@@ -59,20 +59,8 @@ module Search
         @conn.get(url, **params).body
       end
 
-      def get_onlinejournals_specialists(query: "*", filters: [])
-        params = {query: query}
-        params[:filters] = filters unless filters.empty?
-        @conn.get("onlinejournals/specialists", **params).body
-      end
-
       def get_onlinejournals_academic_disciplines
         @conn.get("onlinejournals/academic_disciplines").body
-      end
-
-      def get_databases_specialists(query: "*", filters: [])
-        params = {query: query}
-        params[:filters] = filters unless filters.empty?
-        @conn.get("databases/specialists", **params).body
       end
 
       def get_databases_academic_disciplines
