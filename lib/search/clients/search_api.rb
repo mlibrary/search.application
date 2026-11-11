@@ -36,23 +36,21 @@ module Search
         @conn.get("#{datastore}/records/#{id}", **params).body
       end
 
-      def get_catalog_results(limit: 10, offset: 0, query: "*", filters: [], sort: "", boolean_filters: [])
-        bp = boolean_params(boolean_filters, kind: :catalog)
-        @conn.get("catalog/search", offset: offset, limit: limit, query: query, filters: filters, sort: sort, **bp).body
+      def get_results(datastore:, limit: 10, offset: 0, query: "*", filters: [], sort: "", boolean_filters: [])
+        params = {offset: offset, limit: limit, query: query, sort: sort}
+        my_filters = filters_params(filters, datastore: datastore.to_sym)
+        params[:filters] = my_filters unless my_filters.empty?
+        bp = boolean_params(boolean_filters, datastore: datastore.to_sym)
+        params.merge!(bp)
+        @conn.get("#{datastore}/search", **params).body
       end
 
       def get_catalog_specialists(query: "*", filters: [], boolean_filters: [])
         params = {query: query}
         params[:filters] = filters unless filters.empty?
-        bp = boolean_params(boolean_filters, kind: :catalog)
+        bp = boolean_params(boolean_filters, datastore: :catalog)
         params.merge!(bp)
         @conn.get("catalog/specialists", **params).body
-      end
-
-      def get_onlinejournals_results(limit: 10, offset: 0, query: "*", filters: [], sort: "")
-        params = {offset: offset, limit: limit, query: query, sort: sort}
-        params[:filters] = filters unless filters.empty?
-        @conn.get("onlinejournals/search", **params).body
       end
 
       def get_onlinejournals_browse_academic_discipline(academic_discipline:, limit: 10, offset: 0)
@@ -71,34 +69,6 @@ module Search
         @conn.get("onlinejournals/academic_disciplines").body
       end
 
-      def get_articles_results(limit: 10, offset: 0, sort: "", query: "*", filters: [], boolean_filters: [])
-        params = {offset: offset, limit: limit, sort: sort, query: query}
-        af = articles_filters(filters)
-        params[:filters] = af unless af.empty?
-        bp = boolean_params(boolean_filters, kind: :articles)
-        params.merge!(bp)
-        @conn.get("articles/search", **params).body
-      end
-
-      def articles_filters(filters)
-        filters.map do |filter|
-          kind, value = filter.split(":")[0, 2]
-
-          if kind == "date"
-            years = value.split("-")[0, 2]
-            "date:#{years.join(",")}"
-          else
-            filter
-          end
-        end
-      end
-
-      def get_databases_results(limit: 10, offset: 0, query: "*", filters: [], sort: "")
-        params = {offset: offset, limit: limit, query: query, sort: sort}
-        params[:filters] = filters unless filters.empty?
-        @conn.get("databases/search", **params).body
-      end
-
       def get_databases_specialists(query: "*", filters: [])
         params = {query: query}
         params[:filters] = filters unless filters.empty?
@@ -115,20 +85,30 @@ module Search
         @conn.get(url, **params).body
       end
 
-      def get_guidesandmore_results(limit: 10, offset: 0, query: "*", filters: [], sort: "")
-        params = {offset: offset, limit: limit, query: query, sort: sort}
-        params[:filters] = filters unless filters.empty?
-        @conn.get("guidesandmore/search", **params).body
+      def filters_params(filters, datastore:)
+        if datastore == :articles
+          return filters.map do |filter|
+            kind, value = filter.split(":")[0, 2]
+
+            if kind == "date"
+              years = value.split("-")[0, 2]
+              "date:#{years.join(",")}"
+            else
+              filter
+            end
+          end
+        end
+        filters
       end
 
-      def boolean_params(filters, kind: :catalog)
+      def boolean_params(filters, datastore: :catalog)
         result = {}
         filters.each do |filter|
           key, value = filter.split(":")
           value = value == "true"
-          param = BOOLEAN_FILTER_MAP.dig(kind, :name, key)
+          param = BOOLEAN_FILTER_MAP.dig(datastore, :name, key)
           if param
-            if (BOOLEAN_FILTER_MAP.dig(kind, :toggle_value) || []).include?(param)
+            if (BOOLEAN_FILTER_MAP.dig(datastore, :toggle_value) || []).include?(param)
               value = value ? false : true
             end
             result[param] = value if value

@@ -7,7 +7,7 @@ class Search::Models::Results::Onlinejournals < Search::Models::Results::Base
       ad = params[:filters][0].split(":")[1]
       api_client.get_onlinejournals_browse_academic_discipline(limit: params[:limit], offset: params[:offset], academic_discipline: ad)
     else
-      api_client.get_onlinejournals_results(**params)
+      api_client.get_results(datastore: datastore, **params)
     end
     new(data: data, originating_uri: uri)
   end

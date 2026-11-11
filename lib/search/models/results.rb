@@ -1,5 +1,9 @@
 module Search::Models::Results
   class Base
+    def self.datastore
+      name.split("::").last.downcase
+    end
+
     def self.get_params(uri:, limit: nil, offset: nil)
       get_base_params(uri: uri, limit: limit, offset: offset)
     end
@@ -50,7 +54,7 @@ module Search::Models::Results
     end
 
     def datastore
-      self.class.name.split("::").last.downcase
+      self.class.datastore
     end
 
     def limit

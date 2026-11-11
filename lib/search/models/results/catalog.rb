@@ -26,7 +26,7 @@ class Search::Models::Results::Catalog < Search::Models::Results::Base
     library = LIBRARY_MAP[qh["library"]] || "aa"
     params[:filters].push("library:#{library}")
 
-    data = Search::Clients::SearchAPI.new.get_catalog_results(**params)
+    data = Search::Clients::SearchAPI.new.get_results(datastore: datastore, **params)
     new(data: data, originating_uri: uri)
   end
 end
