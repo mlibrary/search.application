@@ -53,19 +53,13 @@ module Search
         @conn.get("#{datastore}/specialists", **params).body
       end
 
-      def get_onlinejournals_browse_academic_discipline(academic_discipline:, limit: 10, offset: 0)
-        params = {offset: offset, limit: limit}
-        url = Addressable::URI.encode_component("onlinejournals/browse_academic_discipline/#{academic_discipline}")
-        @conn.get(url, **params).body
-      end
-
       def get_academic_disciplines(datastore:)
         @conn.get("#{datastore}/academic_disciplines").body
       end
 
-      def get_databases_browse_academic_discipline(academic_discipline:, limit: 10, offset: 0)
+      def get_browse_academic_discipline(datastore:, academic_discipline:, limit: 10, offset: 0)
         params = {offset: offset, limit: limit}
-        url = Addressable::URI.encode_component("databases/browse_academic_discipline/#{academic_discipline}")
+        url = Addressable::URI.encode_component("#{datastore}/browse_academic_discipline/#{academic_discipline}")
         @conn.get(url, **params).body
       end
 

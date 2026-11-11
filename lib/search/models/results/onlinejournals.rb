@@ -5,7 +5,7 @@ class Search::Models::Results::Onlinejournals < Search::Models::Results::Base
     api_client = Search::Clients::SearchAPI.new
     data = if params[:query] == "" && params[:sort] == "title_asc" && params[:filters].count == 1 && params[:filters][0].split(":")[0] == "academic_discipline"
       ad = params[:filters][0].split(":")[1]
-      api_client.get_onlinejournals_browse_academic_discipline(limit: params[:limit], offset: params[:offset], academic_discipline: ad)
+      api_client.get_browse_academic_discipline(datastore: datastore, limit: params[:limit], offset: params[:offset], academic_discipline: ad)
     else
       api_client.get_results(datastore: datastore, **params)
     end
