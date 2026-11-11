@@ -29,6 +29,13 @@ module Search::Models::Record
       "#{self.class}::Bib".constantize.new(@data)
     end
 
+    def holdings
+      holdings_class_name = "#{self.class}::Holdings"
+      if Object.const_defined?(holdings_class_name)
+        holdings_class_name.constantize.new(@data)
+      end
+    end
+
     def citation
       Search::Models::Record::Citation.new(@data)
     end
@@ -41,8 +48,6 @@ end
 
 require "search/models/record/metadata"
 require "search/models/record/citation"
-require "search/models/record/catalog"
-require "search/models/record/onlinejournals"
-require "search/models/record/articles"
-require "search/models/record/databases"
-require "search/models/record/guidesandmore"
+Search::Datastores.main.each do |datastore|
+  require "search/models/record/#{datastore}"
+end

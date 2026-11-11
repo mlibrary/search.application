@@ -6,9 +6,6 @@ class Search::Models::Record::Databases < Search::Models::Record::Base
   def url
     @data["permalink"]
   end
-
-  def holdings
-  end
 end
 
 require "search/models/record/databases/bib"

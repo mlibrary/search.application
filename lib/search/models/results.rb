@@ -116,8 +116,6 @@ module Search::Models::Results
 end
 
 require "search/models/results/pagination"
-require "search/models/results/catalog"
-require "search/models/results/onlinejournals"
-require "search/models/results/articles"
-require "search/models/results/databases"
-require "search/models/results/guidesandmore"
+Search::Datastores.main.each do |datastore|
+  require "search/models/results/#{datastore}"
+end

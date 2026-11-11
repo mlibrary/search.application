@@ -5,17 +5,6 @@ module Search
     module Record
       module Onlinejournals
         CATALOG_PRESENTER = Search::Presenters::Record::Catalog
-      end
-    end
-  end
-end
-
-require_relative "onlinejournals/holdings"
-
-module Search
-  module Presenters
-    module Record
-      module Onlinejournals
         class Full < CATALOG_PRESENTER::Full
           def self.datastore
             "onlinejournals"
@@ -57,4 +46,5 @@ module Search
     end
   end
 end
+require_relative "onlinejournals/holdings"
 require_relative "onlinejournals/email"

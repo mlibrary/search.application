@@ -22,6 +22,10 @@ module Search
       (slug == presenter_slug) ? "page" : "false"
     end
 
+    def to_s
+      slug.to_s
+    end
+
     private
 
     def fetch_string(key)
@@ -34,8 +38,14 @@ module Search
       Datastore.new(data)
     end
 
+    MAIN_DATASTORES = DATASTORES.reject { |x| x.slug == "everything" }
+
     class << self
       include Enumerable
+
+      def main
+        MAIN_DATASTORES
+      end
 
       def all
         DATASTORES

@@ -11,10 +11,6 @@ class Search::Models::Record::Articles < Search::Models::Record::Base
   def retracted?
     !!bib.retraction_notice_url
   end
-
-  def holdings
-    Holdings.new(@data)
-  end
 end
 require "search/models/record/articles/bib"
 require "search/models/record/articles/holdings"

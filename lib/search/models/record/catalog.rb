@@ -6,12 +6,6 @@ class Search::Models::Record::Catalog < Search::Models::Record::Base
     params
   end
 
-  attr_reader :position, :originating_uri
-
-  def holdings
-    Holdings.new(@data)
-  end
-
   def indexing_date
     Date.parse(@data["indexing_date"])
   end
