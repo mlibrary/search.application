@@ -5,7 +5,7 @@ class Search::Models::Record::Guidesandmore
     data = nil
     Yabeda.search_api_full_record_duration.measure do
       # get data from the api with the client
-      data = Search::Clients::SearchAPI.new.get_guidesandmore_record(id)
+      data = Search::Clients::SearchAPI.new.get_record(datastore: "guidesandmore", id: id)
     end
     new(data, originating_uri: uri)
   end

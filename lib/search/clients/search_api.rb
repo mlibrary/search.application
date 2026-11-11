@@ -32,10 +32,8 @@ module Search
         end
       end
 
-      def get_catalog_record(id, ht_search_only = false)
-        params = {}
-        params["ht_search_only"] = ht_search_only if ht_search_only
-        @conn.get("catalog/records/#{id}", **params).body
+      def get_record(datastore:, id:, params: {})
+        @conn.get("#{datastore}/records/#{id}", **params).body
       end
 
       def get_catalog_results(limit: 10, offset: 0, query: "*", filters: [], sort: "", boolean_filters: [])
@@ -49,10 +47,6 @@ module Search
         bp = boolean_params(boolean_filters, kind: :catalog)
         params.merge!(bp)
         @conn.get("catalog/specialists", **params).body
-      end
-
-      def get_onlinejournals_record(id)
-        @conn.get("onlinejournals/records/#{id}").body
       end
 
       def get_onlinejournals_results(limit: 10, offset: 0, query: "*", filters: [], sort: "")
@@ -77,10 +71,6 @@ module Search
         @conn.get("onlinejournals/academic_disciplines").body
       end
 
-      def get_articles_record(id)
-        @conn.get("articles/records/#{id}").body
-      end
-
       def get_articles_results(limit: 10, offset: 0, sort: "", query: "*", filters: [], boolean_filters: [])
         params = {offset: offset, limit: limit, sort: sort, query: query}
         af = articles_filters(filters)
@@ -103,10 +93,6 @@ module Search
         end
       end
 
-      def get_databases_record(id)
-        @conn.get("databases/records/#{id}").body
-      end
-
       def get_databases_results(limit: 10, offset: 0, query: "*", filters: [], sort: "")
         params = {offset: offset, limit: limit, query: query, sort: sort}
         params[:filters] = filters unless filters.empty?
@@ -127,10 +113,6 @@ module Search
         params = {offset: offset, limit: limit}
         url = Addressable::URI.encode_component("databases/browse_academic_discipline/#{academic_discipline}")
         @conn.get(url, **params).body
-      end
-
-      def get_guidesandmore_record(id)
-        @conn.get("guidesandmore/records/#{id}").body
       end
 
       def get_guidesandmore_results(limit: 10, offset: 0, query: "*", filters: [], sort: "")

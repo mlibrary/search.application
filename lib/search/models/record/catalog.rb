@@ -7,11 +7,13 @@ require "search/models/record/catalog/citation"
 
 class Search::Models::Record::Catalog
   def self.for(id, uri: nil)
+    params = {}
     ht_search_only = uri&.query_values&.[]("filter.search_only") == "true"
+    params[:ht_search_only] = ht_search_only if ht_search_only
     data = nil
     Yabeda.search_api_full_record_duration.measure do
       # get data from the api with the client
-      data = Search::Clients::SearchAPI.new.get_catalog_record(id, ht_search_only)
+      data = Search::Clients::SearchAPI.new.get_record(datastore: "catalog", id: id, params: params)
     end
     new(data, originating_uri: uri)
   end
