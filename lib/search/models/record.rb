@@ -1,6 +1,5 @@
 module Search::Models::Record
   class Base
-    attr_reader :position, :originating_uri
     def self.datastore
       name.split("::").last.downcase
     end
@@ -19,6 +18,21 @@ module Search::Models::Record
       new(data, originating_uri: uri)
     end
 
+    attr_reader :position, :originating_uri
+    def initialize(data, position: nil, originating_uri: nil)
+      @data = data
+      @position = position
+      @originating_uri = originating_uri
+    end
+
+    def bib
+      "#{self.class}::Bib".constantize.new(@data)
+    end
+
+    def citation
+      Search::Models::Record::Citation.new(@data)
+    end
+
     def datastore
       self.class.datastore
     end
@@ -26,6 +40,7 @@ module Search::Models::Record
 end
 
 require "search/models/record/metadata"
+require "search/models/record/citation"
 require "search/models/record/catalog"
 require "search/models/record/onlinejournals"
 require "search/models/record/articles"

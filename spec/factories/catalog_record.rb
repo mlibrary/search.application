@@ -213,7 +213,7 @@ module Factories::CatalogRecord
     end
 
     def citation
-      instance_double(Search::Models::Record::Catalog::Citation)
+      instance_double(Search::Models::Record::Citation)
     end
 
     def holdings(kinds: nil)

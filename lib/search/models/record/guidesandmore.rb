@@ -1,20 +1,6 @@
 class Search::Models::Record::Guidesandmore < Search::Models::Record::Base
-  def initialize(data, position: nil, originating_uri: uri)
-    @data = data
-    @position = position
-    @originating_uri = originating_uri
-  end
-
-  def bib
-    Bib.new(@data)
-  end
-
   def url
     @data["url"]
-  end
-
-  def citation
-    Search::Models::Record::Catalog::Citation.new(@data)
   end
 
   class Bib

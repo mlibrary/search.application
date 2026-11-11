@@ -1,4 +1,4 @@
-RSpec.describe Search::Models::Record::Catalog::Citation do
+RSpec.describe Search::Models::Record::Citation do
   before(:each) do
     @data = {
       "citation" => {

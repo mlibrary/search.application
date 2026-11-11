@@ -1,4 +1,4 @@
-class Search::Models::Record::Catalog::Citation
+class Search::Models::Record::Citation
   def initialize(data)
     @data = data["citation"]
   end
