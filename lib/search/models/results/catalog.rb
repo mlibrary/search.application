@@ -18,15 +18,4 @@ class Search::Models::Results::Catalog < Search::Models::Results::Base
     result[:filters].push("library:#{library}")
     result
   end
-
-  # the parameters are needed so that we can get previous and next records
-  def self.for(uri, limit: nil, offset: nil)
-    params = get_base_params(uri: uri, limit: limit, offset: offset)
-    qh = uri.query_hash # duplicate values can be arrays
-    library = LIBRARY_MAP[qh["library"]] || "aa"
-    params[:filters].push("library:#{library}")
-
-    data = Search::Clients::SearchAPI.new.get_results(datastore: datastore, **params)
-    new(data: data, originating_uri: uri)
-  end
 end
