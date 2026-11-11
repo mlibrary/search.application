@@ -63,4 +63,10 @@ module Search::Presenters::Record::Guidesandmore
       to_h.to_json
     end
   end
+
+  class Email < Brief
+    def holdings
+      OpenStruct.new(any?: true, too_many?: false, list: [])
+    end
+  end
 end

@@ -156,22 +156,6 @@ module Search::Presenters::Record::Articles
           csl: csl
         }
       }
-      # {
-      # title: {
-      # original: @record.bib.title.text
-      # },
-      # metadata: metadata.map do |f|
-      # {
-      # field: f.field,
-      # original: f.values&.first&.text
-      # }
-      # end,
-      # url: url,
-      # citation: {
-      # ris: ris,
-      # csl: csl
-      # }
-      # }
     end
 
     def to_json
