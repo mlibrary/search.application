@@ -59,12 +59,8 @@ module Search
         @conn.get(url, **params).body
       end
 
-      def get_onlinejournals_academic_disciplines
-        @conn.get("onlinejournals/academic_disciplines").body
-      end
-
-      def get_databases_academic_disciplines
-        @conn.get("databases/academic_disciplines").body
+      def get_academic_disciplines(datastore:)
+        @conn.get("#{datastore}/academic_disciplines").body
       end
 
       def get_databases_browse_academic_discipline(academic_discipline:, limit: 10, offset: 0)
