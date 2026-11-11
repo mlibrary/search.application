@@ -1,8 +1,4 @@
-class Search::Models::Results::Onlinejournals < Search::Models::Results::Catalog
-  def self.get_params(uri:, limit: nil, offset: nil)
-    get_base_params(uri: uri, limit: limit, offset: offset)
-  end
-
+class Search::Models::Results::Onlinejournals < Search::Models::Results::Base
   def self.for(uri, limit: nil, offset: nil)
     params = get_params(uri: uri, limit: limit, offset: offset)
 
@@ -14,9 +10,5 @@ class Search::Models::Results::Onlinejournals < Search::Models::Results::Catalog
       api_client.get_onlinejournals_results(**params)
     end
     new(data: data, originating_uri: uri)
-  end
-
-  def records
-    @records ||= @data["records"].each_with_index.map { |x, index| Search::Models::Record::Onlinejournals.new(x, position: position(index), originating_uri: @originating_uri) }
   end
 end
