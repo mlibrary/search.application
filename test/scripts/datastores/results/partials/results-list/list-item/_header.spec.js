@@ -12,6 +12,7 @@ describe('list item header', function () {
       updateListItemCheckboxSpy = sinon.spy();
       updateListItemTitleSpy = sinon.spy();
       args = {
+        hasExternalUrl: false,
         index: 1,
         listItem: {},
         recordDatastore: 'datastore',
@@ -45,7 +46,7 @@ describe('list item header', function () {
     });
 
     it('should call `updateListItemTitle` with the correct arguments', function () {
-      expect(updateListItemTitleSpy.calledOnceWithExactly({ index: args.index, listItem: args.listItem, title: args.title, url: args.url }), '`updateListItemTitle` should have been called with the correct arguments').to.be.true;
+      expect(updateListItemTitleSpy.calledOnceWithExactly({ hasExternalUrl: args.hasExternalUrl, index: args.index, listItem: args.listItem, title: args.title, url: args.url }), '`updateListItemTitle` should have been called with the correct arguments').to.be.true;
     });
   });
 });
