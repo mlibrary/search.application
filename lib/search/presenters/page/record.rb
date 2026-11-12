@@ -51,17 +51,6 @@ class Search::Presenters::Page
       record.ris_action_url
     end
 
-    # def url
-    # return record.url if record.external_url?
-    # debugger
-    # result = Addressable::URI.parse(record.url)
-    # request_qv = Addressable::URI.parse(@uri).query_values(Array) || []
-    # request_qv.reject! { |x| x[0] == "position" }
-    # request_qv.append(["position", record.position]) unless record.position.nil?
-    # result.query_values = request_qv
-    # result.display_uri.to_s
-    # end
-
     def meta_tags
       record.meta_tags
     end
