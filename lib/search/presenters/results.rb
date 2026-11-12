@@ -239,7 +239,7 @@ end
 
 class Search::Presenters::Results::Guidesandmore < Search::Presenters::Results::Catalog
   FILTER_ORDER = [
-    "page_type"
+    "type"
   ]
 
   SORT_OPTIONS = [

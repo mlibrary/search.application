@@ -111,7 +111,7 @@
   ],
   "filters": [
     {
-      "field": "page_type",
+      "field": "type",
       "values": [
         {
           "text": "Research Guides",
