@@ -186,6 +186,7 @@ describe Search::Presenters::Record::Articles::Brief do
           }
         ],
         url: "#{S.base_url}/articles/record/some_id",
+        has_external_url: false,
         citation: {
           ris: [],
           csl: {}
