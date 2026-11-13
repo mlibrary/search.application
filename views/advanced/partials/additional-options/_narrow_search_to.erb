@@ -1,0 +1,12 @@
+<div class="additional-option__narrow-search-to">
+  <% data.filters.each_with_index do |filter, index| %>
+    <div class="additional-option__narrow-search-to--<%= filter[:slug] %>" data-narrow="<%= filter[:narrow].join(', ') %>"<% if index > 0 %> style="display: none;"<% end %>>
+      <label for="narrow-search-to--<%= filter[:slug] %>"><%= filter[:label] %></label>
+      <select name="narrow-search-to--<%= filter[:slug] %>" id="narrow-search-to--<%= filter[:slug] %>" autocomplete="off">
+        <% filter[:options].each do |option| %>
+          <option value="<%= option[:value] %>" data-narrow="<%= option[:narrow].join(', ') %>"><%= option[:value] %></option>
+        <% end %>
+      </select>
+    </div>
+  <% end %>
+</div>

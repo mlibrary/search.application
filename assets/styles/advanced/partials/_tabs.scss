@@ -1,0 +1,88 @@
+@use '../../utilities';
+@use '../../media';
+@use '../../colors';
+
+// --------------------------------------------------
+//
+// # Tabs
+//   Styles to apply directly to `views/advanced/partials/_tabs.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Tabs
+//     2.1. Tab
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".advanced-search__tabs";
+
+
+
+
+
+// *************** //
+// *** 2. TABS *** //
+// *************** //
+
+#{$class} {
+  @include utilities.flex($align: stretch, $responsive: true);
+  gap: 0;
+  @include media.breakpoint('xs') {
+    align-items: end;
+  }
+}
+
+
+
+// **************** //
+// *** 2.1. TAB *** //
+// **************** //
+
+#{$class}--tab {
+  a {
+    border-color: var(--search-color-grey-400);
+    border-style: solid;
+    border-width: 0 0 0 3px;
+    display: block;
+    padding: 0.5rem 1rem;
+    @include media.breakpoint('xs') {
+      border-color: transparent;
+      border-radius: 4px 4px 0 0;
+      border-width: 3px 0 0 0;
+      text-align: center;
+    }
+    &[aria-current='false'] {
+      color: colors.$color-text;
+    }
+    &[aria-current='page'] {
+      border-color: currentColor;
+      font-weight: 700;
+      @include media.breakpoint('xs') {
+        background: white;
+        box-shadow: 0 2px 2px 0 var(--search-color-grey-400), 0 2px 4px 0 var(--search-color-grey-400);
+        position: relative;
+        &:after {
+          background: inherit;
+          bottom: -5px;
+          content: '';
+          height: 5px;
+          left: -2px;
+          position: absolute;
+          right: -2px;
+        }
+      }
+    }
+  }
+  @include media.breakpoint('xs') {
+    &:first-child > a[aria-current='page']:after {
+      left: 0;
+    }
+    &:last-child > a[aria-current='page']:after {
+      right: 0;
+    }
+  }
+}

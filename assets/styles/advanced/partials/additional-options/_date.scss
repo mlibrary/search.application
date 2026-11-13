@@ -1,0 +1,33 @@
+@use './date/radio-buttons';
+@use './date/years';
+
+// --------------------------------------------------
+//
+// # Date
+//   Styles to apply directly to `views/advanced/partials/additional-options/_date.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Date
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".additional-option__date";
+
+
+
+
+
+// *************** //
+// *** 2. DATE *** //
+// *************** //
+
+#{$class} {
+  & > * + * {
+    margin-top: 1rem;
+  }
+}
