@@ -13,24 +13,24 @@ describe Search::Clients::SearchAPI do
       expect(subject.boolean_params(["search_only:false", "search_only:true"])).to eq({ht_search_only: true})
     end
     it "handles articles key flipping" do
-      expect(subject.boolean_params(["holdings_only:false"], kind: :articles)).to eq({include_citation_only: true})
+      expect(subject.boolean_params(["holdings_only:false"], datastore: :articles)).to eq({include_citation_only: true})
     end
   end
-  context "articles_filters" do
+  context "filters_params for articles" do
     it "handles dates that look correct" do
       filters = ["subject:Art", "date:1900-1910"]
       expected = ["subject:Art", "date:1900,1910"]
-      expect(subject.articles_filters(filters)).to eq(expected)
+      expect(subject.filters_params(filters, datastore: :articles)).to eq(expected)
     end
     it "handles takes only the first two dates when there are multiple - dates that look correct" do
       filters = ["subject:Art", "date:1900-1910-2000"]
       expected = ["subject:Art", "date:1900,1910"]
-      expect(subject.articles_filters(filters)).to eq(expected)
+      expect(subject.filters_params(filters, datastore: :articles)).to eq(expected)
     end
     it "sends only one year when one is given" do
       filters = ["date:1900"]
       expected = ["date:1900"]
-      expect(subject.articles_filters(filters)).to eq(expected)
+      expect(subject.filters_params(filters, datastore: :articles)).to eq(expected)
     end
   end
 end

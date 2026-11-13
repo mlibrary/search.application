@@ -3,27 +3,31 @@ class Search::Models::Specialists
 
   def self.for_catalog(uri)
     params = Search::Models::Results::Catalog.get_params(uri: uri).slice(:query, :filters, :boolean_filters)
-
-    data = Search::Clients::SearchAPI.new.get_catalog_specialists(**params)
+    data = Search::Clients::SearchAPI.new.get_specialists(**params)
     new(data)
   end
 
   def self.for_onlinejournals(uri)
     params = Search::Models::Results::Onlinejournals.get_params(uri: uri).slice(:query, :filters, :boolean_filters)
-
-    data = Search::Clients::SearchAPI.new.get_onlinejournals_specialists(**params)
+    data = Search::Clients::SearchAPI.new.get_specialists(datastore: :onlinejournals, **params)
     new(data)
   end
 
   def self.for_articles(uri)
     params = Search::Models::Results::Articles.get_params(uri: uri).slice(:query)
-    data = Search::Clients::SearchAPI.new.get_catalog_specialists(**params)
+    data = Search::Clients::SearchAPI.new.get_specialists(**params)
     new(data)
   end
 
   def self.for_databases(uri)
     params = Search::Models::Results::Databases.get_params(uri: uri).slice(:query, :filters)
-    data = Search::Clients::SearchAPI.new.get_databases_specialists(**params)
+    data = Search::Clients::SearchAPI.new.get_specialists(datastore: :databases, **params)
+    new(data)
+  end
+
+  def self.for_guidesandmore(uri)
+    params = Search::Models::Results::Guidesandmore.get_params(uri: uri).slice(:query)
+    data = Search::Clients::SearchAPI.new.get_specialists(**params)
     new(data)
   end
 

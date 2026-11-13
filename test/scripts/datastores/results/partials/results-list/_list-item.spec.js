@@ -104,7 +104,7 @@ describe('List Item', function () {
     });
 
     it('should call `updateListItemHeader` with the correct arguments', function () {
-      expect(args.listItemFuncs.updateListItemHeader.calledOnceWithExactly({ index: args.index, listItem: args.listItem, recordDatastore: args.recordDatastore, recordId: args.recordId, title: args.record.title, url: args.record.url }), '`updateListItemHeader` should have been called with the correct arguments').to.be.true;
+      expect(args.listItemFuncs.updateListItemHeader.calledOnceWithExactly({ hasExternalUrl: args.record.has_external_url, index: args.index, listItem: args.listItem, recordDatastore: args.recordDatastore, recordId: args.recordId, title: args.record.title, url: args.record.url }), '`updateListItemHeader` should have been called with the correct arguments').to.be.true;
     });
 
     it('should call `updateMetadata` with the correct arguments', function () {

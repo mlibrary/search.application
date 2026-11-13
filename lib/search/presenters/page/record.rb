@@ -48,7 +48,7 @@ class Search::Presenters::Page
     end
 
     def ris_action_url
-      "#{@uri}/ris"
+      record.ris_action_url
     end
 
     def meta_tags
@@ -100,7 +100,7 @@ class Search::Presenters::Page
         new(records: records, uri: uri)
       end
 
-      attr_reader :position
+      attr_reader :position, :originating_uri
 
       def initialize(records:, uri:)
         @records = records

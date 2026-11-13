@@ -1,45 +1,19 @@
-class Search::Models::Record::Catalog
-end
-
-require "search/models/record/catalog/bib"
-require "search/models/record/catalog/holdings"
-require "search/models/record/catalog/citation"
-
-class Search::Models::Record::Catalog
-  def self.for(id, uri: nil)
+class Search::Models::Record::Catalog < Search::Models::Record::Base
+  def self.get_params(uri)
+    params = {}
     ht_search_only = uri&.query_values&.[]("filter.search_only") == "true"
-    data = nil
-    Yabeda.search_api_full_record_duration.measure do
-      # get data from the api with the client
-      data = Search::Clients::SearchAPI.new.get_catalog_record(id, ht_search_only)
-    end
-    new(data)
-  end
-
-  attr_reader :position
-
-  def initialize(data, position: nil)
-    @data = data
-    @position = position
-  end
-
-  def bib
-    Bib.new(@data)
-  end
-
-  def holdings
-    Holdings.new(@data)
+    params[:ht_search_only] = ht_search_only if ht_search_only
+    params
   end
 
   def indexing_date
     Date.parse(@data["indexing_date"])
   end
 
-  def citation
-    Citation.new(@data)
-  end
-
   def marc
     @data["marc"]
   end
 end
+
+require "search/models/record/catalog/bib"
+require "search/models/record/catalog/holdings"
