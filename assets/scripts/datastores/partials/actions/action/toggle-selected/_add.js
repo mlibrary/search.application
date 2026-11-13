@@ -1,6 +1,6 @@
 import { filterSelectedRecords, getCheckboxes, splitCheckboxValue, toggleCheckedState } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { getToggleSelectedTab, toggleSelectedButton, updatedList, updateListForTogglingRecords, updateToggleSelectedAction } from '../_toggle-selected.js';
-import { inTemporaryList, setSessionStorage } from '../../../../list/layout.js';
+import { inTemporaryList, setLocalStorage } from '../../../../list/layout.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
 
 const getAddSelectedButton = () => {
@@ -97,7 +97,7 @@ const handleAddSelectedClick = async ({
   addRecords = fetchAndAddRecords,
   event,
   list = updatedList,
-  setList = setSessionStorage,
+  setList = setLocalStorage,
   showBanner = temporaryListBanner,
   styleRecords = styleAddedRecords,
   toggleAddButton = toggleSelectedButton,

@@ -1,4 +1,4 @@
-import { getSessionStorage, setSessionStorage } from '../../list/layout.js';
+import { getLocalStorage, setLocalStorage } from '../../list/layout.js';
 
 const itemName = 'datastoreInfo';
 
@@ -21,8 +21,8 @@ const toggleInfoSectionClass = ({ infoSection, isAdded }) => {
 
 const hideInfo = ({
   button = hideInfoButton(),
-  list = getSessionStorage({ defaultValue, itemName }),
-  setInfoSection = setSessionStorage,
+  list = getLocalStorage({ defaultValue, itemName }),
+  setInfoSection = setLocalStorage,
   toggleInfoSection = toggleInfoSectionClass
 } = {}) => {
   // Get the parent info section
@@ -40,7 +40,7 @@ const hideInfo = ({
     // Toggle the value for the datastore
     updatedList[datastore] = !updatedList[datastore];
 
-    // Save the updated list to session storage
+    // Save the updated list to local storage
     setInfoSection({ itemName, value: updatedList });
     // Toggle the info section visibility
     toggleInfoSection({ infoSection, isAdded: updatedList[datastore] });

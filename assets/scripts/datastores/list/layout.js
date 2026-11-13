@@ -14,7 +14,7 @@ const defaultTemporaryList = {
   onlinejournals: {}
 };
 
-const getSessionStorage = ({ defaultValue, itemName }) => {
+const getLocalStorage = ({ defaultValue, itemName }) => {
   // Check if a default value was provided
   if (!defaultValue) {
     throw new Error('`defaultValue` is required');
@@ -26,21 +26,21 @@ const getSessionStorage = ({ defaultValue, itemName }) => {
   };
 
   try {
-    // Get session storage
-    const item = sessionStorage.getItem(itemName);
+    // Get local storage
+    const item = localStorage.getItem(itemName);
     // Throw if `item` is falsy, or returned problematic string values
     if (!item || ['undefined', 'null'].includes(item)) {
-      throw new Error('Invalid `sessionStorage` value');
+      throw new Error('Invalid `localStorage` value');
     }
     // Parse and return the list
     return JSON.parse(item);
   } catch {
-    // Return the default list if there are any issues with session storage
+    // Return the default list if there are any issues with local storage
     return defaultValue;
   }
 };
 
-const setSessionStorage = ({ itemName, value }) => {
+const setLocalStorage = ({ itemName, value }) => {
   // Check if an item name was provided
   if (!itemName) {
     throw new Error('`itemName` is required');
@@ -51,8 +51,8 @@ const setSessionStorage = ({ itemName, value }) => {
     throw new Error('`value` is required');
   }
 
-  // Set session storage
-  sessionStorage.setItem(itemName, JSON.stringify(value));
+  // Set local storage
+  localStorage.setItem(itemName, JSON.stringify(value));
 };
 
 const viewingTemporaryList = () => {
@@ -129,9 +129,9 @@ const temporaryList = ({
 export {
   defaultTemporaryList,
   getDatastores,
-  getSessionStorage,
+  getLocalStorage,
   inTemporaryList,
-  setSessionStorage,
+  setLocalStorage,
   temporaryList,
   toggleListElements,
   viewingTemporaryList

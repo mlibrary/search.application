@@ -346,7 +346,7 @@ describe('add selected', function () {
 
   describe('handleAddSelectedClick()', function () {
     let fetchAndAddRecordsStub = null;
-    let setSessionStorageSpy = null;
+    let setLocalStorageSpy = null;
     let styleAddedRecordsSpy = null;
     let temporaryListBannerSpy = null;
     let toggleSelectedButtonSpy = null;
@@ -359,7 +359,7 @@ describe('add selected', function () {
 
     beforeEach(function () {
       fetchAndAddRecordsStub = sinon.stub().resolves(global.temporaryList);
-      setSessionStorageSpy = sinon.spy();
+      setLocalStorageSpy = sinon.spy();
       styleAddedRecordsSpy = sinon.spy();
       temporaryListBannerSpy = sinon.spy();
       toggleSelectedButtonSpy = sinon.spy();
@@ -370,7 +370,7 @@ describe('add selected', function () {
         addRecords: fetchAndAddRecordsStub,
         event: { target: getAddSelectedButton() },
         list: defaultTemporaryList,
-        setList: setSessionStorageSpy,
+        setList: setLocalStorageSpy,
         showBanner: temporaryListBannerSpy,
         styleRecords: styleAddedRecordsSpy,
         toggleAddButton: toggleSelectedButtonSpy,
@@ -387,7 +387,7 @@ describe('add selected', function () {
 
     afterEach(function () {
       fetchAndAddRecordsStub = null;
-      setSessionStorageSpy = null;
+      setLocalStorageSpy = null;
       styleAddedRecordsSpy = null;
       temporaryListBannerSpy = null;
       toggleSelectedButtonSpy = null;
@@ -420,8 +420,8 @@ describe('add selected', function () {
         await actionPromise;
       });
 
-      it('should call `setSessionStorage` with the updated list after processing', function () {
-        expect(setSessionStorageSpy.calledOnceWithExactly({ itemName: 'temporaryList', value: global.temporaryList }), '`setSessionStorage` should be called once with the updated list after processing').to.be.true;
+      it('should call `setLocalStorage` with the updated list after processing', function () {
+        expect(setLocalStorageSpy.calledOnceWithExactly({ itemName: 'temporaryList', value: global.temporaryList }), '`setLocalStorage` should be called once with the updated list after processing').to.be.true;
       });
 
       it('should call `updateListForTogglingRecords` with the updated list after processing', function () {
