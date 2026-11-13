@@ -69,6 +69,7 @@
         }
       ],
       "url": "http://localhost:4567/articles/record/cdi_nii_cinii_1870020692861752192",
+      "has_external_url": false,
       "citation": {
         "ris": "TY  - JOUR\nDB  - U-M Articles Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - cdi_nii_cinii_1870020692861752192\nT1  - Bill shape imposes biomechanical tradeoffs in cavity-excavating birds\nTI  - Bill shape imposes biomechanical tradeoffs in cavity-excavating birds\nAU  - Vaibhav Chhaya\nAU  - Sushma Reddy\nAU  - Anand Krishnan\nPB  - The Royal Society\nJF  - Proceedings of the Royal Society B: Biological Sciences\nJO  - Proceedings of the Royal Society B: Biological Sciences\nVL  - 290\nSN  - 0962-8452\nSN  - 1471-2954\nDO  - 10.1098/rspb.2022.2395\nKW  - Animals\nKW  - Biomechanical Phenomena\nKW  - Birds\nKW  - Finite Element Analysis\nKW  - Morphology and Biomechanics\nKW  - Stress, Mechanical\nAB  - Organisms are subject to physical forces that influence morphological evolution. Birds use their bills as implements to perform various functions, each exerting unique physical demands. When excavating cavities, bird bills must resist a range of mechanical stresses to prevent fracture. However, the contribution of bill geometry and material composition to excavation stress resistance remains poorly understood. Here, we study the biomechanical consequences of bill diversification in the cavity-excavating palaeotropical barbets. Using finite-element models and beam theory, we compare excavation performance for two loading regimes experienced by barbet bills during cavity excavation: impact and torsion. We find that deeper and wider maxillae perform better for impact loads than for torsional loads, with the converse for narrower maxillae. This results in tradeoffs between impact and torsion resistance imposed by bill geometry. Analytical beam models validate this prediction, showing that this relationship holds even when maxillae are simplified to solid elliptical beams. Finally, we find that composite bill structures broadly exhibit lower stresses than homogeneous structures of the same geometry, indicating a functional synergy between the keratinous rhamphotheca and bony layers of the bill. Overall, our findings demonstrate the strong link between morphological evolution, behaviour and functional performance in organisms.\nN2  - Organisms are subject to physical forces that influence morphological evolution. Birds use their bills as implements to perform various functions, each exerting unique physical demands. When excavating cavities, bird bills must resist a range of mechanical stresses to prevent fracture. However, the contribution of bill geometry and material composition to excavation stress resistance remains poorly understood. Here, we study the biomechanical consequences of bill diversification in the cavity-excavating palaeotropical barbets. Using finite-element models and beam theory, we compare excavation performance for two loading regimes experienced by barbet bills during cavity excavation: impact and torsion. We find that deeper and wider maxillae perform better for impact loads than for torsional loads, with the converse for narrower maxillae. This results in tradeoffs between impact and torsion resistance imposed by bill geometry. Analytical beam models validate this prediction, showing that this relationship holds even when maxillae are simplified to solid elliptical beams. Finally, we find that composite bill structures broadly exhibit lower stresses than homogeneous structures of the same geometry, indicating a functional synergy between the keratinous rhamphotheca and bony layers of the bill. Overall, our findings demonstrate the strong link between morphological evolution, behaviour and functional performance in organisms.\nER  -",
         "csl": {
@@ -140,6 +141,7 @@
         }
       ],
       "url": "http://localhost:4567/articles/record/cdi_proquest_journals_2828913497",
+      "has_external_url": false,
       "citation": {
         "ris": "TY  - JOUR\nDB  - U-M Articles Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - cdi_proquest_journals_2828913497\nT1  - Birds\nTI  - Birds\nAU  - Lerner, Lexi\nPB  - Chicago: American Medical Association\nJF  - JAMA : the journal of the American Medical Association\nJO  - JAMA : the journal of the American Medical Association\nSP  - 1990-\nVL  - 329\nIS  - 22\nSN  - 0098-7484\nSN  - 1538-3598\nDO  - 10.1001/jama.2023.8236\nLA  - English\nAB  - A poem is presented.\nN2  - A poem is presented.\nER  -",
         "csl": {
@@ -219,6 +221,7 @@
         }
       ],
       "url": "http://localhost:4567/catalog/record/99187844707006381",
+      "has_external_url": false,
       "citation": {
         "ris": "TY  - BOOK\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - 99187844707006381\nAU  - Kubo, Keishin, 1947-2019\nCN  - QL 674 .L83 1989\nCP  - Tōkyō :\nCY  - Tōkyō :\nDA  - 1989\nPY  - 1989\nY1  - 1989\nET  - Shohan.\nJF  - Birds = Tori\nT1  - Birds = Tori\nTI  - Birds = Tori\nKW  - Birds -- Japan -- Pictorial works\nKW  - Oiseaux -- Japon -- Ouvrages illustrés\nKW  - Birds\nKW  - Japan\nKW  - Illustrated works\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nLA  - Japanese\nM1  - 1 volume :\nNV  - 1 volume :\nPB  - Yama to Keikokusha\nSN  - 9784635596077\nSN  - 4635596079\nER  -",
         "csl": {
@@ -296,6 +299,7 @@
         }
       ],
       "url": "http://localhost:4567/catalog/record/990040646010106381",
+      "has_external_url": false,
       "citation": {
         "ris": "TY  - BOOK\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - 990040646010106381\nAU  - Aristophanes\nAU  - Muldoon, Paul\nCN  - 888 A7av tM94\nCP  - Oldcastle, County Meath :\nCY  - Oldcastle, County Meath :\nDA  - 1999\nPY  - 1999\nY1  - 1999\nJF  - The birds\nT1  - The birds\nTI  - The birds\nLA  - English\nM1  - 79 p. ;\nNV  - 79 p. ;\nPB  - Gallery\nSN  - 9781852352455\nSN  - 1852352450\nSN  - 9781852352448\nSN  - 1852352442\nT3  - Gallery books\nER  -",
         "csl": {
@@ -390,6 +394,7 @@
         }
       ],
       "url": "http://localhost:4567/onlinejournals/record/990060969780106381",
+      "has_external_url": false,
       "citation": {
         "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - 990060969780106381\nAU  - Nihon Chōgakkai\nAU  - Biodiversity Heritage Library\nCN  - QL671.J4 T67\nCP  - Tōkyō :\nCY  - Tōkyō :\nDA  - 1915-1986\nPY  - 1915-1986\nY1  - 1915-1986\nJF  - Tori\nT1  - Tori\nTI  - Tori\nKW  - Birds -- Japan -- Periodicals\nKW  - Bird watching -- Japan -- Periodicals\nKW  - Ornithology -- Periodicals\nKW  - Science | Biology | Zoology\nKW  - Science | Biology | Ecology and Evolutionary Biology\nKW  - International Studies | Asian Studies | Japanese Studies\nL2  - http://www.biodiversitylibrary.org//bibliography/48722\nLA  - Japanese\nLA  - English\nM1  - 34 v. :\nNV  - 34 v. :\nPB  - Nihon Chōgakkai\nSN  - 0040-9480\nER  -",
         "csl": {
@@ -438,6 +443,7 @@
         }
       ],
       "url": "http://localhost:4567/onlinejournals/record/990161238310106381",
+      "has_external_url": false,
       "citation": {
         "ris": "TY  - SER\nDB  - U-M Catalog Search\nDP  - University of Michigan Library\nY2  - 2026-10-15\nID  - 990161238310106381\nAU  - Council for the Conservation of Migratory Birds (U.S.), author\nCN  - G615\nDA  - 2015-2017\nPY  - 2015-2017\nY1  - 2015-2017\nJF  - Newsletter\nT1  - Newsletter\nTI  - Newsletter\nKW  - Council for the Conservation of Migratory Birds (U.S.) -- Periodicals\nKW  - Migratory birds -- Conservation -- United States -- Periodicals\nKW  - Newsletters\nKW  - Social Sciences | Geography and Maps\nKW  - International Studies | Asian Studies | Southeast Asian Studies\nL2  - https://purl.fdlp.gov/GPO/gpo90186\nLA  - English\nM1  - 1 online resource (4 volumes)\nNV  - 1 online resource (4 volumes)\nPB  - Council for the Conservation of Migratory Birds\nER  -",
         "csl": {

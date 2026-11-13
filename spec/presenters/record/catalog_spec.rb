@@ -406,6 +406,7 @@ describe Search::Presenters::Record::Catalog::Brief do
           }
         ],
         url: "#{S.base_url}/catalog/record/#{bib_stub.id}",
+        has_external_url: false,
         citation: {
           ris: citation_stub.ris,
           csl: citation_stub.csl

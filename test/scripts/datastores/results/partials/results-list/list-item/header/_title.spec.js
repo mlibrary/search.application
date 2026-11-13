@@ -2,6 +2,7 @@ import {
   getListItemTitleElement,
   updateListItemTitle,
   updateListItemTitleAnchor,
+  updateListItemTitleExternalAnchor,
   updateListItemTitleNumber,
   updateListItemTitleTransliterated
 } from '../../../../../../../../assets/scripts/datastores/results/partials/results-list/list-item/header/_title.js';
@@ -64,13 +65,65 @@ describe('list item title', function () {
     });
   });
 
-  describe('updateListItemTitleAnchor()', function () {
+  describe('updateListItemTitleExternalAnchor()', function () {
     let args = null;
     let getAnchor = null;
 
     beforeEach(function () {
       args = {
+        anchor: document.createElement('a'),
+        title: 'External Title',
+        url: 'https://search.umich.edu/'
+      };
+
+      getAnchor = () => {
+        return args.anchor;
+      };
+
+      // Call the function
+      updateListItemTitleExternalAnchor(args);
+    });
+
+    afterEach(function () {
+      args = null;
+      getAnchor = null;
+    });
+
+    it('should set a `utm-source` parameter to the URL', function () {
+      // Get the URL of the anchor element
+      const urlObj = new URL(getAnchor().getAttribute('href'));
+      // Check if the `utm-source` parameter is set correctly
+      expect(urlObj.searchParams.get('utm-source'), '`updateListItemTitleExternalAnchor` should update the `href` attribute with `utm-source` parameter').to.equal('mlibrary');
+    });
+
+    it('should add the `open-in-new` class', function () {
+      expect(getAnchor().classList.contains('open-in-new'), '`updateListItemTitleExternalAnchor` should add the `open-in-new` class').to.be.true;
+    });
+
+    it('should set the `target` attribute to `_blank`', function () {
+      expect(getAnchor().getAttribute('target'), '`updateListItemTitleExternalAnchor` should set the `target` attribute to `_blank`').to.equal('_blank');
+    });
+
+    it('should set the `rel` attribute to `noopener noreferrer`', function () {
+      expect(getAnchor().getAttribute('rel'), '`updateListItemTitleExternalAnchor` should set the `rel` attribute to `noopener noreferrer`').to.equal('noopener noreferrer');
+    });
+
+    it('should set the `aria-label` attribute correctly', function () {
+      expect(getAnchor().getAttribute('aria-label'), '`updateListItemTitleExternalAnchor` should set the `aria-label` attribute correctly').to.equal(`${args.title} - opens in new window`);
+    });
+  });
+
+  describe('updateListItemTitleAnchor()', function () {
+    let updateListItemTitleExternalAnchorSpy = null;
+    let args = null;
+    let getAnchor = null;
+
+    beforeEach(function () {
+      updateListItemTitleExternalAnchorSpy = sinon.spy();
+      args = {
         element: getListItem(),
+        externalAnchor: updateListItemTitleExternalAnchorSpy,
+        hasExternalUrl: false,
         title: 'New Title',
         url: 'https://search.umich.edu/'
       };
@@ -84,6 +137,7 @@ describe('list item title', function () {
     });
 
     afterEach(function () {
+      updateListItemTitleExternalAnchorSpy = null;
       args = null;
       getAnchor = null;
     });
@@ -94,6 +148,21 @@ describe('list item title', function () {
 
     it('should update the anchor text', function () {
       expect(getAnchor().textContent, '`updateListItemTitleAnchor` should update the anchor text').to.equal(args.title);
+    });
+
+    it('should not call the external anchor update function', function () {
+      expect(updateListItemTitleExternalAnchorSpy.notCalled, '`updateListItemTitleAnchor` should not call the external anchor update function if `hasExternalUrl` is false').to.be.true;
+    });
+
+    it('should call the external anchor update function', function () {
+      // Set `hasExternalUrl` to true
+      args.hasExternalUrl = true;
+
+      // Call the function again
+      updateListItemTitleAnchor(args);
+
+      // Check that the external anchor update function was called with the correct arguments
+      expect(updateListItemTitleExternalAnchorSpy.calledOnceWithExactly({ anchor: getAnchor(), title: args.title, url: args.url }), '`updateListItemTitleAnchor` should call the external anchor update function with the correct arguments').to.be.true;
     });
   });
 
@@ -161,6 +230,7 @@ describe('list item title', function () {
     beforeEach(function () {
       args = {
         getTitleElement: sinon.stub().returns(getListItemTitleElement({ listItem: getListItem() })),
+        hasExternalUrl: false,
         index: 4,
         listItem: getListItem(),
         title: {
@@ -199,7 +269,7 @@ describe('list item title', function () {
       });
 
       it('should call `updateListItemTitleAnchor` with the correct arguments', function () {
-        expect(args.updateTitleFunctions.updateListItemTitleAnchor.calledOnceWithExactly({ element: args.getTitleElement(), title: args.title.text || args.title.original.text, url: args.url }), '`updateListItemTitleAnchor` should call `updateListItemTitleAnchor` with the correct arguments').to.be.true;
+        expect(args.updateTitleFunctions.updateListItemTitleAnchor.calledOnceWithExactly({ element: args.getTitleElement(), hasExternalUrl: args.hasExternalUrl, title: args.title.text || args.title.original.text, url: args.url }), '`updateListItemTitleAnchor` should call `updateListItemTitleAnchor` with the correct arguments').to.be.true;
       });
 
       it('should call `updateListItemTitleTransliterated` with the correct arguments', function () {

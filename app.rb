@@ -107,38 +107,40 @@ class Search::Application < Sinatra::Base
   end
 
   Search::Datastores.each do |datastore|
-    if ["catalog", "onlinejournals", "articles", "databases"].include?(datastore.slug)
-      get "/#{datastore.slug}/record/:id" do
-        # profile = RubyProf::Profile.new
-        # profile.start
-        headers "metrics.datastore" => datastore.slug, "metrics.route" => "full_record"
-        @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: full_uri, patron: @patron, record_id: params["id"])
-        @record = @presenter.record
-        erb :"datastores/record/layout", layout: :layout do
-          erb :"datastores/record/#{datastore.slug}"
+    if ["catalog", "onlinejournals", "articles", "databases", "guidesandmore"].include?(datastore.slug)
+      unless datastore.slug == "guidesandmore"
+        get "/#{datastore.slug}/record/:id" do
+          # profile = RubyProf::Profile.new
+          # profile.start
+          headers "metrics.datastore" => datastore.slug, "metrics.route" => "full_record"
+          @presenter = Search::Presenters.for_datastore_record(slug: datastore.slug, uri: full_uri, patron: @patron, record_id: params["id"])
+          @record = @presenter.record
+          erb :"datastores/record/layout", layout: :layout do
+            erb :"datastores/record/#{datastore.slug}"
+          end
+          # result = profile.stop
+          # printer = RubyProf::GraphHtmlPrinter.new(result)
+          # printer.print(f)
+          # File.open("profile.html", "w") do |f|
+          #   printer.print(f)
+          # end
+        rescue Faraday::ResourceNotFound => error
+          S.logger.error(error.message, error_response: error.response)
+          redirect not_found
         end
-        # result = profile.stop
-        # printer = RubyProf::GraphHtmlPrinter.new(result)
-        # printer.print(f)
-        # File.open("profile.html", "w") do |f|
-        #   printer.print(f)
-        # end
-      rescue Faraday::ResourceNotFound => error
-        S.logger.error(error.message, error_response: error.response)
-        redirect not_found
+
+        get "/#{datastore.slug}/record/:id/ris" do
+          attachment "#{params["id"]}.ris"
+          Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").ris
+        rescue => e
+          S.logger.error("RIS download fail", {message: e})
+          redirect "/#{datastore.slug}/record/#{params["id"]}"
+        end
       end
 
       get "/#{datastore.slug}/record/:id/brief" do
         content_type :json
         Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").to_json
-      end
-
-      get "/#{datastore.slug}/record/:id/ris" do
-        attachment "#{params["id"]}.ris"
-        Search::Presenters::Record.for_datastore(datastore: datastore.slug, id: params["id"], size: "brief").ris
-      rescue => e
-        S.logger.error("RIS download fail", {message: e})
-        redirect "/#{datastore.slug}/record/#{params["id"]}"
       end
 
       get "/#{datastore.slug}" do

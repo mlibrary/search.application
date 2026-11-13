@@ -10,7 +10,22 @@ const updateListItemTitleNumber = ({ element, index }) => {
   number.textContent = `${index + 1}.`;
 };
 
-const updateListItemTitleAnchor = ({ element, title, url }) => {
+const updateListItemTitleExternalAnchor = ({ anchor, title, url }) => {
+  // Add `utm-source` parameter to the URL
+  const urlObj = new URL(url);
+  urlObj.searchParams.set('utm-source', 'mlibrary');
+  anchor.href = urlObj.toString();
+  // Add to class list
+  anchor.classList.add('open-in-new');
+  // Add `target`
+  anchor.target = '_blank';
+  // Add `rel` attribute for security
+  anchor.rel = 'noopener noreferrer';
+  // Indicate that the link opens in a new tab
+  anchor.setAttribute('aria-label', `${title} - opens in new window`);
+};
+
+const updateListItemTitleAnchor = ({ element, externalAnchor = updateListItemTitleExternalAnchor, hasExternalUrl, title, url }) => {
   // Get the anchor element
   const anchor = element.querySelector('a.results__list-item--title-original');
 
@@ -18,6 +33,12 @@ const updateListItemTitleAnchor = ({ element, title, url }) => {
   anchor.href = url;
   // Update the anchor text
   anchor.textContent = title;
+
+  // Check if the title has an external URL
+  if (hasExternalUrl) {
+    // Update the external anchor attributes
+    externalAnchor({ anchor, title, url });
+  }
 };
 
 const updateListItemTitleTransliterated = ({ element, title }) => {
@@ -46,6 +67,7 @@ const updateListItemTitleFunctions = {
 
 const updateListItemTitle = ({
   getTitleElement = getListItemTitleElement,
+  hasExternalUrl,
   index,
   listItem,
   title,
@@ -67,7 +89,7 @@ const updateListItemTitle = ({
   const { original, text, transliterated } = title;
 
   // Update the anchor element
-  updateTitleFunctions.updateListItemTitleAnchor({ element, title: text ?? original.text, url });
+  updateTitleFunctions.updateListItemTitleAnchor({ element, hasExternalUrl, title: text ?? original.text, url });
 
   // Update the transliterated element
   updateTitleFunctions.updateListItemTitleTransliterated({ element, title: transliterated?.text });
@@ -76,7 +98,8 @@ const updateListItemTitle = ({
 export {
   getListItemTitleElement,
   updateListItemTitle,
-  updateListItemTitleNumber,
   updateListItemTitleAnchor,
+  updateListItemTitleExternalAnchor,
+  updateListItemTitleNumber,
   updateListItemTitleTransliterated
 };
