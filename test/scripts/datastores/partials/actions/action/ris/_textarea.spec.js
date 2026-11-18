@@ -120,7 +120,7 @@ describe('ris', function () {
         expect(getListCitationDataStub.calledOnceWithExactly({ list: global.temporaryList, type: 'ris' }), 'getListCitationData() should have been called').to.be.true;
       });
 
-      it('should cache the RIS data from session storage', function () {
+      it('should cache the RIS data from local storage', function () {
         expect(risDataCache, 'the cached RIS data should match the expected data').to.deep.equal(listRISData);
       });
 

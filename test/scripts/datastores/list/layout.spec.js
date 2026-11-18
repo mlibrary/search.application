@@ -1,9 +1,9 @@
 import {
   defaultTemporaryList,
   getDatastores,
-  getSessionStorage,
+  getLocalStorage,
   inTemporaryList,
-  setSessionStorage,
+  setLocalStorage,
   temporaryList,
   toggleListElements,
   viewingTemporaryList
@@ -46,63 +46,63 @@ describe('layout', function () {
     });
   });
 
-  describe('getSessionStorage()', function () {
-    let getSessionStorageStub = null;
+  describe('getLocalStorage()', function () {
+    let getLocalStorageStub = null;
 
     const defaultValue = defaultTemporaryList;
     const itemName = 'exampleItem';
 
     beforeEach(function () {
-      global.sessionStorage = { getItem: sinon.stub() };
-      getSessionStorageStub = global.sessionStorage.getItem;
+      global.localStorage = { getItem: sinon.stub() };
+      getLocalStorageStub = global.localStorage.getItem;
 
       // Reset the stub before each test
-      getSessionStorageStub.reset();
+      getLocalStorageStub.reset();
     });
 
     it(`should throw an error if \`defaultValue\` is not provided`, function () {
       expect(() => {
-        getSessionStorage({ itemName });
-      }, '`getSessionStorage` should have thrown an error if `defaultValue` is not provided').to.throw('`defaultValue` is required');
+        getLocalStorage({ itemName });
+      }, '`getLocalStorage` should have thrown an error if `defaultValue` is not provided').to.throw('`defaultValue` is required');
     });
 
     it(`should throw an error if \`itemName\` is not provided`, function () {
       expect(() => {
-        getSessionStorage({ defaultValue });
-      }, '`getSessionStorage` should have thrown an error if `itemName` is not provided').to.throw('`itemName` is required');
+        getLocalStorage({ defaultValue });
+      }, '`getLocalStorage` should have thrown an error if `itemName` is not provided').to.throw('`itemName` is required');
     });
 
-    it(`should call \`sessionStorage.getItem\` with \`${itemName}\``, function () {
-      // Make sure `sessionStorage` is defined
-      getSessionStorageStub.returns('');
+    it(`should call \`localStorage.getItem\` with \`${itemName}\``, function () {
+      // Make sure `localStorage` is defined
+      getLocalStorageStub.returns('');
 
       // Call the function
-      getSessionStorage({ defaultValue, itemName });
+      getLocalStorage({ defaultValue, itemName });
 
-      // Check that `sessionStorage.getItem` was called with `itemName`
-      expect(getSessionStorageStub.calledOnceWithExactly(itemName), `\`${itemName}\` should have been called`).to.be.true;
+      // Check that `localStorage.getItem` was called with `itemName`
+      expect(getLocalStorageStub.calledOnceWithExactly(itemName), `\`${itemName}\` should have been called`).to.be.true;
     });
 
     describe('returning valid data', function () {
-      it('should parse and return a string value from `sessionStorage.getItem`', function () {
+      it('should parse and return a string value from `localStorage.getItem`', function () {
         // Create and assign a string value
         const string = 'example';
-        getSessionStorageStub.withArgs(itemName).returns(`"${string}"`);
+        getLocalStorageStub.withArgs(itemName).returns(`"${string}"`);
 
         // Assign the result
-        const result = getSessionStorage({ defaultValue, itemName });
+        const result = getLocalStorage({ defaultValue, itemName });
 
         // Check that the result returns the string value
         expect(result, `the result should have returned ${string}`).to.equal(string);
       });
 
-      it('should parse and return an object from `sessionStorage.getItem`', function () {
+      it('should parse and return an object from `localStorage.getItem`', function () {
         // Create and assign an object value
         const obj = { abc: 1, def: 'c' };
-        getSessionStorageStub.withArgs(itemName).returns(JSON.stringify(obj));
+        getLocalStorageStub.withArgs(itemName).returns(JSON.stringify(obj));
 
         // Assign the result
-        const result = getSessionStorage({ defaultValue, itemName });
+        const result = getLocalStorage({ defaultValue, itemName });
 
         // Check that the result returns the object value
         expect(result, 'the result should have returned the object value').to.deep.equal(obj);
@@ -110,67 +110,67 @@ describe('layout', function () {
     });
 
     describe('returning `defaultValue`', function () {
-      it('should return `defaultValue` if `sessionStorage.getItem` returns `null`', function () {
+      it('should return `defaultValue` if `localStorage.getItem` returns `null`', function () {
         // Assign `null`
-        getSessionStorageStub.withArgs(itemName).returns(null);
+        getLocalStorageStub.withArgs(itemName).returns(null);
 
         // Assign the result
-        const result = getSessionStorage({ defaultValue, itemName });
+        const result = getLocalStorage({ defaultValue, itemName });
 
         // Check that the result returns `defaultValue`
         expect(result, 'the result should have returned `defaultValue`').to.deep.equal(defaultValue);
       });
 
-      it('should return `defaultValue` if `sessionStorage.getItem` returns "undefined"', function () {
+      it('should return `defaultValue` if `localStorage.getItem` returns "undefined"', function () {
         // Assign "undefined"
-        getSessionStorageStub.withArgs(itemName).returns('undefined');
+        getLocalStorageStub.withArgs(itemName).returns('undefined');
 
         // Assign the result
-        const result = getSessionStorage({ defaultValue, itemName });
+        const result = getLocalStorage({ defaultValue, itemName });
 
         // Check that the result returns `defaultValue`
         expect(result, 'the result should have returned `defaultValue`').to.deep.equal(defaultValue);
       });
 
-      it('should return `defaultValue` if `sessionStorage.getItem` returns "null"', function () {
+      it('should return `defaultValue` if `localStorage.getItem` returns "null"', function () {
         // Assign "null"
-        getSessionStorageStub.withArgs(itemName).returns('null');
+        getLocalStorageStub.withArgs(itemName).returns('null');
 
         // Assign the result
-        const result = getSessionStorage({ defaultValue, itemName });
+        const result = getLocalStorage({ defaultValue, itemName });
 
         // Check that the result returns `defaultValue`
         expect(result, 'the result should have returned `defaultValue`').to.deep.equal(defaultValue);
       });
 
-      it('should return `defaultValue` if `sessionStorage.getItem` returns an empty string', function () {
+      it('should return `defaultValue` if `localStorage.getItem` returns an empty string', function () {
         // Assign an empty string
-        getSessionStorageStub.withArgs(itemName).returns('');
+        getLocalStorageStub.withArgs(itemName).returns('');
 
         // Assign the result
-        const result = getSessionStorage({ defaultValue, itemName });
+        const result = getLocalStorage({ defaultValue, itemName });
 
         // Check that the result returns `defaultValue`
         expect(result, 'the result should have returned `defaultValue`').to.deep.equal(defaultValue);
       });
 
-      it('should return `defaultValue` if `sessionStorage.getItem` returns invalid JSON', function () {
+      it('should return `defaultValue` if `localStorage.getItem` returns invalid JSON', function () {
         // Assign invalid JSON
-        getSessionStorageStub.withArgs(itemName).returns('not valid json');
+        getLocalStorageStub.withArgs(itemName).returns('not valid json');
 
         // Assign the result
-        const result = getSessionStorage({ defaultValue, itemName });
+        const result = getLocalStorage({ defaultValue, itemName });
 
         // Check that the result returns `defaultValue`
         expect(result, 'the result should have returned `defaultValue`').to.deep.equal(defaultValue);
       });
 
-      it('should return `defaultTemporaryList` if `sessionStorage` is not accessible', function () {
-        // Make `sessionStorage.getItem` throw an error
-        getSessionStorageStub.withArgs(itemName).throws(new Error('`sessionStorage` is not accessible'));
+      it('should return `defaultTemporaryList` if `localStorage` is not accessible', function () {
+        // Make `localStorage.getItem` throw an error
+        getLocalStorageStub.withArgs(itemName).throws(new Error('`localStorage` is not accessible'));
 
         // Assign the result
-        const result = getSessionStorage({ defaultValue, itemName });
+        const result = getLocalStorage({ defaultValue, itemName });
 
         // Check that the result returns `defaultTemporaryList`
         expect(result, 'the result should have returned `defaultTemporaryList`').to.deep.equal(defaultTemporaryList);
@@ -178,38 +178,38 @@ describe('layout', function () {
     });
   });
 
-  describe('setSessionStorage()', function () {
-    let setSessionStorageStub = null;
+  describe('setLocalStorage()', function () {
+    let setLocalStorageStub = null;
 
     const itemName = 'exampleItem';
     const value = { example: true };
 
     beforeEach(function () {
-      global.sessionStorage = { setItem: sinon.stub() };
-      setSessionStorageStub = global.sessionStorage.setItem;
+      global.localStorage = { setItem: sinon.stub() };
+      setLocalStorageStub = global.localStorage.setItem;
 
       // Reset the stub before each test
-      setSessionStorageStub.reset();
+      setLocalStorageStub.reset();
     });
 
     it(`should throw an error if \`itemName\` is not provided`, function () {
       expect(() => {
-        setSessionStorage({ value });
-      }, '`setSessionStorage` should have thrown an error if `itemName` is not provided').to.throw('`itemName` is required');
+        setLocalStorage({ value });
+      }, '`setLocalStorage` should have thrown an error if `itemName` is not provided').to.throw('`itemName` is required');
     });
 
     it(`should throw an error if \`value\` is not provided`, function () {
       expect(() => {
-        setSessionStorage({ itemName });
-      }, '`setSessionStorage` should have thrown an error if `value` is not provided').to.throw('`value` is required');
+        setLocalStorage({ itemName });
+      }, '`setLocalStorage` should have thrown an error if `value` is not provided').to.throw('`value` is required');
     });
 
-    it(`should stringify and set the value in \`sessionStorage\` under \`${itemName}\``, function () {
+    it(`should stringify and set the value in \`localStorage\` under \`${itemName}\``, function () {
       // Call the function
-      setSessionStorage({ itemName, value });
+      setLocalStorage({ itemName, value });
 
       // Check that a stringified value was set under `temporaryList`
-      expect(setSessionStorageStub.calledOnceWithExactly(itemName, JSON.stringify(value)), `the value should have been stringified under \`${itemName}\``).to.be.true;
+      expect(setLocalStorageStub.calledOnceWithExactly(itemName, JSON.stringify(value)), `the value should have been stringified under \`${itemName}\``).to.be.true;
     });
 
     it('should handle string values too', function () {
@@ -218,10 +218,10 @@ describe('layout', function () {
       expect(string, 'the example should be a string').to.be.a('string');
 
       // Call the function
-      setSessionStorage({ itemName, value: string });
+      setLocalStorage({ itemName, value: string });
 
       // Check that a stringified value was set under `temporaryList`
-      expect(setSessionStorageStub.calledOnceWithExactly(itemName, JSON.stringify(string)), `the string value should have returned under \`${itemName}\``).to.be.true;
+      expect(setLocalStorageStub.calledOnceWithExactly(itemName, JSON.stringify(string)), `the string value should have returned under \`${itemName}\``).to.be.true;
     });
   });
 

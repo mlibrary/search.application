@@ -1,6 +1,6 @@
 import { filterSelectedRecords, splitCheckboxValue } from '../../../../results/partials/results-list/list-item/header/_checkbox.js';
 import { getToggleSelectedTab, toggleSelectedButton, updatedList, updateListForTogglingRecords, updateToggleSelectedAction } from '../_toggle-selected.js';
-import { setSessionStorage, viewingTemporaryList } from '../../../../list/layout.js';
+import { setLocalStorage, viewingTemporaryList } from '../../../../list/layout.js';
 import { temporaryListBanner } from '../../../../list/partials/_go-to.js';
 import { toggleAddedClass } from './_add.js';
 
@@ -38,7 +38,7 @@ const handleRemoveSelectedClick = ({
   event,
   list = updatedList,
   reloadPage = window.location.reload.bind(window.location),
-  setList = setSessionStorage,
+  setList = setLocalStorage,
   showBanner = temporaryListBanner,
   toggleRemoveButton = toggleSelectedButton,
   toggleSelectedTab = getToggleSelectedTab(),

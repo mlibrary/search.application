@@ -31,16 +31,21 @@ $class: '.list__go-to';
   & {
     background-color: var(--search-color-blue-200);
     border: 2px solid var(--search-color-blue-300);
-    border-radius: forms.$radius;
+    border-radius: forms.$radius forms.$radius 0 0;
     justify-content: space-between;
     margin-top: 1rem;
     padding: 0.5rem 1rem;
+    position: sticky;
+    top: 0;
     p {
       margin: 0;
     }
   }
   &#{$class}--empty {
     display: none;
+  }
+  &:not(.hide__javascript) + .actions {
+    border-radius: 0 0 forms.$radius forms.$radius;
   }
 }
 
