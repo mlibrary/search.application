@@ -1,0 +1,11 @@
+<div class="additional-option__access-options">
+  <fieldset class="additional-option__access-options--checkboxes">
+  <legend class="visually-hidden">Select one or more <%= type %> filters</legend>
+  <% data.filters.each do |filter| %>
+    <label class="label-wrapper additional-option__access-options--checkbox">
+      <input type="checkbox" name="<%= data.parameter %>" value="<%= filter %>">
+      <span><%= filter %></span>
+    </label>
+  <% end %>
+</fieldset>
+</div>

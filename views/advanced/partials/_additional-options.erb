@@ -3,6 +3,19 @@
     has_additional_options?: true,
     additional_options: [
       OpenStruct.new(
+        title: "Access Options",
+        partial: "access_options",
+        data: OpenStruct.new(
+          parameter: "access_options",
+          filters: [
+            "Limit to articles available online",
+            "Limit to articles from scholarly journals",
+            "Add results beyond the library's holdings",
+            "Exclude newspaper holdings"
+          ]
+        )
+      ),
+      OpenStruct.new(
         title: "Date of Publication",
         partial: "date",
         data: OpenStruct.new(

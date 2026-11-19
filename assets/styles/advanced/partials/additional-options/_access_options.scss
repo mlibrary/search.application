@@ -1,0 +1,34 @@
+@use '../../../forms';
+
+// --------------------------------------------------
+//
+// # Checkboxes
+//   Styles to apply directly to `views/advanced/partials/additional-options/_access_options.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Checkboxes
+//     2.1. Checkbox
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".additional-option__access-options--checkbox";
+
+
+
+
+
+// ********************* //
+// *** 2. CHECKBOXES *** //
+// ********************* //
+
+#{$class} {
+  word-break: break-word;
+  & + & {
+    margin-top: 0.25rem;
+  }
+}
