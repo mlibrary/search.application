@@ -341,6 +341,7 @@ module Search
                 f.to_h
               end,
               url: url,
+              has_external_url: external_url?,
               citation: {
                 ris: ris,
                 csl: csl

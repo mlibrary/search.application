@@ -1,12 +1,6 @@
 class Search::Models::Record::Onlinejournals < Search::Models::Record::Catalog
-  def self.for(id, uri = nil)
-    # TBChanged
-    data = nil
-    Yabeda.search_api_full_record_duration.measure do
-      # get data from the api with the client
-      data = Search::Clients::SearchAPI.new.get_onlinejournals_record(id)
-    end
-    new(data)
+  def self.get_params(uri)
+    {}
   end
 
   def recommended?

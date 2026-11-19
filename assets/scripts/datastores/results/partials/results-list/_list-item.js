@@ -27,10 +27,10 @@ const updateListItem = ({ index, listItem, listItemFuncs = listItemFunctions, re
   listItemFuncs.updateListItemAttributes({ listItem, recordDatastore, recordId });
 
   // Break down the record information
-  const { metadata, title, url } = record;
+  const { has_external_url: hasExternalUrl, metadata, title, url } = record;
 
   // Update the header
-  listItemFuncs.updateListItemHeader({ index, listItem, recordDatastore, recordId, title, url });
+  listItemFuncs.updateListItemHeader({ hasExternalUrl, index, listItem, recordDatastore, recordId, title, url });
 
   // Update the metadata
   listItemFuncs.updateMetadata({ listItem, metadata });

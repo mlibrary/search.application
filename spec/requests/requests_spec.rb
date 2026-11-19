@@ -17,6 +17,7 @@ RSpec.describe "requests" do
     env "rack.session", @session
     get "/accessibility?something=other"
   }
+
   def base_api_record
     create(:catalog_api_record, fields: [:id, :call_number, :title, :citation, :holdings, :indexing_date])
   end
@@ -42,6 +43,10 @@ RSpec.describe "requests" do
     JSON.parse(fixture("record/databases/database.json"))
   end
 
+  let(:guidesandmore_results) do
+    JSON.parse(fixture("results/guidesandmore.json"))
+  end
+
   def base_results
     create(:catalog_api_one_result)
   end
@@ -49,6 +54,19 @@ RSpec.describe "requests" do
   def onlinejournals_results
     result = base_results
     result["records"] = [base_onlinejournals_api_record]
+    result
+  end
+
+  def database_results
+    result = base_results
+    result["records"] = [databases_record]
+    result["filters"] = []
+    result
+  end
+
+  def articles_results
+    result = base_results
+    result["records"] = [articles_record]
     result
   end
 
@@ -133,6 +151,20 @@ RSpec.describe "requests" do
       expect(last_response.body).to include("Go to online journal")
     end
   end
+
+  context "databases search results" do
+    it "shows the results page when there is a query parameter" do
+      stub_request(:get, "#{S.search_api_url}/databases/search?offset=0&query=title:(test)&limit=10&sort=relevance")
+        .to_return(status: 200, body: database_results.to_json, headers: {content_type: "application/json"})
+      stub_request(:get, "#{S.search_api_url}/databases/specialists?&query=title:(test)")
+        .to_return(status: 200, body: fixture("results/specialists.json"), headers: {content_type: "application/json"})
+      get "/databases?query=title:(test)"
+      expect(last_response.body).to include("Databases results")
+      expect(last_response.body).to include("So and So")
+      expect(last_response.body).to include("Go to database")
+    end
+  end
+
   context "post /search" do
     context "searching with `keyword` selected" do
       it "redirects to the default datastore landing page" do
@@ -166,20 +198,70 @@ RSpec.describe "requests" do
       it "shows the flint message for someone with a flint campus" do
         env "rack.session", @session
         get "/articles"
-        expect(last_response.body).to match(/For\s*the\s*best\s*results/)
+        expect(last_response.body).to match(/For the best results/)
       end
       it "does not show the message for someone not with flint campus" do
         @session[:campus] = nil
         env "rack.session", @session
         get "/articles"
-        expect(last_response.body).not_to match(/For\s*the\s*best\s*results/)
+        expect(last_response.body).not_to match(/For the best results/)
+      end
+    end
+    context "search" do
+      it "shows the results page when there is a query parameter" do
+        stub_request(:get, "#{S.search_api_url}/articles/search?offset=0&query=title:(test)&limit=10&sort=relevance")
+          .to_return(status: 200, body: articles_results.to_json, headers: {content_type: "application/json"})
+        stub_request(:get, "#{S.search_api_url}/catalog/specialists?&query=title:(test)")
+          .to_return(status: 200, body: fixture("results/specialists.json"), headers: {content_type: "application/json"})
+        get "/articles?query=title:(test)"
+        expect(last_response.body).to include("Articles results")
+        expect(last_response.body).to include("So and So")
+        expect(last_response.body).to include("Full text")
+      end
+    end
+    context "/articles/record/:id" do
+      it "shows the article record page" do
+        bib_id = articles_record["id"]
+        stub_request(:get, "#{S.search_api_url}/articles/records/#{bib_id}")
+          .to_return(status: 200, body: articles_record.to_json, headers: {content_type: "application/json"})
+        get "/articles/record/#{bib_id}"
+        expect(last_response.status).to eq(200)
+        expect(last_response.body).to include(articles_record["title"][0]["text"])
+        expect(last_response.body).to include("/articles/record/#{bib_id}/ris")
+        expect(last_response.body).to include("Go to item")
+      end
+    end
+  end
+  context "/guidesandmore" do
+    context "search" do
+      it "shows the results page when there is a query parameter" do
+        stub_request(:get, "#{S.search_api_url}/guidesandmore/search?offset=0&query=title:(test)&limit=10&sort=relevance")
+          .to_return(status: 200, body: guidesandmore_results.to_json, headers: {content_type: "application/json"})
+        stub_request(:get, "#{S.search_api_url}/catalog/specialists?&query=title:(test)")
+          .to_return(status: 200, body: fixture("results/specialists.json"), headers: {content_type: "application/json"})
+        get "/guidesandmore?query=title:(test)"
+        expect(last_response.body).to include("Guides and More results")
+        expect(last_response.body).to include("So and So")
+        expect(last_response.body).to include("Christmas music")
+      end
+    end
+    context "brief" do
+      it "shows a brief record" do
+        record = guidesandmore_results["records"][0]
+        id = record["id"]
+        stub_request(:get, "#{S.search_api_url}/guidesandmore/records/#{id}")
+          .to_return(status: 200, body: record.to_json, headers: {content_type: "application/json"})
+        get "/guidesandmore/record/#{id}/brief"
+        expect(last_response.status).to eq(200)
+        expect(last_response.body).to include("Christmas music")
+        expect(last_response.content_type).to eq("application/json")
       end
     end
   end
   context "/catalog/record/:id" do
     it "shows the catalog record page" do
-      bib_id = "9912345"
       data = base_api_record
+      bib_id = data["id"]
       call_number = data["call_number"][0]["text"]
       stub_request(:get, "#{S.search_api_url}/catalog/records/#{bib_id}")
         .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
@@ -193,8 +275,8 @@ RSpec.describe "requests" do
   end
   context "/onlinejournals/record/:id" do
     it "shows the catalog record page" do
-      bib_id = "9912345"
       data = base_onlinejournals_api_record
+      bib_id = data["id"]
       stub_request(:get, "#{S.search_api_url}/onlinejournals/records/#{bib_id}")
         .to_return(status: 200, body: data.to_json, headers: {content_type: "application/json"})
       get "/onlinejournals/record/#{bib_id}"
@@ -204,22 +286,10 @@ RSpec.describe "requests" do
       expect(last_response.body).to include("Go to online journal")
     end
   end
-  context "/articles/record/:id" do
-    it "shows the article record page" do
-      bib_id = "cdi_something_9912345"
-      stub_request(:get, "#{S.search_api_url}/articles/records/#{bib_id}")
-        .to_return(status: 200, body: articles_record.to_json, headers: {content_type: "application/json"})
-      get "/articles/record/#{bib_id}"
-      expect(last_response.status).to eq(200)
-      expect(last_response.body).to include(articles_record["title"][0]["text"])
-      expect(last_response.body).to include("/articles/record/#{bib_id}/ris")
-      expect(last_response.body).to include("Go to item")
-    end
-  end
 
   context "/databases/record/:id" do
     it "shows the databases record page" do
-      id = "some_id"
+      id = databases_record["id"]
       stub_request(:get, "#{S.search_api_url}/databases/records/#{id}")
         .to_return(status: 200, body: databases_record.to_json, headers: {content_type: "application/json"})
       get "/databases/record/#{id}"

@@ -95,7 +95,7 @@ module Factories::CatalogRecord
     }
 
     def record(bib_fields: [], other_fields: [], holdings: [], position: nil)
-      result = instance_double(Search::Models::Record::Catalog, bib: bib(fields: bib_fields), holdings: holdings(kinds: holdings), position: position)
+      result = instance_double(Search::Models::Record::Catalog, bib: bib(fields: bib_fields), holdings: holdings(kinds: holdings), position: position, originating_uri: nil)
       other_fields.each do |f|
         allow(result).to receive(f).and_return(send(f))
       end
@@ -213,7 +213,7 @@ module Factories::CatalogRecord
     end
 
     def citation
-      instance_double(Search::Models::Record::Catalog::Citation)
+      instance_double(Search::Models::Record::Citation)
     end
 
     def holdings(kinds: nil)
