@@ -1,0 +1,30 @@
+@use '../../../media';
+
+// --------------------------------------------------
+//
+// # Remove Field
+//   Styles to apply directly to `views/advanced/partials/search-fields/_remove-field.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Remove Field
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".advanced-search__remove-field";
+
+
+
+// *********************** //
+// *** 2. REMOVE FIELD *** //
+// *********************** //
+
+#{$class} {
+  @include media.breakpoint('xs') {
+    margin-left: 0.75rem;
+  }
+}

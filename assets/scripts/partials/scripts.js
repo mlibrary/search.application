@@ -1,3 +1,3 @@
-import displaySearchTip from './header/_search.js';
+import { displaySearchTip } from './header/search/_tip.js';
 
 displaySearchTip();

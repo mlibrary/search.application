@@ -1,0 +1,32 @@
+@use './selections/checkboxes';
+
+// --------------------------------------------------
+//
+// # Selections
+//   Styles to apply directly to `views/advanced/partials/additional-options/_selections.erb`.
+//
+// ## Table of Contents
+//   1. Variables
+//   2. Selections
+//
+// --------------------------------------------------
+
+// ******************** //
+// *** 1. VARIABLES *** //
+// ******************** //
+
+$class: ".additional-option__selections";
+
+
+
+
+
+// ********************* //
+// *** 2. SELECTIONS *** //
+// ********************* //
+
+#{$class} {
+  & > * + * {
+    margin-top: 1rem;
+  }
+}

@@ -1,0 +1,12 @@
+<div class="additional-option__narrow-search-to">
+  <% data.filters.each do |filter| %>
+    <div class="additional-option__narrow-search-to--section additional-option__narrow-search-to--section-<%= filter[:slug] %>" data-narrow="<%= filter[:narrow].join(', ') %>"<% if filter[:slug] == "collection" %> style="display: none;"<% end %>>
+      <label for="narrow-search-to--<%= filter[:slug] %>"><%= filter[:label] %></label>
+      <select name="narrow-search-to--<%= filter[:slug] %>" id="narrow-search-to--<%= filter[:slug] %>" autocomplete="off">
+        <% filter[:options].each do |option| %>
+          <option value="<%= option[:value] %>" data-narrow="<%= option[:narrow].join(', ') %>"><%= option[:value] %></option>
+        <% end %>
+      </select>
+    </div>
+  <% end %>
+</div>

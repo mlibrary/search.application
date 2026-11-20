@@ -41,9 +41,7 @@ $class: '.filter__checkbox';
 // ***************** //
 
 #{$class}--link {
-  @include utilities.flex($align: baseline);
   color: colors.$color-text;
-  gap: 0.5rem;
   &:before {
     border: 2px solid var(--search-color-grey-600);
     border-radius: 2px;
