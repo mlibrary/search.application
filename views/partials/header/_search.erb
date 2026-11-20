@@ -36,6 +36,7 @@
     </select>
     <input type="search" aria-label="Search for" class="search-form__inputs--text" name="search_text" autocomplete="on" name="query" value="<%= current_query %>">
     <input type="hidden" name="search_datastore" value="<%= @presenter.current_datastore %>" />
+    <input type="hidden" name="search_filters" value="<%= @presenter.filter_params %>" />
     <button type="submit" class="search-form__inputs--submit button__primary">
       <span class="material-symbols-rounded" aria-hidden="true">search</span>
       <span class="visually-hidden">Search</span>
