@@ -10,7 +10,8 @@ RSpec.describe "requests" do
     @params = {
       search_datastore: "everything",
       search_option: "keyword",
-      search_text: ""
+      search_text: "",
+      search_filters: ""
     }
   end
   let(:get_static_page) {
@@ -176,12 +177,19 @@ RSpec.describe "requests" do
     context "searching with a different option selected" do
       it "redirects to `search.lib.umich.edu` with the query wrapped" do
         search_option = "title"
-        post "/search", @params.merge(search_option: search_option, search_datastore: "catalog")
+        post "/search", @params.merge(search_option: search_option, search_datastore: "catalog", search_text: "something")
         location = last_response.location
         uri = URI.parse(location)
         query_params = URI.decode_www_form(uri.query).to_h
         expect(query_params["query"]).to start_with("#{search_option}:(")
         expect(query_params["query"]).to end_with(")")
+      end
+    end
+    context "posting a search to the same datastore" do
+      it "retains the existing filters when searching the same datastore" do
+        post "/search", {search_option: "keyword", search_datastore: "catalog", search_text: "something", search_filters: "library=aa&filters.availability=Physical"}
+        uri = Addressable::URI.parse(last_response.location)
+        expect(uri.query_hash["filters.availability"]).to eq("Physical")
       end
     end
   end

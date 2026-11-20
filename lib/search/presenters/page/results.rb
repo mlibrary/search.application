@@ -13,6 +13,8 @@ class Search::Presenters::Page
       new(datastore: datastore, uri: uri, patron: patron, results: results)
     end
 
+    attr_reader :uri
+
     def initialize(datastore:, uri:, patron:, results:)
       @description = datastore.description
       @slug = datastore.slug

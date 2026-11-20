@@ -13,6 +13,14 @@ class Search::Presenters::Page
     title_parts.push("Library Search").join(" - ")
   end
 
+  def filter_params
+    result = Addressable::URI.new
+    result.query_values = @uri&.query_values(Array)&.select do |kv|
+      kv[0] == "library" || kv[0].start_with?("filter")
+    end
+    result.query
+  end
+
   def current_datastore
     @datastore
   end

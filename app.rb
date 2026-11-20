@@ -174,7 +174,7 @@ class Search::Application < Sinatra::Base
       get "/#{datastore.slug}" do
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "static_page"
         Yabeda.datastore_request_count.increment({datastore: datastore.slug}, by: 1)
-        @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+        @presenter = Search::Presenters.for_datastore(slug: datastore.slug, uri: full_uri, patron: @patron)
         erb :"datastores/layout", layout: :layout do
           erb :"datastores/#{datastore.slug}"
         end
@@ -184,7 +184,7 @@ class Search::Application < Sinatra::Base
     if ["onlinejournals", "databases"].include?(datastore.slug)
       get "/#{datastore.slug}/browse" do
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "browse"
-        @presenter = Search::Presenters.for_datastore_browse(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+        @presenter = Search::Presenters.for_datastore_browse(slug: datastore.slug, uri: full_uri, patron: @patron)
         erb :"datastores/browse/layout", layout: :layout do
           erb :"datastores/browse/#{datastore.slug}"
         end
@@ -194,7 +194,7 @@ class Search::Application < Sinatra::Base
     if datastore.slug == "everything"
       get "/#{datastore.slug}/list" do
         headers "metrics.datastore" => datastore.slug, "metrics.route" => "list"
-        @presenter = Search::Presenters.for_list(slug: datastore.slug, uri: URI.parse(request.fullpath), patron: @patron)
+        @presenter = Search::Presenters.for_list(slug: datastore.slug, uri: full_uri, patron: @patron)
         erb :"datastores/list/layout", layout: :layout do
           erb :"datastores/list/#{datastore.slug}"
         end
@@ -220,7 +220,7 @@ class Search::Application < Sinatra::Base
   Search::Presenters.static_page_slugs.each do |slug|
     get "/#{slug}" do
       headers "metrics.route" => "static_page"
-      @presenter = Search::Presenters.for_static_page(slug: slug, uri: URI.parse(request.fullpath), patron: @patron)
+      @presenter = Search::Presenters.for_static_page(slug: slug, uri: full_uri, patron: @patron)
       erb :"pages/layout", layout: :layout do
         erb :"pages/#{slug}"
       end
@@ -270,7 +270,7 @@ class Search::Application < Sinatra::Base
 
   not_found do
     headers "metrics.route" => "not_found"
-    @presenter = Search::Presenters.for_404_page(uri: URI.parse(request.fullpath), patron: @patron)
+    @presenter = Search::Presenters.for_404_page(uri: full_uri, patron: @patron)
     status 404
     erb :"errors/layout", layout: :layout do
       erb :"errors/404"
@@ -278,25 +278,19 @@ class Search::Application < Sinatra::Base
   end
 
   post "/search" do
-    # TODO: Keep `library` query parameter on `catalog` datastore when making a search.
-    # Sending both parameters to current site erases the `library` parameter.
-    option = params[:search_option]
-    q_params = {}
-    library = request.referrer ? Addressable::URI.parse(request.referrer).query_hash["library"] : nil
     uri = Addressable::URI.parse("/#{params[:search_datastore]}")
-    if library
-      q_params["library"] = library
-    end
-    q_params["query"] = params[:search_text]
 
-    if option != "keyword"
-      # The query gets wrapped if the selected search option is not `keyword`
-      q_params["query"] = "#{option}:(#{q_params["query"]})"
-    elsif q_params["query"].empty?
-      # Redirect to landing page if query is empty and search option is `keyword`
-      redirect uri
-    end
-    uri.query_values = q_params
+    query = params[:search_text]
+    redirect uri if query.empty?
+
+    option = params[:search_option]
+    # The query gets wrapped if the selected search option is not `keyword`
+    query = "#{option}:(#{query})" if option != "keyword"
+
+    result_params = Addressable::URI.parse("?#{params[:search_filters]}").query_values(Array)
+    result_params.prepend(["query", query])
+
+    uri.query_values = result_params
     redirect uri
   end
 
