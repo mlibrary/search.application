@@ -12,7 +12,8 @@ const { window: { document } } = dom;
 
 // Define global properties for the JSDOM environment
 Object.assign(
-  global, {
+  global,
+  {
     document,
     temporaryList: JSON.parse(fs.readFileSync('./test/fixtures/temporary-list.json', 'utf8')),
     window: dom.window
