@@ -177,7 +177,7 @@ class Search::Presenters::Results::Articles < Search::Presenters::Results::Catal
       {
         uid: "is_scholarly",
         default: "false",
-        label: "Articles from scholaraly journals only"
+        label: "Articles from scholarly journals only"
       },
       {
         uid: "exclude_newspapers",
@@ -197,7 +197,7 @@ class Search::Presenters::Results::Articles < Search::Presenters::Results::Catal
       {
         uid: "holdings_only",
         default: "true",
-        label: "U-M library materials_only"
+        label: "U-M library materials only"
       }
     ].map do |params|
       Search::Presenters::Results::BooleanFilter.for(
